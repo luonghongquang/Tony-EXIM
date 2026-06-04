@@ -1,134 +1,391 @@
-```html id="u4v41v"
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | Chuyên gia Xuất Nhập Khẩu & Logistics</title>
+  <!-- Google Fonts + Font Awesome 6 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <title>Chính sách quản lý hàng hóa xuất nhập khẩu | Tony EXIM</title>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fafcff;
+      color: #0a2540;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
 
-  <meta name="description"
-    content="Chia sẻ kiến thức thực tế về xuất nhập khẩu, logistics và customs.">
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
 
-  <link rel="stylesheet" href="../assets/css/blog.css">
+    /* header / navigation */
+    .site-header {
+      background: #ffffff;
+      box-shadow: 0 1px 0 #eef2f8, 0 2px 12px rgba(0,0,0,0.02);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
+    .logo a {
+      font-size: 1.7rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .logo span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5b7a9a;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #1e3a5f;
+      transition: 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #0f6baf;
+    }
+    .btn-contact {
+      background: #0a4b7a;
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 40px;
+    }
+
+    /* hero section */
+    .hero {
+      background: linear-gradient(110deg, #ffffff 0%, #eef4fc 100%);
+      padding: 3rem 0 3.5rem;
+    }
+    .hero-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .hero-text {
+      flex: 2;
+    }
+    .hero-text h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #002856;
+      margin-bottom: 0.75rem;
+    }
+    .hero-badge {
+      background: #deeaf9;
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0057a3;
+      margin-bottom: 1rem;
+    }
+    .hero-text p {
+      font-size: 1.1rem;
+      color: #2c4e74;
+      margin: 1rem 0 1.5rem;
+      max-width: 90%;
+    }
+    .hero-stats {
+      flex: 1;
+      background: white;
+      border-radius: 28px;
+      padding: 1.6rem;
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.08);
+    }
+    .stat-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      align-items: center;
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      background: #e9f2fa;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #006bb3;
+    }
+
+    /* section style */
+    .section {
+      padding: 3.5rem 0;
+      border-bottom: 1px solid #eef2f8;
+    }
+    .section-title {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      border-left: 5px solid #1e6ec5;
+      padding-left: 1rem;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 1.8rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+      border: 1px solid #eef2f8;
+      transition: 0.2s;
+    }
+    .card:hover {
+      border-color: #cde0ef;
+      transform: translateY(-3px);
+    }
+    .card i {
+      font-size: 2rem;
+      color: #2c7bcb;
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      margin-bottom: 0.75rem;
+    }
+
+    /* testimonials */
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.8rem;
+    }
+    .testimonial {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.5rem;
+      border-left: 5px solid #1e6ec5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .testimonial p {
+      font-style: italic;
+      color: #2b4f6e;
+      margin-bottom: 1rem;
+    }
+    .testimonial h4 {
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    /* resume timeline */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+    .timeline-item {
+      background: #fff;
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid #eef3fc;
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .skill-bar {
+      background: #e6edf6;
+      border-radius: 20px;
+      height: 10px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+    .skill-fill {
+      background: #1e6ec5;
+      width: 0%;
+      height: 10px;
+      border-radius: 20px;
+    }
+
+    .footer {
+      background: #0a1929;
+      color: #bdd3ec;
+      padding: 2.5rem 0;
+      margin-top: 2rem;
+    }
+    @media (max-width: 780px) {
+      .hero-text h1 { font-size: 2rem; }
+      .section-title { font-size: 1.5rem; }
+    }
+  </style>
 </head>
-
 <body>
-
-  <header class="blog-header">
-
-    <div class="blog-header-container">
-
-      <a href="../index.html" class="logo">
-        Tony EXIM
-      </a>
-
-      <div class="nav">
-        <a href="../index.html">Home</a>
-        <a href="../index.html">Portfolio</a>
-        <a href="../index.html">Contact</a>
+<header class="site-header">
+  <div class="container">
+    <div class="nav-wrap">
+      <div class="logo">
+        <a href="#">Tony EXIM</a>
+        <span>Chuyên gia Xuất Nhập khẩu & Logistics</span>
       </div>
-
+      <div class="nav-links">
+        <a href="#" class="active">Trang chủ</a>
+        <a href="#about">Giới thiệu</a>
+        <a href="#services">Dịch vụ</a>
+        <a href="#resume">Hồ sơ</a>
+        <a href="#contact" class="btn-contact">Liên hệ</a>
+      </div>
     </div>
+  </div>
+</header>
 
-  </header>
-
-  <main class="blog-layout">
-
-    <article class="blog-content">
-
-      <a href="../index.html" class="back-home">
-        ← Back to Home
-      </a>
-
-      <h1>
-        Chuyên đề chính sách quản lý hàng hóa xuất nhập khẩu
-      </h1>
-
-      <div class="blog-meta">
-        Published on June 2026 · 8 min read
+<main>
+  <!-- Hero / Intro -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <div class="hero-badge"><i class="fas fa-passport"></i> Export-Import Specialist</div>
+          <h1>Đồng hành cùng doanh nghiệp <br>vượt rào cản hải quan</h1>
+          <p>Tôi là Lương Hồng Quang, chuyên gia tư vấn thủ tục hải quan, cấp C/O, vận tải quốc tế và tối ưu chuỗi cung ứng. Với kinh nghiệm thực chiến từ sản xuất đến logistics, tôi cam kết mang đến giải pháp nhanh, chính xác và tiết kiệm chi phí.</p>
+          <div class="stat-row" style="margin-top: 1rem;">
+            <div><i class="fas fa-check-circle" style="color:#2b7e3a;"></i> 100+ hồ sơ thành công</div>
+            <div><i class="fas fa-clock"></i> Hỗ trợ 24/7</div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-row"><div class="stat-icon"><i class="fas fa-ship"></i></div><div><strong>Vận tải đa phương thức</strong><br>Đường biển, hàng không, bộ</div></div>
+          <div class="stat-row"><div class="stat-icon"><i class="fas fa-file-invoice"></i></div><div><strong>Thủ tục hải quan</strong><br>Tờ khai, C/O, giấy phép XNK</div></div>
+          <div class="stat-row"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div><strong>Tối ưu logistics</strong><br>Giảm 15-25% chi phí vận hành</div></div>
+        </div>
       </div>
+    </div>
+  </section>
 
-      <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200">
-
-      <p>
-        Trong hoạt động xuất nhập khẩu, chính sách quản lý hàng hóa là một trong những yếu tố quan trọng ảnh hưởng trực tiếp tới quá trình thông quan.
-      </p>
-
-      <h2>1. Chính sách quản lý hàng hóa là gì?</h2>
-
-      <p>
-        Đây là hệ thống quy định liên quan tới kiểm tra chuyên ngành, giấy phép, điều kiện nhập khẩu và các quy định quản lý khác.
-      </p>
-
-      <h2>2. Vì sao cần kiểm tra chính sách?</h2>
-
-      <p>
-        Nếu không kiểm tra trước, doanh nghiệp có thể gặp:
-      </p>
-
-      <ul>
-        <li>Thiếu giấy phép nhập khẩu</li>
-        <li>Bị giữ hàng</li>
-        <li>Phát sinh storage, DEM/DET</li>
-        <li>Luồng đỏ hoặc kiểm hóa</li>
-      </ul>
-
-      <h2>3. Kinh nghiệm thực tế</h2>
-
-      <p>
-        Trước khi mở tờ khai, nên kiểm tra:
-      </p>
-
-      <ul>
-        <li>HS code</li>
-        <li>Biểu thuế</li>
-        <li>Danh mục quản lý chuyên ngành</li>
-        <li>Kiểm tra C/O nếu có</li>
-      </ul>
-
-    </article>
-
-    <aside class="sidebar">
-
-      <div class="sidebar-box">
-
-        <h3>About Author</h3>
-
-        <p>
-          Tony EXIM chia sẻ kiến thức thực tế về logistics, customs và supply chain.
-        </p>
-
+  <!-- About section dựa trên nội dung "Hello!" -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-title"><i class="fas fa-user-astronaut"></i> Về tôi</div>
+      <div class="grid-2col">
+        <div class="card">
+          <i class="fas fa-briefcase"></i>
+          <h3>Hành trình chuyên môn</h3>
+          <p>Bắt đầu từ lĩnh vực Sản xuất & R&D tại Dunlopillo, tôi thấu hiểu sự đồng bộ trong quy trình. Sau đó tôi chuyển sang Logistics Sales tại BPL và hiện là Import-Export Officer tại VINA PRIDE SEAFOODS. Sự kết hợp giữa kỹ thuật, sản xuất và xuất nhập khẩu giúp tôi tư vấn giải pháp toàn diện cho khách hàng.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-handshake"></i>
+          <h3>Triết lý phục vụ</h3>
+          <p>Lắng nghe, phản hồi nhanh và duy trì hồ sơ chính xác. Mục tiêu của tôi là đơn giản hóa thủ tục hải quan, giảm chi phí và rủi ro cho doanh nghiệp, đồng thời xây dựng quan hệ đối tác bền vững.</p>
+        </div>
       </div>
+    </div>
+  </section>
 
-      <div class="sidebar-box">
-
-        <h3>Related Posts</h3>
-
-        <a class="related-post"
-          href="./eta-etd.html">
-          ETA vs ETD là gì?
-        </a>
-
-        <a class="related-post"
-          href="./incoterms.html">
-          Incoterms cho người mới
-        </a>
-
+  <!-- Dịch vụ: What i'm doing -->
+  <section id="services" class="section" style="background:#f8fafd;">
+    <div class="container">
+      <div class="section-title"><i class="fas fa-cogs"></i> Dịch vụ chính</div>
+      <div class="grid-2col">
+        <div class="card"><i class="fas fa-boxes"></i><h3>Logistics trọn gói</h3><p>Vận chuyển nhanh, an toàn, tiết kiệm bằng đường biển, hàng không, đường bộ. Giám sát hàng hóa xuyên suốt.</p></div>
+        <div class="card"><i class="fas fa-headset"></i><h3>Chăm sóc khách hàng</h3><p>Tư vấn phương thức vận tải tối ưu, theo dõi đơn hàng và giải đáp vướng mắc hải quan 24/7.</p></div>
+        <div class="card"><i class="fas fa-shopping-cart"></i><h3>Chăm sóc đơn hàng</h3><p>Kiểm tra chứng từ, quản lý tracking số, đảm bảo hàng đến đúng tiến độ và thông báo kịp thời.</p></div>
+        <div class="card"><i class="fas fa-globe-asia"></i><h3>Thương mại quốc tế</h3><p>Tư vấn Incoterms, thủ tục hải quan, cấp C/O, giấy phép XNK, tận dụng ưu đãi thuế quan.</p></div>
       </div>
+    </div>
+  </section>
 
-    </aside>
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title"><i class="fas fa-star"></i> Phản hồi từ đối tác</div>
+      <div class="testimonial-grid">
+        <div class="testimonial"><p>“Quang luôn có mặt đúng giờ, chủ động điều phối công việc. Anh ấy đảm bảo hiệu suất, hoàn thành nhiệm vụ đúng hạn và tuân thủ quy trình nghiêm ngặt.”</p><h4>- Tô Văn Nhỏ</h4></div>
+        <div class="testimonial"><p>“Tạo động lực và môi trường làm việc tích cực. Luôn cập nhật thị trường, xử lý tình huống bất ngờ rất bình tĩnh và linh hoạt.”</p><h4>- Kiều Anh</h4></div>
+        <div class="testimonial"><p>“Giao tiếp rõ ràng, xây dựng mạng lưới quan hệ tự nhiên. Tóm tắt vấn đề phức tạp thành nội dung dễ hiểu, truyền đạt chính xác.”</p><h4>- Eviedinh</h4></div>
+        <div class="testimonial"><p>“Thấu hiểu từng thành viên trong nhóm, phân công phù hợp năng lực. Hướng dẫn tận tình nhân viên mới, khuyến khích sự chủ động và trung thực.”</p><h4>- Trương Văn Nam</h4></div>
+      </div>
+    </div>
+  </section>
 
-  </main>
+  <!-- Resume section: Education + Experience + Skills -->
+  <section id="resume" class="section" style="background:#fefefe;">
+    <div class="container">
+      <div class="section-title"><i class="fas fa-graduation-cap"></i> Hồ sơ năng lực</div>
+      <div class="grid-2col" style="margin-bottom: 1.5rem;">
+        <div class="card"><i class="fas fa-university"></i><h3>Học vấn</h3><p><strong>ĐH Sư phạm Kỹ thuật TP.HCM (HCMUTE)</strong><br>Quản lý công nghiệp (2019-2023) – chiến lược, vận hành doanh nghiệp. Chứng chỉ Drive.</p><p><strong>Trường THPT Nguyễn Trãi</strong><br>Tin học cơ bản, hoạt động ngoại khóa, huấn luyện gia đình Phật tử.</p></div>
+        <div class="card"><i class="fas fa-briefcase"></i><h3>Kinh nghiệm nổi bật</h3><p><strong>VINA PRIDE SEAFOODS</strong> – Import-Export Officer (2/2025 đến nay). Lập bộ chứng từ, khai báo hải quan, phối hợp hãng tàu & ngân hàng.<br><strong>BPL Logistics</strong> – Sales Logistics (2023-2025): đạt chỉ tiêu, đào tạo nhân viên mới, chăm sóc khách hàng XNK.<br><strong>Dunlopillo</strong> – R&D (2022): thay đổi nguyên liệu, thử nghiệm sản phẩm, kiểm soát tồn kho.</p></div>
+      </div>
+      <div style="background: white; border-radius: 28px; padding: 1.6rem; margin-top: 1rem;">
+        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-chart-pie"></i> Kỹ năng chuyên môn</h3>
+        <div><span>Chịu áp lực cao</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        <div><span>Giao tiếp & đàm phán</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></div>
+        <div><span>Tư duy phản biện</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+        <div><span>Lập kế hoạch & dự báo</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div><span>Làm việc nhóm</span><div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div></div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Hoạt động + khách hàng -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title"><i class="fas fa-heart"></i> Hoạt động & cộng đồng</div>
+      <div class="grid-2col">
+        <div class="card"><i class="fas fa-users"></i><h3>UISC - CLB Khởi nghiệp</h3><p>Media Planning (2/2022 - 5/2023): thiết kế banner, poster, dựng video, chèn sub.</p></div>
+        <div class="card"><i class="fas fa-chart-simple"></i><h3>VietQuality</h3><p>Cộng tác viên (2021-2023): nghiên cứu về quản lý chất lượng, tiếp cận tài liệu chuyên sâu.</p></div>
+        <div class="card"><i class="fas fa-hand-holding-heart"></i><h3>The Benevolences</h3><p>Hoạt động từ thiện: xây dựng dự án, kế hoạch quyên góp, tổ chức hoạt động thiện nguyện.</p></div>
+        <div class="card"><i class="fas fa-building"></i><h3>Đối tác tiêu biểu</h3><p>Các doanh nghiệp XNK thủy sản, may mặc, nội thất. Đại lý vận tải, hãng tàu, ngân hàng, cơ quan hải quan.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA liên hệ -->
+  <section id="contact" class="section" style="background: #eaf3fc;">
+    <div class="container" style="text-align: center;">
+      <div class="section-title" style="border-left: none; text-align: center;">Sẵn sàng hợp tác?</div>
+      <p style="font-size: 1.1rem; max-width: 700px; margin: 0 auto 1.5rem;">Hãy liên hệ để được tư vấn giải pháp xuất nhập khẩu, tối ưu chuỗi cung ứng và xử lý thủ tục hải quan nhanh chóng.</p>
+      <a href="#" style="background: #0a4b7a; color: white; padding: 12px 32px; border-radius: 40px; text-decoration: none; font-weight: 600; display: inline-block;"><i class="fas fa-envelope"></i> Nhận tư vấn ngay</a>
+      <div style="margin-top: 1.8rem; font-size: 0.9rem;"><i class="fab fa-linkedin"></i> linkedin.com/in/luonghongquang &nbsp;|&nbsp; <i class="fas fa-phone-alt"></i> +84 902 123 456</div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div>© 2026 Lương Hồng Quang – Tony EXIM. Chuyên gia xuất nhập khẩu & logistics. Mọi thông tin được bảo vệ.</div>
+  </div>
+</footer>
 </body>
-
 </html>
-```
