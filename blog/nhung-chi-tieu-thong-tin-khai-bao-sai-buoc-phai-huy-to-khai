@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | Chỉ tiêu khai sai buộc hủy tờ khai hải quan</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fbfe;
+      color: #0a2540;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* header navigation */
+    .site-header {
+      background: white;
+      box-shadow: 0 1px 0 #eef2f8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo a {
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .logo span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #5c7c9c;
+      display: block;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      margin-left: 2rem;
+      font-weight: 500;
+      color: #1e3a5f;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #0f6baf;
+    }
+
+    /* ----- Định dạng cho #post-171 và .entry-content ----- */
+    #post-171 {
+      margin: 2rem 0 3rem;
+    }
+
+    .entry-content {
+      width: 100%;
+    }
+
+    .is-layout-constrained {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    /* Animation fade-up cho các thành phần trong entry content */
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .entry-content > * {
+      animation: fadeUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+      opacity: 0; /* bắt đầu ẩn */
+    }
+
+    /* tuần tự delay cho các phần tử con trực tiếp, tạo hiệu ứng tuần tự mượt */
+    .entry-content > :nth-child(1) { animation-delay: 0.05s; }
+    .entry-content > :nth-child(2) { animation-delay: 0.1s; }
+    .entry-content > :nth-child(3) { animation-delay: 0.15s; }
+    .entry-content > :nth-child(4) { animation-delay: 0.2s; }
+    .entry-content > :nth-child(5) { animation-delay: 0.25s; }
+    .entry-content > :nth-child(6) { animation-delay: 0.3s; }
+    .entry-content > :nth-child(7) { animation-delay: 0.35s; }
+    .entry-content > :nth-child(8) { animation-delay: 0.4s; }
+    .entry-content > :nth-child(9) { animation-delay: 0.45s; }
+    .entry-content > :nth-child(10) { animation-delay: 0.5s; }
+    .entry-content > :nth-child(11) { animation-delay: 0.55s; }
+    .entry-content > :nth-child(12) { animation-delay: 0.6s; }
+
+    /* layout blog 2 cột */
+    .blog-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .blog-main {
+      flex: 3;
+      min-width: 0;
+    }
+
+    .blog-sidebar {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    /* post meta */
+    .post-meta {
+      margin-bottom: 1.2rem;
+    }
+
+    .category-badge {
+      background: #eef2ff;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0057a3;
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0.75rem 0 0.5rem;
+      line-height: 1.25;
+      color: #002856;
+    }
+
+    .meta-info {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: #5f7d9c;
+      border-bottom: 1px solid #e2edf5;
+      padding-bottom: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    /* card nội dung chính */
+    .content-card {
+      background: white;
+      border-radius: 32px;
+      padding: 2rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.02);
+      border: 1px solid #eef3fc;
+    }
+
+    .warning-box {
+      background: #fff6e5;
+      border-left: 5px solid #e67e22;
+      padding: 1.2rem 1.5rem;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+    }
+
+    .data-table {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      border: 1px solid #dce5ef;
+      padding: 12px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef3fa;
+      font-weight: 700;
+    }
+
+    .badge-critical {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 30px;
+      padding: 2px 12px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      display: inline-block;
+    }
+
+    .info-note {
+      background: #e9f4fe;
+      border-radius: 18px;
+      padding: 1rem;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+
+    .sidebar-widget {
+      background: white;
+      border-radius: 24px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #eef3fc;
+      transition: transform 0.2s;
+    }
+    .sidebar-widget:hover {
+      transform: translateY(-4px);
+    }
+    .sidebar-widget h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #1e6ec5;
+      padding-left: 0.75rem;
+    }
+
+    .footer {
+      background: #0a1929;
+      color: #bbd3ef;
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 780px) {
+      h1 { font-size: 1.7rem; }
+      .content-card { padding: 1.3rem; }
+      .nav-links a { margin-left: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <div class="nav-wrap">
+      <div class="logo">
+        <a href="#">Tony EXIM</a>
+        <span>Lương Hồng Quang | Chuyên gia Xuất nhập khẩu & Logistics</span>
+      </div>
+      <div class="nav-links">
+        <a href="#">Trang chủ</a>
+        <a href="#">Blog</a>
+        <a href="#">Dịch vụ</a>
+        <a href="#">Liên hệ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- container bao ngoài để có nền đồng bộ -->
+<div class="container">
+  <!-- bài viết với id="post-171" và entry-content is-layout-constrained giữ đúng yêu cầu format & animation -->
+  <article id="post-171">
+    <div class="entry-content is-layout-constrained">
+      <div class="blog-layout">
+        <div class="blog-main">
+          <div class="post-meta">
+            <span class="category-badge"><i class="fas fa-file-alt"></i> Thủ tục hải quan</span>
+            <h1>Những chỉ tiêu thông tin khai báo sai buộc phải hủy tờ khai</h1>
+            <div class="meta-info">
+              <span><i class="far fa-calendar-alt"></i> 03/06/2026</span>
+              <span><i class="fas fa-user-check"></i> Lương Hồng Quang (Tony EXIM)</span>
+              <span><i class="fas fa-clock"></i> 6 phút đọc</span>
+            </div>
+          </div>
+          <div class="content-card">
+            <p><strong>Tóm tắt:</strong> Theo quy định tại <strong>Mục 3 Phụ lục I Thông tư 39/2018/TT-BTC</strong> (sửa đổi bởi Thông tư 62/2019/TT-BTC), có một số chỉ tiêu thông tin trên tờ khai hải quan điện tử <span class="badge-critical">KHÔNG được phép khai bổ sung</span> mà bắt buộc phải hủy tờ khai và khai lại. Đây là những “lỗi chí tử” mà người làm nghiệp vụ xuất nhập khẩu cần ghi nhớ như lòng bàn tay.</p>
+
+            <div class="warning-box">
+              <i class="fas fa-exclamation-triangle" style="color:#e67e22; margin-right: 12px;"></i> 
+              <strong>Lưu ý quan trọng từ Tony EXIM:</strong> Các sai sót thuộc nhóm chỉ tiêu dưới đây <u>không thể sửa chữa bằng hình thức khai bổ sung</u> (điều chỉnh sau thông quan) mà doanh nghiệp bắt buộc phải hủy tờ khai hải quan (nếu chưa thông quan) hoặc hủy đăng ký tờ khai, sau đó khai báo lại từ đầu. Hành động này gây chậm trễ, phát sinh chi phí lưu kho bãi, thậm chí ảnh hưởng đến uy tín với đối tác nước ngoài.
+            </div>
+
+            <h2>📌 Danh mục chỉ tiêu thông tin “cấm khai bổ sung”</h2>
+            <p>Căn cứ điểm a khoản 3 Điều 40 Luật Hải quan và hướng dẫn tại Thông tư 39/2018/TT-BTC, các chỉ tiêu sau đây nếu khai sai sẽ không được chấp nhận khai bổ sung hồ sơ hải quan:</p>
+            <div class="data-table">
+              <table>
+                <thead>
+                  <tr><th>STT</th><th>Chỉ tiêu thông tin</th><th>Mô tả/ví dụ sai sót</th><th>Hậu quả bắt buộc</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td><strong>Loại hình xuất nhập khẩu</strong></td><td>Khai sai loại hình: Ví dụ khai “Nhập sản xuất xuất khẩu” nhưng thực tế là “Nhập tiêu dùng nội địa”</td><td>Hủy tờ khai, đăng ký lại</td></tr>
+                  <tr><td>2</td><td><strong>Mã số thuế của người khai / nhập khẩu / xuất khẩu</strong></td><td>Sai mã số thuế doanh nghiệp hoặc đối tác liên quan đến chủ hàng</td><td>Hủy tờ khai, đăng ký lại</td></tr>
+                  <tr><td>3</td><td><strong>Mã số doanh nghiệp trên hệ thống VNACCS/VCIS</strong></td><td>Sai thông tin đăng ký kinh doanh, không đồng nhất với cơ sở dữ liệu hải quan</td><td>Hủy tờ khai</td></tr>
+                  <tr><td>4</td><td><strong>Cảng xếp hàng / cảng đích / cửa khẩu xuất nhập</strong></td><td>Khai sai cảng dỡ hàng hoặc cửa khẩu nhập (khác với vận đơn thực tế)</td><td>Bắt buộc hủy tờ khai</td></tr>
+                  <tr><td>5</td><td><strong>Mã số định mức (đối với hàng gia công, sản xuất xuất khẩu)</strong></td><td>Khai sai định mức nguyên liệu, không phù hợp hợp đồng gia công</td><td>Hủy tờ khai, nộp lại hồ sơ mới</td></tr>
+                  <tr><td>6</td><td><strong>Số tờ khai chính (đối với hàng hóa XNK tại chỗ)</strong></td><td>Số tờ khai dẫn chiếu không tồn tại hoặc sai định danh</td><td>Hủy đăng ký tờ khai</td></tr>
+                  <tr><td>7</td><td><strong>Mã số hàng hóa (HS code) cấp 8 số và các chỉ tiêu liên quan đến chính sách mặt hàng có điều kiện</strong></td><td>Sai mã HS dẫn đến thiếu giấy phép, thuế sai nghiêm trọng, thuộc diện cấm hoặc hạn chế.</td><td>Hủy tờ khai, xử lý vi phạm</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="info-note"><i class="fas fa-info-circle"></i> (*) Mã HS code có thể được khai bổ sung trong trường hợp thay đổi thuế suất nhưng không làm thay đổi bản chất chính sách mặt hàng; tuy nhiên nếu sai mã HS dẫn đến thay đổi diện quản lý (cấm, hạn chế, kiểm tra chuyên ngành) thì bắt buộc hủy tờ khai.</p>
+
+            <h2>⚠️ Tại sao phải hủy tờ khai thay vì khai bổ sung?</h2>
+            <p>Khai bổ sung (điều chỉnh) chỉ áp dụng cho các chỉ tiêu như số lượng, trị giá, xuất xứ, thuế suất... miễn là không làm thay đổi bản chất của hàng hóa hoặc chính sách quản lý. Những chỉ tiêu nêu trên ảnh hưởng trực tiếp đến <strong>tính hợp pháp của luồng đăng ký</strong> và đối tượng chịu thuế, cơ quan hải quan yêu cầu hủy để đảm bảo tính chính xác tuyệt đối. Theo kinh nghiệm thực chiến của tôi tại VINA PRIDE SEAFOODS, lỗi loại hình và sai mã HS là hai nguyên nhân hàng đầu dẫn đến hủy tờ khai, gây gián đoạn xuất hàng.</p>
+
+            <div style="background:#f2f6fc; border-radius: 18px; padding: 1rem; margin: 1.2rem 0;">
+              <i class="fas fa-gavel"></i> <strong>Cơ sở pháp lý:</strong> Điểm a, Khoản 3, Điều 40 Luật Hải quan 2014; Mục 3 Phụ lục I Thông tư 39/2018/TT-BTC (sửa đổi bởi Thông tư 62/2019/TT-BCT). Các chỉ tiêu không được phép khai bổ sung phải thực hiện hủy đăng ký tờ khai và khai lại.
+            </div>
+
+            <h2>📝 Quy trình xử lý khi phát hiện sai sót thuộc diện bắt buộc hủy (Tony EXIM hướng dẫn)</h2>
+            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+              <li><strong>Bước 1:</strong> Ngay khi phát hiện (trước khi hàng được thông quan), người khai thực hiện hủy đăng ký tờ khai trên hệ thống VNACCS/VCIS.</li>
+              <li><strong>Bước 2:</strong> Nếu tờ khai đã ở luồng vàng/đỏ hoặc đã qua kiểm tra chi tiết, cần làm văn bản đề nghị hủy tờ khai gửi Chi cục Hải quan (kèm giải trình).</li>
+              <li><strong>Bước 3:</strong> Sau khi được chấp thuận hủy, doanh nghiệp lập tờ khai mới với thông tin chính xác, đồng thời theo dõi lại luồng thông quan.</li>
+              <li><strong>Bước 4:</strong> Nếu hàng đã được giải phóng nhưng phát hiện sai sót thuộc nhóm chỉ tiêu cấm bổ sung, doanh nghiệp có thể bị xử phạt vi phạm hành chính theo <strong>Nghị định 169/2026/NĐ-CP</strong> và buộc phải làm thủ tục hải quan khác (hủy kết quả thông quan).</li>
+            </ul>
+            <div class="warning-box" style="background:#fef2f0;">
+              <i class="fas fa-times-circle" style="color:#d9534f;"></i> <strong>Hệ quả thực tế:</strong> Việc hủy tờ khai gây chậm trễ thông quan trung bình 2-3 ngày, phát sinh chi phí lưu kho, lưu bãi từ 1-3 triệu đồng/lô hàng, thậm chí ảnh hưởng tiến độ giao hàng và phạt hợp đồng với đối tác. Vì vậy, người khai hải quan cần kiểm tra kỹ các chỉ tiêu “tối quan trọng” này trước khi nhấn nút “Đăng ký tờ khai”.
+            </div>
+
+            <h2>✅ Mẹo giảm thiểu rủi ro sai sót (kinh nghiệm từ Tony EXIM)</h2>
+            <ul style="margin-left: 1.5rem;">
+              <li>🔹 Sử dụng <strong>checklist các chỉ tiêu cốt lõi</strong>: loại hình, mã số thuế, mã HS, cảng nhập trước khi khai chính thức.</li>
+              <li>🔹 Đối chiếu bộ chứng từ thương mại (hợp đồng, vận đơn, hóa đơn) song song với khai trên VNACCS.</li>
+              <li>🔹 Tận dụng chức năng “Lưu nháp” để kiểm tra lại toàn bộ các trường bắt buộc, nhờ đồng nghiệp review chéo.</li>
+              <li>🔹 Tham khảo ý kiến cán bộ hải quan qua hotline chi cục nếu phân vân về loại hình, mã HS, đặc biệt với mặt hàng mới.</li>
+              <li>🔹 Tham gia các khóa đào tạo cập nhật thông tư, nghị định mới do tôi hoặc các đơn vị uy tín tổ chức.</li>
+            </ul>
+            <div class="info-note">
+              <i class="fas fa-chart-line"></i> <strong>Thống kê nhanh:</strong> Theo dữ liệu từ Cục Hải quan, khoảng 15% tờ khai bị từ chối/hủy đăng ký do sai các chỉ tiêu nêu trên, trong đó sai mã HS và loại hình chiếm tỷ lệ cao nhất (hơn 65%). Hãy là người khai thông minh, tránh mắc những lỗi phổ biến này.
+            </div>
+            <p><em>👉 Kết luận từ Tony EXIM: Nắm vững các chỉ tiêu “cấm khai bổ sung” sẽ giúp doanh nghiệp tiết kiệm thời gian, tránh bị xử phạt theo Nghị định 169/2026 và đảm bảo hàng hóa thông quan suôn sẻ. Tôi khuyên anh chị em nên in bảng danh mục này và dán tại bàn làm việc để kiểm tra nhanh trước mỗi lần nộp tờ khai.</em></p>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="blog-sidebar">
+          <div class="sidebar-widget">
+            <h3><i class="fas fa-user"></i> Tác giả</h3>
+            <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia xuất nhập khẩu, hải quan. Kinh nghiệm thực chiến tại VINA PRIDE SEAFOODS, BPL Logistics. Đồng hành cùng doanh nghiệp tối ưu thủ tục, giảm rủi ro pháp lý.</p>
+          </div>
+          <div class="sidebar-widget">
+            <h3><i class="fas fa-file-alt"></i> Bài viết liên quan</h3>
+            <ul style="list-style: none;">
+              <li style="margin-bottom: 12px;">📄 <a href="#" style="text-decoration: none; color: #1e6ec5;">Tổng hợp điểm mới Nghị định 169/2026/NĐ-CP</a></li>
+              <li style="margin-bottom: 12px;">⚖️ <a href="#" style="text-decoration: none; color: #1e6ec5;">So sánh Nghị định 128 và 169 về xử phạt hải quan</a></li>
+              <li style="margin-bottom: 12px;">📊 <a href="#" style="text-decoration: none; color: #1e6ec5;">Infographic: 7 chỉ tiêu dễ sai dẫn đến hủy tờ khai</a></li>
+            </ul>
+          </div>
+          <div class="sidebar-widget">
+            <h3><i class="fas fa-download"></i> Tài liệu tham khảo</h3>
+            <p>Download bảng tổng hợp chỉ tiêu không được khai bổ sung (PDF) và mẫu công văn đề nghị hủy tờ khai.</p>
+            <a href="#" style="display: inline-block; background: #0a4b7a; color: white; padding: 6px 18px; border-radius: 30px; text-decoration: none; margin-top: 10px;">Tải ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>© 2026 Tony EXIM – Lương Hồng Quang. Mọi phân tích dựa trên Thông tư 39/2018/TT-BTC và Nghị định 169/2026/NĐ-CP.</p>
+  </div>
+</footer>
+</body>
+</html>
