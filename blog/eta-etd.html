@@ -1,87 +1,581 @@
-```html
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>ETA vs ETD | Tony EXIM</title>
-
-  <link rel="stylesheet" href="../assets/css/style.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Điểm chính Nghị định 169/2026/NĐ-CP | Infographic Hải quan</title>
+  <!-- Font Awesome 6 (free) & Google Fonts Inter -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background: #121212;
+      font-family: 'Inter', sans-serif;
+      background: #f6f9fe;
+      color: #0a2540;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* container & layout */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* header / navigation bar */
+    .top-bar {
+      background: #ffffff;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03), 0 1px 0 #e9edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(0px);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      background: #0b2b4f;
       color: white;
-      font-family: Poppins, sans-serif;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 1.6rem;
+      background: linear-gradient(145deg, #003366, #0a4b8a);
+      box-shadow: 0 4px 8px rgba(0, 51, 102, 0.1);
     }
 
-    .blog-container {
-      max-width: 900px;
-      margin: auto;
-      padding: 40px 20px;
+    .logo-text {
+      font-weight: 800;
+      font-size: 1.45rem;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #003366, #1a6eb0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
     }
 
-    .blog-container img {
+    .logo-sub {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #4a627a;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #1f3a5f;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #0f6baf;
+    }
+
+    .badge-date {
+      background: #eef2ff;
+      border-radius: 40px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #0057a3;
+    }
+
+    /* hero section */
+    .hero {
+      background: linear-gradient(105deg, #ffffff 0%, #f0f5fe 100%);
+      padding: 2.8rem 0 3rem 0;
+      border-bottom: 1px solid #e2e9f2;
+    }
+
+    .hero-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-content {
+      flex: 2;
+      min-width: 260px;
+    }
+
+    .hero-badge {
+      background: #d4e2fc;
+      color: #004080;
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: #002856;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #2c4c6e;
+      max-width: 90%;
+      margin-bottom: 1.4rem;
+    }
+
+    .info-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: #5c6f87;
+      border-top: 1px solid #dce5ef;
+      padding-top: 1rem;
+    }
+
+    .hero-stats {
+      flex: 1;
+      background: white;
+      border-radius: 28px;
+      padding: 1.5rem 1.8rem;
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 84, 147, 0.1);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      background: #eef4ff;
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #0066b3;
+    }
+
+    .stat-text h4 {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .stat-text p {
+      font-size: 0.85rem;
+      color: #4f6f8f;
+    }
+
+    /* main content */
+    .main-content {
+      padding: 3.5rem 0 4rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      border-left: 6px solid #1e6ec5;
+      padding-left: 1rem;
+      color: #0a2f44;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0 3rem;
+    }
+
+    .insight-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.6rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eef2f8;
+    }
+
+    .insight-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 30px -12px rgba(0, 60, 110, 0.12);
+      border-color: #cbdde9;
+    }
+
+    .card-icon {
+      background: #e9f2fa;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      color: #006bb3;
+      margin-bottom: 1.2rem;
+    }
+
+    .insight-card h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #003057;
+    }
+
+    .insight-card p {
+      color: #2c4f6e;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .highlight {
+      background: #fef7e0;
+      border-left: 4px solid #f5b042;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #a45400;
+      margin-top: 0.5rem;
+    }
+
+    /* table / so sánh */
+    .comparison-section {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+      border: 1px solid #e2edf7;
+    }
+
+    .comp-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    table {
       width: 100%;
-      border-radius: 16px;
-      margin: 20px 0;
+      border-collapse: collapse;
+      font-size: 0.95rem;
     }
 
-    .back-btn {
-      color: orange;
+    th, td {
+      text-align: left;
+      padding: 1rem 0.75rem;
+      border-bottom: 1px solid #e2edf2;
+    }
+
+    th {
+      font-weight: 700;
+      background: #f8fafd;
+      color: #004b7c;
+    }
+
+    .badge-new {
+      background: #dcfce7;
+      color: #15803d;
+      border-radius: 30px;
+      padding: 2px 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    /* infobox */
+    .info-box {
+      background: #eef4fc;
+      border-radius: 24px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      font-size: 2rem;
+      color: #2c7bcb;
+    }
+
+    .info-content h4 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    /* footer */
+    .footer {
+      background: #0a1929;
+      color: #bcd0e8;
+      padding: 2.5rem 0;
+      margin-top: 2rem;
+      border-top: 1px solid #1e385c;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .footer-links a {
+      color: #bbd4ff;
       text-decoration: none;
     }
 
-    p {
-      line-height: 1.8;
+    .copyright {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      border-top: 1px solid #1e385c;
+      padding-top: 1.5rem;
+    }
+
+    @media (max-width: 760px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+      .hero p {
+        max-width: 100%;
+      }
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+      .comparison-section {
+        padding: 1rem;
+        overflow-x: auto;
+      }
+      .section-title {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
-
 <body>
-
-  <div class="blog-container">
-
-    <a class="back-btn" href="../index.html">
-      ← Back to Home
-    </a>
-
-    <h1>ETA vs ETD trong xuất nhập khẩu là gì?</h1>
-
-    <p><b>Published:</b> June 2026</p>
-
-    <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200"
-      alt="logistics">
-
-    <p>
-      Người mới làm xuất nhập khẩu thường nhầm giữa ETA và ETD.
-      Đây là hai thuật ngữ cực kỳ phổ biến trong logistics và shipping.
-    </p>
-
-    <h2>ETD là gì?</h2>
-
-    <p>
-      ETD (Estimated Time of Departure) là thời gian dự kiến tàu hoặc chuyến hàng khởi hành.
-    </p>
-
-    <h2>ETA là gì?</h2>
-
-    <p>
-      ETA (Estimated Time of Arrival) là thời gian dự kiến hàng cập cảng hoặc tới nơi.
-    </p>
-
-    <h2>Ví dụ thực tế</h2>
-
-    <p>
-      Nếu ETD là ngày 10/06 và transit time là 7 ngày,
-      thì ETA dự kiến sẽ là ngày 17/06.
-    </p>
-
+<div class="top-bar">
+  <div class="container">
+    <div class="navbar">
+      <div class="logo-area">
+        <div class="logo-icon"><i class="fas fa-file-alt"></i></div>
+        <div>
+          <div class="logo-text">THƯ VIỆN INFOGRAPHIC</div>
+          <div class="logo-sub">Hải quan & Xuất nhập khẩu</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#">Trang chủ</a>
+        <a href="#">Văn bản mới</a>
+        <a href="#">Infographic</a>
+        <span class="badge-date"><i class="far fa-calendar-alt"></i> 03/06/2026</span>
+      </div>
+    </div>
   </div>
+</div>
 
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-gavel"></i> NGHỊ ĐỊNH NỔI BẬT 2026</div>
+        <h1>Tổng hợp những điểm chính cần lưu ý <br> Nghị định 169/2026/NĐ-CP</h1>
+        <p>Quy định xử phạt vi phạm hành chính trong lĩnh vực hải quan – có hiệu lực từ ngày 01/07/2026. Những thay đổi trọng tâm, khung phạt mới và hành vi bổ sung.</p>
+        <div class="info-meta">
+          <span><i class="far fa-file-pdf"></i> Ban hành: 15/05/2026</span>
+          <span><i class="fas fa-clock"></i> Hiệu lực: 01/07/2026</span>
+          <span><i class="fas fa-chart-line"></i> Phạm vi: Thủ tục hải quan, xuất nhập khẩu</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-icon"><i class="fas fa-balance-scale"></i></div>
+          <div class="stat-text">
+            <h4>Mức phạt tăng 20-35%</h4>
+            <p>So với Nghị định cũ 128/2020</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon"><i class="fas fa-plus-circle"></i></div>
+          <div class="stat-text">
+            <h4>08 hành vi mới</h4>
+            <p>Liên quan đến thương mại điện tử xuyên biên giới</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
+          <div class="stat-text">
+            <h4>Thẩm quyền xử phạt mở rộng</h4>
+            <p>Cục trưởng Cục Hải quan tỉnh, Chi cục trưởng</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="main-content">
+  <div class="container">
+    <div class="section-title">
+      <i class="fas fa-lightbulb" style="margin-right: 12px; color: #f5a623;"></i> Những điểm cốt lõi cần lưu ý
+    </div>
+    <div class="card-grid">
+      <div class="insight-card">
+        <div class="card-icon"><i class="fas fa-chart-simple"></i></div>
+        <h3>Khung tiền phạt mới</h3>
+        <p>Nghị định 169 tăng mức phạt tối đa lên 200 triệu đồng (cá nhân) và 400 triệu đồng (tổ chức) đối với hành vi gian lận hải quan. Mức phạt trung bình tăng 25% so với quy định cũ.</p>
+        <div class="highlight"><i class="fas fa-info-circle"></i> Đặc biệt: Vi phạm về trị giá hải quan bị xử phạt đến 120 triệu.</div>
+      </div>
+      <div class="insight-card">
+        <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
+        <h3>Hành vi bổ sung TMĐT</h3>
+        <p>Bổ sung 8 hành vi vi phạm liên quan đến khai sai thông tin hàng hóa nhập khẩu qua thương mại điện tử, không cung cấp dữ liệu hải quan điện tử.</p>
+        <div class="highlight">📌 Phạt tiền từ 15-30 triệu với tổ chức kinh doanh sàn TMĐT vi phạm nghĩa vụ cung cấp thông tin.</div>
+      </div>
+      <div class="insight-card">
+        <div class="card-icon"><i class="fas fa-truck-fast"></i></div>
+        <h3>Vi phạm vận tải & quá cảnh</h3>
+        <p>Lái xe vận chuyển hàng hóa quá cảnh không có niêm phong hải quan hoặc làm hỏng niêm phong: phạt đến 40 triệu đồng. Tăng mạnh tính răn đe.</p>
+        <div class="highlight">⚠️ Tước quyền sử dụng chứng nhận nghiệp vụ từ 3-6 tháng nếu tái phạm.</div>
+      </div>
+    </div>
+
+    <!-- Bảng so sánh trọng yếu -->
+    <div class="comparison-section">
+      <div class="comp-title">
+        <i class="fas fa-table-list" style="color: #1e6ec5;"></i> 
+        <span>So sánh điểm khác biệt so với Nghị định 128/2020/NĐ-CP</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Lĩnh vực / hành vi</th><th>Nghị định 128 cũ</th><th>Nghị định 169/2026 mới</th><th>Mức tăng/điểm mới</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Khai sai tên hàng, mã số, số lượng</td><td>Phạt 5-10 triệu</td><td>Phạt 8-18 triệu</td><td><span class="badge-new">+60% trần</span></td></tr>
+          <tr><td>Không xuất trình chứng từ trong kiểm tra sau thông quan</td><td>4-8 triệu</td><td>6-15 triệu</td><td><span class="badge-new">Tăng gần gấp đôi</span></td></tr>
+          <tr><td>Vi phạm về cung cấp thông tin hàng hóa xuất nhập khẩu qua hệ thống VNACCS/VCIS</td><td>Chưa quy định rõ</td><td>Phạt 10-25 triệu với tổ chức</td><td><span class="badge-new">Hành vi mới</span></td></tr>
+          <tr><td>Che giấu, vận chuyển hàng cấm qua cửa khẩu</td><td>Phạt 50-80 triệu</td><td>Phạt 80-150 triệu + tịch thu tang vật</td><td><span class="badge-new">Nặng hơn rõ rệt</span></td></tr>
+          <tr><td>Vi phạm thời hạn nộp thuế (chậm trên 90 ngày)</td><td>Phạt 0,03%/ngày & phạt hành chính</td><td>Phạt bổ sung hành chính 5-12 triệu + lãi chậm nộp</td><td><span class="badge-new">Xử phạt kép</span></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 1.2rem; font-size: 0.85rem; background:#f3f9ff; padding: 12px; border-radius: 20px;">
+        <i class="fas fa-chart-line"></i> <strong>Xu hướng:</strong> Nghị định 169 tăng chế tài, nhấn mạnh trách nhiệm người khai hải quan, đặc biệt xử lý nghiêm hành vi lợi dụng công nghệ.
+      </div>
+    </div>
+
+    <!-- infographic block về thẩm quyền xử phạt -->
+    <div class="info-box">
+      <div class="info-icon"><i class="fas fa-landmark"></i></div>
+      <div class="info-content">
+        <h4>⛔ Thẩm quyền xử phạt mở rộng – doanh nghiệp cần lưu ý</h4>
+        <p>Theo Điều 43 Nghị định 169, Chi cục trưởng Chi cục Hải quan được quyền phạt tiền đến 50 triệu đồng (tăng từ 25 triệu). Cục trưởng Cục Hải quan tỉnh có thể phạt đến 200 triệu đồng và áp dụng biện pháp khắc phục hậu quả. Điều này tạo áp lực tuân thủ cao hơn cho các doanh nghiệp XNK.</p>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top: 1rem;">
+      <i class="fas fa-microphone-alt" style="margin-right: 12px;"></i> Khuyến nghị & hành động ngay
+    </div>
+    <div class="card-grid" style="margin-bottom: 1rem;">
+      <div class="insight-card">
+        <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h3>Rà soát quy trình khai báo</h3>
+        <p>Doanh nghiệp cần kiểm tra lại mã số HS, trị giá hải quan và thông tin tờ khai trước thời điểm Nghị định có hiệu lực (01/07/2026). Đặc biệt lưu tâm tới hàng hóa nhập khẩu TMĐT.</p>
+      </div>
+      <div class="insight-card">
+        <div class="card-icon"><i class="fas fa-chalkboard-user"></i></div>
+        <h3>Đào tạo nội bộ về chế tài mới</h3>
+        <p>Các bộ phận xuất nhập khẩu, khai hải quan cần cập nhật khung phạt hành vi liên quan đến chậm nộp hồ sơ, gian lận xuất xứ – mức phạt tăng mạnh đến 100 triệu đồng.</p>
+      </div>
+      <div class="insight-card">
+        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Ứng dụng số hóa & tuân thủ</h3>
+        <p>Đảm bảo dữ liệu điện tử gửi qua cổng thông tin một cửa quốc gia chính xác. Các lỗi kỹ thuật nhỏ cũng có thể bị xử phạt hành chính theo quy định mới.</p>
+      </div>
+    </div>
+
+    <div style="background: linear-gradient(115deg, #EFF6FF, #FFFFFF); border-radius: 32px; padding: 1.5rem 2rem; margin: 2rem 0;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+        <div>
+          <h3 style="font-weight: 700; font-size: 1.3rem;"><i class="fas fa-download"></i> Tải toàn văn Nghị định 169/2026/NĐ-CP</h3>
+          <p style="margin-top: 0.5rem;">Bản PDF chính thức và phụ lục danh mục hành vi vi phạm – cập nhật từ cổng thông tin chính phủ.</p>
+        </div>
+        <a href="#" style="background: #0a4b7a; color: white; padding: 10px 24px; border-radius: 40px; text-decoration: none; font-weight: 600;">Tải tài liệu <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <h4 style="color: white; font-weight: 600;">Thư viện Infographic Hải quan</h4>
+        <p style="font-size: 0.85rem; margin-top: 8px;">Cập nhật văn bản pháp luật & infographic chuyên sâu</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Về chúng tôi</a>
+        <a href="#">Chính sách</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Bản quyền</a>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 Thư viện Hải quan Xuất nhập khẩu & Logistics. Toàn bộ phân tích dựa trên Nghị định 169/2026/NĐ-CP có hiệu lực từ tháng 7/2026.
+    </div>
+  </div>
+</footer>
 </body>
-
 </html>
-```
