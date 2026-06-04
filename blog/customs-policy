@@ -1,0 +1,134 @@
+```html id="u4v41v"
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Chính sách quản lý hàng hóa xuất nhập khẩu | Tony EXIM</title>
+
+  <meta name="description"
+    content="Chia sẻ kiến thức thực tế về xuất nhập khẩu, logistics và customs.">
+
+  <link rel="stylesheet" href="../assets/css/blog.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+</head>
+
+<body>
+
+  <header class="blog-header">
+
+    <div class="blog-header-container">
+
+      <a href="../index.html" class="logo">
+        Tony EXIM
+      </a>
+
+      <div class="nav">
+        <a href="../index.html">Home</a>
+        <a href="../index.html">Portfolio</a>
+        <a href="../index.html">Contact</a>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="blog-layout">
+
+    <article class="blog-content">
+
+      <a href="../index.html" class="back-home">
+        ← Back to Home
+      </a>
+
+      <h1>
+        Chuyên đề chính sách quản lý hàng hóa xuất nhập khẩu
+      </h1>
+
+      <div class="blog-meta">
+        Published on June 2026 · 8 min read
+      </div>
+
+      <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200">
+
+      <p>
+        Trong hoạt động xuất nhập khẩu, chính sách quản lý hàng hóa là một trong những yếu tố quan trọng ảnh hưởng trực tiếp tới quá trình thông quan.
+      </p>
+
+      <h2>1. Chính sách quản lý hàng hóa là gì?</h2>
+
+      <p>
+        Đây là hệ thống quy định liên quan tới kiểm tra chuyên ngành, giấy phép, điều kiện nhập khẩu và các quy định quản lý khác.
+      </p>
+
+      <h2>2. Vì sao cần kiểm tra chính sách?</h2>
+
+      <p>
+        Nếu không kiểm tra trước, doanh nghiệp có thể gặp:
+      </p>
+
+      <ul>
+        <li>Thiếu giấy phép nhập khẩu</li>
+        <li>Bị giữ hàng</li>
+        <li>Phát sinh storage, DEM/DET</li>
+        <li>Luồng đỏ hoặc kiểm hóa</li>
+      </ul>
+
+      <h2>3. Kinh nghiệm thực tế</h2>
+
+      <p>
+        Trước khi mở tờ khai, nên kiểm tra:
+      </p>
+
+      <ul>
+        <li>HS code</li>
+        <li>Biểu thuế</li>
+        <li>Danh mục quản lý chuyên ngành</li>
+        <li>Kiểm tra C/O nếu có</li>
+      </ul>
+
+    </article>
+
+    <aside class="sidebar">
+
+      <div class="sidebar-box">
+
+        <h3>About Author</h3>
+
+        <p>
+          Tony EXIM chia sẻ kiến thức thực tế về logistics, customs và supply chain.
+        </p>
+
+      </div>
+
+      <div class="sidebar-box">
+
+        <h3>Related Posts</h3>
+
+        <a class="related-post"
+          href="./eta-etd.html">
+          ETA vs ETD là gì?
+        </a>
+
+        <a class="related-post"
+          href="./incoterms.html">
+          Incoterms cho người mới
+        </a>
+
+      </div>
+
+    </aside>
+
+  </main>
+
+</body>
+
+</html>
+```
