@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | ETO – Thiết kế theo đơn hàng & Quản lý nhân sự</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fbfe;
+      color: #0a2540;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* header navigation - Tony EXIM style */
+    .site-header {
+      background: white;
+      box-shadow: 0 1px 0 #eef2f8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo a {
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .logo span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #5c7c9c;
+      display: block;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      margin-left: 2rem;
+      font-weight: 500;
+      color: #1e3a5f;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #0f6baf;
+    }
+
+    /* entry-content layout */
+    #post-171 {
+      margin: 2rem 0 3rem;
+    }
+
+    .entry-content {
+      width: 100%;
+    }
+
+    .is-layout-constrained {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    /* Animation fade-up */
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .entry-content > * {
+      animation: fadeUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+      opacity: 0;
+    }
+
+    .entry-content > :nth-child(1) { animation-delay: 0.05s; }
+    .entry-content > :nth-child(2) { animation-delay: 0.1s; }
+    .entry-content > :nth-child(3) { animation-delay: 0.15s; }
+    .entry-content > :nth-child(4) { animation-delay: 0.2s; }
+    .entry-content > :nth-child(5) { animation-delay: 0.25s; }
+    .entry-content > :nth-child(6) { animation-delay: 0.3s; }
+    .entry-content > :nth-child(7) { animation-delay: 0.35s; }
+    .entry-content > :nth-child(8) { animation-delay: 0.4s; }
+    .entry-content > :nth-child(9) { animation-delay: 0.45s; }
+    .entry-content > :nth-child(10) { animation-delay: 0.5s; }
+
+    /* layout 2 cột */
+    .blog-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .blog-main {
+      flex: 3;
+      min-width: 0;
+    }
+
+    .blog-sidebar {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .post-meta {
+      margin-bottom: 1.2rem;
+    }
+
+    .category-badge {
+      background: #eef2ff;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0057a3;
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0.75rem 0 0.5rem;
+      line-height: 1.25;
+      color: #002856;
+    }
+
+    .meta-info {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: #5f7d9c;
+      border-bottom: 1px solid #e2edf5;
+      padding-bottom: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .content-card {
+      background: white;
+      border-radius: 32px;
+      padding: 2rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.02);
+      border: 1px solid #eef3fc;
+    }
+
+    .highlight-box {
+      background: #f0f7fe;
+      border-left: 5px solid #1e6ec5;
+      padding: 1.2rem 1.5rem;
+      border-radius: 20px;
+      margin: 1.6rem 0;
+    }
+
+    .info-note {
+      background: #e9f4fe;
+      border-radius: 18px;
+      padding: 1rem;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+
+    .problem-list {
+      background: #fff6e5;
+      border-left: 5px solid #e67e22;
+      padding: 1rem 1.5rem;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+    }
+    .solution-list {
+      background: #e6f4ea;
+      border-left: 5px solid #2e7d32;
+      padding: 1rem 1.5rem;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+    }
+
+    .sidebar-widget {
+      background: white;
+      border-radius: 24px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #eef3fc;
+      transition: transform 0.2s;
+    }
+    .sidebar-widget:hover {
+      transform: translateY(-4px);
+    }
+    .sidebar-widget h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #1e6ec5;
+      padding-left: 0.75rem;
+    }
+
+    .footer {
+      background: #0a1929;
+      color: #bbd3ef;
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 780px) {
+      h1 { font-size: 1.7rem; }
+      .content-card { padding: 1.3rem; }
+      .nav-links a { margin-left: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <div class="nav-wrap">
+      <div class="logo">
+        <a href="#">Tony EXIM</a>
+        <span>Lương Hồng Quang | Chuyên gia Xuất nhập khẩu & Logistics</span>
+      </div>
+      <div class="nav-links">
+        <a href="#">Trang chủ</a>
+        <a href="#">Blog</a>
+        <a href="#">Dịch vụ</a>
+        <a href="#">Liên hệ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <article id="post-171">
+    <div class="entry-content is-layout-constrained">
+      <div class="blog-layout">
+        <div class="blog-main">
+          <div class="post-meta">
+            <span class="category-badge"><i class="fas fa-industry"></i> Quản lý sản xuất</span>
+            <h1>SO SÁNH CÁCH QUẢN LÝ NHÂN SỰ THEO PHƯƠNG PHÁP SẢN XUẤT MTS, MTO, ATO, ETO<br><span style="font-size: 1.3rem;">Kỳ 4: ETO – ENGINEER TO ORDER (THIẾT KẾ THEO ĐƠN HÀNG)</span></h1>
+            <div class="meta-info">
+              <span><i class="far fa-calendar-alt"></i> 05/06/2026</span>
+              <span><i class="fas fa-user-check"></i> Lương Hồng Quang (Tony EXIM)</span>
+              <span><i class="fas fa-clock"></i> 8 phút đọc</span>
+            </div>
+          </div>
+          <div class="content-card">
+            <p>Tôi thường được nghe các doanh nghiệp sản xuất nói rằng <strong>"Khách hàng của họ không giống ai cả."</strong> Mỗi khách một yêu cầu khác nhau. Mỗi đơn hàng lại phải chỉnh sửa, tính toán thiết kế lại một phần hoặc tất cả.</p>
+
+            <p>Với các yêu cầu mới và khác nhau như vậy từ khách hàng, nhân viên mới thì chưa thể làm được. Còn người cũ thành thạo thì có thể bị quá tải. Và gần như mọi việc quan trọng đều phải chờ một vài cá nhân chủ chốt quyết định.</p>
+
+            <div class="highlight-box">
+              <i class="fas fa-drafting-compass"></i> <strong>ETO – Engineer To Order (Thiết kế theo đơn hàng)</strong><br>
+              Đó cũng là tình huống khá điển hình của mô hình ETO. Khách hàng đặt hàng trước, doanh nghiệp phải thiết kế hoặc điều chỉnh giải pháp kỹ thuật rồi mới bắt đầu sản xuất.
+            </div>
+
+            <h2>📌 Ví dụ dễ hình dung nhất</h2>
+            <p>Một khách hàng cần <strong>hệ thống băng tải cho nhà máy</strong>. Doanh nghiệp không thể lấy một mẫu có sẵn trong kho ra giao. Mà phải khảo sát mặt bằng, tính toán công suất, thiết kế giải pháp phù hợp rồi mới sản xuất và lắp đặt.</p>
+            <p>Hay như ngành <strong>cơ khí chế tạo, nội thất theo yêu cầu, máy móc tự động hóa, kết cấu thép, khuôn mẫu…</strong> Mỗi dự án đều có những điểm khác biệt nhất định.</p>
+
+            <div class="info-note">
+              <i class="fas fa-chart-line"></i> <strong>Điều thú vị:</strong> Doanh nghiệp ETO thường sở hữu rất nhiều người giỏi. Nhưng càng phát triển lại càng dễ gặp áp lực. Không phải vì thiếu đơn hàng mà vì mọi thứ đang phụ thuộc quá nhiều vào kinh nghiệm của một vài cá nhân.
+            </div>
+
+            <h2>⚠️ Các vấn đề phổ biến thường gặp ở doanh nghiệp ETO</h2>
+            
+            <div class="problem-list">
+              <h3 style="color:#e67e22; margin-bottom: 0.8rem;"><i class="fas fa-exclamation-triangle"></i> 1. Người giỏi trở thành điểm nghẽn</h3>
+              <p>Lúc đầu doanh nghiệp rất tự hào vì có những nhân sự nhiều kinh nghiệm. Khách khó cũng xử lý được, dự án khó cũng làm được. Nhưng theo thời gian, mọi việc đều đổ về những người này vì bản vẽ phải chờ họ duyệt, giải pháp phải chờ họ quyết định, vấn đề phát sinh phải chờ họ xử lý. Đến một lúc nào đó, doanh nghiệp không còn thiếu khách mà lại <strong>thiếu thời gian của người giỏi</strong>.</p>
+            </div>
+
+            <div class="problem-list">
+              <h3 style="color:#e67e22; margin-bottom: 0.8rem;"><i class="fas fa-users"></i> 2. Quản lý cấp trung vẫn đang làm chuyên môn thay vì quản lý</h3>
+              <p>Đây là tình trạng tôi thấy khá thường xuyên. Nhiều trưởng nhóm hoặc quản lý xuất thân từ kỹ thuật. Họ rất giỏi nghề. Nhưng vì quá giỏi nên việc gì cũng tự làm. Nhân viên gặp vấn đề là hỏi. Khách có thay đổi là họ xử lý. Dự án có phát sinh là họ nhảy vào. Kết quả là dự án vẫn chạy nhưng <strong>đội ngũ không lớn lên được</strong>.</p>
+            </div>
+
+            <div class="problem-list">
+              <h3 style="color:#e67e22; margin-bottom: 0.8rem;"><i class="fas fa-brain"></i> 3. Kinh nghiệm nằm trong đầu người nhiều hơn trong hệ thống</h3>
+              <p>Đây là rủi ro lớn nhất của ETO. Rất nhiều doanh nghiệp có những nhân sự làm 5 năm, 10 năm hoặc lâu hơn. Họ biết rất nhiều thứ. Nhưng khi cần đào tạo người mới hoặc mở rộng đội ngũ thì lại rất khó. Vì phần lớn kiến thức chưa được hệ thống hóa. Người biết thì làm được. Người chưa biết thì phải hỏi.</p>
+            </div>
+
+            <h2>✅ Giải pháp quản lý nhân sự cho ETO</h2>
+            <p>Với ETO, tôi thường ưu tiên quản lý nhân sự theo hướng sau:</p>
+
+            <div class="solution-list">
+              <h3 style="color:#2e7d32; margin-bottom: 0.8rem;"><i class="fas fa-check-circle"></i> Thứ nhất: Biến kinh nghiệm thành quy trình</h3>
+              <p>Không phải để thay thế người giỏi mà để người giỏi không phải lặp lại cùng một việc quá nhiều lần. Những gì làm đi làm lại nên được:</p>
+              <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>Chuẩn hóa thành checklist</li>
+                <li>Xây dựng thành quy trình</li>
+                <li>Lưu thành tài liệu hướng dẫn</li>
+              </ul>
+              <p>Khi đó đội ngũ mới có cơ hội học nhanh hơn và doanh nghiệp cũng bớt phụ thuộc vào cá nhân.</p>
+            </div>
+
+            <div class="solution-list">
+              <h3 style="color:#2e7d32; margin-bottom: 0.8rem;"><i class="fas fa-user-graduate"></i> Thứ hai: Tách người giỏi khỏi các công việc đơn giản</h3>
+              <p>Một kỹ sư giỏi nên dành thời gian cho những việc thực sự cần chuyên môn cao. Nếu ngày nào cũng phải trả lời những câu hỏi lặp lại hoặc xử lý những việc có thể đào tạo được thì doanh nghiệp đang lãng phí nguồn lực.</p>
+              <p>Ngắn hạn có thể dùng trợ lý, còn về lâu dài nếu có thể dùng hệ thống hoặc AI, robot hỗ trợ thì là tốt nhất. <strong>Bí quyết ở đây của tôi chính là cách làm sao để người cũ sẵn lòng chia sẻ kinh nghiệm với người mới.</strong></p>
+            </div>
+
+            <div class="solution-list">
+              <h3 style="color:#2e7d32; margin-bottom: 0.8rem;"><i class="fas fa-tree"></i> Thứ ba: Xây dựng đội ngũ kế thừa</h3>
+              <p>Ở ETO, việc đào tạo người thay thế quan trọng không kém việc tìm người giỏi. Tôi thường khuyến khích các doanh nghiệp:</p>
+              <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>Cho người mới tham gia dự án sớm</li>
+                <li>Tạo cơ chế hướng dẫn và kèm cặp</li>
+                <li>Ghi nhận cả năng lực chia sẻ kiến thức</li>
+              </ul>
+              <p>Bởi vì nếu chỉ một người biết làm thì đó chưa phải năng lực của doanh nghiệp. Đó mới chỉ là năng lực của cá nhân.</p>
+            </div>
+
+            <div class="solution-list">
+              <h3 style="color:#2e7d32; margin-bottom: 0.8rem;"><i class="fas fa-database"></i> Thứ tư: Dùng công nghệ để lưu giữ tri thức</h3>
+              <p>Rất nhiều doanh nghiệp đầu tư công nghệ để quản lý tiến độ. Nhưng với ETO, thứ đáng lưu lại hơn cả là <strong>kinh nghiệm</strong>, như là các bản vẽ cũ, các phương án xử lý, các lỗi từng gặp, các bài học từ dự án trước. Những thứ này sẽ giúp doanh nghiệp tiết kiệm rất nhiều thời gian cho các dự án sau.</p>
+            </div>
+
+            <h2>🎯 Tổng kết chuỗi bài MTS, MTO, ATO, ETO</h2>
+            <div class="highlight-box">
+              <p><strong>Nếu:</strong></p>
+              <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li><strong>MTS (Make to Stock)</strong> cần sự <strong>ổn định</strong>.</li>
+                <li><strong>MTO (Make to Order)</strong> cần khả năng <strong>phản ứng</strong>.</li>
+                <li><strong>ATO (Assemble to Order)</strong> cần sự <strong>phối hợp</strong>.</li>
+                <li><strong>ETO (Engineer to Order)</strong> cần: <strong>Khả năng biến kiến thức của cá nhân thành năng lực của cả hệ thống</strong>.</li>
+              </ul>
+            </div>
+
+            <p>Do các doanh nghiệp ETO khá đặc thù, cho nên các giải pháp tôi thường đi vào từng doanh nghiệp để có giải pháp khả thi nhất.</p>
+
+            <div class="info-note">
+              <i class="fas fa-gem"></i> <strong>Lời kết:</strong> Khép lại 4 kỳ chia sẻ về MTS, MTO, ATO và ETO, tôi hy vọng các anh chị có thể nhìn thấy một điều là <strong>không có mô hình sản xuất nào tốt hơn mô hình nào</strong>. Chỉ có mô hình nào phù hợp hơn với sản phẩm, khách hàng và cách doanh nghiệp đang vận hành.
+            </div>
+
+            <p>Và cũng vì vậy, cách quản lý nhân sự, quản lý cấp trung hay xây dựng KPI cũng không thể áp dụng giống nhau cho tất cả. Hiểu đúng mô hình sản xuất của mình thường là bước đầu tiên để xây dựng được một hệ thống quản lý phù hợp và phát triển bền vững hơn.</p>
+
+            <div class="highlight-box" style="background:#eef2fa;">
+              <i class="fas fa-envelope"></i> <strong>Nếu các anh chị cần hỏi thêm:</strong> Tôi sẵn sàng hỗ trợ vì với thực tiễn chúng ta không chỉ chọn đúng mô hình sản xuất mà còn có rất nhiều quyết định khác để tối ưu và phát triển liên tục, đảm bảo kết quả, năng suất và sự hài lòng của khách hàng có thể đạt hoặc thậm chí vượt kỳ vọng.
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="blog-sidebar">
+          <div class="sidebar-widget">
+            <h3><i class="fas fa-user"></i> Tác giả</h3>
+            <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia xuất nhập khẩu, logistics & quản lý sản xuất. Kinh nghiệm thực chiến tại VINA PRIDE SEAFOODS, BPL Logistics, Dunlopillo Vietnam.</p>
+          </div>
+          <div class="sidebar-widget">
+            <h3><i class="fas fa-chart-line"></i> Chuỗi bài MTS - MTO - ATO - ETO</h3>
+            <ul style="list-style: none;">
+              <li style="margin-bottom: 10px;">📄 <a href="#" style="text-decoration: none; color: #1e6ec5;">Kỳ 1: MTS – Make to Stock (Sản xuất để tồn kho)</a></li>
+              <li style="margin-bottom: 10px;">⚙️ <a href="#" style="text-decoration: none; color: #1e6ec5;">Kỳ 2: MTO – Make to Order (Sản xuất theo đơn hàng)</a></li>
+              <li style="margin-bottom: 10px;">🔧 <a href="#" style="text-decoration: none; color: #1e6ec5;">Kỳ 3: ATO – Assemble to Order (Lắp ráp theo đơn hàng)</a></li>
+              <li style="margin-bottom: 10px;">🎯 <a href="#" style="text-decoration: none; color: #1e6ec5;">Kỳ 4: ETO – Engineer to Order (Thiết kế theo đơn hàng)</a></li>
+            </ul>
+          </div>
+          <div class="sidebar-widget">
+            <h3><i class="fas fa-download"></i> Tài liệu tham khảo</h3>
+            <p>Download bảng so sánh 4 mô hình sản xuất và checklist đánh giá mô hình phù hợp.</p>
+            <a href="#" style="display: inline-block; background: #0a4b7a; color: white; padding: 6px 18px; border-radius: 30px; text-decoration: none; margin-top: 10px;">Tải ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>© 2026 Tony EXIM – Lương Hồng Quang. Chia sẻ kiến thức quản lý sản xuất, xuất nhập khẩu và logistics.</p>
+  </div>
+</footer>
+</body>
+</html>
