@@ -27,7 +27,7 @@
       padding: 0 28px;
     }
 
-    /* header navigation - Tony EXIM style */
+    /* header navigation */
     .site-header {
       background: white;
       box-shadow: 0 1px 0 #eef2f8;
@@ -75,7 +75,7 @@
       color: #0f6baf;
     }
 
-    /* entry-content layout giữ format animation */
+    /* bài viết */
     #post-171 {
       margin: 2rem 0 3rem;
     }
@@ -92,20 +92,14 @@
       padding-right: 20px;
     }
 
-    /* Animation fade-up */
+    /* animation */
     @keyframes fadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .entry-content > * {
-      animation: fadeUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+      animation: fadeUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
       opacity: 0;
     }
 
@@ -113,16 +107,6 @@
     .entry-content > :nth-child(2) { animation-delay: 0.1s; }
     .entry-content > :nth-child(3) { animation-delay: 0.15s; }
     .entry-content > :nth-child(4) { animation-delay: 0.2s; }
-    .entry-content > :nth-child(5) { animation-delay: 0.25s; }
-    .entry-content > :nth-child(6) { animation-delay: 0.3s; }
-    .entry-content > :nth-child(7) { animation-delay: 0.35s; }
-    .entry-content > :nth-child(8) { animation-delay: 0.4s; }
-    .entry-content > :nth-child(9) { animation-delay: 0.45s; }
-    .entry-content > :nth-child(10) { animation-delay: 0.5s; }
-    .entry-content > :nth-child(11) { animation-delay: 0.55s; }
-    .entry-content > :nth-child(12) { animation-delay: 0.6s; }
-    .entry-content > :nth-child(13) { animation-delay: 0.65s; }
-    .entry-content > :nth-child(14) { animation-delay: 0.7s; }
 
     /* layout 2 cột */
     .blog-layout {
@@ -182,86 +166,186 @@
       border: 1px solid #eef3fc;
     }
 
-    /* Phong cách giống ảnh chụp */
+    /* header chính */
     .doc-header {
       background: #0a2f44;
       color: white;
-      border-radius: 24px;
+      border-radius: 28px;
       padding: 1.5rem 2rem;
-      margin: 1rem 0 2rem 0;
+      margin: 0 0 2rem 0;
       text-align: center;
     }
     .doc-header h2 {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       margin-bottom: 0.5rem;
     }
     .doc-header .sub {
-      font-size: 1rem;
+      font-size: 1.1rem;
       opacity: 0.9;
     }
-
-    .section-block {
-      margin: 2rem 0;
-      border-left: 4px solid #1e6ec5;
-      padding-left: 1.2rem;
+    .doc-header .critical {
+      font-weight: 800;
+      margin-top: 8px;
+      font-size: 1rem;
     }
+
     .section-title {
       font-size: 1.6rem;
       font-weight: 700;
       color: #00356b;
-      margin-bottom: 1rem;
+      margin: 1.5rem 0 1rem;
+      border-left: 5px solid #1e6ec5;
+      padding-left: 1rem;
     }
 
-    .rule-list {
-      list-style: none;
-      margin: 1.2rem 0;
-    }
-    .rule-list li {
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid #eef2f8;
-    }
-    .rule-number {
-      display: inline-block;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: #1e6ec5;
-      width: 36px;
-    }
-    .rule-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-    .rule-desc {
-      color: #4a627a;
-      margin-top: 4px;
-      margin-left: 36px;
-    }
-
-    .warning-box {
-      background: #fff6e5;
-      border-left: 5px solid #e67e22;
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
+    /* ========= PHẦN 1: CÁC KHỐI CARD HOVER NẢY + CLICK POPUP ========= */
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
       margin: 1.5rem 0;
     }
-
-    .badge-critical {
-      background: #fee2e2;
-      color: #b91c1c;
-      border-radius: 30px;
-      padding: 2px 12px;
-      font-weight: 600;
+    .criteria-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 1.4rem;
+      border: 1px solid #e2edf5;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .criteria-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
+      border-color: #1e6ec5;
+      background: #fefefe;
+    }
+    .card-number {
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #1e6ec5;
+      margin-bottom: 0.5rem;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-desc {
+      color: #4a627a;
+      font-size: 0.85rem;
+    }
+    .card-hint {
+      margin-top: 0.8rem;
       font-size: 0.7rem;
+      color: #8aa0bc;
       display: inline-block;
     }
 
-    .info-note {
-      background: #e9f4fe;
-      border-radius: 18px;
+    /* ========= PHẦN 2: NHÓM + HOVER ĐỔI MÀU ========= */
+    .group-container {
+      margin: 2rem 0 1.5rem;
+    }
+    .group-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 1.2rem 0 0.8rem;
+      color: #003e6e;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid #e2edf5;
+      padding-bottom: 0.5rem;
+    }
+    .bp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .bp-item {
+      display: flex;
+      align-items: baseline;
+      padding: 0.8rem 1rem;
+      background: #fafcff;
+      border-radius: 16px;
+      border: 1px solid #eef2f8;
+      transition: all 0.2s;
+    }
+    .bp-item:hover {
+      background: #eef4fc;
+      border-color: #1e6ec5;
+      transform: translateX(4px);
+    }
+    .bp-num {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1e6ec5;
+      width: 42px;
+      flex-shrink: 0;
+    }
+    .bp-content {
+      flex: 1;
+    }
+    .bp-title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .bp-desc {
+      font-size: 0.85rem;
+      color: #4a627a;
+      margin-top: 2px;
+    }
+
+    .arrow-down {
+      text-align: center;
+      margin: 1rem 0;
+      font-weight: 700;
+      color: #1e6ec5;
+      font-size: 1rem;
+    }
+
+    /* popup modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      max-width: 480px;
+      width: 90%;
+      border-radius: 32px;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+      border-top: 6px solid #1e6ec5;
+    }
+    .modal-close {
+      position: absolute;
+      right: 1rem;
+      top: 0.8rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #8aa0bc;
+    }
+    .modal-close:hover { color: #b91c1c; }
+    .modal h4 { font-size: 1.3rem; margin-bottom: 0.8rem; color: #00356b; }
+    .modal p { line-height: 1.5; color: #2c4e6e; }
+
+    .warning-note {
+      background: #fee2e2;
+      border-left: 5px solid #b91c1c;
       padding: 1rem;
-      margin: 1.2rem 0;
-      font-size: 0.9rem;
+      border-radius: 16px;
+      margin: 1.5rem 0;
     }
 
     .sidebar-widget {
@@ -272,9 +356,7 @@
       border: 1px solid #eef3fc;
       transition: transform 0.2s;
     }
-    .sidebar-widget:hover {
-      transform: translateY(-4px);
-    }
+    .sidebar-widget:hover { transform: translateY(-4px); }
     .sidebar-widget h3 {
       font-size: 1.2rem;
       margin-bottom: 1rem;
@@ -295,6 +377,7 @@
       .content-card { padding: 1.3rem; }
       .nav-links a { margin-left: 1rem; }
       .section-title { font-size: 1.3rem; }
+      .criteria-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -303,14 +386,14 @@
   <div class="container">
     <div class="nav-wrap">
       <div class="logo">
-        <a href="https://luonghongquang.github.io/Tony-EXIM">Tony EXIM</a>
+        <a href="#">Tony EXIM</a>
         <span>Lương Hồng Quang | Chuyên gia Xuất nhập khẩu & Logistics</span>
       </div>
       <div class="nav-links">
-        <a href="https://luonghongquang.github.io/Tony-EXIM/">Trang chủ</a>
-        <a href="https://luonghongquang.github.io/Tony-EXIM/">Blog</a>
+        <a href="#">Trang chủ</a>
+        <a href="#">Blog</a>
         <a href="#">Dịch vụ</a>
-        <a href="https://luonghongquang.github.io/Tony-EXIM/">Liên hệ</a>
+        <a href="#">Liên hệ</a>
       </div>
     </div>
   </div>
@@ -325,110 +408,43 @@
             <span class="category-badge"><i class="fas fa-file-contract"></i> Thông tư 39/2018/TT-BTC - Mục 3 Phụ lục I</span>
             <h1>CHỈ TIÊU TUYỆT ĐỐI KHÔNG ĐƯỢC KHAI BỔ SUNG<br><span style="font-size: 1.2rem;">Sai sót = Bắt buộc HỦY tờ khai hải quan</span></h1>
             <div class="meta-info">
-              <span><i class="far fa-calendar-alt"></i> 03/06/2026</span>
+              <span><i class="far fa-calendar-alt"></i> 05/06/2026</span>
               <span><i class="fas fa-user-check"></i> Lương Hồng Quang (Tony EXIM)</span>
-              <span><i class="fas fa-clock"></i> 8 phút đọc</span>
+              <span><i class="fas fa-clock"></i> 6 phút đọc</span>
             </div>
           </div>
           <div class="content-card">
-            <p>Theo quy định tại <strong>Mục 3 Phụ lục I - Thông tư 39/2018/TT-BTC</strong> (sửa đổi bởi Thông tư 62/2019/TT-BTC), có một nhóm chỉ tiêu thông tin trên tờ khai hải quan điện tử <span class="badge-critical">TUYỆT ĐỐI KHÔNG ĐƯỢC KHAI BỔ SUNG</span>. Sai sót những chỉ tiêu này đồng nghĩa với việc <strong>BẮT BUỘC HỦY TỜ KHAI</strong> và đăng ký lại từ đầu. Dưới đây là danh mục đầy đủ mà anh chị em làm nghiệp vụ xuất nhập khẩu phải "thuộc lòng".</p>
-
             <div class="doc-header">
               <h2>THÔNG TƯ 39/2018/TT-BTC - MỤC 3 PHỤ LỤC I</h2>
               <div class="sub">CHỈ TIÊU TUYỆT ĐỐI KHÔNG ĐƯỢC KHAI BỔ SUNG</div>
-              <div class="sub" style="font-weight: 700; margin-top: 6px;">Sai sót = Bắt buộc HỦY tờ khai hải quan</div>
+              <div class="critical">Sai sót = Bắt buộc HỦY tờ khai hải quan</div>
             </div>
 
-            <!-- PHẦN 1: ÁP DỤNG CHUNG (6 chỉ tiêu) -->
-            <div class="section-block">
-              <div class="section-title">📌 PHẦN 1: ÁP DỤNG CHUNG TỜ KHAI XUẤT & NHẬP</div>
-              <p style="margin-bottom: 1rem;">Cả tờ khai <strong>Nhập khẩu</strong> và <strong>Xuất khẩu</strong> đều chia sẻ 6 nhóm chỉ tiêu cốt lõi không được phép thay đổi sau khi đã đăng ký.</p>
-              <ul class="rule-list">
-                <li><span class="rule-number">1.</span> <span class="rule-title">Mã loại hình</span><div class="rule-desc">Loại hình XNK đã chốt không thể chuyển đổi bằng cách khai bổ sung.</div></li>
-                <li><span class="rule-number">2.</span> <span class="rule-title">Phân loại hàng hóa</span><div class="rule-desc">Mã phân loại hàng hóa định hình tính chất lô hàng ngay từ đầu.</div></li>
-                <li><span class="rule-number">3.</span> <span class="rule-title">PT Vận chuyển</span><div class="rule-desc">Mã hiệu phương thức vận chuyển (trừ TH ngoại lệ điểm b khoản 3 Điều 82).</div></li>
-                <li><span class="rule-number">4.</span> <span class="rule-title">Cơ quan Hải quan</span><div class="rule-desc">Nơi đăng ký tờ khai phải chính xác tuyệt đối.</div></li>
-                <li><span class="rule-number">5.</span> <span class="rule-title">Mã người XNK</span><div class="rule-desc">Mã người Nhập khẩu hoặc Mã người Xuất khẩu.</div></li>
-                <li><span class="rule-number">6.</span> <span class="rule-title">Mã Đại lý HQ</span><div class="rule-desc">Đơn vị đại diện làm thủ tục (nếu có sử dụng đại lý).</div></li>
-              </ul>
-              <div class="warning-box" style="background: #eef2fa; border-left-color: #1e6ec5;">
-                <i class="fas fa-arrow-down"></i> <strong>GIA TĂNG CẤP ĐỘ RÀNG BUỘC</strong>
-              </div>
+            <!-- PHẦN 1: 6 chỉ tiêu chung - dạng card, hover nảy, click popup -->
+            <div class="section-title">📌 PHẦN 1: ÁP DỤNG CHUNG TỜ KHAI XUẤT & NHẬP</div>
+            <p>Cả tờ khai <strong>Nhập khẩu</strong> và <strong>Xuất khẩu</strong> đều chia sẻ 6 nhóm chỉ tiêu cốt lõi không được phép thay đổi sau khi đã đăng ký. <strong>Click vào từng ô để xem chi tiết.</strong></p>
+            <div class="criteria-grid" id="criteriaGrid">
+              <!-- Dữ liệu sẽ được JavaScript tạo động, nhưng viết sẵn để rõ -->
+            </div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i> GIA TĂNG CẤP ĐỘ RÀNG BUỘC <i class="fas fa-arrow-down"></i></div>
+
+            <!-- PHẦN 2: 16 chỉ tiêu BP - nhóm + hover đổi màu -->
+            <div class="section-title">📌 PHẦN 2: TRƯỜNG HỢP GIẢI PHÓNG HÀNG (BP)</div>
+            <p>Quy trình Giải phóng hàng (BP) đòi hỏi sự chính xác cực cao. Ngoài 6 chỉ tiêu cốt lõi, bạn bị <strong style="color:#b91c1c;">CẤM KHAI BỔ SUNG THÊM 16 CHỈ TIÊU</strong> dưới đây, chia làm 3 nhóm chính:</p>
+            
+            <div class="group-container" id="bpGroups">
+              <!-- Nội dung nhóm sẽ được JS thêm để dễ quản lý, nhưng viết trực tiếp bằng HTML cũng được, để chắc chắn tôi sẽ inject bằng JS nhưng vẫn hiển thị đúng -->
             </div>
 
-            <!-- PHẦN 2: TRƯỜNG HỢP GIẢI PHÓNG HÀNG (BP) + 16 chỉ tiêu -->
-            <div class="section-block">
-              <div class="section-title">📌 PHẦN 2: TRƯỜNG HỢP GIẢI PHÓNG HÀNG (BP)</div>
-              <p>Quy trình Giải phóng hàng (BP) đòi hỏi sự chính xác cực cao. Ngoài 6 chỉ tiêu cốt lõi (như Mã loại hình, Mã người XNK), bạn bị <span class="badge-critical">CẤM KHAI BỔ SUNG THÊM 16 CHỈ TIÊU</span> dưới đây, chia làm 3 nhóm chính:</p>
-
-              <!-- Nhóm Vận tải & Hàng hóa -->
-              <h3 style="margin: 1.5rem 0 0.8rem 0; color: #003e6e;"><i class="fas fa-truck"></i> Vận tải & Hàng hóa</h3>
-              <ul class="rule-list">
-                <li><span class="rule-number">8</span> <span class="rule-title">Số vận đơn</span><div class="rule-desc">Số Bill of Lading (B/L) hoặc Airway bill. Sai số vận đơn không thể khai bổ sung.</div></li>
-                <li><span class="rule-number">9</span> <span class="rule-title">Số lượng hàng</span><div class="rule-desc">Số kiện, đơn vị tính, tổng số lượng hàng hóa khai báo ban đầu.</div></li>
-                <li><span class="rule-number">10</span> <span class="rule-title">Tổng trọng lượng (Gross)</span><div class="rule-desc">Trọng lượng cả bì của lô hàng, sai lệch dù nhỏ cũng không được điều chỉnh.</div></li>
-                <li><span class="rule-number">11</span> <span class="rule-title">Phương tiện vận chuyển</span><div class="rule-desc">Số hiệu phương tiện (số xe, tàu, máy bay) không được thay đổi sau đăng ký.</div></li>
-                <li><span class="rule-number">12</span> <span class="rule-title">Ngày hàng đến</span><div class="rule-desc">Ngày dự kiến hoặc thực tế hàng đến cửa khẩu, sai buộc hủy tờ khai.</div></li>
-                <li><span class="rule-number">13</span> <span class="rule-title">Địa điểm dỡ hàng</span><div class="rule-desc">Cảng dỡ, địa điểm nhận hàng cuối cùng phải chính xác ngay từ đầu.</div></li>
-                <li><span class="rule-number">14</span> <span class="rule-title">Địa điểm xếp hàng</span><div class="rule-desc">Cảng xếp hàng xuất phát, không được sửa đổi sau khi đăng ký BP.</div></li>
-                <li><span class="rule-number">15</span> <span class="rule-title">Số lượng container</span><div class="rule-desc">Số container, số seal, chủng loại container – sai là phải hủy tờ khai.</div></li>
-              </ul>
-
-              <!-- Nhóm Hóa đơn & Lý do -->
-              <h3 style="margin: 1.5rem 0 0.8rem 0; color: #003e6e;"><i class="fas fa-file-invoice"></i> Hóa đơn & Lý do</h3>
-              <ul class="rule-list">
-                <li><span class="rule-number">16</span> <span class="rule-title">Phân loại hình thức hóa đơn</span><div class="rule-desc">Loại hóa đơn thương mại, hóa đơn chiếu lệ, hóa đơn giá trị gia tăng… không đổi được.</div></li>
-                <li><span class="rule-number">17</span> <span class="rule-title">Số tiếp nhận hóa đơn điện tử</span><div class="rule-desc">Mã số tiếp nhận hóa đơn điện tử từ cơ quan thuế/hải quan.</div></li>
-                <li><span class="rule-number">18</span> <span class="rule-title">Mã lý do đề nghị BP</span><div class="rule-desc">Lý do đề nghị giải phóng hàng (khai báo ban đầu quyết định luồng xử lý).</div></li>
-              </ul>
-
-              <!-- Nhóm Thông tin Bảo lãnh -->
-              <h3 style="margin: 1.5rem 0 0.8rem 0; color: #003e6e;"><i class="fas fa-handshake"></i> Thông tin Bảo lãnh</h3>
-              <ul class="rule-list">
-                <li><span class="rule-number">19</span> <span class="rule-title">Mã ngân hàng bảo lãnh</span><div class="rule-desc">Mã định danh ngân hàng phát hành bảo lãnh hải quan.</div></li>
-                <li><span class="rule-number">20</span> <span class="rule-title">Năm phát hành bảo lãnh</span><div class="rule-desc">Năm cấp chứng thư bảo lãnh (sai năm không được khai bổ sung).</div></li>
-                <li><span class="rule-number">21</span> <span class="rule-title">Ký hiệu chứng từ bảo lãnh</span><div class="rule-desc">Mã ký hiệu của chứng thư bảo lãnh do ngân hàng cấp.</div></li>
-                <li><span class="rule-number">22</span> <span class="rule-title">Số chứng từ bảo lãnh</span><div class="rule-desc">Số tham chiếu bảo lãnh, không được sửa đổi nếu sai sót.</div></li>
-              </ul>
-            </div>
-
-            <!-- Cảnh báo tổng hợp -->
-            <div class="warning-box">
-              <i class="fas fa-exclamation-triangle" style="color:#e67e22; margin-right: 10px;"></i>
+            <div class="warning-note">
+              <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
               <strong>TỔNG HỢP 22 CHỈ TIÊU "CẤM KHAI BỔ SUNG":</strong><br>
               - Phần 1: 6 chỉ tiêu áp dụng chung cho mọi tờ khai XNK.<br>
               - Phần 2 (BP): 16 chỉ tiêu bổ sung (từ số 8 đến 22).<br>
-              Sai bất kỳ chỉ tiêu nào trong số này, doanh nghiệp bắt buộc phải hủy tờ khai và đăng ký lại từ đầu.
+              Sai bất kỳ chỉ tiêu nào, doanh nghiệp bắt buộc phải hủy tờ khai và đăng ký lại.
             </div>
-
-            <h2>⚠️ HẬU QUẢ KHI SAI SÓT CÁC CHỈ TIÊU TRÊN</h2>
-            <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-              <li><strong>Hủy tờ khai ngay lập tức:</strong> Hệ thống VNACCS/VCIS từ chối sửa bổ sung, mất thời gian làm thủ tục lại.</li>
-              <li><strong>Chậm thông quan / giải phóng hàng 2-5 ngày:</strong> Phát sinh chi phí lưu kho, lưu bãi, lưu container (3-7 triệu đồng/ngày).</li>
-              <li><strong>Rủi ro xử phạt vi phạm hành chính:</strong> Theo Nghị định 169/2026/NĐ-CP, khai sai chỉ tiêu bắt buộc có thể bị phạt từ 5-20 triệu đồng.</li>
-              <li><strong>Ảnh hưởng uy tín doanh nghiệp:</strong> Đối tác đánh giá thấp năng lực xuất nhập khẩu.</li>
-            </ul>
-
-            <div class="info-note">
-              <i class="fas fa-chart-line"></i> <strong>Thống kê thực tế từ Tony EXIM:</strong> Trong 5 năm làm việc tại VINA PRIDE SEAFOODS và BPL Logistics, hơn 70% trường hợp hủy tờ khai đến từ sai mã loại hình, sai số vận đơn, sai trọng lượng và sai thông tin container. Hãy in danh sách 22 chỉ tiêu này và dán tại góc làm việc của người khai!
-            </div>
-
-            <div class="warning-box" style="background:#fef2f0;">
-              <i class="fas fa-times-circle" style="color:#d9534f;"></i> <strong>LƯU Ý ĐẶC BIỆT TỪ CHUYÊN GIA:</strong> Các chỉ tiêu nêu trên không thể thực hiện "khai bổ sung" trong bất kỳ trường hợp nào, kể cả trước hay sau thông quan. Nếu cố tình sửa đổi, hệ thống VNACCS/VCIS sẽ từ chối. Doanh nghiệp chỉ còn cách hủy tờ khai và làm lại từ đầu.
-            </div>
-
-            <h2>✅ QUY TRÌNH XỬ LÝ CHUẨN KHI PHÁT HIỆN SAI</h2>
-            <ul style="margin-left: 1.5rem;">
-              <li><strong>Bước 1:</strong> Kiểm tra ngay trên hệ thống VNACCS, nếu tờ khai chưa thông quan → thực hiện "Hủy đăng ký tờ khai".</li>
-              <li><strong>Bước 2:</strong> Nếu tờ khai đã ở luồng vàng/đỏ hoặc đã qua kiểm tra chi tiết, lập văn bản đề nghị hủy tờ khai gửi Chi cục Hải quan.</li>
-              <li><strong>Bước 3:</strong> Sau khi được chấp thuận hủy (hoặc tự động hủy), khai báo lại tờ khai mới với thông tin chính xác.</li>
-              <li><strong>Bước 4:</strong> Rà soát kỹ lưỡng toàn bộ 22 chỉ tiêu trước khi nhấn nút "Đăng ký".</li>
-            </ul>
-
-            <div class="doc-header" style="background: #eef2fa; color: #002856;">
-              <h3><i class="fas fa-sticky-note"></i> KẾT LUẬN TỪ TONY EXIM</h3>
-              <p>Hãy ghi nhớ 22 chỉ tiêu tuyệt đối không được khai bổ sung. Sai một trong số này là đương nhiên phải hủy tờ khai. Hãy xây dựng quy trình kiểm tra chéo trước khi nộp để tiết kiệm thời gian và chi phí.</p>
-              <p style="margin-top: 8px;"><strong>Trích xuất từ: Phụ lục I - Thông tư 39/2018/TT-BTC</strong></p>
+            <div style="background:#e9f4fe; border-radius: 20px; padding: 1rem; margin: 1rem 0 0;">
+              <i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế từ Tony EXIM:</strong> Hãy ghi nhớ 22 chỉ tiêu này. Click vào các ô ở Phần 1 để xem giải thích chuyên sâu.
             </div>
           </div>
         </div>
@@ -437,14 +453,14 @@
         <div class="blog-sidebar">
           <div class="sidebar-widget">
             <h3><i class="fas fa-user"></i> Tác giả</h3>
-            <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia xuất nhập khẩu, hải quan. Kinh nghiệm thực chiến tại VINA PRIDE SEAFOODS, BPL Logistics. Tôi đồng hành cùng doanh nghiệp tối ưu thủ tục, giảm rủi ro hủy tờ khai.</p>
+            <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia xuất nhập khẩu, hải quan. Với kinh nghiệm thực chiến, tôi chia sẻ những quy định quan trọng giúp doanh nghiệp tránh rủi ro hủy tờ khai.</p>
           </div>
           <div class="sidebar-widget">
             <h3><i class="fas fa-file-alt"></i> Bài viết liên quan</h3>
             <ul style="list-style: none;">
-              <li style="margin-bottom: 12px;">📄 <a href="#" style="text-decoration: none; color: #1e6ec5;">Tổng hợp điểm mới Nghị định 169/2026/NĐ-CP</a></li>
-              <li style="margin-bottom: 12px;">⚖️ <a href="#" style="text-decoration: none; color: #1e6ec5;">So sánh Thông tư 39 & Thông tư 62 về khai bổ sung</a></li>
-              <li style="margin-bottom: 12px;">📊 <a href="#" style="text-decoration: none; color: #1e6ec5;">Infographic: 22 chỉ tiêu không được khai bổ sung</a></li>
+              <li style="margin-bottom: 12px;">📄 <a href="#" style="text-decoration: none; color: #1e6ec5;">Quy trình phân loại mã HS chuẩn xác</a></li>
+              <li style="margin-bottom: 12px;">⚖️ <a href="#" style="text-decoration: none; color: #1e6ec5;">Tổng hợp Nghị định 169/2026/NĐ-CP</a></li>
+              <li style="margin-bottom: 12px;">🚢 <a href="#" style="text-decoration: none; color: #1e6ec5;">ETA, ETD là gì? Giải nghĩa chi tiết</a></li>
             </ul>
           </div>
           <div class="sidebar-widget">
@@ -458,10 +474,106 @@
   </article>
 </div>
 
+<div id="popupModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h4 id="modalTitle"></h4>
+    <p id="modalDesc"></p>
+  </div>
+</div>
+
 <footer class="footer">
   <div class="container">
-    <p>© 2026 Tony EXIM – Lương Hồng Quang. Trích dẫn Mục 3 Phụ lục I Thông tư 39/2018/TT-BTC. Mọi thông tin được bảo vệ.</p>
+    <p>© 2026 Tony EXIM – Lương Hồng Quang. Trích dẫn Mục 3 Phụ lục I Thông tư 39/2018/TT-BTC.</p>
   </div>
 </footer>
+
+<script>
+  // Dữ liệu cho phần 1 (6 chỉ tiêu)
+  const part1Data = [
+    { num: "1", title: "Mã loại hình", shortDesc: "Loại hình XNK đã chốt không thể chuyển đổi bằng khai bổ sung.", fullDesc: "Mã loại hình xác định chính sách quản lý hải quan áp dụng cho lô hàng (VD: nhập sản xuất xuất khẩu, nhập tiêu dùng nội địa, xuất khẩu tại chỗ...). Sai loại hình không thể sửa bằng khai bổ sung, bắt buộc hủy tờ khai và đăng ký lại." },
+    { num: "2", title: "Phân loại hàng hóa", shortDesc: "Mã phân loại hàng hóa định hình tính chất lô hàng ngay từ đầu.", fullDesc: "Mã HS 8 số và các chỉ tiêu phân loại liên quan. Nếu sai dẫn đến thay đổi chính sách mặt hàng (cấm, hạn chế, kiểm tra chuyên ngành) thì không được khai bổ sung, buộc hủy tờ khai." },
+    { num: "3", title: "PT Vận chuyển", shortDesc: "Mã hiệu phương thức vận chuyển (trừ ngoại lệ).", fullDesc: "Phương thức vận chuyển như đường biển, hàng không, đường bộ... sai không được điều chỉnh trừ trường hợp ngoại lệ theo điểm b khoản 3 Điều 82. Các trường hợp khác đều phải hủy." },
+    { num: "4", title: "Cơ quan Hải quan", shortDesc: "Nơi đăng ký tờ khai phải chính xác tuyệt đối.", fullDesc: "Mã Chi cục Hải quan nơi đăng ký tờ khai. Nếu sai, toàn bộ hồ sơ không thể chuyển đổi, bắt buộc hủy và khai lại tại đúng cơ quan có thẩm quyền." },
+    { num: "5", title: "Mã người XNK", shortDesc: "Mã người Nhập khẩu hoặc Xuất khẩu.", fullDesc: "Mã số thuế của chủ hàng xuất khẩu hoặc nhập khẩu. Sai thông tin doanh nghiệp dẫn đến không thể thực hiện nghĩa vụ thuế, hệ thống từ chối khai bổ sung, phải hủy tờ khai." },
+    { num: "6", title: "Mã Đại lý HQ", shortDesc: "Đơn vị đại diện làm thủ tục (nếu có).", fullDesc: "Mã số đại lý hải quan được ủy quyền. Nếu sai, việc ủy thác không hợp lệ, không được khai bổ sung, bắt buộc hủy đăng ký." }
+  ];
+
+  // Render phần 1
+  const gridContainer = document.getElementById('criteriaGrid');
+  part1Data.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'criteria-card';
+    card.setAttribute('data-full-desc', item.fullDesc);
+    card.setAttribute('data-title', item.title);
+    card.innerHTML = `
+      <div class="card-number">${item.num}</div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-desc">${item.shortDesc}</div>
+      <div class="card-hint"><i class="fas fa-mouse-pointer"></i> Click để xem chi tiết</div>
+    `;
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const title = card.getAttribute('data-title');
+      const desc = card.getAttribute('data-full-desc');
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalDesc').innerHTML = desc;
+      document.getElementById('popupModal').style.display = 'flex';
+    });
+    gridContainer.appendChild(card);
+  });
+
+  // Dữ liệu phần 2 (16 chỉ tiêu BP)
+  const bpData = {
+    "Vận tải & Hàng hóa": [
+      { num: "8", title: "Số vận đơn", desc: "Số Bill of Lading (B/L) hoặc Airway bill. Sai số vận đơn không thể khai bổ sung." },
+      { num: "9", title: "Số lượng hàng", desc: "Số kiện, đơn vị tính, tổng số lượng hàng hóa khai báo ban đầu." },
+      { num: "10", title: "Tổng trọng lượng (Gross)", desc: "Trọng lượng cả bì của lô hàng, sai lệch dù nhỏ cũng không được điều chỉnh." },
+      { num: "11", title: "Phương tiện vận chuyển", desc: "Số hiệu phương tiện (số xe, tàu, máy bay) không được thay đổi sau đăng ký." },
+      { num: "12", title: "Ngày hàng đến", desc: "Ngày dự kiến hoặc thực tế hàng đến cửa khẩu, sai buộc hủy tờ khai." },
+      { num: "13", title: "Địa điểm dỡ hàng", desc: "Cảng dỡ, địa điểm nhận hàng cuối cùng phải chính xác ngay từ đầu." },
+      { num: "14", title: "Địa điểm xếp hàng", desc: "Cảng xếp hàng xuất phát, không được sửa đổi sau khi đăng ký BP." },
+      { num: "15", title: "Số lượng container", desc: "Số container, số seal, chủng loại container – sai là phải hủy tờ khai." }
+    ],
+    "Hóa đơn & Lý do": [
+      { num: "16", title: "Phân loại hình thức hóa đơn", desc: "Loại hóa đơn thương mại, hóa đơn chiếu lệ, hóa đơn GTGT… không đổi được." },
+      { num: "17", title: "Số tiếp nhận hóa đơn điện tử", desc: "Mã số tiếp nhận hóa đơn điện tử từ cơ quan thuế/hải quan." },
+      { num: "18", title: "Mã lý do đề nghị BP", desc: "Lý do đề nghị giải phóng hàng (khai báo ban đầu quyết định luồng xử lý)." }
+    ],
+    "Thông tin Bảo lãnh": [
+      { num: "19", title: "Mã ngân hàng bảo lãnh", desc: "Mã định danh ngân hàng phát hành bảo lãnh hải quan." },
+      { num: "20", title: "Năm phát hành bảo lãnh", desc: "Năm cấp chứng thư bảo lãnh (sai năm không được khai bổ sung)." },
+      { num: "21", title: "Ký hiệu chứng từ bảo lãnh", desc: "Mã ký hiệu của chứng thư bảo lãnh do ngân hàng cấp." },
+      { num: "22", title: "Số chứng từ bảo lãnh", desc: "Số tham chiếu bảo lãnh, không được sửa đổi nếu sai sót." }
+    ]
+  };
+
+  const bpGroupsContainer = document.getElementById('bpGroups');
+  for (const [groupName, items] of Object.entries(bpData)) {
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'group-container';
+    groupDiv.innerHTML = `<div class="group-title"><i class="fas fa-folder-open"></i> ${groupName}</div><div class="bp-list" id="list-${groupName.replace(/\s/g, '')}"></div>`;
+    bpGroupsContainer.appendChild(groupDiv);
+    const listContainer = groupDiv.querySelector('.bp-list');
+    items.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'bp-item';
+      itemDiv.innerHTML = `
+        <div class="bp-num">${item.num}</div>
+        <div class="bp-content">
+          <div class="bp-title">${item.title}</div>
+          <div class="bp-desc">${item.desc}</div>
+        </div>
+      `;
+      listContainer.appendChild(itemDiv);
+    });
+  }
+
+  // Popup modal
+  const modal = document.getElementById('popupModal');
+  const closeBtn = document.querySelector('.modal-close');
+  closeBtn.onclick = () => { modal.style.display = 'none'; };
+  window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+</script>
 </body>
 </html>
