@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | SOP Nhập khẩu Hàng hóa Đường biển</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ----- CSS Variables (Pastel Palette) ----- */
+    :root {
+      --bg: #FFFCF9;
+      --surface: #FFFFFF;
+      --primary: #FF9AA2;
+      --primary-light: #FFB7B2;
+      --secondary: #FFDAC1;
+      --accent: #B5EAD7;
+      --accent-dark: #C7CEEA;
+      --text: #2D3E50;
+      --text-light: #6C7F8F;
+      --border: #F0E5E0;
+      --shadow: 0 12px 28px rgba(0, 0, 0, 0.03);
+      --shadow-hover: 0 20px 32px rgba(0, 0, 0, 0.06);
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* ----- Custom Scrollbar ----- */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--secondary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    /* Loading Screen */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.4s;
+    }
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--accent);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Navbar Sticky + Blur */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 252, 249, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.8rem 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo a {
+      font-size: 1.7rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: var(--text);
+      transition: 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    .menu-icon {
+      display: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    /* Mobile Menu (Slide) */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 80%;
+      max-width: 300px;
+      height: 100%;
+      background: var(--surface);
+      z-index: 200;
+      padding: 2rem 1.5rem;
+      transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.05);
+      border-right: 1px solid var(--border);
+    }
+    .mobile-menu.open {
+      left: 0;
+    }
+    .close-menu {
+      text-align: right;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+    .mobile-menu a {
+      display: block;
+      padding: 0.8rem 0;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      border-bottom: 1px solid var(--secondary);
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: 150;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s;
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(255, 250, 245, 0.85), rgba(255, 218, 193, 0.7)), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+      padding: 5rem 0;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text);
+      animation: fadeUp 0.6s ease;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s 0.1s both;
+    }
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: linear-gradient(110deg, var(--primary), var(--primary-light));
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(255, 154, 162, 0.3);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 20px rgba(255, 154, 162, 0.4);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--accent-dark);
+      padding: 10px 26px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: var(--text);
+      transition: var(--transition);
+    }
+    .btn-outline:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    /* Container & Sections */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+    section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .section-title:after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      display: block;
+      margin: 0.8rem auto 0;
+      border-radius: 4px;
+    }
+
+    /* SOP Timeline (Steps) */
+    .sop-phase {
+      margin-bottom: 3rem;
+    }
+    .phase-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin: 1.5rem 0 1rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+    .step-card {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 1.4rem;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+    .step-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary-light);
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+    .step-icon {
+      font-size: 1.8rem;
+      color: var(--accent-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Checklist Cards */
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .doc-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 1.2rem;
+      text-align: center;
+      transition: var(--transition);
+      border: 1px solid var(--border);
+    }
+    .doc-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+    }
+    .doc-card i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+    }
+
+    /* Accordion FAQ */
+    .accordion-item {
+      background: var(--surface);
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .accordion-header {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+    .accordion-header:hover {
+      background: #FFF5F0;
+    }
+    .accordion-content {
+      max-height: 0;
+      padding: 0 1.5rem;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .accordion-item.active .accordion-content {
+      max-height: 200px;
+      padding: 0 1.5rem 1rem;
+    }
+    .fa-chevron-down {
+      transition: transform 0.25s;
+    }
+    .accordion-item.active .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    /* Back To Top */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: 0.2s;
+      z-index: 98;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .back-to-top.show { opacity: 1; }
+    .back-to-top:hover { background: var(--primary-light); transform: scale(1.02); }
+
+    /* Footer */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .social-icons a {
+      color: var(--text-light);
+      margin: 0 0.8rem;
+      font-size: 1.3rem;
+      transition: 0.2s;
+    }
+    .social-icons a:hover {
+      color: var(--primary);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 780px) {
+      .nav-links { display: none; }
+      .menu-icon { display: block; }
+      .hero h1 { font-size: 1.9rem; }
+      .section-title { font-size: 1.5rem; }
+      .phase-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="loading"><div class="loader"></div></div>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo"><a href="https://luonghongquang.github.io/Tony-EXIM/">TONY EXIM</a></div>
+    <div class="nav-links">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Trang chủ</a>
+      <a href="#sop">SOP nhập khẩu</a>
+      <a href="#documents">Chứng từ</a>
+      <a href="#checklist">Checklist</a>
+      <a href="#contact">Liên hệ</a>
+    </div>
+    <div class="menu-icon" id="menuIcon"><i class="fas fa-bars"></i></div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="close-menu" id="closeMenu">&times;</div>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Trang chủ</a>
+  <a href="#sop">SOP nhập khẩu</a>
+  <a href="#documents">Chứng từ</a>
+  <a href="#checklist">Checklist</a>
+  <a href="#contact">Liên hệ</a>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>QUY TRÌNH NHẬP KHẨU HÀNG HÓA ĐƯỜNG BIỂN</h1>
+    <p>Standard Operating Procedure (SOP) dành cho doanh nghiệp xuất nhập khẩu</p>
+    <div class="btn-group">
+      <a href="#sop" class="btn-primary">Xem SOP</a>
+      <a href="#checklist-download" class="btn-outline">Download Checklist</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- SOP: 4 giai đoạn chính -->
+  <section id="sop">
+    <h2 class="section-title reveal">📌 QUY TRÌNH SOP CHI TIẾT</h2>
+    
+    <!-- Giai đoạn 1 -->
+    <div class="sop-phase reveal">
+      <div class="phase-title"><i class="fas fa-handshake"></i> GIAI ĐOẠN 1: CHUẨN BỊ & ĐẶT HÀNG</div>
+      <div class="timeline-grid">
+        <div class="step-card"><div class="step-number">1</div><i class="fas fa-file-signature step-icon"></i><strong>Đàm phán & ký hợp đồng</strong><p>Ký Sales Contract, xác nhận Incoterms, điều khoản thanh toán.</p></div>
+        <div class="step-card"><div class="step-number">2</div><i class="fas fa-barcode step-icon"></i><strong>Kiểm tra HS & giấy phép</strong><p>Tra mã HS, kiểm tra chính sách, giấy phép nhập khẩu nếu có.</p></div>
+        <div class="step-card"><div class="step-number">3</div><i class="fas fa-credit-card step-icon"></i><strong>Thanh toán quốc tế</strong><p>Đặt cọc / L/C theo hợp đồng, mở LC nếu cần.</p></div>
+        <div class="step-card"><div class="step-number">4</div><i class="fas fa-file-invoice step-icon"></i><strong>Nhận chứng từ nháp</strong><p>Draft Invoice, Packing List, C/O từ nhà cung cấp.</p></div>
+      </div>
+    </div>
+
+    <!-- Giai đoạn 2 -->
+    <div class="sop-phase reveal">
+      <div class="phase-title"><i class="fas fa-ship"></i> GIAI ĐOẠN 2: VẬN CHUYỂN & CHỨNG TỪ</div>
+      <div class="timeline-grid">
+        <div class="step-card"><div class="step-number">5</div><i class="fas fa-chart-line step-icon"></i><strong>Theo dõi ETD</strong><p>Cập nhật tiến độ sản xuất, lịch tàu dự kiến khởi hành.</p></div>
+        <div class="step-card"><div class="step-number">6</div><i class="fas fa-umbrella step-icon"></i><strong>Mua bảo hiểm hàng hóa</strong><p>Đảm bảo quyền lợi khi có tổn thất.</p></div>
+        <div class="step-card"><div class="step-number">7</div><i class="fas fa-clock step-icon"></i><strong>Theo dõi ETA</strong><p>Tracking qua hãng tàu, cập nhật ngày dự kiến đến.</p></div>
+        <div class="step-card"><div class="step-number">8</div><i class="fas fa-bell step-icon"></i><strong>Nhận Arrival Notice</strong><p>Forwarder/hãng tàu gửi thông báo hàng sắp cập cảng.</p></div>
+      </div>
+    </div>
+
+    <!-- Giai đoạn 3 -->
+    <div class="sop-phase reveal">
+      <div class="phase-title"><i class="fas fa-customs"></i> GIAI ĐOẠN 3: THỦ TỤC NHẬP KHẨU & THÔNG QUAN</div>
+      <div class="timeline-grid">
+        <div class="step-card"><div class="step-number">9</div><i class="fas fa-dollar-sign step-icon"></i><strong>Nộp Local Charges</strong><p>Phí hạ bãi, phí D/O, CFS, v.v.</p></div>
+        <div class="step-card"><div class="step-number">10</div><i class="fas fa-tasks step-icon"></i><strong>Lấy Delivery Order</strong><p>Xuất trình Bill of Lading gốc để nhận D/O.</p></div>
+        <div class="step-card"><div class="step-number">11</div><i class="fas fa-laptop-code step-icon"></i><strong>Truyền tờ khai VNACCS</strong><p>Khai báo điện tử trên hệ thống hải quan.</p></div>
+        <div class="step-card"><div class="step-number">12</div><i class="fas fa-receipt step-icon"></i><strong>Nộp thuế NK & VAT</strong><p>Thực hiện nộp thuế qua ngân hàng hoặc cổng thanh toán điện tử.</p></div>
+        <div class="step-card"><div class="step-number">13</div><i class="fas fa-search step-icon"></i><strong>Kiểm hóa / nộp hồ sơ</strong><p>Luồng đỏ cần kiểm tra thực tế, luồng xanh thông quan nhanh.</p></div>
+        <div class="step-card"><div class="step-number">14</div><i class="fas fa-check-circle step-icon"></i><strong>Thông quan tờ khai</strong><p>Hoàn tất thủ tục, nhận hàng giải phóng.</p></div>
+      </div>
+    </div>
+
+    <!-- Giai đoạn 4 -->
+    <div class="sop-phase reveal">
+      <div class="phase-title"><i class="fas fa-truck"></i> GIAI ĐOẠN 4: GIAO NHẬN & HOÀN TẤT</div>
+      <div class="timeline-grid">
+        <div class="step-card"><div class="step-number">15</div><i class="fas fa-clipboard-list step-icon"></i><strong>Đăng ký phiếu hạ bãi</strong><p>Làm thủ tục xuất cont khỏi cảng.</p></div>
+        <div class="step-card"><div class="step-number">16</div><i class="fas fa-truck-moving step-icon"></i><strong>Điều xe trucking</strong><p>Vận chuyển container về kho doanh nghiệp.</p></div>
+        <div class="step-card"><div class="step-number">17</div><i class="fas fa-warehouse step-icon"></i><strong>Rút hàng & kiểm tra</strong><p>Kiểm đếm số lượng, chất lượng so với chứng từ.</p></div>
+        <div class="step-card"><div class="step-number">18</div><i class="fas fa-recycle step-icon"></i><strong>Trả container rỗng</strong><p>Hoàn trả cont về bãi hãng tàu đúng hạn.</p></div>
+        <div class="step-card"><div class="step-number">19</div><i class="fas fa-calculator step-icon"></i><strong>Quyết toán chi phí</strong><p>Tổng hợp hóa đơn, lưu hồ sơ cho kiểm tra sau.</p></div>
+        <div class="step-card"><div class="step-number">20</div><i class="fas fa-archive step-icon"></i><strong>Lưu trữ hồ sơ</strong><p>Lưu bộ chứng từ ít nhất 5 năm theo quy định.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHỨNG TỪ -->
+  <section id="documents">
+    <h2 class="section-title reveal">📄 BẢNG TỔNG HỢP CHỨNG TỪ TRỌNG YẾU</h2>
+    <div class="doc-grid reveal">
+      <div class="doc-card"><i class="fas fa-file-contract"></i><h4>Sales Contract</h4><p>Hợp đồng ngoại thương</p></div>
+      <div class="doc-card"><i class="fas fa-file-invoice-dollar"></i><h4>Commercial Invoice</h4><p>Hóa đơn thương mại</p></div>
+      <div class="doc-card"><i class="fas fa-boxes"></i><h4>Packing List</h4><p>Phiếu đóng gói</p></div>
+      <div class="doc-card"><i class="fas fa-ship"></i><h4>Bill of Lading</h4><p>Vận đơn đường biển</p></div>
+      <div class="doc-card"><i class="fas fa-passport"></i><h4>C/O</h4><p>Chứng nhận xuất xứ</p></div>
+      <div class="doc-card"><i class="fas fa-bell"></i><h4>Arrival Notice</h4><p>Thông báo hàng đến</p></div>
+      <div class="doc-card"><i class="fas fa-stamp"></i><h4>Delivery Order</h4><p>Lệnh giao hàng</p></div>
+      <div class="doc-card"><i class="fas fa-file-export"></i><h4>Customs Declaration</h4><p>Tờ khai hải quan</p></div>
+      <div class="doc-card"><i class="fas fa-receipt"></i><h4>Tax Receipt</h4><p>Biên lai nộp thuế</p></div>
+      <div class="doc-card"><i class="fas fa-id-card"></i><h4>EIR</h4><p>Phiếu giao nhận container</p></div>
+    </div>
+  </section>
+
+  <!-- FAQ / LỖI THƯỜNG GẶP (Accordion) -->
+  <section id="checklist">
+    <h2 class="section-title reveal">⚠️ NHỮNG LỖI THƯỜNG GẶP (FAQ)</h2>
+    <div class="accordion reveal">
+      <div class="accordion-item"><div class="accordion-header">❌ Sai HS Code <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Dẫn đến sai thuế suất, có thể bị phạt và truy thu thuế. Cần tra cứu kỹ Danh mục hàng hóa XNK.</div></div>
+      <div class="accordion-item"><div class="accordion-header">❌ Sai Gross Weight / Net Weight <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Chênh lệch trọng lượng gây chậm thông quan, có thể bị xử phạt hành chính.</div></div>
+      <div class="accordion-item"><div class="accordion-header">❌ Sai số kiện / số container <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Đối chiếu Packing List trước khi khai báo, tránh sai sót dẫn đến hủy tờ khai.</div></div>
+      <div class="accordion-item"><div class="accordion-header">❌ Sai Consignee / thông tin doanh nghiệp <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Sai tên hoặc mã số thuế người nhận sẽ không thể sửa, buộc hủy tờ khai.</div></div>
+      <div class="accordion-item"><div class="accordion-header">❌ Thiếu C/O (Certificate of Origin) <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Không được hưởng ưu đãi thuế quan, phải nộp thuế suất MFN cao hơn.</div></div>
+      <div class="accordion-item"><div class="accordion-header">❌ Chưa truyền manifest trước khi tàu cập cảng <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Hàng không được phép dỡ, bị phạt và chậm trễ.</div></div>
+    </div>
+  </section>
+
+  <!-- Checklist tổng hợp (thêm id download) -->
+  <section id="checklist-download">
+    <h2 class="section-title reveal">📋 CHECKLIST NHẬP KHẨU (TRƯỚC & SAU)</h2>
+    <div class="checklist-block reveal" style="background: var(--surface); border-radius: 28px; padding: 1.5rem; margin: 1rem 0;">
+      <ul style="list-style: none; display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fill, minmax(250px,1fr));">
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Kiểm tra Invoice, Packing List</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Xác nhận HS code, thuế suất</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Đối chiếu Bill of Lading & ETA</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Chuẩn bị giấy phép (nếu có)</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Đã truyền tờ khai VNACCS</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Nộp thuế đầy đủ</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Lấy Delivery Order trước hạn</li>
+        <li><i class="fas fa-check-circle" style="color:var(--accent);"></i> Đặt lịch trucking</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<footer id="contact">
+  <div class="container">
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p style="margin: 1rem 0;">📧 tony.exim@logistics.com | 📞 0988 123 456</p>
+    <p>© 2026 TONY EXIM — Hướng dẫn SOP nhập khẩu đường biển chuyên sâu</p>
+  </div>
+</footer>
+
+<div class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+  // Loading
+  window.addEventListener('load', () => {
+    const loading = document.getElementById('loading');
+    loading.style.opacity = '0';
+    setTimeout(() => { loading.style.display = 'none'; }, 500);
+  });
+
+  // Mobile menu slide
+  const menuIcon = document.getElementById('menuIcon');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const closeMenu = document.getElementById('closeMenu');
+  const overlay = document.getElementById('overlay');
+  function openMenu() { mobileMenu.classList.add('open'); overlay.classList.add('active'); }
+  function closeMenuFn() { mobileMenu.classList.remove('open'); overlay.classList.remove('active'); }
+  menuIcon.addEventListener('click', openMenu);
+  closeMenu.addEventListener('click', closeMenuFn);
+  overlay.addEventListener('click', closeMenuFn);
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) backBtn.classList.add('show');
+    else backBtn.classList.remove('show');
+  });
+  backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Scroll Reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Accordion
+  const accordions = document.querySelectorAll('.accordion-item');
+  accordions.forEach(item => {
+    const header = item.querySelector('.accordion-header');
+    header.addEventListener('click', () => {
+      item.classList.toggle('active');
+    });
+  });
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        closeMenuFn(); // đóng mobile menu nếu đang mở
+      }
+    });
+  });
+</script>
+</body>
+</html>
