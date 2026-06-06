@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Value Stream Mapping (VSM) | Lean Manufacturing Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0a0a0a;
+      color: #e5e5e5;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      transition: background 0.3s, color 0.2s;
+    }
+
+    /* Light mode */
+    body.light {
+      background-color: #f4f7fb;
+      color: #1a1e24;
+    }
+    body.light .card,
+    body.light .process-card,
+    body.light .stat-card,
+    body.light .quote-block,
+    body.light .case-card {
+      background: #ffffff;
+      color: #1e1e2f;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    body.light .navbar {
+      background: rgba(255,255,255,0.98);
+      box-shadow: 0 1px 0 #eef2f8;
+    }
+    body.light .nav-links a {
+      color: #1e3a5f;
+    }
+    body.light .hero {
+      background: linear-gradient(135deg, #f9fafc 0%, #ffffff 100%);
+    }
+    body.light h1, body.light h2, body.light h3 {
+      color: #002856;
+    }
+    body.light .stat-number {
+      color: #b91c1c;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* Sticky navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s;
+      border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+    }
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff, #dc143c);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      color: #e5e5e5;
+    }
+    .nav-links a:hover {
+      color: #dc143c;
+    }
+    .dark-toggle {
+      background: #2c2c2c;
+      border: none;
+      color: #ffcc00;
+      padding: 8px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .dark-toggle:hover {
+      background: #dc143c;
+      color: white;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 101;
+    }
+    .progress-bar {
+      height: 4px;
+      background: #dc143c;
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    /* Hero section */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(145deg, #0c0c0c 0%, #1a1a1a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    body.light .hero {
+      background: linear-gradient(145deg, #eef2fa, #ffffff);
+    }
+    .hero-content {
+      max-width: 800px;
+      animation: fadeUp 0.8s ease;
+    }
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .gradient-text {
+      background: linear-gradient(120deg, #dc143c, #ff4d6d);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #b0b0b0;
+    }
+    .btn-primary {
+      background: #dc143c;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover {
+      background: #a01030;
+      transform: scale(1.02);
+      box-shadow: 0 0 12px rgba(220,20,60,0.6);
+    }
+
+    /* Typing effect */
+    #typed-text {
+      border-right: 3px solid #dc143c;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    /* Sections */
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid rgba(220,20,60,0.2);
+    }
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: #dc143c;
+      border-radius: 2px;
+    }
+
+    /* Card grid */
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+    .card {
+      background: #141414;
+      border-radius: 28px;
+      padding: 1.8rem;
+      transition: all 0.25s ease;
+      border: 1px solid #2a2a2a;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: #dc143c;
+      box-shadow: 0 15px 30px rgba(220,20,60,0.15);
+    }
+    .card i {
+      font-size: 2.2rem;
+      color: #dc143c;
+      margin-bottom: 1rem;
+    }
+
+    /* Process flow */
+    .process-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .process-card {
+      background: #141414;
+      border-radius: 20px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+      transition: 0.2s;
+    }
+    .process-card:hover { transform: translateY(-5px); background: #1f1f2f; }
+
+    /* KPI counters */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .stat-card {
+      background: #141414;
+      border-radius: 28px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #dc143c;
+    }
+
+    /* Quote */
+    .quote-block {
+      background: #0f0f1a;
+      border-left: 6px solid #dc143c;
+      padding: 2rem;
+      border-radius: 28px;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    /* Case study */
+    .case-card {
+      background: #141414;
+      border-radius: 28px;
+      padding: 1.5rem;
+    }
+
+    /* Floating particles */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s ease;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* SVG divider */
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    /* Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .glow-text {
+      text-shadow: 0 0 6px rgba(220,20,60,0.3);
+    }
+
+    footer {
+      background: #050505;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    @media (max-width: 780px) {
+      .hero h1 { font-size: 2rem; }
+      .section-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+<div id="particles"></div>
+
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-wrap">
+      <div class="logo">TONY<span style="color:#dc143c;">•LEAN</span></div>
+      <div class="nav-links">
+        <a href="#overview">Tổng quan</a>
+        <a href="#flow">Dòng chảy</a>
+        <a href="#waste">Lãng phí</a>
+        <a href="#kpi">KPI</a>
+        <a href="#case">Case Study</a>
+        <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Sáng/Tối</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <h1><span id="typed-text"></span><span class="gradient-text"> Value Stream Mapping</span></h1>
+        <p>“You cannot improve what you cannot see.” — <strong>Taiichi Ohno</strong></p>
+        <button class="btn-primary" onclick="document.getElementById('overview').scrollIntoView({behavior:'smooth'})">Khám phá ngay <i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tổng quan VSM -->
+  <section id="overview">
+    <div class="container">
+      <h2 class="section-title reveal">VSM là gì?</h2>
+      <div class="grid-2">
+        <div class="card reveal"><i class="fas fa-eye"></i><h3>Nhìn thấy dòng chảy</h3><p>Value Stream Mapping (VSM) là công cụ Lean mạnh mẽ giúp hình dung toàn bộ quy trình từ nguyên liệu đến tay khách hàng, bao gồm cả dòng thông tin và dòng vật chất.</p></div>
+        <div class="card reveal"><i class="fas fa-chart-line"></i><h3>Mục đích</h3><p>Phát hiện và loại bỏ lãng phí, rút ngắn thời gian sản xuất, cải thiện dòng chảy giá trị, và xây dựng bản đồ tương lai (Future State).</p></div>
+      </div>
+      <div class="grid-2 reveal">
+        <div class="card"><i class="fas fa-hourglass-half"></i><h3>Current State Map</h3><p>Bản đồ hiện trạng phản ánh chính xác quy trình đang vận hành, bao gồm tồn kho, thời gian chờ, và các nút thắt.</p></div>
+        <div class="card"><i class="fas fa-rocket"></i><h3>Future State Map</h3><p>Bản đồ tương lai thể hiện quy trình tinh gọn sau khi cải tiến, với dòng chảy liên tục và các hoạt động tạo giá trị.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dòng chảy: Information & Material -->
+  <section id="flow" style="background: rgba(220,20,60,0.03);">
+    <div class="container">
+      <h2 class="section-title reveal">Dòng chảy trong VSM</h2>
+      <div class="process-flow">
+        <div class="process-card reveal"><i class="fas fa-envelope fa-2x" style="color:#dc143c;"></i><h3>Information Flow</h3><p>Lịch trình, đơn hàng, dự báo từ khách hàng → kế hoạch sản xuất → hạ lệnh sản xuất.</p></div>
+        <div class="process-card reveal"><i class="fas fa-cogs fa-2x" style="color:#dc143c;"></i><h3>Material Flow</h3><p>Nguyên liệu → các công đoạn gia công → tồn kho đệm → thành phẩm giao khách.</p></div>
+      </div>
+      <div class="highlight-box" style="background:#1a1a2a; padding:1.5rem; border-radius:28px; text-align:center; margin:1rem 0;">
+        <i class="fas fa-chalkboard"></i> VSM kết hợp cả hai dòng chảy để thấy rõ sự tương tác giữa thông tin và vật chất.
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 loại lãng phí -->
+  <section id="waste">
+    <div class="container">
+      <h2 class="section-title reveal">7 loại lãng phí trong VSM</h2>
+      <div class="grid-3">
+        <div class="card reveal"><i class="fas fa-boxes"></i><h3>1. Sản xuất thừa</h3><p>Sản xuất sớm hơn hoặc nhiều hơn yêu cầu.</p></div>
+        <div class="card reveal"><i class="fas fa-hourglass-start"></i><h3>2. Chờ đợi</h3><p>Nguyên liệu chờ xử lý, người chờ máy.</p></div>
+        <div class="card reveal"><i class="fas fa-dolly"></i><h3>3. Vận chuyển</h3><p>Di chuyển nguyên liệu, bán thành phẩm không cần thiết.</p></div>
+        <div class="card reveal"><i class="fas fa-tasks"></i><h3>4. Gia công thừa</h3><p>Thao tác thừa, xử lý không tạo giá trị.</p></div>
+        <div class="card reveal"><i class="fas fa-archive"></i><h3>5. Tồn kho</h3><p>Hàng tồn đọng giữa các công đoạn.</p></div>
+        <div class="card reveal"><i class="fas fa-hand-paper"></i><h3>6. Di chuyển lãng phí</h3><p>Thao tác không cần thiết của công nhân.</p></div>
+        <div class="card reveal"><i class="fas fa-bug"></i><h3>7. Sản phẩm lỗi</h3><p>Hư hỏng, làm lại, kiểm tra lặp.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ví dụ thực tế trong nhà máy -->
+  <section id="example" style="background: linear-gradient(120deg, #0c0c0c, #1a1a1a);">
+    <div class="container">
+      <h2 class="section-title reveal">🏭 Ví dụ thực tế | Nhà máy lắp ráp cơ khí</h2>
+      <div class="card reveal" style="background:#141414;">
+        <p>Một nhà máy sản xuất linh kiện có tồn kho đệm giữa 5 công đoạn lên tới 3 ngày. Áp dụng VSM, họ phát hiện thời gian chờ do lập lịch không đồng bộ. Sau khi tái thiết kế dòng chảy và áp dụng Kanban, tồn kho giảm 65%, lead time từ 12 ngày xuống 4.5 ngày.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- KPI thường dùng + Counter animation -->
+  <section id="kpi">
+    <div class="container">
+      <h2 class="section-title reveal">KPI quan trọng trong VSM</h2>
+      <div class="stats-grid">
+        <div class="stat-card reveal"><div class="stat-number" id="leadTimeCounter">0</div><p>Lead Time (ngày)</p><small>Thời gian từ đơn hàng đến giao hàng</small></div>
+        <div class="stat-card reveal"><div class="stat-number" id="cycleTimeCounter">0</div><p>Cycle Time (phút)</p><small>Thời gian thực tế chế biến 1 đơn vị</small></div>
+        <div class="stat-card reveal"><div class="stat-number" id="taktTimeCounter">0</div><p>Takt Time (giây)</p><small>Nhịp độ khách hàng yêu cầu</small></div>
+        <div class="stat-card reveal"><div class="stat-number" id="inventoryCounter">0</div><p>Inventory (đơn vị)</p><small>Mức tồn kho trung bình</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case study cải tiến bằng VSM -->
+  <section id="case">
+    <div class="container">
+      <h2 class="section-title reveal">Case Study: Giảm 50% Lead Time tại nhà máy điện tử</h2>
+      <div class="case-card reveal">
+        <p><strong>Hiện trạng:</strong> Lead time 20 ngày, tồn kho 8.500 sản phẩm, nhiều điểm chờ.</p>
+        <p><strong>Giải pháp VSM:</strong> Xây dựng Current State → phát hiện 7 loại lãng phí → thiết kế Future State với hệ thống kéo (pull) và liên tục cải tiến.</p>
+        <p><strong>Kết quả:</strong> Lead time giảm xuống 9 ngày, tồn kho giảm 62%, năng suất tăng 34% chỉ sau 4 tháng.</p>
+        <div class="quote-block" style="margin:1rem 0;">📌 Bài học: VSM không chỉ là bản vẽ mà là hành trình thay đổi văn hóa Lean.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kết luận mạnh mẽ -->
+  <section id="conclusion">
+    <div class="container">
+      <div class="quote-block reveal">
+        <i class="fas fa-quote-left fa-2x" style="color:#dc143c;"></i>
+        <h3>Lean Thinking – Giá trị từ góc nhìn khách hàng</h3>
+        <p>Value Stream Mapping giúp bạn không chỉ nhìn thấy lãng phí mà còn xây dựng văn hóa cải tiến liên tục. Bắt đầu hành trình Lean của bạn bằng cách vẽ dòng chảy giá trị ngay hôm nay.</p>
+        <button class="btn-primary" style="margin-top:1rem;" onclick="location.href='#home'">Quay đầu trang <i class="fas fa-arrow-up"></i></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>© 2025 TONY Blog | Value Stream Mapping — Nhìn thấy dòng chảy, loại bỏ lãng phí.</p>
+  </div>
+</footer>
+
+<script>
+  // Particles (đơn giản)
+  const particleContainer = document.getElementById('particles');
+  for (let i = 0; i < 50; i++) {
+    let particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = '2px';
+    particle.style.height = '2px';
+    particle.style.background = `rgba(220,20,60,${Math.random() * 0.5})`;
+    particle.style.borderRadius = '50%';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.pointerEvents = 'none';
+    particleContainer.appendChild(particle);
+  }
+
+  // Typing effect
+  const texts = ["Nhìn thấy dòng chảy", "Loại bỏ lãng phí", "Value Stream Mapping"];
+  let index = 0, charIndex = 0;
+  const typedSpan = document.getElementById('typed-text');
+  function typeEffect() {
+    if (charIndex < texts[index].length) {
+      typedSpan.textContent += texts[index].charAt(charIndex);
+      charIndex++;
+      setTimeout(typeEffect, 100);
+    } else {
+      setTimeout(() => {
+        charIndex = 0;
+        index = (index + 1) % texts.length;
+        typedSpan.textContent = '';
+        typeEffect();
+      }, 2000);
+    }
+  }
+  typeEffect();
+
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+  });
+
+  // Counter animation
+  function animateCounter(id, target, suffix='', duration=2000) {
+    let start = 0;
+    const stepTime = Math.abs(Math.floor(duration / target));
+    const elem = document.getElementById(id);
+    if (!elem) return;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += 1;
+      elem.innerText = current + suffix;
+      if (current >= target) {
+        elem.innerText = target + suffix;
+        clearInterval(timer);
+      }
+    }, stepTime);
+  }
+  // Khi scroll tới section KPI
+  const kpiSection = document.getElementById('kpi');
+  let counted = false;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !counted) {
+        counted = true;
+        animateCounter('leadTimeCounter', 12, ' ngày', 1500);
+        animateCounter('cycleTimeCounter', 24, ' phút', 1500);
+        animateCounter('taktTimeCounter', 48, ' giây', 1500);
+        animateCounter('inventoryCounter', 2850, ' sp', 1800);
+      }
+    });
+  }, { threshold: 0.5 });
+  observer.observe(kpiSection);
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('active');
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => revealObserver.observe(el));
+
+  // Dark mode toggle
+  const toggleBtn = document.getElementById('darkModeToggle');
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    const icon = toggleBtn.querySelector('i');
+    if (document.body.classList.contains('light')) {
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+    } else {
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
+    }
+  });
+
+  // Parallax nhẹ
+  window.addEventListener('scroll', () => {
+    let scrolled = window.scrollY;
+    let hero = document.querySelector('.hero');
+    if (hero) hero.style.backgroundPositionY = scrolled * 0.2 + 'px';
+  });
+</script>
+</body>
+</html>
