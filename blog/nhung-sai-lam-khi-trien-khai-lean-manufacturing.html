@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | Những Sai Lầm Khi Triển Khai Lean Manufacturing</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fbfe;
+      color: #0a2540;
+      line-height: 1.5;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background: #0a0c12;
+      color: #e5e9f0;
+    }
+
+    body.dark .card,
+    body.dark .stat-card,
+    body.dark .sidebar-widget,
+    body.dark .content-card,
+    body.dark .comment-box,
+    body.dark .table-of-contents,
+    body.dark .author-box {
+      background: #14161c;
+      border-color: #2c2f36;
+      color: #e5e9f0;
+    }
+
+    body.dark .navbar {
+      background: rgba(10, 12, 18, 0.98);
+      border-bottom-color: #2c2f36;
+    }
+
+    body.dark .nav-links a {
+      color: #e5e9f0;
+    }
+
+    body.dark .hero {
+      background: linear-gradient(135deg, #0c0f16 0%, #161a24 100%);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* Sticky Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #eef2f8;
+      transition: all 0.3s;
+    }
+
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo a {
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #1e3a5f;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #dc143c;
+    }
+
+    .dark-toggle {
+      background: #eef2ff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: #dc143c;
+      color: white;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 102;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: #dc143c;
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f4fa 100%);
+      padding: 4rem 0;
+      border-bottom: 1px solid #eef2f8;
+    }
+
+    body.dark .hero {
+      background: linear-gradient(135deg, #0c0f16 0%, #161a24 100%);
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, #dc143c, #ff4d6d);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    /* Blog Layout */
+    .blog-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .blog-main {
+      flex: 3;
+      min-width: 0;
+    }
+
+    .blog-sidebar {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    /* Content Card */
+    .content-card {
+      background: white;
+      border-radius: 32px;
+      padding: 2rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.02);
+      border: 1px solid #eef3fc;
+    }
+
+    /* Table of Contents */
+    .table-of-contents {
+      background: #f8fafd;
+      border-radius: 24px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dc143c;
+    }
+
+    .table-of-contents h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .toc-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      list-style: none;
+    }
+
+    .toc-list li a {
+      text-decoration: none;
+      color: #1e6ec5;
+      font-size: 0.85rem;
+      background: #eef2ff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      transition: 0.2s;
+    }
+
+    .toc-list li a:hover {
+      background: #dc143c;
+      color: white;
+    }
+
+    /* Typography */
+    h2 {
+      font-size: 1.8rem;
+      margin: 1.8rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #dc143c;
+      display: inline-block;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin: 1.2rem 0 0.8rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      border: 1px solid #eef2f8;
+      transition: all 0.25s;
+      margin-bottom: 1rem;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      border-color: #dc143c;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid #eef2f8;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #dc143c;
+    }
+
+    .quote-box {
+      background: #fef7e0;
+      border-left: 5px solid #f5b042;
+      padding: 1.2rem;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+      font-style: italic;
+    }
+
+    body.dark .quote-box {
+      background: #2c2a1a;
+    }
+
+    .warning-box {
+      background: #fee2e2;
+      border-left: 5px solid #b91c1c;
+      padding: 1rem;
+      border-radius: 16px;
+      margin: 1rem 0;
+    }
+
+    .author-box {
+      display: flex;
+      gap: 1rem;
+      background: #f8fafd;
+      border-radius: 28px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sidebar-widget {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #eef3fc;
+    }
+
+    .sidebar-widget h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #dc143c;
+      padding-left: 0.75rem;
+    }
+
+    .social-share {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .social-share a {
+      background: #eef2ff;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: 0.2s;
+      color: #1e6ec5;
+    }
+
+    .social-share a:hover {
+      background: #dc143c;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #dc143c;
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 99;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+    }
+
+    .comment-box {
+      background: #f8fafd;
+      border-radius: 28px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    /* SVG Divider */
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .blog-wrapper {
+        flex-direction: column;
+      }
+      .nav-links {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-wrap">
+      <div class="logo"><a href="#">Tony EXIM</a></div>
+      <div class="nav-links">
+        <a href="#" class="active">Trang chủ</a>
+        <a href="#">Blog</a>
+        <a href="#">Dịch vụ</a>
+        <a href="#">Liên hệ</a>
+        <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Những Sai Lầm Khi Triển Khai <span class="gradient-text">Lean Manufacturing</span></h1>
+      <p><strong>Tony EXIM</strong> — Chuyên gia Xuất nhập khẩu & Quản trị sản xuất. Với kinh nghiệm thực chiến, tôi chia sẻ những hiểu lầm phổ biến khi áp dụng Lean, giúp doanh nghiệp tránh lãng phí và tối ưu dòng chảy giá trị.</p>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="blog-wrapper">
+    <div class="blog-main">
+      <div class="content-card">
+        <!-- Table of Contents -->
+        <div class="table-of-contents">
+          <h3><i class="fas fa-list-ul"></i> Mục lục bài viết</h3>
+          <ul class="toc-list">
+            <li><a href="#section1">1. Lean là gì?</a></li>
+            <li><a href="#section2">2. Hiểu sai phổ biến về Lean</a></li>
+            <li><a href="#section3">3. 7 loại lãng phí (TIMWOOD)</a></li>
+            <li><a href="#section4">4. VSM – Nhìn thấy dòng chảy</a></li>
+            <li><a href="#section5">5. Kanban – Kéo dòng chảy</a></li>
+            <li><a href="#section6">6. Poka-Yoke – Ngăn ngừa sai lỗi</a></li>
+            <li><a href="#section7">7. OEE – Hiệu suất thiết bị tổng thể</a></li>
+            <li><a href="#section8">8. Case study thực tế</a></li>
+            <li><a href="#section9">9. Kết luận</a></li>
+          </ul>
+        </div>
+
+        <!-- Section 1 -->
+        <h2 id="section1">1. Lean Manufacturing là gì?</h2>
+        <p>Lean Manufacturing (Sản xuất Tinh gọn) là một phương pháp quản lý hệ thống, tập trung vào việc loại bỏ mọi hình thức lãng phí (Muda) trong khi vẫn đảm bảo năng suất và chất lượng. Bắt nguồn từ Toyota Production System (TPS), Lean khuyến khích văn hóa cải tiến liên tục (Kaizen), giúp doanh nghiệp linh hoạt và cạnh tranh hơn[reference:0]. Tuy nhiên, nhiều tổ chức hiểu sai bản chất, dẫn đến thất bại trong hành trình chuyển đổi.</p>
+
+        <div class="quote-box">
+          <i class="fas fa-quote-left"></i> "Lean không phải là một công cụ, mà là một cách tư duy và văn hóa làm việc."
+        </div>
+
+        <!-- Section 2 -->
+        <h2 id="section2">2. Hiểu sai phổ biến về Lean</h2>
+        <div class="card">
+          <h3><i class="fas fa-times-circle" style="color:#dc143c;"></i> Sai lầm 1: Lean chỉ là cắt giảm nhân sự</h3>
+          <p>Nhiều doanh nghiệp nghĩ Lean là giảm đầu người. Thực chất, Lean loại bỏ lãng phí, giúp nhân viên làm việc hiệu quả hơn, không phải sa thải hàng loạt.</p>
+        </div>
+        <div class="card">
+          <h3><i class="fas fa-chalkboard"></i> Sai lầm 2: Áp dụng công cụ mà không thay đổi văn hóa</h3>
+          <p>5S, Kanban, VSM chỉ phát huy khi có sự cam kết từ lãnh đạo và sự tham gia của toàn bộ nhân viên. Thiếu văn hóa Lean, công cụ trở thành hình thức.</p>
+        </div>
+        <div class="card">
+          <h3><i class="fas fa-chart-line"></i> Sai lầm 3: Chạy theo KPI ngắn hạn</h3>
+          <p>Lean đòi hỏi tầm nhìn dài hạn. Chạy theo sản lượng mà bỏ qua dòng chảy và chất lượng sẽ tạo ra lãng phí lớn hơn.</p>
+        </div>
+
+        <!-- Section 3: 7 wastes -->
+        <h2 id="section3">3. 7 loại lãng phí (TIMWOOD)</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-number">T</span><br>Chờ đợi (Waiting)</div>
+          <div class="stat-card"><span class="stat-number">I</span><br>Tồn kho (Inventory)</div>
+          <div class="stat-card"><span class="stat-number">M</span><br>Di chuyển (Motion)</div>
+          <div class="stat-card"><span class="stat-number">W</span><br>Vận chuyển (Transport)</div>
+          <div class="stat-card"><span class="stat-number">O</span><br>Gia công thừa (Over-processing)</div>
+          <div class="stat-card"><span class="stat-number">O</span><br>Sản xuất thừa (Overproduction)</div>
+          <div class="stat-card"><span class="stat-number">D</span><br>Lỗi/Sửa chữa (Defects)</div>
+        </div>
+        <p>Theo Lean Enterprise Institute, sản xuất thừa là hình thức lãng phí tồi tệ nhất vì nó sinh ra các lãng phí khác[reference:1]. Tồn kho che giấu vấn đề, chờ đợi làm gián đoạn dòng chảy, di chuyển không cần thiết gây mệt mỏi và giảm năng suất[reference:2]. Nhận diện chính xác từng loại lãng phí là bước đầu để cải tiến.</p>
+
+        <!-- Section 4: VSM -->
+        <h2 id="section4">4. VSM – Value Stream Mapping</h2>
+        <p>Value Stream Mapping là công cụ trực quan hóa toàn bộ dòng chảy vật chất và thông tin từ nhà cung cấp đến khách hàng. Giúp doanh nghiệp nhìn thấy lãng phí và thiết kế bản đồ tương lai (Future State) hiệu quả hơn[reference:3]. Sai lầm thường thấy là vẽ VSM cho "có" mà không hành động cải tiến thực tế.</p>
+
+        <div class="warning-box">
+          <i class="fas fa-eye"></i> <strong>Tip:</strong> Hãy tổ chức workshop VSM với sự tham gia của nhiều bộ phận, không chỉ riêng phòng sản xuất.
+        </div>
+
+        <!-- Section 5: Kanban -->
+        <h2 id="section5">5. Kanban – Hệ thống kéo (Pull System)</h2>
+        <p>Kanban sử dụng tín hiệu trực quan để kiểm soát sản xuất, chỉ sản xuất khi có nhu cầu. Điều này giúp giảm tồn kho và phản ứng nhanh hơn với biến động thị trường. Một lỗi phổ biến là để Kanban trở nên quá phức tạp hoặc không được cập nhật thường xuyên, làm sai lệch tín hiệu[reference:4].</p>
+
+        <!-- Section 6: Poka-Yoke -->
+        <h2 id="section6">6. Poka-Yoke – Ngăn ngừa sai lỗi</h2>
+        <p>Poka-Yoke là cơ chế chống lỗi, giúp người vận hành tránh được những sai sót do vô ý. Ví dụ: cảm biến lắp ráp đảm bảo chi tiết đã được gắn đúng vị trí. Nhiều doanh nghiệp chỉ chú trọng kiểm tra cuối dây chuyền thay vì thiết kế poka-yoke ngay từ khâu thiết kế[reference:5].</p>
+
+        <!-- Section 7: OEE -->
+        <h2 id="section7">7. OEE – Overall Equipment Effectiveness</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-number" id="oeeValue">0</span>%<br>OEE</div>
+          <div class="stat-card"><span class="stat-number" id="availValue">0</span>%<br>Availability</div>
+          <div class="stat-card"><span class="stat-number" id="perfValue">0</span>%<br>Performance</div>
+          <div class="stat-card"><span class="stat-number" id="qualValue">0</span>%<br>Quality</div>
+        </div>
+        <p>OEE đo lường hiệu suất thiết bị tổng thể qua ba chỉ số: Độ sẵn sàng × Hiệu suất hoạt động × Chất lượng. Lean chuẩn đặt mục tiêu OEE > 85%. Nhiều nhà máy tính OEE sai cách, chỉ tập trung vào thời gian chạy máy mà bỏ qua lỗi chất lượng và dừng nhỏ[reference:6].</p>
+        <div class="quote-box">
+          <i class="fas fa-chart-simple"></i> Công thức OEE = Availability × Performance × Quality
+        </div>
+
+        <!-- Section 8: Case Study -->
+        <h2 id="section8">8. Case Study: Nhà máy cơ khí giảm 40% lãng phí</h2>
+        <p>Một doanh nghiệp cơ khí tại Bình Dương áp dụng Lean trong 6 tháng: VSM phát hiện 70% thời gian là chờ đợi và vận chuyển. Kanban giúp cắt giảm tồn kho đệm. Poka-Yoke được lắp trên dây chuyền gia công, giảm 50% lỗi sản phẩm. Kết quả: OEE tăng từ 62% lên 81%, Lead Time giảm 28%.</p>
+
+        <!-- Section 9: Conclusion -->
+        <h2 id="section9">9. Kết luận mạnh mẽ</h2>
+        <p>Lean không phải đích đến mà là hành trình. Sai lầm là một phần tất yếu, nhưng quan trọng là học hỏi và cải tiến liên tục (Kaizen). Hãy bắt đầu từ việc đào tạo nhận thức, xây dựng văn hóa thí nghiệm, và kiên trì đo lường kết quả bằng những chỉ số như VSM, OEE. Một doanh nghiệp thực sự "tinh gọn" không phải vì nó có nhiều công cụ, mà vì mỗi nhân viên đều biết trân trọng giá trị và dám loại bỏ lãng phí.</p>
+
+        <div class="quote-box">
+          <i class="fas fa-quote-right"></i> "Chất lượng không phải là một hành động, mà là một thói quen." — Aristotle
+        </div>
+
+        <!-- Author Box -->
+        <div class="author-box">
+          <img src="https://ui-avatars.com/api/?background=dc143c&color=fff&name=Lương+Hồng+Quang" alt="Tony EXIM" style="width:64px; border-radius:50%;">
+          <div>
+            <h4>Lương Hồng Quang (Tony EXIM)</h4>
+            <p>Chuyên gia Xuất nhập khẩu & Lean Manufacturing. Đã tư vấn cải tiến cho 10+ nhà máy sản xuất, giúp tiết kiệm chi phí lên đến 35%.</p>
+          </div>
+        </div>
+
+        <!-- Comment UI giả lập -->
+        <div class="comment-box">
+          <h4><i class="fas fa-comments"></i> 3 bình luận</h4>
+          <div style="margin: 1rem 0;"><strong>Minh Đức:</strong> Bài viết rất thực tế, đặc biệt là phần VSM và OEE. Cảm ơn anh Quang!</div>
+          <div style="margin: 1rem 0;"><strong>Thu Hà:</strong> Tôi đang gặp khó khăn khi triển khai Kanban trong ngành may mặc. Mong anh có thêm case study cụ thể.</div>
+          <textarea rows="3" placeholder="Thêm bình luận..." style="width:100%; padding: 0.8rem; border-radius: 20px; border:1px solid #ddd;"></textarea>
+          <button style="margin-top: 0.5rem; background:#dc143c; color:white; border:none; padding:8px 20px; border-radius:30px;">Gửi bình luận</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="blog-sidebar">
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-user"></i> Tác giả</h3>
+        <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia Xuất nhập khẩu & Lean Manufacturing. Kinh nghiệm thực chiến cải tiến nhà máy.</p>
+      </div>
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-tags"></i> Bài viết liên quan</h3>
+        <ul style="list-style: none;">
+          <li>📄 <a href="#" style="color:#1e6ec5;">22 chỉ tiêu tuyệt đối không được khai bổ sung</a></li>
+          <li>📄 <a href="#" style="color:#1e6ec5;">ETO – Thiết kế theo đơn hàng</a></li>
+          <li>📄 <a href="#" style="color:#1e6ec5;">HS Code Master – Xác định mã HS chuẩn xác</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-folder"></i> Categories</h3>
+        <ul><li>Lean Manufacturing</li><li>Quản trị sản xuất</li><li>Logistics</li><li>Xuất nhập khẩu</li></ul>
+      </div>
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-share-alt"></i> Chia sẻ bài viết</h3>
+        <div class="social-share">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></div>
+
+<footer style="background:#0a1929; color:#bbd3ef; text-align:center; padding:2rem; margin-top:2rem;">
+  <div class="container">© 2026 Tony EXIM – Lean Manufacturing & Xuất nhập khẩu. Mọi quyền được bảo lưu.</div>
+</footer>
+
+<script>
+  // Progress Bar
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+  });
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) backBtn.classList.add('show');
+    else backBtn.classList.remove('show');
+  });
+  backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Dark Mode
+  const toggle = document.getElementById('darkModeToggle');
+  toggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    toggle.innerHTML = document.body.classList.contains('dark') ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
+  });
+
+  // Animated counters for OEE
+  function animateCounter(id, target, suffix='%', duration=2000) {
+    let start = 0;
+    const stepTime = Math.abs(Math.floor(duration / target));
+    const elem = document.getElementById(id);
+    if (!elem) return;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += 1;
+      elem.innerText = current;
+      if (current >= target) {
+        elem.innerText = target;
+        clearInterval(timer);
+      }
+    }, stepTime);
+  }
+  // Trigger counter when OEE section appears
+  const oeeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter('oeeValue', 85);
+        animateCounter('availValue', 90);
+        animateCounter('perfValue', 88);
+        animateCounter('qualValue', 96);
+        oeeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const oeeSection = document.getElementById('section7');
+  if (oeeSection) oeeObserver.observe(oeeSection);
+
+  // Active navbar highlight on scroll
+  const sections = ['section1', 'section2', 'section3', 'section4', 'section5', 'section6', 'section7', 'section8', 'section9'];
+  window.addEventListener('scroll', () => {
+    let current = '';
+    for (let sec of sections) {
+      const element = document.getElementById(sec);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 150 && rect.bottom >= 150) current = '#' + sec;
+      }
+    }
+    document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+    if (current) {
+      const activeLink = document.querySelector(`.nav-links a[href="${current}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+
+  // Smooth scrolling for internal links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
