@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | Những Chỉ Tiêu Không Được Sai Khi Khai Tờ Khai Hải Quan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fbfe;
+      color: #0a2540;
+      line-height: 1.5;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background: #0a0c12;
+      color: #e5e9f0;
+    }
+
+    body.dark .card,
+    body.dark .sidebar-widget,
+    body.dark .content-card,
+    body.dark .comment-box,
+    body.dark .table-of-contents,
+    body.dark .author-box,
+    body.dark .checklist-card {
+      background: #14161c;
+      border-color: #2c2f36;
+      color: #e5e9f0;
+    }
+
+    body.dark .navbar {
+      background: rgba(10, 12, 18, 0.98);
+      border-bottom-color: #2c2f36;
+    }
+
+    body.dark .nav-links a {
+      color: #e5e9f0;
+    }
+
+    body.dark .hero {
+      background: linear-gradient(135deg, #0c0f16 0%, #161a24 100%);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* Sticky Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #eef2f8;
+      transition: all 0.3s;
+    }
+
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo a {
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #1e3a5f;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #dc143c;
+    }
+
+    .dark-toggle {
+      background: #eef2ff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: #dc143c;
+      color: white;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 102;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: #dc143c;
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f4fa 100%);
+      padding: 4rem 0;
+      border-bottom: 1px solid #eef2f8;
+    }
+
+    body.dark .hero {
+      background: linear-gradient(135deg, #0c0f16 0%, #161a24 100%);
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg, #dc143c, #ff4d6d);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    /* Blog Layout */
+    .blog-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .blog-main {
+      flex: 3;
+      min-width: 0;
+    }
+
+    .blog-sidebar {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    /* Content Card */
+    .content-card {
+      background: white;
+      border-radius: 32px;
+      padding: 2rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.02);
+      border: 1px solid #eef3fc;
+    }
+
+    /* Table of Contents */
+    .table-of-contents {
+      background: #f8fafd;
+      border-radius: 24px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #dc143c;
+    }
+
+    .table-of-contents h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .toc-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      list-style: none;
+    }
+
+    .toc-list li a {
+      text-decoration: none;
+      color: #1e6ec5;
+      font-size: 0.85rem;
+      background: #eef2ff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      transition: 0.2s;
+    }
+
+    .toc-list li a:hover {
+      background: #dc143c;
+      color: white;
+    }
+
+    /* Typography */
+    h2 {
+      font-size: 1.8rem;
+      margin: 1.8rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #dc143c;
+      display: inline-block;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin: 1.2rem 0 0.8rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      border: 1px solid #eef2f8;
+      transition: all 0.25s;
+      margin-bottom: 1rem;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      border-color: #dc143c;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid #eef2f8;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #dc143c;
+    }
+
+    .quote-box {
+      background: #fef7e0;
+      border-left: 5px solid #f5b042;
+      padding: 1.2rem;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+      font-style: italic;
+    }
+
+    body.dark .quote-box {
+      background: #2c2a1a;
+    }
+
+    .warning-box {
+      background: #fee2e2;
+      border-left: 5px solid #b91c1c;
+      padding: 1rem;
+      border-radius: 16px;
+      margin: 1rem 0;
+    }
+
+    .author-box {
+      display: flex;
+      gap: 1rem;
+      background: #f8fafd;
+      border-radius: 28px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sidebar-widget {
+      background: white;
+      border-radius: 24px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #eef3fc;
+    }
+
+    .sidebar-widget h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #dc143c;
+      padding-left: 0.75rem;
+    }
+
+    .social-share {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .social-share a {
+      background: #eef2ff;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: 0.2s;
+      color: #1e6ec5;
+    }
+
+    .social-share a:hover {
+      background: #dc143c;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #dc143c;
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 99;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+    }
+
+    .comment-box {
+      background: #f8fafd;
+      border-radius: 28px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .blog-wrapper {
+        flex-direction: column;
+      }
+      .nav-links {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-wrap">
+      <div class="logo"><a href="https://luonghongquang.github.io/Tony-EXIM/">Tony EXIM</a></div>
+      <div class="nav-links">
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Trang chủ</a>
+        <a href="#">Blog</a>
+        <a href="#">Xuất nhập khẩu</a>
+        <a href="#">Lean Manufacturing</a>
+        <a href="#">Liên hệ</a>
+        <button class="dark-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Những Chỉ Tiêu Không Được Sai Khi Khai <span class="gradient-text">Tờ Khai Hải Quan</span></h1>
+      <p><strong>Tony EXIM</strong> — Chuyên gia Xuất nhập khẩu & Hải quan. Với kinh nghiệm thực chiến, tôi chia sẻ những chỉ tiêu quan trọng nhất trên tờ khai, giúp doanh nghiệp tránh lỗi sai, tiết kiệm thời gian và chi phí.</p>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="blog-wrapper">
+    <div class="blog-main">
+      <div class="content-card">
+        <!-- Table of Contents -->
+        <div class="table-of-contents">
+          <h3><i class="fas fa-list-ul"></i> Mục lục bài viết</h3>
+          <ul class="toc-list">
+            <li><a href="#section1">1. Giới thiệu</a></li>
+            <li><a href="#section2">2. Chỉ tiêu không được sai</a></li>
+            <li><a href="#section3">3. Các trường hợp phải hủy tờ khai</a></li>
+            <li><a href="#section4">4. Checklist trước khi truyền tờ khai</a></li>
+            <li><a href="#section5">5. Case study thực tế</a></li>
+            <li><a href="#section6">6. Kết luận</a></li>
+          </ul>
+        </div>
+
+        <!-- Section 1: Giới thiệu -->
+        <h2 id="section1">1. Giới thiệu</h2>
+        <p>Việc khai sai chỉ tiêu trên tờ khai hải quan có thể dẫn đến nhiều hậu quả nghiêm trọng: <strong>chậm thông quan, bị xử phạt, mất thời gian sửa tờ khai, và ảnh hưởng đến lịch xuất hàng</strong>. Theo quy định tại Phụ lục I ban hành kèm theo Thông tư số 39/2018/TT-BTC, một số chỉ tiêu thông tin trên tờ khai hải quan điện tử không được phép khai bổ sung. Trong trường hợp có sai sót, doanh nghiệp bắt buộc phải hủy tờ khai và đăng ký tờ khai mới, gây tốn kém thời gian và chi phí.</p>
+        <div class="warning-box">
+          <i class="fas fa-exclamation-triangle"></i> <strong>Lưu ý thực tế:</strong> Theo Nghị định 169/2026/NĐ-CP (có hiệu lực từ 01/07/2026), mức phạt vi phạm hành chính trong lĩnh vực hải quan tăng mạnh, có thể lên đến 200 triệu đồng đối với cá nhân và 400 triệu đồng đối với tổ chức.
+        </div>
+
+        <!-- Section 2: Những chỉ tiêu không được sai -->
+        <h2 id="section2">2. Những chỉ tiêu không được sai</h2>
+        <p>Dưới đây là danh sách chi tiết các chỉ tiêu quan trọng, kèm giải thích, ví dụ và rủi ro khi khai sai:</p>
+
+        <div class="card" id="loaihinh">
+          <h3>📌 Mã loại hình</h3>
+          <p><strong>Giải thích:</strong> Xác định mục đích xuất/nhập khẩu (sản xuất xuất khẩu, tiêu dùng nội địa, gia công...).</p>
+          <p><strong>Ví dụ sai:</strong> Khai "Nhập sản xuất xuất khẩu" nhưng thực tế là "Nhập tiêu dùng nội địa".</p>
+          <p><strong>Rủi ro:</strong> Bị yêu cầu hủy tờ khai, gây chậm trễ, có thể bị xử phạt hành chính.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Nhiều doanh nghiệp nhầm lẫn giữa các mã loại hình có tính chất gần giống nhau. Hãy kiểm tra kỹ mục đích nhập khẩu/xuất khẩu trước khi khai báo.</div>
+        </div>
+
+        <div class="card" id="mahs">
+          <h3>📌 Mã HS (Harmonized System Code)</h3>
+          <p><strong>Giải thích:</strong> Mã phân loại hàng hóa, xác định thuế suất, chính sách quản lý.</p>
+          <p><strong>Ví dụ sai:</strong> Khai mã HS cho linh kiện điện tử nhưng thực tế là máy móc hoàn chỉnh.</p>
+          <p><strong>Rủi ro:</strong> Áp sai thuế suất, bị truy thu thuế, phạt vi phạm hành chính, có thể bị xem xét xử lý hình sự nếu cố tình khai sai.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Nếu không chắc chắn về mã HS, doanh nghiệp nên làm công văn đề nghị cơ quan hải quan xác nhận trước khi khai báo hoặc sử dụng dịch vụ xác định trước mã số (Advance Ruling).</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Mã doanh nghiệp nhập khẩu/xuất khẩu</h3>
+          <p><strong>Giải thích:</strong> Mã số thuế của doanh nghiệp xuất/nhập khẩu.</p>
+          <p><strong>Ví dụ sai:</strong> Ghi sai một chữ số trong mã số thuế của công ty mình hoặc đối tác.</p>
+          <p><strong>Rủi ro:</strong> Không thể xác định đúng đối tượng nộp thuế, chậm thông quan, bị xử phạt.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Cần kiểm tra mã số thuế của doanh nghiệp trên giấy phép kinh doanh, tuyệt đối không sao chép từ các tờ khai trước.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Cảng xếp hàng / cảng dỡ hàng</h3>
+          <p><strong>Giải thích:</strong> Cảng xuất phát và cảng đích của lô hàng.</p>
+          <p><strong>Ví dụ sai:</strong> Khai cảng dỡ hàng là Hải Phòng nhưng thực tế hàng về Cát Lái.</p>
+          <p><strong>Rủi ro:</strong> Sai cảng dỡ hàng khiến hàng không thể thông quan tại cảng đăng ký, buộc phải hủy tờ khai và khai lại, có thể phát sinh chi phí lưu kho, bãi và vận chuyển.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Luôn đối chiếu thông tin cảng trên tờ khai với vận đơn (Bill of Lading) trước khi truyền tờ khai.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Điều kiện giao hàng</h3>
+          <p><strong>Giải thích:</strong> Incoterms (FOB, CIF, EXW...).</p>
+          <p><strong>Ví dụ sai:</strong> Khai CIF nhưng thực tế hợp đồng là FOB.</p>
+          <p><strong>Rủi ro:</strong> Sai trị giá tính thuế, ảnh hưởng đến nghĩa vụ thuế, bị truy thu hoặc hoàn thuế sau này.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Incoterms quy định rõ trách nhiệm, chi phí và rủi ro. Cần kiểm tra kỹ hợp đồng thương mại trước khi khai báo.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Mã phương thức vận chuyển</h3>
+          <p><strong>Giải thích:</strong> Đường biển, hàng không, đường bộ, đường sắt...</p>
+          <p><strong>Ví dụ sai:</strong> Khai đường biển nhưng thực tế hàng chuyển bằng máy bay.</p>
+          <p><strong>Rủi ro:</strong> Sai phương thức vận chuyển là một trong những lỗi không được khai bổ sung, bắt buộc phải hủy tờ khai.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Trừ trường hợp ngoại lệ tại điểm b khoản 3 Điều 82 Thông tư 39/2018/TT-BTC, mã phương thức vận chuyển tuyệt đối không được sửa.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Đơn vị tính</h3>
+          <p><strong>Giải thích:</strong> Chiếc, cái, kg, tấn, m...</p>
+          <p><strong>Ví dụ sai:</strong> Khai đơn vị tính là "kg" nhưng thực tế là "tấn".</p>
+          <p><strong>Rủi ro:</strong> Sai số lượng, sai trọng lượng dẫn đến sai lệch toàn bộ tờ khai, có thể bị xử phạt và ảnh hưởng đến xuất/nhập khẩu.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Cần đối chiếu đơn vị tính trên hợp đồng và chứng từ thương mại.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Trị giá hóa đơn</h3>
+          <p><strong>Giải thích:</strong> Giá trị lô hàng ghi trên invoice.</p>
+          <p><strong>Ví dụ sai:</strong> Khai thiếu trị giá để giảm thuế nhập khẩu.</p>
+          <p><strong>Rủi ro:</strong> Bị ấn định trị giá tính thuế, truy thu thuế, phạt vi phạm hành chính, ảnh hưởng đến uy tín doanh nghiệp.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Việc khai sai trị giá có thể bị coi là hành vi trốn thuế, dẫn đến xử lý hình sự.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Số lượng / Gross Weight / Net Weight</h3>
+          <p><strong>Giải thích:</strong> Số lượng kiện, tổng trọng lượng cả bì và trọng lượng tịnh.</p>
+          <p><strong>Ví dụ sai:</strong> Khai gross weight 1000kg nhưng thực tế 1500kg.</p>
+          <p><strong>Rủi ro:</strong> Chênh lệch trọng lượng là một trong những lỗi phổ biến và nghiêm trọng, có thể bị coi là khai sai dẫn đến truy thu thuế, phạt vi phạm hành chính.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Cần cân chính xác hàng hóa và đối chiếu với packing list trước khi khai báo.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Số vận đơn / Invoice No / Container No</h3>
+          <p><strong>Giải thích:</strong> Số Bill of Lading, số hóa đơn thương mại, số container.</p>
+          <p><strong>Ví dụ sai:</strong> Ghi sai số container do nhầm lẫn khi nhập liệu.</p>
+          <p><strong>Rủi ro:</strong> Sai số vận đơn là một trong các lỗi không được khai bổ sung, buộc phải hủy tờ khai. Sai số container có thể dẫn đến lấy nhầm hàng, gây thiệt hại lớn.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Nên nhập liệu trực tiếp từ chứng từ gốc để tránh sai sót.</div>
+        </div>
+
+        <div class="card">
+          <h3>📌 Thông tin giấy phép/chứng từ đính kèm</h3>
+          <p><strong>Giải thích:</strong> Các giấy phép nhập khẩu, kiểm tra chuyên ngành, C/O...</p>
+          <p><strong>Ví dụ sai:</strong> Khai thiếu giấy phép nhập khẩu đối với mặt hàng có điều kiện.</p>
+          <p><strong>Rủi ro:</strong> Hàng hóa bị giữ, buộc tái xuất hoặc tịch thu, bị xử phạt vi phạm hành chính.</p>
+          <div class="warning-box"><i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế:</strong> Cần cập nhật thường xuyên danh mục hàng hóa cần kiểm tra chuyên ngành và các quy định về giấy phép.</div>
+        </div>
+
+        <!-- Section 3: Các trường hợp phải hủy tờ khai -->
+        <h2 id="section3">3. Các trường hợp phải hủy tờ khai</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-number">1</span><br>Sai mã HS nghiêm trọng</div>
+          <div class="stat-card"><span class="stat-number">2</span><br>Sai loại hình</div>
+          <div class="stat-card"><span class="stat-number">3</span><br>Sai doanh nghiệp</div>
+          <div class="stat-card"><span class="stat-number">4</span><br>Sai trị giá</div>
+          <div class="stat-card"><span class="stat-number">5</span><br>Sai phương thức vận chuyển</div>
+          <div class="stat-card"><span class="stat-number">6</span><br>Khai nhầm container</div>
+        </div>
+        <p>Các trường hợp trên đều thuộc nhóm chỉ tiêu "cấm khai bổ sung" theo quy định. Doanh nghiệp bắt buộc phải hủy tờ khai và đăng ký lại. Việc hủy tờ khai có thể dẫn đến chậm trễ thông quan, phát sinh chi phí lưu kho, lưu bãi, ảnh hưởng đến tiến độ giao hàng và uy tín với đối tác.</p>
+        <div class="warning-box">
+          <i class="fas fa-info-circle"></i> <strong>Thủ tục hủy tờ khai:</strong> Doanh nghiệp cần thực hiện hủy đăng ký trên hệ thống VNACCS/VCIS (nếu tờ khai chưa thông quan). Nếu tờ khai đã ở luồng vàng/đỏ, cần làm văn bản đề nghị hủy tờ khai gửi Chi cục Hải quan.
+        </div>
+
+        <!-- Section 4: Checklist -->
+        <h2 id="section4">4. Checklist trước khi truyền tờ khai</h2>
+        <div class="card">
+          <ul style="margin-left: 1.5rem;">
+            <li>✔️ Kiểm tra invoice (hóa đơn thương mại): đối chiếu số hóa đơn, ngày, trị giá, điều kiện giao hàng, đơn vị tiền tệ.</li>
+            <li>✔️ Kiểm tra packing list (phiếu đóng gói): đối chiếu số kiện, chủng loại, trọng lượng net/gross, số container, số seal.</li>
+            <li>✔️ Kiểm tra bill of lading (vận đơn): đối chiếu số vận đơn, cảng xếp hàng, cảng dỡ hàng, tên tàu, ngày hàng đến.</li>
+            <li>✔️ Kiểm tra mã HS: tra cứu kỹ, tham khảo ý kiến chuyên gia nếu cần.</li>
+            <li>✔️ Kiểm tra gross weight, net weight: đảm bảo khớp với packing list và thực tế.</li>
+            <li>✔️ Kiểm tra số container và seal: nhập chính xác từng số.</li>
+            <li>✔️ Kiểm tra loại hình, mã doanh nghiệp, mã phương thức vận chuyển, cơ quan hải quan.</li>
+          </ul>
+        </div>
+
+        <!-- Section 5: Case Study -->
+        <h2 id="section5">5. Case study thực tế</h2>
+        <div class="case-study">
+          <div class="card">
+            <h3>📌 Case 1: Khai sai gross weight</h3>
+            <p><strong>Tình huống:</strong> Một doanh nghiệp xuất khẩu hàng thủy sản khai gross weight là 10.000kg nhưng thực tế hàng cân được 12.000kg do độ ẩm cao hơn dự kiến.</p>
+            <p><strong>Hậu quả:</strong> Chênh lệch trọng lượng 20%, bị hải quan yêu cầu giải trình. Doanh nghiệp phải hủy tờ khai, khai báo lại, mất 2 ngày và phát sinh chi phí lưu cont 2 triệu đồng. Ngoài ra còn bị xử phạt vi phạm hành chính 5 triệu đồng.</p>
+            <p><strong>Cách xử lý:</strong> Cân chính xác hàng hóa trước khi khai báo, hoặc khai trọng lượng dự kiến có dư ra một chút để tránh thiếu hụt.</p>
+          </div>
+          <div class="card">
+            <h3>📌 Case 2: Sai cảng đích</h3>
+            <p><strong>Tình huống:</strong> Một lô hàng nhập khẩu, bộ phận làm chứng từ ghi cảng dỡ là Hải Phòng, nhưng thực tế vận đơn ghi là Cái Mép - Vũng Tàu.</p>
+            <p><strong>Hậu quả:</strong> Cảng dỡ là chỉ tiêu không được khai bổ sung. Doanh nghiệp buộc phải hủy tờ khai, mất 3 ngày để khai lại. Hàng bị lưu kho tại cảng, phát sinh chi phí lưu cont 4 triệu đồng/ngày, tổng thiệt hại 12 triệu đồng.</p>
+            <p><strong>Cách xử lý:</strong> Luôn đối chiếu thông tin trên vận đơn trước khi khai báo, tuyệt đối không dùng lại thông tin từ tờ khai cũ.</p>
+          </div>
+        </div>
+
+        <!-- Section 6: Kết luận -->
+        <h2 id="section6">6. Kết luận</h2>
+        <p>Một tờ khai đúng không chỉ giúp thông quan nhanh mà còn thể hiện năng lực vận hành của doanh nghiệp. Sai sót dù nhỏ cũng có thể gây ra hậu quả lớn: chậm trễ, chi phí phát sinh, xử phạt, mất uy tín. Hãy tuân thủ đúng quy trình, kiểm tra kỹ lưỡng các chỉ tiêu quan trọng trước khi truyền tờ khai, và luôn cập nhật những quy định mới nhất của pháp luật hải quan.</p>
+
+        <div class="quote-box">
+          <i class="fas fa-quote-right"></i> "Cẩn thận từng chi tiết nhỏ là chìa khóa để vận hành một hệ thống xuất nhập khẩu hiệu quả và bền vững."
+        </div>
+
+        <!-- Author Box -->
+        <div class="author-box">
+          <img src="https://ui-avatars.com/api/?background=dc143c&color=fff&name=Lương+Hồng+Quang" alt="Tony EXIM" style="width:64px; border-radius:50%;">
+          <div>
+            <h4>Lương Hồng Quang (Tony EXIM)</h4>
+            <p>Chuyên gia Xuất nhập khẩu & Hải quan. Đã tư vấn và xử lý thành công hàng nghìn tờ khai cho các doanh nghiệp sản xuất và thương mại.</p>
+          </div>
+        </div>
+
+        <!-- Related Posts -->
+        <div class="card" style="background:#f8fafd;">
+          <h3><i class="fas fa-bookmark"></i> Bài viết liên quan</h3>
+          <ul style="margin-left: 1.5rem;">
+            <li>📄 <a href="#" style="color:#1e6ec5;">Quy trình phân loại mã HS chuẩn xác</a></li>
+            <li>📄 <a href="#" style="color:#1e6ec5;">Tổng hợp Nghị định 169/2026/NĐ-CP</a></li>
+            <li>📄 <a href="#" style="color:#1e6ec5;">ETA, ETD là gì? Giải nghĩa chi tiết</a></li>
+          </ul>
+        </div>
+
+        <!-- Comment UI -->
+        <div class="comment-box">
+          <h4><i class="fas fa-comments"></i> 2 bình luận</h4>
+          <div style="margin: 1rem 0;"><strong>Minh Anh:</strong> Bài viết rất chi tiết và thực tế. Cảm ơn anh Quang!</div>
+          <div style="margin: 1rem 0;"><strong>Hải Đăng:</strong> Cho em hỏi trường hợp sai mã HS nhưng hàng đã thông quan thì xử lý thế nào ạ?</div>
+          <textarea rows="3" placeholder="Thêm bình luận..." style="width:100%; padding: 0.8rem; border-radius: 20px; border:1px solid #ddd;"></textarea>
+          <button style="margin-top: 0.5rem; background:#dc143c; color:white; border:none; padding:8px 20px; border-radius:30px;">Gửi bình luận</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="blog-sidebar">
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-user"></i> Tác giả</h3>
+        <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia Xuất nhập khẩu & Hải quan. Kinh nghiệm thực chiến tại VINA PRIDE SEAFOODS, BPL Logistics. Đào tạo và tư vấn cho hàng trăm doanh nghiệp về thủ tục hải quan.</p>
+      </div>
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-tags"></i> Categories</h3>
+        <ul><li>Thủ tục hải quan</li><li>Xuất nhập khẩu</li><li>Quản trị rủi ro</li><li>Phân loại hàng hóa</li></ul>
+      </div>
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-share-alt"></i> Chia sẻ bài viết</h3>
+        <div class="social-share">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <h3><i class="fas fa-download"></i> Tài liệu đính kèm</h3>
+        <p>Download checklist 22 chỉ tiêu và mẫu công văn đề nghị hủy tờ khai.</p>
+        <a href="#" style="display: inline-block; background: #dc143c; color: white; padding: 6px 18px; border-radius: 30px; text-decoration: none; margin-top: 10px;">Tải ngay</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></div>
+
+<footer style="background:#0a1929; color:#bbd3ef; text-align:center; padding:2rem; margin-top:2rem;">
+  <div class="container">© 2026 Tony EXIM – Kiến thức Xuất nhập khẩu & Hải quan. Mọi quyền được bảo lưu.</div>
+</footer>
+
+<script>
+  // Progress Bar
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+  });
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) backBtn.classList.add('show');
+    else backBtn.classList.remove('show');
+  });
+  backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Dark Mode
+  const toggle = document.getElementById('darkModeToggle');
+  toggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    toggle.innerHTML = document.body.classList.contains('dark') ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
+  });
+
+  // Smooth scrolling for internal links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
