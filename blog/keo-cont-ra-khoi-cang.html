@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tony EXIM | Quy trình kéo hàng ra khỏi cảng</title>
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ----- VARIABLES PASTEL ----- */
+    :root {
+      --bg: #FFFCF9;
+      --surface: #FFFFFF;
+      --primary: #FF9AA2;
+      --primary-light: #FFB7B2;
+      --secondary: #FFDAC1;
+      --accent: #B5EAD7;
+      --accent-dark: #C7CEEA;
+      --text: #2D3E50;
+      --text-light: #6C7F8F;
+      --border: #F0E5E0;
+      --shadow: 0 12px 28px rgba(0, 0, 0, 0.03);
+      --shadow-hover: 0 20px 32px rgba(0, 0, 0, 0.06);
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar Pastel */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--secondary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    /* Loading screen */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.4s;
+    }
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--accent);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Sticky Navbar + Blur */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 252, 249, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.8rem 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo a {
+      font-size: 1.7rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: var(--text);
+      transition: 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    .menu-icon {
+      display: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    /* Mobile Menu Slide */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 80%;
+      max-width: 300px;
+      height: 100%;
+      background: var(--surface);
+      z-index: 200;
+      padding: 2rem 1.5rem;
+      transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.05);
+      border-right: 1px solid var(--border);
+    }
+    .mobile-menu.open {
+      left: 0;
+    }
+    .close-menu {
+      text-align: right;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+    .mobile-menu a {
+      display: block;
+      padding: 0.8rem 0;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      border-bottom: 1px solid var(--secondary);
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: 150;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s;
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(255, 250, 245, 0.88), rgba(255, 218, 193, 0.75)), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+      padding: 5rem 0;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text);
+      animation: fadeUp 0.6s ease;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s 0.1s both;
+    }
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: linear-gradient(110deg, var(--primary), var(--primary-light));
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(255, 154, 162, 0.3);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 20px rgba(255, 154, 162, 0.4);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--accent-dark);
+      padding: 10px 26px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: var(--text);
+      transition: var(--transition);
+    }
+    .btn-outline:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+    section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .section-title:after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      display: block;
+      margin: 0.8rem auto 0;
+      border-radius: 4px;
+    }
+
+    /* Cards Grid */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+    .card i {
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    /* Timeline Workflow */
+    .timeline {
+      position: relative;
+      margin: 2rem 0;
+    }
+    .step-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .step-number {
+      width: 50px;
+      height: 50px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: white;
+      margin-right: 1.5rem;
+      flex-shrink: 0;
+    }
+    .step-content {
+      flex: 1;
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .step-content:hover {
+      transform: translateX(6px);
+      border-color: var(--accent-dark);
+      box-shadow: var(--shadow);
+    }
+    .step-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .step-desc {
+      color: var(--text-light);
+      margin-bottom: 0.4rem;
+    }
+    .step-note {
+      font-size: 0.85rem;
+      background: var(--secondary);
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 30px;
+      margin-top: 0.5rem;
+    }
+
+    /* Accordion */
+    .accordion-item {
+      background: var(--surface);
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .accordion-header {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accordion-header:hover {
+      background: #FFF5F0;
+    }
+    .accordion-content {
+      max-height: 0;
+      padding: 0 1.5rem;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .accordion-item.active .accordion-content {
+      max-height: 200px;
+      padding: 0 1.5rem 1rem;
+    }
+    .fa-chevron-down {
+      transition: transform 0.25s;
+    }
+    .accordion-item.active .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    /* Checklist */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+    .checklist-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 0.8rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .checklist-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .checklist-card i {
+      font-size: 1.2rem;
+      color: var(--accent-dark);
+    }
+    .checklist-card span {
+      flex: 1;
+    }
+    .checklist-card.completed i {
+      color: var(--primary);
+    }
+    .checklist-card.completed span {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: 0.2s;
+      z-index: 98;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .back-to-top.show { opacity: 1; }
+    .back-to-top:hover { background: var(--primary-light); transform: scale(1.02); }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+    }
+    .social-icons a {
+      color: var(--text-light);
+      margin: 0 0.8rem;
+      font-size: 1.3rem;
+      transition: 0.2s;
+    }
+    .social-icons a:hover {
+      color: var(--primary);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 780px) {
+      .hero h1 { font-size: 1.9rem; }
+      .section-title { font-size: 1.5rem; }
+      .step-row { flex-direction: column; }
+      .step-number { margin-bottom: 0.5rem; }
+      .nav-links { display: none; }
+      .menu-icon { display: block; }
+    }
+  </style>
+</head>
+<body>
+<div id="loading"><div class="loader"></div></div>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo"><a href="https://luonghongquang.github.io/Tony-EXIM/">TONY EXIM</a></div>
+    <div class="nav-links">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Trang chủ</a>
+      <a href="#process">Quy trình</a>
+      <a href="#documents">Hồ sơ</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Liên hệ</a>
+    </div>
+    <div class="menu-icon" id="menuIcon"><i class="fas fa-bars"></i></div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="close-menu" id="closeMenu">&times;</div>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Trang chủ</a>
+  <a href="#process">Quy trình</a>
+  <a href="#documents">Hồ sơ</a>
+  <a href="#faq">FAQ</a>
+  <a href="#contact">Liên hệ</a>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>QUY TRÌNH KÉO HÀNG RA KHỎI CẢNG</h1>
+    <p>Hướng dẫn thực tế quy trình kéo container từ cảng về kho doanh nghiệp</p>
+    <div class="btn-group">
+      <a href="#process" class="btn-primary">Xem quy trình</a>
+      <a href="#documents" class="btn-outline">Download SOP</a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Giới thiệu các bên liên quan -->
+  <section id="intro">
+    <h2 class="section-title reveal">🏭 Các bên liên quan trong quy trình kéo hàng</h2>
+    <div class="grid-3 reveal">
+      <div class="card"><i class="fas fa-building"></i><h3>EXIM Dept</h3><p>Yêu cầu hủy xuất hàng, phối hợp chứng từ</p></div>
+      <div class="card"><i class="fas fa-handshake"></i><h3>Agent / Forwarder</h3><p>Thông báo giữ container, xử lý local charges</p></div>
+      <div class="card"><i class="fas fa-ship"></i><h3>Shipping Line</h3><p>Hold container, xác nhận đủ điều kiện kéo</p></div>
+      <div class="card"><i class="fas fa-warehouse"></i><h3>Container Yard</h3><p>Xác nhận thực tế container còn trên bãi</p></div>
+      <div class="card"><i class="fas fa-passport"></i><h3>Hải quan</h3><p>Đóng dấu xác nhận, xóa giám sát, hủy tờ khai</p></div>
+      <div class="card"><i class="fas fa-truck"></i><h3>Depot / Trucking</h3><p>Điều xe, kéo container ra khỏi cảng</p></div>
+    </div>
+  </section>
+
+  <!-- Quy trình chính dạng timeline (dựa theo flow ảnh) -->
+  <section id="process">
+    <h2 class="section-title reveal">⚓ Quy trình kéo hàng ra khỏi cảng</h2>
+    <div class="timeline reveal">
+      <div class="step-row"><div class="step-number">1</div><div class="step-content"><div class="step-title">EXIM Dept yêu cầu hủy xuất hàng</div><div class="step-desc">Bộ phận xuất nhập khẩu gửi văn bản đề nghị hủy lô hàng, kèm lý do (thay đổi lịch, sai chứng từ...)</div><div class="step-note">📌 Bắt buộc có công văn hủy hàng</div></div></div>
+      <div class="step-row"><div class="step-number">2</div><div class="step-content"><div class="step-title">Agent gửi thông báo giữ container tại cảng</div><div class="step-desc">Đại lý làm thủ tục thông báo hãng tàu giữ container, chặn xuất hàng.</div><div class="step-note">🚨 Phải xác nhận container chưa rời bãi</div></div></div>
+      <div class="step-row"><div class="step-number">3</div><div class="step-content"><div class="step-title">Shipping Line xác nhận hold container</div><div class="step-desc">Hãng tàu chốt trạng thái "hold" trên hệ thống, ngừng cho phép xuất khẩu.</div><div class="step-note">📄 Đóng phí hold nếu có</div></div></div>
+      <div class="step-row"><div class="step-number">4</div><div class="step-content"><div class="step-title">Container Yard xác nhận container còn trong bãi</div><div class="step-desc">Bãi kiểm tra thực tế, xác nhận container chưa được xếp lên tàu.</div><div class="step-note">✅ Cần EIR hoặc bảng kê bãi</div></div></div>
+      <div class="step-row"><div class="step-number">5</div><div class="step-content"><div class="step-title">Hải quan đóng dấu xác nhận container còn tại bãi</div><div class="step-desc">Chi cục Hải quan nơi làm thủ tục đóng dấu xác nhận hiện trạng container.</div><div class="step-note">🖨️ Bước bắt buộc để xóa giám sát</div></div></div>
+      <div class="step-row"><div class="step-number">6</div><div class="step-content"><div class="step-title">Xóa giám sát hải quan</div><div class="step-desc">Cán bộ hải quan thực hiện xóa giám sát lô hàng trên hệ thống VNACCS.</div><div class="step-note">⚠️ Sau bước này container không còn bị kiểm soát xuất khẩu</div></div></div>
+      <div class="step-row"><div class="step-number">7</div><div class="step-content"><div class="step-title">Hủy tờ khai hải quan</div><div class="step-desc">Thực hiện thủ tục hủy tờ khai xuất khẩu đã đăng ký.</div><div class="step-note">📋 Lưu hồ sơ hủy tờ khai</div></div></div>
+      <div class="step-row"><div class="step-number">8</div><div class="step-content"><div class="step-title">Đóng mộc điện (xác nhận điện tử)</div><div class="step-desc">Đóng dấu điện tử xác nhận container đã được xóa giám sát và hủy tờ khai.</div><div class="step-note">✅ Hệ thống cập nhật trạng thái mới</div></div></div>
+      <div class="step-row"><div class="step-number">9</div><div class="step-content"><div class="step-title">Làm thủ tục kéo container và tạo tờ khai mới</div><div class="step-desc">EXIM Dept khai tờ khai nhập khẩu hoặc tờ khai xuất mới tùy theo mục đích.</div><div class="step-note">📦 Kiểm tra lại mã HS, thuế suất</div></div></div>
+      <div class="step-row"><div class="step-number">10</div><div class="step-content"><div class="step-title">Container Yard xác nhận đủ điều kiện kéo container</div><div class="step-desc">Bãi container xác nhận đã đủ lệnh, phí, chứng từ để kéo container rời bãi.</div><div class="step-note">🚛 Cấp phiếu giao container</div></div></div>
+      <div class="step-row"><div class="step-number">11</div><div class="step-content"><div class="step-title">Điều xe kéo container ra khỏi cảng</div><div class="step-desc">Đội xe trucking nhận lệnh, kéo container về kho doanh nghiệp hoặc địa điểm chỉ định.</div><div class="step-note">✅ Hoàn tất kéo hàng</div></div></div>
+    </div>
+  </section>
+
+  <!-- Lưu ý nghiệp vụ dạng Accordion -->
+  <section id="notes">
+    <h2 class="section-title reveal">📘 Lưu ý nghiệp vụ khi kéo hàng</h2>
+    <div class="accordion reveal">
+      <div class="accordion-item"><div class="accordion-header">📦 Kiểm tra container còn trong bãi <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Bắt buộc xác nhận thực tế container chưa được đưa lên tàu. Nếu đã xếp tàu, quy trình phức tạp hơn rất nhiều.</div></div>
+      <div class="accordion-item"><div class="accordion-header">💰 Phí hold container <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Hãng tàu có thể tính phí hold nếu container đã được đặt booking và xác nhận lịch. Cần thương lượng trước.</div></div>
+      <div class="accordion-item"><div class="accordion-header">📄 Hủy tờ khai ảnh hưởng gì? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Hủy tờ khai xuất sẽ mất chỉ tiêu xuất khẩu, phải báo cáo nếu có liên quan đến hạn ngạch.</div></div>
+      <div class="accordion-item"><div class="accordion-header">🔓 Khi nào cần xóa giám sát? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Trước khi hủy tờ khai, phải được xóa giám sát bởi Chi cục Hải quan nơi đăng ký.</div></div>
+      <div class="accordion-item"><div class="accordion-header">⏳ Rủi ro storage / demurrage <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Container nằm bãi quá thời gian free-time sẽ phát sinh phí lưu bãi, lưu container. Cần kéo sớm.</div></div>
+      <div class="accordion-item"><div class="accordion-header">✂️ Kiểm tra cut-off <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Trước khi kéo, phải kiểm tra cut-off hạ bãi của chuyến tàu mới nếu có booking thay thế.</div></div>
+    </div>
+  </section>
+
+  <!-- Checklist hồ sơ (click để gạch) -->
+  <section id="documents">
+    <h2 class="section-title reveal">📋 Checklist hồ sơ kéo hàng</h2>
+    <div class="checklist-grid reveal" id="checklistContainer">
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Bill of Lading (B/L)</span></div>
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Delivery Order (D/O)</span></div>
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Tờ khai hải quan xuất khẩu</span></div>
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Phiếu EIR</span></div>
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Công văn hủy tờ khai</span></div>
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Booking mới (nếu có)</span></div>
+      <div class="checklist-card" data-checked="false"><i class="far fa-square"></i><span>Phiếu xác nhận container còn bãi</span></div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion -->
+  <section id="faq">
+    <h2 class="section-title reveal">❓ Câu hỏi thường gặp</h2>
+    <div class="accordion reveal">
+      <div class="accordion-item"><div class="accordion-header">🧐 Container đã vào bãi có hủy xuất được không? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Có thể, nhưng phải làm thủ tục xóa giám sát và hủy tờ khai trước khi container được xếp lên tàu.</div></div>
+      <div class="accordion-item"><div class="accordion-header">🔁 Có cần hủy tờ khai không? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Bắt buộc phải hủy tờ khai xuất khẩu cũ để tránh sai lệch dữ liệu hải quan.</div></div>
+      <div class="accordion-item"><div class="accordion-header">💸 Hủy xuất có mất phí không? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Có thể phát sinh phí hành chính, phí hold container, phí hạ bãi (tùy hãng tàu).</div></div>
+      <div class="accordion-item"><div class="accordion-header">🤝 Ai chịu phí phát sinh? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Theo thỏa thuận hợp đồng thương mại, thường bên yêu cầu hủy hàng sẽ chịu.</div></div>
+      <div class="accordion-item"><div class="accordion-header">📦 Có cần làm booking mới không? <i class="fas fa-chevron-down"></i></div><div class="accordion-content">Nếu muốn xuất lại, cần booking mới và tờ khai mới.</div></div>
+    </div>
+  </section>
+</div>
+
+<footer id="contact">
+  <div class="container">
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p style="margin: 1rem 0;">📧 tony.exim@logistics.com | 📞 0988 123 456</p>
+    <p>© 2026 TONY EXIM — Quy trình kéo hàng ra khỏi cảng chuyên nghiệp</p>
+  </div>
+</footer>
+
+<div class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+  // Loading
+  window.addEventListener('load', () => {
+    const loading = document.getElementById('loading');
+    loading.style.opacity = '0';
+    setTimeout(() => { loading.style.display = 'none'; }, 500);
+  });
+
+  // Mobile menu
+  const menuIcon = document.getElementById('menuIcon');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const closeMenu = document.getElementById('closeMenu');
+  const overlay = document.getElementById('overlay');
+  function openMenu() { mobileMenu.classList.add('open'); overlay.classList.add('active'); }
+  function closeMenuFn() { mobileMenu.classList.remove('open'); overlay.classList.remove('active'); }
+  menuIcon.addEventListener('click', openMenu);
+  closeMenu.addEventListener('click', closeMenuFn);
+  overlay.addEventListener('click', closeMenuFn);
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) backBtn.classList.add('show');
+    else backBtn.classList.remove('show');
+  });
+  backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Accordion
+  const accordions = document.querySelectorAll('.accordion-item');
+  accordions.forEach(item => {
+    const header = item.querySelector('.accordion-header');
+    header.addEventListener('click', () => { item.classList.toggle('active'); });
+  });
+
+  // Checklist click to strike
+  const checklistCards = document.querySelectorAll('.checklist-card');
+  checklistCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const checked = card.getAttribute('data-checked') === 'true';
+      const icon = card.querySelector('i');
+      if (!checked) {
+        card.setAttribute('data-checked', 'true');
+        card.classList.add('completed');
+        icon.className = 'fas fa-check-circle';
+      } else {
+        card.setAttribute('data-checked', 'false');
+        card.classList.remove('completed');
+        icon.className = 'far fa-square';
+      }
+    });
+  });
+
+  // Smooth scroll anchor
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        closeMenuFn();
+      }
+    });
+  });
+</script>
+</body>
+</html>
