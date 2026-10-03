@@ -1,579 +1,780 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Tony EXIM | Chỉ tiêu tuyệt đối không được khai bổ sung – Hủy tờ khai</title>
-  <!-- Google Fonts & Font Awesome -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Những Chỉ Tiêu Thông Tin Khai Báo Sai Buộc Phải Hủy Tờ Khai · Tony EXIM</title>
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f9fbfe;
-      color: #0a2540;
-      line-height: 1.5;
-    }
+    <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
 
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    /* header navigation */
-    .site-header {
-      background: white;
-      box-shadow: 0 1px 0 #eef2f8;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-    .nav-wrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .logo a {
-      font-size: 1.6rem;
-      font-weight: 800;
-      text-decoration: none;
-      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      letter-spacing: -0.3px;
-    }
+        :root {
+            --bg-body: #121212;
+            --bg-sidebar: #1e1e1e;
+            --bg-card: #2b2b2b;
+            --bg-card-hover: #3a3a3a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #7a7a7a;
+            --accent: #ffdb70;
+            --accent-dark: #d4b24a;
+            --border-light: #3a3a3a;
+            --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --font: 'Poppins', sans-serif;
+        }
 
-    .logo span {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #5c7c9c;
-      display: block;
-    }
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    .nav-links a {
-      text-decoration: none;
-      margin-left: 2rem;
-      font-weight: 500;
-      color: #1e3a5f;
-      transition: 0.2s;
-    }
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
+        }
 
-    .nav-links a:hover {
-      color: #0f6baf;
-    }
+        /* ====== SIDEBAR ====== */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 30px 22px 26px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            position: sticky;
+            top: 30px;
+            text-align: center;
+        }
 
-    /* bài viết */
-    #post-171 {
-      margin: 2rem 0 3rem;
-    }
+        .sidebar-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            border: 3px solid var(--accent);
+            background: #333;
+        }
 
-    .entry-content {
-      width: 100%;
-    }
+        .sidebar-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
 
-    .is-layout-constrained {
-      max-width: 1280px;
-      margin-left: auto;
-      margin-right: auto;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--accent);
+            background: rgba(255, 219, 112, 0.1);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin: 6px 0 18px;
+        }
 
-    /* animation */
-    @keyframes fadeUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 18px 0;
+        }
 
-    .entry-content > * {
-      animation: fadeUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-      opacity: 0;
-    }
+        .sidebar-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+            font-size: 0.82rem;
+        }
 
-    .entry-content > :nth-child(1) { animation-delay: 0.05s; }
-    .entry-content > :nth-child(2) { animation-delay: 0.1s; }
-    .entry-content > :nth-child(3) { animation-delay: 0.15s; }
-    .entry-content > :nth-child(4) { animation-delay: 0.2s; }
+        .sidebar-contact .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
 
-    /* layout 2 cột */
-    .blog-layout {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
-    }
+        .sidebar-contact .item iconify-icon {
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
 
-    .blog-main {
-      flex: 3;
-      min-width: 0;
-    }
+        .sidebar-contact .item a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
 
-    .blog-sidebar {
-      flex: 1;
-      min-width: 260px;
-    }
+        .sidebar-contact .item a:hover {
+            color: var(--accent);
+        }
 
-    .post-meta {
-      margin-bottom: 1.2rem;
-    }
+        .sidebar-contact .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 1px;
+        }
 
-    .category-badge {
-      background: #eef2ff;
-      padding: 4px 14px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #0057a3;
-      display: inline-block;
-    }
+        .sidebar-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
 
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin: 0.75rem 0 0.5rem;
-      line-height: 1.25;
-      color: #002856;
-    }
+        .sidebar-social a {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            transition: color 0.2s, transform 0.2s;
+        }
 
-    .meta-info {
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.85rem;
-      color: #5f7d9c;
-      border-bottom: 1px solid #e2edf5;
-      padding-bottom: 1rem;
-      margin-bottom: 1.8rem;
-    }
+        .sidebar-social a:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
 
-    .content-card {
-      background: white;
-      border-radius: 32px;
-      padding: 2rem;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.02);
-      border: 1px solid #eef3fc;
-    }
+        /* ====== MAIN CONTENT ====== */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
 
-    /* header chính */
-    .doc-header {
-      background: #0a2f44;
-      color: white;
-      border-radius: 28px;
-      padding: 1.5rem 2rem;
-      margin: 0 0 2rem 0;
-      text-align: center;
-    }
-    .doc-header h2 {
-      font-size: 1.6rem;
-      margin-bottom: 0.5rem;
-    }
-    .doc-header .sub {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-    .doc-header .critical {
-      font-weight: 800;
-      margin-top: 8px;
-      font-size: 1rem;
-    }
+        .navbar {
+            background: var(--bg-sidebar);
+            border-radius: 40px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .section-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #00356b;
-      margin: 1.5rem 0 1rem;
-      border-left: 5px solid #1e6ec5;
-      padding-left: 1rem;
-    }
+        .navbar button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-    /* ========= PHẦN 1: CÁC KHỐI CARD HOVER NẢY + CLICK POPUP ========= */
-    .criteria-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin: 1.5rem 0;
-    }
-    .criteria-card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 1.4rem;
-      border: 1px solid #e2edf5;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-    .criteria-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
-      border-color: #1e6ec5;
-      background: #fefefe;
-    }
-    .card-number {
-      font-weight: 800;
-      font-size: 1.4rem;
-      color: #1e6ec5;
-      margin-bottom: 0.5rem;
-    }
-    .card-title {
-      font-weight: 700;
-      font-size: 1.15rem;
-      margin-bottom: 0.5rem;
-    }
-    .card-desc {
-      color: #4a627a;
-      font-size: 0.85rem;
-    }
-    .card-hint {
-      margin-top: 0.8rem;
-      font-size: 0.7rem;
-      color: #8aa0bc;
-      display: inline-block;
-    }
+        .navbar button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
 
-    /* ========= PHẦN 2: NHÓM + HOVER ĐỔI MÀU ========= */
-    .group-container {
-      margin: 2rem 0 1.5rem;
-    }
-    .group-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin: 1.2rem 0 0.8rem;
-      color: #003e6e;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 2px solid #e2edf5;
-      padding-bottom: 0.5rem;
-    }
-    .bp-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin: 0.5rem 0 1rem;
-    }
-    .bp-item {
-      display: flex;
-      align-items: baseline;
-      padding: 0.8rem 1rem;
-      background: #fafcff;
-      border-radius: 16px;
-      border: 1px solid #eef2f8;
-      transition: all 0.2s;
-    }
-    .bp-item:hover {
-      background: #eef4fc;
-      border-color: #1e6ec5;
-      transform: translateX(4px);
-    }
-    .bp-num {
-      font-weight: 800;
-      font-size: 1rem;
-      color: #1e6ec5;
-      width: 42px;
-      flex-shrink: 0;
-    }
-    .bp-content {
-      flex: 1;
-    }
-    .bp-title {
-      font-weight: 700;
-      font-size: 1rem;
-    }
-    .bp-desc {
-      font-size: 0.85rem;
-      color: #4a627a;
-      margin-top: 2px;
-    }
+        .navbar button.active {
+            background: var(--accent);
+            color: #121212;
+            font-weight: 600;
+        }
 
-    .arrow-down {
-      text-align: center;
-      margin: 1rem 0;
-      font-weight: 700;
-      color: #1e6ec5;
-      font-size: 1rem;
-    }
+        /* ====== ARTICLE ====== */
+        .article-card {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 32px 34px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
 
-    /* popup modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: white;
-      max-width: 480px;
-      width: 90%;
-      border-radius: 32px;
-      padding: 1.5rem;
-      position: relative;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.2);
-      border-top: 6px solid #1e6ec5;
-    }
-    .modal-close {
-      position: absolute;
-      right: 1rem;
-      top: 0.8rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #8aa0bc;
-    }
-    .modal-close:hover { color: #b91c1c; }
-    .modal h4 { font-size: 1.3rem; margin-bottom: 0.8rem; color: #00356b; }
-    .modal p { line-height: 1.5; color: #2c4e6e; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .warning-note {
-      background: #fee2e2;
-      border-left: 5px solid #b91c1c;
-      padding: 1rem;
-      border-radius: 16px;
-      margin: 1.5rem 0;
-    }
+        .article-header {
+            margin-bottom: 26px;
+        }
 
-    .sidebar-widget {
-      background: white;
-      border-radius: 24px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      border: 1px solid #eef3fc;
-      transition: transform 0.2s;
-    }
-    .sidebar-widget:hover { transform: translateY(-4px); }
-    .sidebar-widget h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      border-left: 4px solid #1e6ec5;
-      padding-left: 0.75rem;
-    }
+        .article-badge {
+            display: inline-block;
+            background: rgba(255, 219, 112, 0.15);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin-bottom: 12px;
+        }
 
-    .footer {
-      background: #0a1929;
-      color: #bbd3ef;
-      text-align: center;
-      padding: 2rem 0;
-      margin-top: 2rem;
-    }
+        .article-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
 
-    @media (max-width: 780px) {
-      h1 { font-size: 1.7rem; }
-      .content-card { padding: 1.3rem; }
-      .nav-links a { margin-left: 1rem; }
-      .section-title { font-size: 1.3rem; }
-      .criteria-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+        .article-header h1 span {
+            color: var(--accent);
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .article-meta iconify-icon {
+            color: var(--accent);
+            margin-right: 4px;
+        }
+
+        .article-body {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .article-body h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 28px 0 12px;
+            padding-left: 14px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .article-body h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+        }
+
+        .article-body p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 10px 0 16px 20px;
+            padding-left: 6px;
+        }
+
+        .article-body li {
+            margin-bottom: 6px;
+        }
+
+        .article-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .article-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .article-body a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 22px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .highlight-box iconify-icon {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 18px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-pl {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid rgba(255, 219, 112, 0.3);
+        }
+
+        .step-list {
+            list-style: none;
+            margin-left: 0;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 44px;
+            margin-bottom: 16px;
+            counter-increment: step-counter;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: #121212;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .source-note {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .source-note iconify-icon {
+            color: var(--accent);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 820px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                text-align: left;
+                padding: 22px 20px;
+                align-items: center;
+            }
+            .sidebar-avatar {
+                width: 70px;
+                height: 70px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+            .sidebar-header {
+                flex: 1;
+                min-width: 150px;
+            }
+            .sidebar-name {
+                font-size: 1.1rem;
+            }
+            .sidebar-title {
+                font-size: 0.75rem;
+                margin: 2px 0 0;
+            }
+            .sidebar-divider {
+                display: none;
+            }
+            .sidebar-contact {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px 20px;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .sidebar-social {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+            .navbar {
+                border-radius: var(--radius-sm);
+            }
+            .article-card {
+                padding: 22px 18px;
+            }
+            .article-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px 10px;
+            }
+            .article-card {
+                padding: 16px 14px;
+            }
+            .article-header h1 {
+                font-size: 1.2rem;
+            }
+            .navbar button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .article-body h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="container">
-    <div class="nav-wrap">
-      <div class="logo">
-        <a href="#">Tony EXIM</a>
-        <span>Lương Hồng Quang | Chuyên gia Xuất nhập khẩu & Logistics</span>
-      </div>
-      <div class="nav-links">
-        <a href="#">Trang chủ</a>
-        <a href="#">Blog</a>
-        <a href="#">Dịch vụ</a>
-        <a href="#">Liên hệ</a>
-      </div>
+
+    <div class="main-layout">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <img
+                src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+                alt="Luong Hong Quang"
+                class="sidebar-avatar"
+            />
+            <div class="sidebar-header">
+                <h1 class="sidebar-name">Luong Hong Quang</h1>
+                <p class="sidebar-title">Import-Export Officer</p>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-contact">
+                <div class="item">
+                    <iconify-icon icon="mail-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Email</span>
+                        <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Phone</span>
+                        <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="location-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Location</span>
+                        <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-social">
+                <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+                <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+                <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+                <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+                <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+                <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="main-content">
+            <nav class="navbar">
+                <button class="active">About</button>
+                <button>Resume</button>
+                <button>Portfolio</button>
+                <button>Blog</button>
+                <button>Contact</button>
+            </nav>
+
+            <article class="article-card">
+                <header class="article-header">
+                    <span class="article-badge">
+                        <iconify-icon icon="alert-triangle-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+                        Hải quan – Tờ khai
+                    </span>
+                    <h1>
+                        Những Chỉ Tiêu Thông Tin Khai Báo Sai<br />
+                        <span>Buộc Phải Hủy Tờ Khai</span>
+                    </h1>
+                    <div class="article-meta">
+                        <span><iconify-icon icon="calendar-outline"></iconify-icon> 03/06/2026</span>
+                        <span><iconify-icon icon="folder-open-outline"></iconify-icon> Hải quan – Khai báo</span>
+                        <span><iconify-icon icon="time-outline"></iconify-icon> 7 phút đọc</span>
+                    </div>
+                </header>
+
+                <div class="article-body">
+                    <p>
+                        Trong quá trình làm thủ tục hải quan điện tử, việc khai báo sai các chỉ tiêu thông tin
+                        trên tờ khai là tình huống mà nhiều doanh nghiệp xuất nhập khẩu gặp phải. Điều đáng lưu ý
+                        là <strong>không phải mọi sai sót đều có thể khắc phục bằng khai bổ sung</strong>. Theo
+                        quy định hiện hành, một số chỉ tiêu thông tin thuộc nhóm <strong>không được khai bổ
+                        sung</strong> – khi khai sai, doanh nghiệp <strong>bắt buộc phải hủy tờ khai</strong> và
+                        đăng ký tờ khai mới thay vì sửa đổi.
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="alert-circle-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Lưu ý:</strong> Các chỉ tiêu thông tin không được khai bổ sung được quy định
+                        tại <strong>Mục 3 Phụ lục II</strong> ban hành kèm theo <strong>Thông tư
+                        38/2015/TT-BTC</strong>, được sửa đổi, bổ sung bởi <strong>Thông tư
+                        39/2018/TT-BTC</strong>. Khi phát hiện khai sai các chỉ tiêu này, người khai hải quan
+                        phải khai lại tờ khai mới với nội dung đã được chỉnh sửa đồng thời thực hiện hủy tờ
+                        khai sai.
+                    </div>
+
+                    <h2>I. Các chỉ tiêu thông tin không được khai bổ sung</h2>
+                    <p>
+                        Theo quy định tại <strong>Phụ lục I</strong> ban hành kèm theo Thông tư
+                        39/2018/TT-BTC, một số chỉ tiêu thông tin trên tờ khai hải quan điện tử
+                        <strong>không được phép khai bổ sung</strong>. Trong trường hợp có sai sót, doanh
+                        nghiệp phải thực hiện hủy tờ khai và đăng ký tờ khai mới thay vì sửa đổi.
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nhóm chỉ tiêu</th>
+                                    <th>Tờ khai nhập khẩu</th>
+                                    <th>Tờ khai xuất khẩu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Mã loại hình</strong></td>
+                                    <td>✅ Không được sửa</td>
+                                    <td>✅ Không được sửa</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mã phân loại hàng hóa</strong></td>
+                                    <td>✅ Không được sửa</td>
+                                    <td>✅ Không được sửa</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mã hiệu phương thức vận chuyển</strong></td>
+                                    <td>✅ Không được sửa <span class="badge-pl">trừ điểm b, khoản 3, Điều 82 TT 39/2018</span></td>
+                                    <td>✅ Không được sửa</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cơ quan Hải quan</strong></td>
+                                    <td>✅ Không được sửa</td>
+                                    <td>✅ Không được sửa</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mã người nhập khẩu</strong></td>
+                                    <td>✅ Không được sửa</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mã người xuất khẩu</strong></td>
+                                    <td>—</td>
+                                    <td>✅ Không được sửa</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mã đại lý hải quan</strong></td>
+                                    <td>✅ Không được sửa</td>
+                                    <td>✅ Không được sửa</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h2>II. Các trường hợp bắt buộc hủy tờ khai</h2>
+                    <p>
+                        Bên cạnh các trường hợp khai sai chỉ tiêu thông tin không được khai bổ sung, pháp luật
+                        hải quan còn quy định nhiều trường hợp khác buộc doanh nghiệp phải thực hiện hủy tờ
+                        khai. Cụ thể:
+                    </p>
+
+                    <h3>1. Các trường hợp hủy do quá thời hạn</h3>
+                    <ul>
+                        <li>
+                            <strong>Quá 15 ngày</strong> kể từ ngày đăng ký tờ khai, hàng hóa được miễn kiểm
+                            tra thực tế nhưng không có hàng nhập khẩu đến cửa khẩu nhập hoặc hàng xuất khẩu
+                            chưa đưa vào khu vực giám sát hải quan tại cửa khẩu xuất.
+                        </li>
+                        <li>
+                            <strong>Quá 15 ngày</strong> kể từ ngày đăng ký tờ khai mà người khai hải quan
+                            không xuất trình hồ sơ hải quan trong trường hợp phải xuất trình hồ sơ để cơ quan
+                            hải quan kiểm tra.
+                        </li>
+                        <li>
+                            <strong>Quá 15 ngày</strong> kể từ ngày đăng ký tờ khai mà người khai hải quan
+                            chưa xuất trình hàng hóa xuất khẩu, nhập khẩu phải kiểm tra thực tế để cơ quan hải
+                            quan kiểm tra.
+                        </li>
+                    </ul>
+
+                    <h3>2. Các trường hợp hủy theo yêu cầu của người khai hải quan</h3>
+                    <ul>
+                        <li>
+                            Tờ khai hải quan đã được đăng ký nhưng <strong>chưa được thông quan</strong> do
+                            Hệ thống xử lý dữ liệu điện tử hải quan có sự cố.
+                        </li>
+                        <li>
+                            <strong>Khai nhiều tờ khai</strong> cho cùng một lô hàng xuất khẩu, nhập khẩu
+                            (khai trùng thông tin tờ khai).
+                        </li>
+                        <li>
+                            Tờ khai hàng hóa xuất khẩu đã có hàng hóa đưa vào khu vực giám sát hải quan nhưng
+                            <strong>thực tế không xuất khẩu</strong>.
+                        </li>
+                        <li>
+                            Tờ khai hàng hóa nhập khẩu đã được đăng ký nhưng <strong>thực tế hàng hóa không
+                            nhập khẩu</strong> hoặc nhập khẩu không đúng so với khai báo.
+                        </li>
+                        <li>
+                            <strong>Khai sai các chỉ tiêu thông tin không được khai bổ sung</strong> quy định
+                            tại Mục 3 Phụ lục II Thông tư 38/2015/TT-BTC.
+                        </li>
+                        <li>
+                            Hàng hóa không đáp ứng các quy định về quản lý, kiểm tra chuyên ngành, sau khi xử
+                            lý vi phạm với hình thức phạt bổ sung là buộc phải tái xuất hoặc tiêu hủy.
+                        </li>
+                    </ul>
+
+                    <h2>III. Quy trình hủy tờ khai và khai lại</h2>
+                    <p>
+                        Khi thuộc một trong các trường hợp buộc phải hủy tờ khai, doanh nghiệp cần thực hiện
+                        theo quy trình sau:
+                    </p>
+                    <ol class="step-list">
+                        <li>
+                            <strong>Kiểm tra trạng thái tờ khai:</strong> Xác định tờ khai đang ở trạng thái
+                            nào (chưa thông quan, đã thông quan, đang kiểm tra, v.v.) để có hướng xử lý phù
+                            hợp.
+                        </li>
+                        <li>
+                            <strong>Gửi đề nghị hủy tờ khai:</strong> Doanh nghiệp gửi văn bản đề nghị hủy tờ
+                            khai đến Chi cục Hải quan nơi đăng ký tờ khai, nêu rõ <strong>lý do hủy</strong>
+                            và số tờ khai cần hủy. Mẫu đơn đề nghị hủy tờ khai theo quy định.
+                        </li>
+                        <li>
+                            <strong>Chờ phê duyệt từ cơ quan hải quan:</strong> Cơ quan hải quan xem xét, kiểm
+                            tra và ra quyết định chấp nhận hoặc không chấp nhận việc hủy tờ khai.
+                        </li>
+                        <li>
+                            <strong>Khai lại tờ khai mới:</strong> Sau khi tờ khai cũ được hủy thành công,
+                            doanh nghiệp tiến hành đăng ký tờ khai mới với thông tin đã được chỉnh sửa chính
+                            xác.
+                        </li>
+                    </ol>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="bulb-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Kinh nghiệm thực tế:</strong> Việc khai sai các chỉ tiêu không được khai bổ
+                        sung thường xảy ra với các lỗi như: sai mã loại hình, sai mã phân loại hàng hóa, sai
+                        mã đại lý hải quan, hoặc sai mã người xuất khẩu/nhập khẩu. Doanh nghiệp nên rà soát
+                        kỹ các thông tin này trước khi truyền tờ khai để tránh phải hủy và khai lại, gây mất
+                        thời gian và phát sinh chi phí.
+                    </div>
+
+                    <div class="source-note">
+                        <span>
+                            <iconify-icon icon="link-outline"></iconify-icon>
+                            Nguồn tham khảo: Thư viện Infographic Hải quan Xuất Nhập Khẩu &amp; Logistics
+                        </span>
+                        <span>
+                            <iconify-icon icon="document-text-outline"></iconify-icon>
+                            Căn cứ pháp lý: Thông tư 38/2015/TT-BTC, Thông tư 39/2018/TT-BTC, Nghị định 08/2015/NĐ-CP
+                        </span>
+                    </div>
+                </div>
+            </article>
+        </div>
     </div>
-  </div>
-</header>
 
-<div class="container">
-  <article id="post-171">
-    <div class="entry-content is-layout-constrained">
-      <div class="blog-layout">
-        <div class="blog-main">
-          <div class="post-meta">
-            <span class="category-badge"><i class="fas fa-file-contract"></i> Thông tư 39/2018/TT-BTC - Mục 3 Phụ lục I</span>
-            <h1>CHỈ TIÊU TUYỆT ĐỐI KHÔNG ĐƯỢC KHAI BỔ SUNG<br><span style="font-size: 1.2rem;">Sai sót = Bắt buộc HỦY tờ khai hải quan</span></h1>
-            <div class="meta-info">
-              <span><i class="far fa-calendar-alt"></i> 05/06/2026</span>
-              <span><i class="fas fa-user-check"></i> Lương Hồng Quang (Tony EXIM)</span>
-              <span><i class="fas fa-clock"></i> 6 phút đọc</span>
-            </div>
-          </div>
-          <div class="content-card">
-            <div class="doc-header">
-              <h2>THÔNG TƯ 39/2018/TT-BTC - MỤC 3 PHỤ LỤC I</h2>
-              <div class="sub">CHỈ TIÊU TUYỆT ĐỐI KHÔNG ĐƯỢC KHAI BỔ SUNG</div>
-              <div class="critical">Sai sót = Bắt buộc HỦY tờ khai hải quan</div>
-            </div>
-
-            <!-- PHẦN 1: 6 chỉ tiêu chung - dạng card, hover nảy, click popup -->
-            <div class="section-title">📌 PHẦN 1: ÁP DỤNG CHUNG TỜ KHAI XUẤT & NHẬP</div>
-            <p>Cả tờ khai <strong>Nhập khẩu</strong> và <strong>Xuất khẩu</strong> đều chia sẻ 6 nhóm chỉ tiêu cốt lõi không được phép thay đổi sau khi đã đăng ký. <strong>Click vào từng ô để xem chi tiết.</strong></p>
-            <div class="criteria-grid" id="criteriaGrid">
-              <!-- Dữ liệu sẽ được JavaScript tạo động, nhưng viết sẵn để rõ -->
-            </div>
-            <div class="arrow-down"><i class="fas fa-arrow-down"></i> GIA TĂNG CẤP ĐỘ RÀNG BUỘC <i class="fas fa-arrow-down"></i></div>
-
-            <!-- PHẦN 2: 16 chỉ tiêu BP - nhóm + hover đổi màu -->
-            <div class="section-title">📌 PHẦN 2: TRƯỜNG HỢP GIẢI PHÓNG HÀNG (BP)</div>
-            <p>Quy trình Giải phóng hàng (BP) đòi hỏi sự chính xác cực cao. Ngoài 6 chỉ tiêu cốt lõi, bạn bị <strong style="color:#b91c1c;">CẤM KHAI BỔ SUNG THÊM 16 CHỈ TIÊU</strong> dưới đây, chia làm 3 nhóm chính:</p>
-            
-            <div class="group-container" id="bpGroups">
-              <!-- Nội dung nhóm sẽ được JS thêm để dễ quản lý, nhưng viết trực tiếp bằng HTML cũng được, để chắc chắn tôi sẽ inject bằng JS nhưng vẫn hiển thị đúng -->
-            </div>
-
-            <div class="warning-note">
-              <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
-              <strong>TỔNG HỢP 22 CHỈ TIÊU "CẤM KHAI BỔ SUNG":</strong><br>
-              - Phần 1: 6 chỉ tiêu áp dụng chung cho mọi tờ khai XNK.<br>
-              - Phần 2 (BP): 16 chỉ tiêu bổ sung (từ số 8 đến 22).<br>
-              Sai bất kỳ chỉ tiêu nào, doanh nghiệp bắt buộc phải hủy tờ khai và đăng ký lại.
-            </div>
-            <div style="background:#e9f4fe; border-radius: 20px; padding: 1rem; margin: 1rem 0 0;">
-              <i class="fas fa-info-circle"></i> <strong>Lưu ý thực tế từ Tony EXIM:</strong> Hãy ghi nhớ 22 chỉ tiêu này. Click vào các ô ở Phần 1 để xem giải thích chuyên sâu.
-            </div>
-          </div>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="blog-sidebar">
-          <div class="sidebar-widget">
-            <h3><i class="fas fa-user"></i> Tác giả</h3>
-            <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia xuất nhập khẩu, hải quan. Với kinh nghiệm thực chiến, tôi chia sẻ những quy định quan trọng giúp doanh nghiệp tránh rủi ro hủy tờ khai.</p>
-          </div>
-          <div class="sidebar-widget">
-            <h3><i class="fas fa-file-alt"></i> Bài viết liên quan</h3>
-            <ul style="list-style: none;">
-              <li style="margin-bottom: 12px;">📄 <a href="#" style="text-decoration: none; color: #1e6ec5;">Quy trình phân loại mã HS chuẩn xác</a></li>
-              <li style="margin-bottom: 12px;">⚖️ <a href="#" style="text-decoration: none; color: #1e6ec5;">Tổng hợp Nghị định 169/2026/NĐ-CP</a></li>
-              <li style="margin-bottom: 12px;">🚢 <a href="#" style="text-decoration: none; color: #1e6ec5;">ETA, ETD là gì? Giải nghĩa chi tiết</a></li>
-            </ul>
-          </div>
-          <div class="sidebar-widget">
-            <h3><i class="fas fa-download"></i> Tài liệu đính kèm</h3>
-            <p>Download checklist 22 chỉ tiêu và mẫu công văn đề nghị hủy tờ khai.</p>
-            <a href="#" style="display: inline-block; background: #0a4b7a; color: white; padding: 6px 18px; border-radius: 30px; text-decoration: none; margin-top: 10px;">Tải ngay</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </article>
-</div>
-
-<div id="popupModal" class="modal">
-  <div class="modal-content">
-    <span class="modal-close">&times;</span>
-    <h4 id="modalTitle"></h4>
-    <p id="modalDesc"></p>
-  </div>
-</div>
-
-<footer class="footer">
-  <div class="container">
-    <p>© 2026 Tony EXIM – Lương Hồng Quang. Trích dẫn Mục 3 Phụ lục I Thông tư 39/2018/TT-BTC.</p>
-  </div>
-</footer>
-
-<script>
-  // Dữ liệu cho phần 1 (6 chỉ tiêu)
-  const part1Data = [
-    { num: "1", title: "Mã loại hình", shortDesc: "Loại hình XNK đã chốt không thể chuyển đổi bằng khai bổ sung.", fullDesc: "Mã loại hình xác định chính sách quản lý hải quan áp dụng cho lô hàng (VD: nhập sản xuất xuất khẩu, nhập tiêu dùng nội địa, xuất khẩu tại chỗ...). Sai loại hình không thể sửa bằng khai bổ sung, bắt buộc hủy tờ khai và đăng ký lại." },
-    { num: "2", title: "Phân loại hàng hóa", shortDesc: "Mã phân loại hàng hóa định hình tính chất lô hàng ngay từ đầu.", fullDesc: "Mã HS 8 số và các chỉ tiêu phân loại liên quan. Nếu sai dẫn đến thay đổi chính sách mặt hàng (cấm, hạn chế, kiểm tra chuyên ngành) thì không được khai bổ sung, buộc hủy tờ khai." },
-    { num: "3", title: "PT Vận chuyển", shortDesc: "Mã hiệu phương thức vận chuyển (trừ ngoại lệ).", fullDesc: "Phương thức vận chuyển như đường biển, hàng không, đường bộ... sai không được điều chỉnh trừ trường hợp ngoại lệ theo điểm b khoản 3 Điều 82. Các trường hợp khác đều phải hủy." },
-    { num: "4", title: "Cơ quan Hải quan", shortDesc: "Nơi đăng ký tờ khai phải chính xác tuyệt đối.", fullDesc: "Mã Chi cục Hải quan nơi đăng ký tờ khai. Nếu sai, toàn bộ hồ sơ không thể chuyển đổi, bắt buộc hủy và khai lại tại đúng cơ quan có thẩm quyền." },
-    { num: "5", title: "Mã người XNK", shortDesc: "Mã người Nhập khẩu hoặc Xuất khẩu.", fullDesc: "Mã số thuế của chủ hàng xuất khẩu hoặc nhập khẩu. Sai thông tin doanh nghiệp dẫn đến không thể thực hiện nghĩa vụ thuế, hệ thống từ chối khai bổ sung, phải hủy tờ khai." },
-    { num: "6", title: "Mã Đại lý HQ", shortDesc: "Đơn vị đại diện làm thủ tục (nếu có).", fullDesc: "Mã số đại lý hải quan được ủy quyền. Nếu sai, việc ủy thác không hợp lệ, không được khai bổ sung, bắt buộc hủy đăng ký." }
-  ];
-
-  // Render phần 1
-  const gridContainer = document.getElementById('criteriaGrid');
-  part1Data.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'criteria-card';
-    card.setAttribute('data-full-desc', item.fullDesc);
-    card.setAttribute('data-title', item.title);
-    card.innerHTML = `
-      <div class="card-number">${item.num}</div>
-      <div class="card-title">${item.title}</div>
-      <div class="card-desc">${item.shortDesc}</div>
-      <div class="card-hint"><i class="fas fa-mouse-pointer"></i> Click để xem chi tiết</div>
-    `;
-    card.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const title = card.getAttribute('data-title');
-      const desc = card.getAttribute('data-full-desc');
-      document.getElementById('modalTitle').innerText = title;
-      document.getElementById('modalDesc').innerHTML = desc;
-      document.getElementById('popupModal').style.display = 'flex';
-    });
-    gridContainer.appendChild(card);
-  });
-
-  // Dữ liệu phần 2 (16 chỉ tiêu BP)
-  const bpData = {
-    "Vận tải & Hàng hóa": [
-      { num: "8", title: "Số vận đơn", desc: "Số Bill of Lading (B/L) hoặc Airway bill. Sai số vận đơn không thể khai bổ sung." },
-      { num: "9", title: "Số lượng hàng", desc: "Số kiện, đơn vị tính, tổng số lượng hàng hóa khai báo ban đầu." },
-      { num: "10", title: "Tổng trọng lượng (Gross)", desc: "Trọng lượng cả bì của lô hàng, sai lệch dù nhỏ cũng không được điều chỉnh." },
-      { num: "11", title: "Phương tiện vận chuyển", desc: "Số hiệu phương tiện (số xe, tàu, máy bay) không được thay đổi sau đăng ký." },
-      { num: "12", title: "Ngày hàng đến", desc: "Ngày dự kiến hoặc thực tế hàng đến cửa khẩu, sai buộc hủy tờ khai." },
-      { num: "13", title: "Địa điểm dỡ hàng", desc: "Cảng dỡ, địa điểm nhận hàng cuối cùng phải chính xác ngay từ đầu." },
-      { num: "14", title: "Địa điểm xếp hàng", desc: "Cảng xếp hàng xuất phát, không được sửa đổi sau khi đăng ký BP." },
-      { num: "15", title: "Số lượng container", desc: "Số container, số seal, chủng loại container – sai là phải hủy tờ khai." }
-    ],
-    "Hóa đơn & Lý do": [
-      { num: "16", title: "Phân loại hình thức hóa đơn", desc: "Loại hóa đơn thương mại, hóa đơn chiếu lệ, hóa đơn GTGT… không đổi được." },
-      { num: "17", title: "Số tiếp nhận hóa đơn điện tử", desc: "Mã số tiếp nhận hóa đơn điện tử từ cơ quan thuế/hải quan." },
-      { num: "18", title: "Mã lý do đề nghị BP", desc: "Lý do đề nghị giải phóng hàng (khai báo ban đầu quyết định luồng xử lý)." }
-    ],
-    "Thông tin Bảo lãnh": [
-      { num: "19", title: "Mã ngân hàng bảo lãnh", desc: "Mã định danh ngân hàng phát hành bảo lãnh hải quan." },
-      { num: "20", title: "Năm phát hành bảo lãnh", desc: "Năm cấp chứng thư bảo lãnh (sai năm không được khai bổ sung)." },
-      { num: "21", title: "Ký hiệu chứng từ bảo lãnh", desc: "Mã ký hiệu của chứng thư bảo lãnh do ngân hàng cấp." },
-      { num: "22", title: "Số chứng từ bảo lãnh", desc: "Số tham chiếu bảo lãnh, không được sửa đổi nếu sai sót." }
-    ]
-  };
-
-  const bpGroupsContainer = document.getElementById('bpGroups');
-  for (const [groupName, items] of Object.entries(bpData)) {
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'group-container';
-    groupDiv.innerHTML = `<div class="group-title"><i class="fas fa-folder-open"></i> ${groupName}</div><div class="bp-list" id="list-${groupName.replace(/\s/g, '')}"></div>`;
-    bpGroupsContainer.appendChild(groupDiv);
-    const listContainer = groupDiv.querySelector('.bp-list');
-    items.forEach(item => {
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'bp-item';
-      itemDiv.innerHTML = `
-        <div class="bp-num">${item.num}</div>
-        <div class="bp-content">
-          <div class="bp-title">${item.title}</div>
-          <div class="bp-desc">${item.desc}</div>
-        </div>
-      `;
-      listContainer.appendChild(itemDiv);
-    });
-  }
-
-  // Popup modal
-  const modal = document.getElementById('popupModal');
-  const closeBtn = document.querySelector('.modal-close');
-  closeBtn.onclick = () => { modal.style.display = 'none'; };
-  window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-</script>
 </body>
 </html>
