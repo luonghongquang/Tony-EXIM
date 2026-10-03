@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quy Trình Phân Loại Mã HS Code · Tony EXIM</title>
+
+    <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #121212;
+            --bg-sidebar: #1e1e1e;
+            --bg-card: #2b2b2b;
+            --bg-card-hover: #3a3a3a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #7a7a7a;
+            --accent: #ffdb70;
+            --accent-dark: #d4b24a;
+            --border-light: #3a3a3a;
+            --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --font: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        /* ====== SIDEBAR ====== */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 30px 22px 26px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            position: sticky;
+            top: 30px;
+            text-align: center;
+        }
+
+        .sidebar-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            border: 3px solid var(--accent);
+            background: #333;
+        }
+
+        .sidebar-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--accent);
+            background: rgba(255, 219, 112, 0.1);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin: 6px 0 18px;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 18px 0;
+        }
+
+        .sidebar-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+            font-size: 0.82rem;
+        }
+
+        .sidebar-contact .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-contact .item iconify-icon {
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-contact .item a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+
+        .sidebar-contact .item a:hover {
+            color: var(--accent);
+        }
+
+        .sidebar-contact .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .sidebar-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-social a {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .sidebar-social a:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ====== MAIN CONTENT ====== */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .navbar {
+            background: var(--bg-sidebar);
+            border-radius: 40px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .navbar button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .navbar button.active {
+            background: var(--accent);
+            color: #121212;
+            font-weight: 600;
+        }
+
+        /* ====== ARTICLE ====== */
+        .article-card {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 32px 34px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .article-header {
+            margin-bottom: 26px;
+        }
+
+        .article-badge {
+            display: inline-block;
+            background: rgba(255, 219, 112, 0.15);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin-bottom: 12px;
+        }
+
+        .article-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .article-header h1 span {
+            color: var(--accent);
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .article-meta iconify-icon {
+            color: var(--accent);
+            margin-right: 4px;
+        }
+
+        .article-body {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .article-body h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 28px 0 12px;
+            padding-left: 14px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .article-body h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+        }
+
+        .article-body p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 10px 0 16px 20px;
+            padding-left: 6px;
+        }
+
+        .article-body li {
+            margin-bottom: 6px;
+        }
+
+        .article-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .article-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .article-body a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        .highlight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 22px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .highlight-box iconify-icon {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 18px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-pl {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid rgba(255, 219, 112, 0.3);
+        }
+
+        .step-list {
+            list-style: none;
+            margin-left: 0;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 44px;
+            margin-bottom: 16px;
+            counter-increment: step-counter;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: #121212;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .source-note {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .source-note iconify-icon {
+            color: var(--accent);
+        }
+
+        @media (max-width: 820px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                text-align: left;
+                padding: 22px 20px;
+                align-items: center;
+            }
+            .sidebar-avatar {
+                width: 70px;
+                height: 70px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+            .sidebar-header {
+                flex: 1;
+                min-width: 150px;
+            }
+            .sidebar-name {
+                font-size: 1.1rem;
+            }
+            .sidebar-title {
+                font-size: 0.75rem;
+                margin: 2px 0 0;
+            }
+            .sidebar-divider {
+                display: none;
+            }
+            .sidebar-contact {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px 20px;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .sidebar-social {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+            .navbar {
+                border-radius: var(--radius-sm);
+            }
+            .article-card {
+                padding: 22px 18px;
+            }
+            .article-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px 10px;
+            }
+            .article-card {
+                padding: 16px 14px;
+            }
+            .article-header h1 {
+                font-size: 1.2rem;
+            }
+            .navbar button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .article-body h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-layout">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <img
+                src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+                alt="Luong Hong Quang"
+                class="sidebar-avatar"
+            />
+            <div class="sidebar-header">
+                <h1 class="sidebar-name">Luong Hong Quang</h1>
+                <p class="sidebar-title">Import-Export Specialist</p>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-contact">
+                <div class="item">
+                    <iconify-icon icon="mail-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Email</span>
+                        <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Phone</span>
+                        <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="location-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Location</span>
+                        <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-social">
+                <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+                <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+                <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+                <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+                <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+                <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="main-content">
+            <nav class="navbar">
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>About</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Resume</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Portfolio</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Blog</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Contact</button>
+            </nav>
+
+            <article class="article-card">
+                <header class="article-header">
+                    <span class="article-badge">
+                        <iconify-icon icon="search-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+                        Hải quan – Mã HS Code
+                    </span>
+                    <h1>
+                        Quy Trình Phân Loại Mã HS Code<br />
+                        <span>Theo Quyết Định 117/QĐ-CHQ</span>
+                    </h1>
+                    <div class="article-meta">
+                        <span><iconify-icon icon="calendar-outline"></iconify-icon> 30/05/2026</span>
+                        <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hải quan</span>
+                        <span><iconify-icon icon="time-outline"></iconify-icon> 10 phút đọc</span>
+                    </div>
+                </header>
+
+                <div class="article-body">
+                    <p>
+                        Phân loại mã HS code là <strong>bước đầu tiên và vô cùng quan trọng</strong> trong quy
+                        trình khai báo hải quan. Việc xác định sai mã có thể dẫn đến <strong>sai lệch thuế,
+                        chậm thông quan hoặc bị xử phạt hành chính</strong>. Kể từ ngày
+                        <strong>01/02/2026</strong>, cơ quan Hải quan chính thức áp dụng Quy trình xác định
+                        trước mã số; kiểm tra tên hàng, mô tả hàng hóa, mã số, mức thuế trong thông quan và
+                        thống nhất công tác phân loại hàng hóa theo <strong>Quyết định số
+                        117/QĐ-CHQ</strong> ngày 20/01/2026 của Cục trưởng Cục Hải quan.
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="alert-circle-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Điểm cốt lõi:</strong> Quyết định 117/QĐ-CHQ thay thế Quyết định số
+                        1921/QĐ-TCHQ ngày 28/6/2018, chuẩn hóa quy trình phân loại, xác định trước mã số
+                        và kiểm tra hàng hóa trong thông quan. Mọi kết quả phân loại đều có
+                        <strong>giá trị pháp lý bắt buộc áp dụng thống nhất</strong> tại tất cả các chi
+                        cục hải quan, loại bỏ hoàn toàn rủi ro mỗi nơi áp một mã số khác nhau cho cùng
+                        một mặt hàng.
+                    </div>
+
+                    <h2>I. Mã HS code là gì và vì sao bắt buộc?</h2>
+                    <p>
+                        Phân loại mã HS (Harmonized System) là quá trình xác định mã số hàng hóa trong
+                        biểu thuế, giúp cơ quan hải quan áp dụng đúng mức thuế và chính sách quản lý với
+                        từng mặt hàng. Mỗi mã HS gồm <strong>8 chữ số</strong> đối với hàng nhập khẩu tại
+                        Việt Nam và phản ánh đầy đủ bản chất, thành phần, mục đích sử dụng hàng hóa.
+                    </p>
+                    <p>
+                        Việc phân loại mã HS sai dễ khiến doanh nghiệp bị <strong>áp mức thuế cao hơn, bị
+                        truy thu thuế hoặc xử phạt hành chính</strong>. Ngoài ra, sai mã HS còn dẫn đến
+                        việc <strong>xin giấy phép, kiểm tra chuyên ngành không đúng yêu cầu pháp
+                        luật</strong>.
+                    </p>
+
+                    <h2>II. Quy trình phân loại hàng hóa theo Quyết định 117/QĐ-CHQ</h2>
+                    <p>
+                        Theo Quyết định 117/QĐ-CHQ, quy trình phân loại hàng hóa được thực hiện thống
+                        nhất trên toàn hệ thống hải quan, bao gồm các bước chính sau:
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bước</th>
+                                    <th>Nội dung</th>
+                                    <th>Trách nhiệm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Bước 1</strong></td>
+                                    <td><strong>Tự phân loại và khai báo:</strong> Doanh nghiệp tự phân loại, khai báo mã HS trên tờ khai hải quan theo Danh mục hàng hóa xuất nhập khẩu Việt Nam.</td>
+                                    <td>Người khai hải quan</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bước 2</strong></td>
+                                    <td><strong>Kiểm tra tính chính xác:</strong> Cơ quan hải quan kiểm tra tính chính xác của mã HS đã khai dựa trên hồ sơ, tài liệu kỹ thuật kèm theo.</td>
+                                    <td>Công chức hải quan</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bước 3</strong></td>
+                                    <td><strong>Yêu cầu bổ sung:</strong> Nếu nghi ngờ sai mã, cơ quan yêu cầu doanh nghiệp cung cấp thêm hồ sơ, tài liệu kỹ thuật hoặc lấy mẫu phân tích.</td>
+                                    <td>Công chức hải quan</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bước 4</strong></td>
+                                    <td><strong>Kết luận và thông báo:</strong> Cơ quan hải quan ban hành Thông báo kết quả phân loại, có giá trị pháp lý bắt buộc áp dụng thống nhất tại tất cả các chi cục hải quan.</td>
+                                    <td>Ban Nghiệp vụ thuế hải quan</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        Theo quy trình mới, <strong>Ban Nghiệp vụ thuế hải quan (Cục Hải quan)</strong> sẽ
+                        thực hiện kiểm tra sơ bộ hồ sơ trong vòng <strong>5 ngày làm việc</strong>. Các
+                        trường hợp thiếu tài liệu kỹ thuật, catalogue hoặc bản phân tích thành phần sẽ bị
+                        từ chối xử lý ngay lập tức để tránh gây tồn đọng hồ sơ không cần thiết.
+                    </p>
+                    <p>
+                        Trong giai đoạn thẩm định chuyên sâu, công chức Tổ phân loại thực hiện đối chiếu
+                        hàng hóa với <strong>Cơ sở dữ liệu MHS</strong> và <strong>Danh mục hàng hóa xuất
+                        nhập khẩu Việt Nam</strong>. Đối với những mặt hàng có cấu tạo hoặc tính chất kỹ
+                        thuật phức tạp, quy trình bắt buộc phải lấy ý kiến từ các đơn vị kiểm định hoặc
+                        tham vấn chuyên gia ngành trước khi ban hành thông báo kết quả.
+                    </p>
+
+                    <h2>III. Thời hạn giải quyết và thẩm quyền</h2>
+                    <p>
+                        Quy trình xác định trước mã số quy định rõ thời hạn giải quyết như sau:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>05 ngày làm việc:</strong> Thời hạn ban hành Thông báo kết quả phân
+                            tích đối với trường hợp thông thường.
+                        </li>
+                        <li>
+                            <strong>20 ngày làm việc:</strong> Thời hạn ban hành Thông báo kết quả phân
+                            tích đối với trường hợp phức tạp, cần lấy ý kiến chuyên gia hoặc kiểm định
+                            chuyên sâu.
+                        </li>
+                    </ul>
+                    <p>
+                        Thẩm quyền ban hành kết quả phân tích, phân loại được giao trực tiếp cho
+                        <strong>Đội trưởng Đội Kiểm định hải quan</strong>. Đồng thời, văn bản hướng dẫn
+                        phân loại chỉ áp dụng đối với các văn bản do <strong>Cục trưởng Cục Hải quan ban
+                        hành</strong>, bảo đảm tính thống nhất cao nhất trên toàn hệ thống.
+                    </p>
+
+                    <h2>IV. Kiểm tra tên hàng, mô tả hàng hóa trong thông quan</h2>
+                    <p>
+                        Khi hàng hóa bắt đầu làm thủ tục tại cửa khẩu, việc <strong>kiểm tra tên hàng và
+                        mô tả hàng hóa</strong> trở thành chốt chặn quan trọng nhất để chống gian lận
+                        thuế. Công chức Hải quan có trách nhiệm soi chiếu kỹ lưỡng các thông số cốt lõi
+                        như:
+                    </p>
+                    <ul>
+                        <li>Thành phần cấu tạo</li>
+                        <li>Model, công suất</li>
+                        <li>Mục đích sử dụng</li>
+                    </ul>
+                    <p>
+                        Những trường hợp doanh nghiệp mô tả hàng hóa một cách <strong>chung chung, không
+                        rõ bản chất kỹ thuật</strong> hoặc cố tình gây hiểu lầm để hưởng mức thuế suất
+                        thấp sẽ bị hệ thống cảnh báo và yêu cầu giải trình bổ sung ngay tại thời điểm
+                        kiểm tra hồ sơ.
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="warning-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Lưu ý:</strong> Quy trình xác định trước mã số quy định rõ nếu phát hiện
+                        sự không tương thích giữa mô tả hàng hóa thực tế và mã số thuế khai báo, cơ quan
+                        Hải quan sẽ tiến hành xử lý theo quy định, bao gồm truy thu thuế và xử phạt hành
+                        chính nếu có dấu hiệu gian lận.
+                    </div>
+
+                    <h2>V. Lưu ý quan trọng cho doanh nghiệp</h2>
+                    <p>
+                        Để đảm bảo quá trình phân loại mã HS diễn ra thuận lợi, doanh nghiệp cần chú ý
+                        các điểm sau:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Chuẩn bị hồ sơ kỹ thuật đầy đủ:</strong> Tài liệu kỹ thuật, catalogue,
+                            bản phân tích thành phần, hình ảnh hàng hóa cần được chuẩn bị kỹ lưỡng trước
+                            khi làm thủ tục.
+                        </li>
+                        <li>
+                            <strong>Mô tả hàng hóa rõ ràng:</strong> Tránh mô tả chung chung, không rõ bản
+                            chất kỹ thuật; ghi đầy đủ thành phần, cấu tạo, công dụng, đặc tính kỹ thuật và
+                            quy trình sản xuất của hàng hóa.
+                        </li>
+                        <li>
+                            <strong>Sử dụng dịch vụ xác định trước mã số:</strong> Đối với hàng hóa phức
+                            tạp, doanh nghiệp nên chủ động đăng ký xác định trước mã số để tránh rủi ro
+                            trong quá trình thông quan.
+                        </li>
+                        <li>
+                            <strong>Cập nhật quy định mới:</strong> Theo dõi các văn bản hướng dẫn phân
+                            loại do Cục trưởng Cục Hải quan ban hành để áp dụng đúng quy định.
+                        </li>
+                    </ul>
+
+                    <div class="source-note">
+                        <span>
+                            <iconify-icon icon="link-outline"></iconify-icon>
+                            Nguồn tham khảo: Thư viện Infographic Hải quan Xuất Nhập Khẩu &amp; Logistics
+                        </span>
+                        <span>
+                            <iconify-icon icon="document-text-outline"></iconify-icon>
+                            Căn cứ pháp lý: Quyết định 117/QĐ-CHQ ngày 20/01/2026 của Cục Hải quan
+                        </span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</body>
+</html>
