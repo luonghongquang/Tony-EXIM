@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trọn Bộ Kỹ Năng Khai Báo Hóa Chất Xuất Nhập Khẩu · Tony EXIM</title>
+
+    <!-- Favicon (tùy chọn) -->
+    <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+    <!-- Google Fonts: Poppins – font chữ được sử dụng trên trang Tony-EXIM -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Iconify (dùng cho icon giống trang nguồn) -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        /* ====== RESET & BASE ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #121212;
+            --bg-sidebar: #1e1e1e;
+            --bg-card: #2b2b2b;
+            --bg-card-hover: #3a3a3a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #7a7a7a;
+            --accent: #ffdb70;
+            --accent-dark: #d4b24a;
+            --border-light: #3a3a3a;
+            --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --font: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* ====== LAYOUT CHÍNH (giống cấu trúc sidebar + main) ====== */
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        /* ====== SIDEBAR (dạng thẻ thông tin) ====== */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 30px 22px 26px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            position: sticky;
+            top: 30px;
+            text-align: center;
+        }
+
+        .sidebar-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            border: 3px solid var(--accent);
+            background: #333;
+        }
+
+        .sidebar-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--accent);
+            background: rgba(255, 219, 112, 0.1);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin: 6px 0 18px;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 18px 0;
+        }
+
+        .sidebar-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+            font-size: 0.82rem;
+        }
+
+        .sidebar-contact .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-contact .item iconify-icon {
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-contact .item a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+
+        .sidebar-contact .item a:hover {
+            color: var(--accent);
+        }
+
+        .sidebar-contact .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        /* Social icons */
+        .sidebar-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-social a {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .sidebar-social a:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ====== NỘI DUNG CHÍNH ====== */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Navbar (dạng tab) */
+        .navbar {
+            background: var(--bg-sidebar);
+            border-radius: 40px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .navbar button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .navbar button.active {
+            background: var(--accent);
+            color: #121212;
+            font-weight: 600;
+        }
+
+        /* Card chứa nội dung bài viết */
+        .article-card {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 32px 34px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .article-header {
+            margin-bottom: 26px;
+        }
+
+        .article-badge {
+            display: inline-block;
+            background: rgba(255, 219, 112, 0.15);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin-bottom: 12px;
+        }
+
+        .article-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .article-header h1 span {
+            color: var(--accent);
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .article-meta iconify-icon {
+            color: var(--accent);
+            margin-right: 4px;
+        }
+
+        /* Nội dung bài viết */
+        .article-body {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .article-body h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 28px 0 12px;
+            padding-left: 14px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .article-body h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+        }
+
+        .article-body p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 10px 0 16px 20px;
+            padding-left: 6px;
+        }
+
+        .article-body li {
+            margin-bottom: 6px;
+        }
+
+        .article-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .article-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .article-body a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 22px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .highlight-box iconify-icon {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        /* Bảng so sánh */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 18px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Nhãn phụ lục */
+        .badge-pl {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid rgba(255, 219, 112, 0.3);
+        }
+
+        /* Danh sách bước */
+        .step-list {
+            list-style: none;
+            margin-left: 0;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 44px;
+            margin-bottom: 16px;
+            counter-increment: step-counter;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: #121212;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* Liên kết nguồn */
+        .source-note {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .source-note iconify-icon {
+            color: var(--accent);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 820px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                text-align: left;
+                padding: 22px 20px;
+                align-items: center;
+            }
+            .sidebar-avatar {
+                width: 70px;
+                height: 70px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+            .sidebar-header {
+                flex: 1;
+                min-width: 150px;
+            }
+            .sidebar-name {
+                font-size: 1.1rem;
+            }
+            .sidebar-title {
+                font-size: 0.75rem;
+                margin: 2px 0 0;
+            }
+            .sidebar-divider {
+                display: none;
+            }
+            .sidebar-contact {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px 20px;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .sidebar-social {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+            .navbar {
+                border-radius: var(--radius-sm);
+            }
+            .article-card {
+                padding: 22px 18px;
+            }
+            .article-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px 10px;
+            }
+            .article-card {
+                padding: 16px 14px;
+            }
+            .article-header h1 {
+                font-size: 1.2rem;
+            }
+            .navbar button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .article-body h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-layout">
+        <!-- ========== SIDEBAR (thông tin cá nhân) ========== -->
+        <aside class="sidebar">
+            <img
+                src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+                alt="Luong Hong Quang"
+                class="sidebar-avatar"
+            />
+            <div class="sidebar-header">
+                <h1 class="sidebar-name">Luong Hong Quang</h1>
+                <p class="sidebar-title">Import-Export Officer</p>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-contact">
+                <div class="item">
+                    <iconify-icon icon="mail-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Email</span>
+                        <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Phone</span>
+                        <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="location-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Location</span>
+                        <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-social">
+                <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+                <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+                <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+                <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+                <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+                <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+            </div>
+        </aside>
+
+        <!-- ========== NỘI DUNG CHÍNH ========== -->
+        <div class="main-content">
+            <!-- Navbar giống trang Tony-EXIM -->
+            <nav class="navbar">
+                <button class="active">About</button>
+                <button>Resume</button>
+                <button>Portfolio</button>
+                <button>Blog</button>
+                <button>Contact</button>
+            </nav>
+
+            <!-- Bài viết -->
+            <article class="article-card">
+                <header class="article-header">
+                    <span class="article-badge">
+                        <iconify-icon icon="file-tray-full-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+                        Hướng dẫn chuyên môn
+                    </span>
+                    <h1>
+                        Trọn Bộ Kỹ Năng Khai Báo Hóa Chất<br />
+                        <span>Xuất Nhập Khẩu Kỷ Nguyên 2026</span>
+                    </h1>
+                    <div class="article-meta">
+                        <span><iconify-icon icon="calendar-outline"></iconify-icon> 31/05/2026</span>
+                        <span><iconify-icon icon="folder-open-outline"></iconify-icon> Hóa chất – Hải quan</span>
+                        <span><iconify-icon icon="time-outline"></iconify-icon> 8 phút đọc</span>
+                    </div>
+                </header>
+
+                <div class="article-body">
+                    <p>
+                        Từ ngày <strong>17/01/2026</strong>, toàn bộ khung pháp lý về quản lý hóa chất tại Việt Nam
+                        đã thay đổi hoàn toàn với sự ra đời của <strong>Luật Hóa chất 2025 (số 69/2025/QH15)</strong>
+                        cùng các nghị định hướng dẫn thi hành mới. Điều này đặt ra yêu cầu cấp thiết đối với
+                        doanh nghiệp xuất nhập khẩu trong việc nắm bắt và thực thi đúng quy trình khai báo hóa chất,
+                        tránh rủi ro pháp lý và tối ưu hóa chi phí logistics.
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="alert-circle-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Lưu ý quan trọng:</strong> Nghĩa vụ khai báo hóa chất nay được xác định dựa trên
+                        việc hàng hóa có thuộc <strong>Chương 28 và Chương 29</strong> của Biểu thuế hay không
+                        (theo Điều 6 Nghị định 26/2026/NĐ-CP), thay vì liệt kê theo phụ lục như trước đây. Điều này
+                        đồng nghĩa với việc áp sai mã HS có thể dẫn đến khai thừa hoặc khai thiếu nghĩa vụ khai báo.
+                    </div>
+
+                    <h2>I. Phân loại hóa chất theo quy định mới</h2>
+                    <p>
+                        Trước khi tiến hành khai báo, doanh nghiệp cần đối chiếu mã CAS và tên khoa học của hóa chất
+                        với các danh mục quản lý hiện hành để xác định đúng nhóm đối tượng:
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nhóm hóa chất</th>
+                                    <th>Căn cứ pháp lý</th>
+                                    <th>Yêu cầu thủ tục</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Hóa chất phải khai báo</strong></td>
+                                    <td><span class="badge-pl">Phụ lục V</span></td>
+                                    <td>Khai báo trên Cổng thông tin một cửa quốc gia trước khi thông quan.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hóa chất sản xuất, kinh doanh có điều kiện</strong></td>
+                                    <td><span class="badge-pl">Phụ lục I</span></td>
+                                    <td>Cần có Giấy chứng nhận đủ điều kiện kinh doanh.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hóa chất hạn chế sản xuất, kinh doanh</strong></td>
+                                    <td><span class="badge-pl">Phụ lục II</span></td>
+                                    <td>Phải xin giấy phép nhập khẩu của Bộ Công Thương cho từng lô hàng/năm.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hóa chất cấm</strong></td>
+                                    <td><span class="badge-pl">Phụ lục III</span></td>
+                                    <td>Tuyệt đối không được phép nhập khẩu (trừ trường hợp đặc biệt phục vụ an ninh quốc phòng).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h2>II. Bộ hồ sơ khai báo hóa chất nhập khẩu</h2>
+                    <p>
+                        Để quá trình khai báo diễn ra suôn sẻ, doanh nghiệp cần chuẩn bị đầy đủ các chứng từ sau:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Phiếu an toàn hóa chất (MSDS/SDS):</strong> Phải có bản tiếng Việt theo quy định.
+                            Đây là chứng từ quan trọng nhất để xác định tính chất lý hóa và mã CAS của sản phẩm.
+                            Lưu ý: MSDS phải do đơn vị sản xuất hoặc phân phối gốc cung cấp, có đóng dấu xác nhận và
+                            còn thời hạn (không quá 3 năm kể từ ngày ký).
+                        </li>
+                        <li>
+                            <strong>Hóa đơn thương mại (Invoice):</strong> Thể hiện rõ tên hàng, nồng độ, hàm lượng
+                            của hóa chất.
+                        </li>
+                        <li>
+                            <strong>Phiếu đóng gói (Packing List):</strong> Mô tả chi tiết cách thức đóng gói,
+                            số lượng, trọng lượng hàng hóa.
+                        </li>
+                        <li>
+                            <strong>Nhãn sản phẩm:</strong> Hình ảnh nhãn gốc và nhãn phụ tiếng Việt, trong đó
+                            phải thể hiện đầy đủ các ký hiệu cảnh báo nguy hiểm theo hệ thống GHS.
+                        </li>
+                    </ul>
+
+                    <h2>III. Quy trình khai báo hóa chất trực tuyến</h2>
+                    <ol class="step-list">
+                        <li>
+                            <strong>Tạo tài khoản:</strong> Truy cập vào Cổng thông tin một cửa quốc gia
+                            (<a href="https://vnsw.gov.vn" target="_blank" rel="noopener">vnsw.gov.vn</a>) và đăng ký
+                            tài khoản cho doanh nghiệp.
+                        </li>
+                        <li>
+                            <strong>Nhập liệu khai báo:</strong> Chọn mục <em>Bộ Công Thương → Khai báo hóa chất</em>.
+                            Nhập đầy đủ các thông tin về hóa chất dựa trên MSDS và Invoice, bao gồm tên hóa chất,
+                            mã CAS, hàm lượng, mục đích sử dụng.
+                        </li>
+                        <li>
+                            <strong>Đính kèm chứng từ:</strong> Tải lên bản scan của MSDS, Invoice, Packing List
+                            và các giấy phép liên quan (nếu có).
+                        </li>
+                        <li>
+                            <strong>Nhận xác nhận:</strong> Hệ thống sẽ trả về mã xác nhận khai báo. Lưu giữ mã này
+                            để xuất trình cho cơ quan hải quan khi làm thủ tục thông quan.
+                        </li>
+                        <li>
+                            <strong>Làm thủ tục hải quan:</strong> Sử dụng mã xác nhận khai báo hóa chất cùng với
+                            bộ hồ sơ hải quan để đăng ký tờ khai và thông quan hàng hóa.
+                        </li>
+                    </ol>
+
+                    <h2>IV. Các trường hợp được miễn trừ khai báo</h2>
+                    <p>
+                        Theo quy định tại <strong>khoản 6 Điều 12 Luật Hóa chất 2025</strong>, một số trường hợp
+                        được miễn trừ khai báo hóa chất nhập khẩu, bao gồm:
+                    </p>
+                    <ul>
+                        <li>Nhập khẩu hóa chất cần kiểm soát đặc biệt đã được cơ quan có thẩm quyền cấp Giấy phép nhập khẩu.</li>
+                        <li>Nhập khẩu hóa chất cấm để phục vụ mục đích an ninh, quốc phòng theo quyết định của Thủ tướng Chính phủ.</li>
+                        <li>Nhập khẩu hóa chất với khối lượng nhỏ phục vụ mục đích nghiên cứu khoa học, thử nghiệm.</li>
+                        <li>Các trường hợp khác theo quy định cụ thể của Nghị định 26/2026/NĐ-CP.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="bulb-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Kinh nghiệm thực tế:</strong> Doanh nghiệp nên chủ động rà soát mã HS và đối chiếu
+                        với danh mục quản lý trước khi làm thủ tục. Việc khai báo không chính xác hoặc chậm trễ có thể
+                        dẫn đến lô hàng bị giữ tại cảng, phát sinh chi phí lưu kho bãi lớn hoặc bị xử phạt hành chính
+                        theo Nghị định 71/2019/NĐ-CP.
+                    </div>
+
+                    <div class="source-note">
+                        <span>
+                            <iconify-icon icon="link-outline"></iconify-icon>
+                            Nguồn tham khảo: Thư viện Infographic Hải quan Xuất Nhập Khẩu &amp; Logistics
+                        </span>
+                        <span>
+                            <iconify-icon icon="document-text-outline"></iconify-icon>
+                            Cập nhật theo Luật Hóa chất 2025 &amp; Nghị định 26/2026/NĐ-CP
+                        </span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</body>
+</html>
