@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toàn Cảnh Nghị Định 37/2026/NĐ-CP · Quản Lý Chất Lượng Sản Phẩm, Hàng Hóa · Tony EXIM</title>
+
+    <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #121212;
+            --bg-sidebar: #1e1e1e;
+            --bg-card: #2b2b2b;
+            --bg-card-hover: #3a3a3a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #7a7a7a;
+            --accent: #ffdb70;
+            --accent-dark: #d4b24a;
+            --border-light: #3a3a3a;
+            --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --font: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        /* ====== SIDEBAR ====== */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 30px 22px 26px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            position: sticky;
+            top: 30px;
+            text-align: center;
+        }
+
+        .sidebar-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            border: 3px solid var(--accent);
+            background: #333;
+        }
+
+        .sidebar-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--accent);
+            background: rgba(255, 219, 112, 0.1);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin: 6px 0 18px;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 18px 0;
+        }
+
+        .sidebar-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+            font-size: 0.82rem;
+        }
+
+        .sidebar-contact .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-contact .item iconify-icon {
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-contact .item a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+
+        .sidebar-contact .item a:hover {
+            color: var(--accent);
+        }
+
+        .sidebar-contact .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .sidebar-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-social a {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .sidebar-social a:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ====== MAIN CONTENT ====== */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .navbar {
+            background: var(--bg-sidebar);
+            border-radius: 40px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .navbar button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .navbar button.active {
+            background: var(--accent);
+            color: #121212;
+            font-weight: 600;
+        }
+
+        /* ====== ARTICLE ====== */
+        .article-card {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 32px 34px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .article-header {
+            margin-bottom: 26px;
+        }
+
+        .article-badge {
+            display: inline-block;
+            background: rgba(255, 219, 112, 0.15);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin-bottom: 12px;
+        }
+
+        .article-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .article-header h1 span {
+            color: var(--accent);
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .article-meta iconify-icon {
+            color: var(--accent);
+            margin-right: 4px;
+        }
+
+        .article-body {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .article-body h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 28px 0 12px;
+            padding-left: 14px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .article-body h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+        }
+
+        .article-body p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 10px 0 16px 20px;
+            padding-left: 6px;
+        }
+
+        .article-body li {
+            margin-bottom: 6px;
+        }
+
+        .article-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .article-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .article-body a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 22px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .highlight-box iconify-icon {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 18px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-pl {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid rgba(255, 219, 112, 0.3);
+        }
+
+        .step-list {
+            list-style: none;
+            margin-left: 0;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 44px;
+            margin-bottom: 16px;
+            counter-increment: step-counter;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: #121212;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .source-note {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .source-note iconify-icon {
+            color: var(--accent);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 820px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                text-align: left;
+                padding: 22px 20px;
+                align-items: center;
+            }
+            .sidebar-avatar {
+                width: 70px;
+                height: 70px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+            .sidebar-header {
+                flex: 1;
+                min-width: 150px;
+            }
+            .sidebar-name {
+                font-size: 1.1rem;
+            }
+            .sidebar-title {
+                font-size: 0.75rem;
+                margin: 2px 0 0;
+            }
+            .sidebar-divider {
+                display: none;
+            }
+            .sidebar-contact {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px 20px;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .sidebar-social {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+            .navbar {
+                border-radius: var(--radius-sm);
+            }
+            .article-card {
+                padding: 22px 18px;
+            }
+            .article-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px 10px;
+            }
+            .article-card {
+                padding: 16px 14px;
+            }
+            .article-header h1 {
+                font-size: 1.2rem;
+            }
+            .navbar button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .article-body h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-layout">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <img
+                src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+                alt="Luong Hong Quang"
+                class="sidebar-avatar"
+            />
+            <div class="sidebar-header">
+                <h1 class="sidebar-name">Luong Hong Quang</h1>
+                <p class="sidebar-title">Import-Export Officer</p>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-contact">
+                <div class="item">
+                    <iconify-icon icon="mail-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Email</span>
+                        <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Phone</span>
+                        <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="location-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Location</span>
+                        <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-social">
+                <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+                <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+                <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+                <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+                <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+                <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="main-content">
+            <nav class="navbar">
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/">About</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Resume</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Portfolio</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Blog</button>
+                <button class="active" href="https://luonghongquang.github.io/Tony-EXIM/>Contact</button>
+            </nav>
+
+            <article class="article-card">
+                <header class="article-header">
+                    <span class="article-badge">
+                        <iconify-icon icon="shield-check-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+                        Pháp luật Hải quan
+                    </span>
+                    <h1>
+                        Toàn Cảnh Nghị Định 37/2026/NĐ-CP<br />
+                        <span>Quản Lý Chất Lượng Sản Phẩm, Hàng Hóa</span>
+                    </h1>
+                    <div class="article-meta">
+                        <span><iconify-icon icon="calendar-outline"></iconify-icon> 23/06/2026</span>
+                        <span><iconify-icon icon="folder-open-outline"></iconify-icon> Chất lượng – Hải quan</span>
+                        <span><iconify-icon icon="time-outline"></iconify-icon> 10 phút đọc</span>
+                    </div>
+                </header>
+
+                <div class="article-body">
+                    <p>
+                        Ngày <strong>23/01/2026</strong>, Chính phủ đã ban hành <strong>Nghị định số
+                        37/2026/NĐ-CP</strong> quy định chi tiết một số điều và biện pháp để tổ chức, hướng dẫn
+                        thi hành Luật Chất lượng sản phẩm, hàng hóa. Nghị định có hiệu lực thi hành ngay từ ngày
+                        ký ban hành, tạo hành lang pháp lý quan trọng cho việc đổi mới toàn diện công tác quản lý
+                        chất lượng sản phẩm, hàng hóa trong giai đoạn mới[reference:0].
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="alert-circle-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Điểm cốt lõi:</strong> Nghị định 37/2026/NĐ-CP chuyển từ phương thức quản lý
+                        "dàn đều" sang <strong>quản lý dựa trên mức độ rủi ro</strong>, đồng thời đẩy mạnh số hóa
+                        dữ liệu, tăng cường hậu kiểm và minh bạch hóa thông tin chất lượng sản phẩm, hàng hóa
+                        [reference:1].
+                    </div>
+
+                    <h2>I. Bối cảnh ban hành</h2>
+                    <p>
+                        Nghị định 37/2026/NĐ-CP ra đời trong bối cảnh <strong>Luật số 78/2025/QH15</strong> sửa
+                        đổi, bổ sung một số điều của Luật Chất lượng sản phẩm, hàng hóa đã chính thức có hiệu lực
+                        từ ngày <strong>01/01/2026</strong>. Trên cơ sở đó, Chính phủ ban hành Nghị định này để
+                        cụ thể hóa các quy định mới, tạo hành lang pháp lý cho việc đổi mới toàn diện công tác
+                        quản lý chất lượng[reference:2].
+                    </p>
+                    <p>
+                        Nghị định 37/2026/NĐ-CP được ban hành nhằm hoàn thiện khung pháp lý về quản lý chất lượng
+                        sản phẩm, hàng hóa, đáp ứng yêu cầu quản lý trong sản xuất, lưu thông và thương mại số
+                        [reference:3].
+                    </p>
+
+                    <h2>II. Phân loại sản phẩm, hàng hóa theo 3 mức độ rủi ro</h2>
+                    <p>
+                        Một trong những nội dung quan trọng nhất của Nghị định 37/2026/NĐ-CP là quy định về việc
+                        phân loại sản phẩm, hàng hóa theo <strong>3 mức độ rủi ro</strong>. Cụ thể tại Điều 4
+                        Nghị định nêu rõ nguyên tắc và phương pháp xác định mức độ rủi ro của sản phẩm, hàng hóa
+                        [reference:4].
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nhóm rủi ro</th>
+                                    <th>Đặc điểm</th>
+                                    <th>Phương thức quản lý</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Rủi ro cao</strong></td>
+                                    <td>Sản phẩm, hàng hóa có mức độ rủi ro nguy hại lớn và khả năng xảy ra rủi ro cao, có thể gây hậu quả nghiêm trọng hoặc đặc biệt nghiêm trọng nếu không có biện pháp quản lý phù hợp.</td>
+                                    <td>Quản lý chặt chẽ thông qua tổ chức chứng nhận được chỉ định, kết hợp kiểm tra định kỳ và đột xuất.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Rủi ro trung bình</strong></td>
+                                    <td>Sản phẩm, hàng hóa có mức độ rủi ro nguy hại hoặc khả năng xảy ra rủi ro ở mức trung bình, có thể gây ảnh hưởng đáng kể nếu không có biện pháp quản lý phù hợp.</td>
+                                    <td>Doanh nghiệp được lựa chọn tự công bố hoặc đánh giá bởi bên thứ ba.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Rủi ro thấp</strong></td>
+                                    <td>Sản phẩm, hàng hóa có mức độ rủi ro nguy hại nhỏ hoặc khả năng xảy ra rủi ro thấp, hầu như không gây ảnh hưởng đáng kể trong điều kiện kiểm soát hoặc sử dụng thông thường.</td>
+                                    <td>Doanh nghiệp tự công bố và tự chịu trách nhiệm.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        Nguyên tắc xác định mức độ rủi ro được quy định rõ: căn cứ vào bằng chứng khoa học và dữ
+                        liệu áp dụng trong thực tiễn; khả năng quản lý của cơ quan nhà nước trong từng thời kỳ;
+                        bảo đảm tính minh bạch, khách quan, kế thừa nguyên tắc quản lý chất lượng; bảo đảm nguyên
+                        tắc tỷ lệ, yêu cầu quản lý nhà nước phải tương xứng với mức độ rủi ro; và áp dụng nguyên
+                        tắc phòng ngừa trong trường hợp có nguy cơ nghiêm trọng đến sức khỏe, tính mạng con người,
+                        môi trường hoặc an ninh quốc gia mà chưa có đầy đủ bằng chứng khoa học[reference:5].
+                    </p>
+                    <p>
+                        Đối với phương pháp xác định mức độ rủi ro định lượng, được quy định tại
+                        <strong>Phụ lục VI</strong> của Nghị định 37/2026/NĐ-CP[reference:6].
+                    </p>
+
+                    <h2>III. Nhãn điện tử – Bước tiến trong quản lý chất lượng</h2>
+                    <p>
+                        Một điểm mới nổi bật của Nghị định 37/2026/NĐ-CP là quy định về <strong>nhãn điện
+                        tử</strong> đối với sản phẩm, hàng hóa. Từ ngày <strong>01/7/2026</strong>, quy định về
+                        nhãn điện tử chính thức có hiệu lực, được kỳ vọng tạo thuận lợi cho doanh nghiệp trong
+                        việc cung cấp, cập nhật thông tin sản phẩm, nâng cao tính minh bạch, khả năng truy xuất
+                        nguồn gốc và bảo vệ quyền lợi người tiêu dùng[reference:7].
+                    </p>
+                    <p>
+                        Chỉ cần một lần quét mã trên sản phẩm, người tiêu dùng có thể kiểm tra nhanh thông tin
+                        chất lượng – đây là điểm mới nổi bật của Nghị định 37/2026/NĐ-CP, nhằm triển khai
+                        <strong>"hộ chiếu số của sản phẩm"</strong>[reference:8].
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="bulb-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Ý nghĩa:</strong> Nhãn điện tử không chỉ giúp minh bạch hóa thông tin sản phẩm
+                        mà còn là nền tảng quan trọng để thúc đẩy chuyển đổi số trong quản lý chất lượng, hướng
+                        tới xây dựng hạ tầng chất lượng quốc gia số.
+                    </div>
+
+                    <h2>IV. Lộ trình áp dụng và quy định chuyển tiếp</h2>
+                    <p>
+                        Theo Nghị định 37/2026/NĐ-CP, trong thời hạn <strong>6 tháng</strong> kể từ ngày Nghị
+                        định có hiệu lực thi hành, việc quản lý chất lượng sản phẩm, hàng hóa tiếp tục thực hiện
+                        theo các quy định hiện hành[reference:9].
+                    </p>
+                    <p>
+                        Bên cạnh đó, các Bộ quản lý ngành, lĩnh vực có trách nhiệm ban hành Danh mục sản phẩm
+                        rủi ro trung bình, rủi ro cao trước ngày <strong>01/7/2026</strong> để làm cơ sở triển
+                        khai thực hiện[reference:10].
+                    </p>
+                    <p>
+                        Kể từ ngày <strong>01/7/2026</strong>, việc kiểm tra chất lượng sản phẩm hàng hóa được
+                        thực hiện trên cơ sở Danh mục sản phẩm rủi ro trung bình và rủi ro cao theo quy định tại
+                        Nghị định 37/2026/NĐ-CP[reference:11].
+                    </p>
+
+                    <h2>V. Tác động đối với doanh nghiệp xuất nhập khẩu</h2>
+                    <p>
+                        Nghị định 37/2026/NĐ-CP có tác động trực tiếp đến hoạt động xuất nhập khẩu của doanh
+                        nghiệp, đặc biệt trong lĩnh vực kiểm tra chất lượng hàng hóa nhập khẩu. Cụ thể:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Thống nhất quy định:</strong> Nghị định tạo cơ sở pháp lý thống nhất cho việc
+                            kiểm tra chất lượng hàng hóa nhập khẩu, góp phần gỡ vướng trong thực tiễn triển khai
+                            [reference:12].
+                        </li>
+                        <li>
+                            <strong>Phân loại rủi ro:</strong> Doanh nghiệp cần xác định đúng nhóm rủi ro của
+                            sản phẩm, hàng hóa để áp dụng đúng phương thức quản lý, tránh rủi ro pháp lý và tối
+                            ưu hóa chi phí.
+                        </li>
+                        <li>
+                            <strong>Chuyển đổi số:</strong> Việc áp dụng nhãn điện tử và truy xuất nguồn gốc
+                            đòi hỏi doanh nghiệp phải chủ động cập nhật, số hóa thông tin sản phẩm để đáp ứng
+                            yêu cầu mới.
+                        </li>
+                        <li>
+                            <strong>Hậu kiểm:</strong> Cơ chế hậu kiểm được tăng cường, doanh nghiệp cần duy
+                            trì hồ sơ chất lượng đầy đủ và sẵn sàng giải trình khi có yêu cầu từ cơ quan chức
+                            năng.
+                        </li>
+                    </ul>
+
+                    <div class="source-note">
+                        <span>
+                            <iconify-icon icon="link-outline"></iconify-icon>
+                            Nguồn tham khảo: Thư viện Infographic Hải quan Xuất Nhập Khẩu &amp; Logistics
+                        </span>
+                        <span>
+                            <iconify-icon icon="document-text-outline"></iconify-icon>
+                            Cập nhật theo Nghị định 37/2026/NĐ-CP &amp; Luật Chất lượng sản phẩm, hàng hóa
+                        </span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</body>
+</html>
