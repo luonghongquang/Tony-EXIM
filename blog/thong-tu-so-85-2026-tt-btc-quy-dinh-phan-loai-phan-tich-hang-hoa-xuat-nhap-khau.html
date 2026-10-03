@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infographic Thông tư 85/2026/TT-BTC · Phân Loại & Phân Tích Hàng Hóa XNK · Tony EXIM</title>
+
+    <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #121212;
+            --bg-sidebar: #1e1e1e;
+            --bg-card: #2b2b2b;
+            --bg-card-hover: #3a3a3a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #7a7a7a;
+            --accent: #ffdb70;
+            --accent-dark: #d4b24a;
+            --border-light: #3a3a3a;
+            --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --font: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        /* ====== SIDEBAR ====== */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 30px 22px 26px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            position: sticky;
+            top: 30px;
+            text-align: center;
+        }
+
+        .sidebar-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            display: block;
+            border: 3px solid var(--accent);
+            background: #333;
+        }
+
+        .sidebar-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--accent);
+            background: rgba(255, 219, 112, 0.1);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin: 6px 0 18px;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 18px 0;
+        }
+
+        .sidebar-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
+            font-size: 0.82rem;
+        }
+
+        .sidebar-contact .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-contact .item iconify-icon {
+            color: var(--accent);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-contact .item a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+
+        .sidebar-contact .item a:hover {
+            color: var(--accent);
+        }
+
+        .sidebar-contact .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .sidebar-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-social a {
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .sidebar-social a:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ====== MAIN CONTENT ====== */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .navbar {
+            background: var(--bg-sidebar);
+            border-radius: 40px;
+            padding: 6px 10px;
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .navbar button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 22px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        .navbar button.active {
+            background: var(--accent);
+            color: #121212;
+            font-weight: 600;
+        }
+
+        /* ====== ARTICLE ====== */
+        .article-card {
+            background: var(--bg-sidebar);
+            border-radius: var(--radius);
+            padding: 32px 34px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .article-header {
+            margin-bottom: 26px;
+        }
+
+        .article-badge {
+            display: inline-block;
+            background: rgba(255, 219, 112, 0.15);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            border-radius: 40px;
+            margin-bottom: 12px;
+        }
+
+        .article-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .article-header h1 span {
+            color: var(--accent);
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .article-meta iconify-icon {
+            color: var(--accent);
+            margin-right: 4px;
+        }
+
+        .article-body {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .article-body h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 28px 0 12px;
+            padding-left: 14px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .article-body h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 8px;
+        }
+
+        .article-body p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 10px 0 16px 20px;
+            padding-left: 6px;
+        }
+
+        .article-body li {
+            margin-bottom: 6px;
+        }
+
+        .article-body strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .article-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+            transition: border-color 0.2s;
+        }
+
+        .article-body a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 22px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .highlight-box iconify-icon {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 18px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-pl {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid rgba(255, 219, 112, 0.3);
+        }
+
+        .step-list {
+            list-style: none;
+            margin-left: 0;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            position: relative;
+            padding-left: 44px;
+            margin-bottom: 16px;
+            counter-increment: step-counter;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: #121212;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .source-note {
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .source-note iconify-icon {
+            color: var(--accent);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 820px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+                width: 100%;
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                text-align: left;
+                padding: 22px 20px;
+                align-items: center;
+            }
+            .sidebar-avatar {
+                width: 70px;
+                height: 70px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+            .sidebar-header {
+                flex: 1;
+                min-width: 150px;
+            }
+            .sidebar-name {
+                font-size: 1.1rem;
+            }
+            .sidebar-title {
+                font-size: 0.75rem;
+                margin: 2px 0 0;
+            }
+            .sidebar-divider {
+                display: none;
+            }
+            .sidebar-contact {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px 20px;
+                width: 100%;
+                margin-top: 4px;
+            }
+            .sidebar-social {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+            .navbar {
+                border-radius: var(--radius-sm);
+            }
+            .article-card {
+                padding: 22px 18px;
+            }
+            .article-header h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 14px 10px;
+            }
+            .article-card {
+                padding: 16px 14px;
+            }
+            .article-header h1 {
+                font-size: 1.2rem;
+            }
+            .navbar button {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .article-body h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-layout">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <img
+                src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+                alt="Luong Hong Quang"
+                class="sidebar-avatar"
+            />
+            <div class="sidebar-header">
+                <h1 class="sidebar-name">Luong Hong Quang</h1>
+                <p class="sidebar-title">Import-Export Specialist</p>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-contact">
+                <div class="item">
+                    <iconify-icon icon="mail-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Email</span>
+                        <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Phone</span>
+                        <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <iconify-icon icon="location-outline"></iconify-icon>
+                    <div>
+                        <span class="label">Location</span>
+                        <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-social">
+                <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+                <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+                <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+                <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+                <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+                <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="main-content">
+            <nav class="navbar">
+                <button class="active">About</button>
+                <button>Resume</button>
+                <button>Portfolio</button>
+                <button>Blog</button>
+                <button>Contact</button>
+            </nav>
+
+            <article class="article-card">
+                <header class="article-header">
+                    <span class="article-badge">
+                        <iconify-icon icon="file-tray-full-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+                        Hải quan – Phân loại hàng hóa
+                    </span>
+                    <h1>
+                        Infographic Thông tư 85/2026/TT-BTC<br />
+                        <span>Phân Loại &amp; Phân Tích Hàng Hóa Xuất Nhập Khẩu</span>
+                    </h1>
+                    <div class="article-meta">
+                        <span><iconify-icon icon="calendar-outline"></iconify-icon> 09/07/2026</span>
+                        <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hải quan</span>
+                        <span><iconify-icon icon="time-outline"></iconify-icon> 9 phút đọc</span>
+                    </div>
+                </header>
+
+                <div class="article-body">
+                    <p>
+                        Ngày <strong>30/6/2026</strong>, Bộ Tài chính đã ban hành <strong>Thông tư số
+                        85/2026/TT-BTC</strong> quy định về phân loại hàng hóa, phân tích để phân loại hàng
+                        hóa xuất khẩu, nhập khẩu. Thông tư có hiệu lực thi hành từ ngày
+                        <strong>15/9/2026</strong>, thay thế hoàn toàn Thông tư số 14/2015/TT-BTC và Thông
+                        tư số 17/2021/TT-BTC của Bộ Tài chính[reference:0].
+                    </p>
+
+                    <p>
+                        Đây là văn bản pháp lý quan trọng, đánh dấu bước tiến trong việc hoàn thiện thể chế
+                        hải quan, đẩy mạnh chuyển đổi số, cắt giảm thủ tục hành chính và tạo thuận lợi tối đa
+                        cho doanh nghiệp trong hoạt động xuất nhập khẩu[reference:1].
+                    </p>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="alert-circle-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Điểm cốt lõi:</strong> Thông tư 85/2026/TT-BTC tập trung vào chuyên môn nghiệp
+                        vụ phân loại hàng hóa, loại bỏ hoàn toàn việc sử dụng kết quả phân tích để kiểm tra
+                        chất lượng hay kiểm tra an toàn thực phẩm ra khỏi phạm vi điều chỉnh[reference:2].
+                    </div>
+
+                    <h2>I. Phạm vi điều chỉnh và đối tượng áp dụng</h2>
+                    <p>
+                        Thông tư 85/2026/TT-BTC quy định chi tiết về <strong>phân loại hàng hóa</strong>,
+                        <strong>phân tích để phân loại hàng hóa xuất khẩu, nhập khẩu</strong>, cũng như việc
+                        <strong>xây dựng và sử dụng cơ sở dữ liệu</strong> về Danh mục hàng hóa xuất nhập khẩu
+                        Việt Nam[reference:3].
+                    </p>
+                    <p>
+                        Đối tượng áp dụng bao gồm: <strong>người khai hải quan, cơ quan Hải quan, công chức
+                        hải quan</strong> cùng các tổ chức, cá nhân có liên quan đến hoạt động phân loại,
+                        phân tích hàng hóa và khai thác cơ sở dữ liệu danh mục hàng hóa[reference:4].
+                    </p>
+
+                    <h2>II. Những điểm mới nổi bật của Thông tư 85/2026/TT-BTC</h2>
+
+                    <h3>1. Loại bỏ mục đích kiểm tra chất lượng và an toàn thực phẩm</h3>
+                    <p>
+                        Một trong những thay đổi căn bản của Thông tư 85/2026/TT-BTC là việc
+                        <strong>loại bỏ hoàn toàn</strong> việc sử dụng kết quả phân tích để kiểm tra chất
+                        lượng hay kiểm tra an toàn thực phẩm ra khỏi phạm vi điều chỉnh. Điều này giúp hoạt
+                        động kiểm định tập trung sâu vào mục đích phân loại hàng hóa, thay vì phải xử lý đa
+                        mục tiêu như trước đây[reference:5][reference:6].
+                    </p>
+
+                    <h3>2. Cơ chế xử lý linh hoạt cho hàng hóa phức tạp</h3>
+                    <p>
+                        Đối với các mặt hàng có tính chất kỹ thuật phức tạp chưa đủ cơ sở định danh theo Danh
+                        mục hiện hành, Thông tư mở ra cơ chế xử lý linh hoạt khi cho phép sử dụng các
+                        <strong>tiêu chuẩn, quy chuẩn và tiêu chí kỹ thuật</strong> do cơ quan có thẩm quyền
+                        ban hành làm căn cứ xác định tên gọi, mô tả và mã số hàng hóa[reference:7].
+                    </p>
+
+                    <h3>3. Đẩy mạnh số hóa và kết nối dữ liệu</h3>
+                    <p>
+                        Thông tư hướng tới việc <strong>tăng cường ứng dụng công nghệ thông tin</strong>,
+                        kết nối và chia sẻ dữ liệu giữa cơ quan Hải quan, cơ quan quản lý chuyên ngành và
+                        người khai hải quan; giảm hồ sơ giấy, rút ngắn thời gian xử lý và nâng cao tính minh
+                        bạch trong quản lý[reference:8][reference:9].
+                    </p>
+
+                    <h3>4. Đơn giản hóa thủ tục đối với máy móc, thiết bị</h3>
+                    <p>
+                        Theo quy định mới, <strong>máy liên hợp hoặc tổ hợp máy</strong> thuộc các Chương 84,
+                        85 và 90 nhập khẩu trong cùng một chuyến sẽ <strong>không còn phải đăng ký Danh mục
+                        và Phiếu theo dõi trừ lùi</strong> như trước. Doanh nghiệp chỉ cần đăng ký Danh mục
+                        trước thời điểm mở tờ khai nhập khẩu[reference:10].
+                    </p>
+
+                    <h2>III. Nguyên tắc phân loại hàng hóa theo Thông tư 85/2026/TT-BTC</h2>
+                    <p>
+                        Một trong những điểm nhấn quan trọng của Thông tư là việc <strong>siết chặt nguyên tắc
+                        phân loại</strong>, trong đó khẳng định <strong>một mặt hàng chỉ có một mã số duy
+                        nhất</strong> theo Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam[reference:11].
+                    </p>
+                    <p>
+                        Đối với các mặt hàng phức tạp chưa thể xác định ngay mã số duy nhất, Thông tư đưa ra
+                        <strong>thứ tự ưu tiên</strong> sử dụng các nguồn tài liệu chuẩn quốc tế như:
+                    </p>
+                    <ul>
+                        <li>Chú giải chi tiết Danh mục HS</li>
+                        <li>Tuyển tập ý kiến phân loại của Tổ chức Hải quan thế giới (WCO)</li>
+                        <li>Chú giải bổ sung Danh mục AHTN</li>
+                    </ul>
+                    <p>
+                        Đặc biệt, trường hợp có sự khác biệt về mô tả hàng hóa giữa danh mục trong nước và
+                        quốc tế, cơ quan Hải quan sẽ áp dụng trực tiếp mô tả của <strong>Danh mục HS và
+                        AHTN</strong> theo nguyên tắc áp dụng Điều ước quốc tế mà Việt Nam là thành viên
+                        [reference:12].
+                    </p>
+
+                    <h2>IV. Quy định về lấy mẫu và lưu mẫu hàng hóa</h2>
+                    <p>
+                        Theo khoản 1 Điều 11 Thông tư 85/2026/TT-BTC, người khai hải quan có trách nhiệm
+                        xuất trình hàng hóa để cơ quan hải quan lấy mẫu thực hiện phân tích. Việc lấy mẫu
+                        được thực hiện theo quy định tại khoản 2 Điều 11[reference:13].
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nội dung</th>
+                                    <th>Quy định</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Số lượng mẫu</strong></td>
+                                    <td>02 mẫu (theo điểm b khoản 2 Điều 11). Trường hợp người khai hải quan chỉ nhập khẩu 01 mẫu thì không thực hiện lấy mẫu[reference:14].</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Yêu cầu mẫu</strong></td>
+                                    <td>Lấy từ chính lô hàng cần phân tích, bảo đảm tính đại diện, đủ về số lượng, khối lượng để phục vụ việc trưng cầu giám định hoặc giải quyết khiếu nại[reference:15].</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Xác nhận mẫu</strong></td>
+                                    <td>Phải có đại diện của người khai hải quan; mẫu phải được các bên ký xác nhận và niêm phong riêng biệt từng mẫu[reference:16].</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Thời hạn lưu mẫu</strong></td>
+                                    <td>120 ngày kể từ ngày ban hành Thông báo kết quả phân tích, phân loại (theo điểm b khoản 3 Điều 11)[reference:17].</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h2>V. Tác động đối với doanh nghiệp xuất nhập khẩu</h2>
+                    <p>
+                        Thông tư 85/2026/TT-BTC được đánh giá sẽ <strong>giảm đáng kể thời gian và chi phí
+                        tuân thủ</strong> của doanh nghiệp nhờ việc cắt giảm thủ tục hành chính, đẩy mạnh số
+                        hóa và tăng cường quản lý rủi ro[reference:18].
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Tiết kiệm thời gian:</strong> Việc loại bỏ thủ tục đăng ký Danh mục và
+                            Phiếu theo dõi trừ lùi đối với máy liên hợp giúp rút ngắn đáng kể thời gian thông
+                            quan.
+                        </li>
+                        <li>
+                            <strong>Giảm chi phí:</strong> Doanh nghiệp không còn phải thực hiện các thủ tục
+                            kiểm tra chất lượng, an toàn thực phẩm qua kết quả phân tích, giúp tiết kiệm chi
+                            phí kiểm định.
+                        </li>
+                        <li>
+                            <strong>Tăng tính chủ động:</strong> Thông tư quy định rõ hơn trách nhiệm của
+                            người khai hải quan trong xác định mã số hàng hóa, giúp doanh nghiệp chủ động hơn
+                            trong việc phân loại hàng hóa[reference:19].
+                        </li>
+                        <li>
+                            <strong>Minh bạch hóa:</strong> Việc xây dựng và sử dụng cơ sở dữ liệu về Danh
+                            mục hàng hóa xuất nhập khẩu giúp tăng cường tính minh bạch và nhất quán trong
+                            công tác phân loại.
+                        </li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <iconify-icon icon="bulb-outline" style="font-size: 1.1rem;"></iconify-icon>
+                        <strong>Khuyến nghị cho doanh nghiệp:</strong> Cần chủ động cập nhật và nắm rõ các
+                        quy định mới của Thông tư 85/2026/TT-BTC trước ngày 15/9/2026, đặc biệt là các thay
+                        đổi về nguyên tắc phân loại, quy trình lấy mẫu và trách nhiệm xác định mã số hàng
+                        hóa. Việc rà soát lại quy trình nội bộ và đào tạo nhân sự sẽ giúp doanh nghiệp tận
+                        dụng tối đa lợi ích từ các quy định mới.
+                    </div>
+
+                    <div class="source-note">
+                        <span>
+                            <iconify-icon icon="link-outline"></iconify-icon>
+                            Nguồn tham khảo: Thư viện Infographic Hải quan Xuất Nhập Khẩu &amp; Logistics
+                        </span>
+                        <span>
+                            <iconify-icon icon="document-text-outline"></iconify-icon>
+                            Căn cứ pháp lý: Thông tư 85/2026/TT-BTC ngày 30/6/2026 của Bộ Tài chính
+                        </span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</body>
+</html>
