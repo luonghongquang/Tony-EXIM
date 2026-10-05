@@ -1,459 +1,1704 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Tony EXIM | Quy trình phân loại mã HS - Kỹ năng sống còn trong xuất nhập khẩu</title>
-  <!-- Google Fonts & Font Awesome -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#121212" />
+  <title>Quy Trình Phân Loại Mã HS Code · Mã HS Là Gì? · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+      --blue: #7ec8e3;
+      --purple: #c5a3e0;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f9fbfe;
-      color: #0a2540;
-      line-height: 1.5;
-    }
-
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-
-    /* header navigation - Tony EXIM style */
-    .site-header {
-      background: white;
-      box-shadow: 0 1px 0 #eef2f8;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-wrap {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 24px 16px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-      flex-wrap: wrap;
-      gap: 1rem;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 15px;
     }
 
-    .logo a {
-      font-size: 1.6rem;
-      font-weight: 800;
-      text-decoration: none;
-      background: linear-gradient(135deg, #0B2B5F, #1A6EB0);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      letter-spacing: -0.3px;
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s;
+    }
+    #loading.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+    }
+    .loader {
+      width: 44px; height: 44px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .main-layout {
+      display: flex; flex-direction: column;
+      gap: 20px; max-width: 1280px;
+      width: 100%; align-items: stretch;
     }
 
-    .logo span {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #5c7c9c;
+    .sidebar {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      display: flex; flex-wrap: wrap;
+      align-items: center; gap: 14px; text-align: left;
+    }
+    .sidebar-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--accent);
+      background: #333; flex-shrink: 0;
+    }
+    .sidebar-header { flex: 1; min-width: 140px; }
+    .sidebar-name {
+      font-size: 1.05rem; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .sidebar-title {
+      font-size: 0.7rem; font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block; padding: 2px 10px;
+      border-radius: 40px; margin-top: 4px;
+    }
+    .sidebar-divider { display: none; }
+    .sidebar-contact {
+      width: 100%; display: grid;
+      grid-template-columns: 1fr; gap: 8px;
+      text-align: left; font-size: 0.78rem;
+      padding-top: 12px; border-top: 1px solid var(--border-light);
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-secondary); word-break: break-word;
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.1rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      word-break: break-all;
+    }
+    .sidebar-contact .label {
+      font-size: 0.65rem; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
       display: block;
     }
-
-    .nav-links a {
-      text-decoration: none;
-      margin-left: 2rem;
-      font-weight: 500;
-      color: #1e3a5f;
-      transition: 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: #0f6baf;
-    }
-
-    /* entry-content layout */
-    #post-171 {
-      margin: 2rem 0 3rem;
-    }
-
-    .entry-content {
-      width: 100%;
-    }
-
-    .is-layout-constrained {
-      max-width: 1280px;
-      margin-left: auto;
-      margin-right: auto;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    /* Animation fade-up */
-    @keyframes fadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .entry-content > * {
-      animation: fadeUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-      opacity: 0;
-    }
-
-    /* layout 2 cột */
-    .blog-layout {
-      display: flex;
+    .sidebar-social {
+      width: 100%; display: flex;
+      justify-content: center; gap: 16px;
+      padding-top: 12px; border-top: 1px solid var(--border-light);
       flex-wrap: wrap;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary); font-size: 1.4rem;
+      min-width: 44px; min-height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      transition: color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .sidebar-social a:active {
+      background: var(--bg-card); color: var(--accent);
+      transform: scale(0.92);
     }
 
-    .blog-main {
-      flex: 3;
-      min-width: 0;
+    .main-content { width: 100%; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px; padding: 6px 10px;
+      display: flex; gap: 4px; margin-bottom: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      overflow-x: auto; overflow-y: hidden;
+      justify-content: flex-start;
+      scrollbar-width: none; -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .navbar::-webkit-scrollbar { display: none; }
+    .navbar a {
+      flex-shrink: 0; background: transparent;
+      border: none; color: var(--text-secondary);
+      font-family: var(--font); font-size: 0.8rem;
+      font-weight: 500; padding: 10px 18px;
+      border-radius: 40px; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+      min-height: 40px; display: inline-flex; align-items: center;
+    }
+    .navbar a:active { transform: scale(0.95); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: tabFadeIn 0.35s ease; }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .blog-sidebar {
-      flex: 1;
-      min-width: 260px;
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .post-meta {
-      margin-bottom: 1.2rem;
+    .hero-inner {
+      position: relative; border-radius: var(--radius-sm);
+      overflow: hidden; margin-bottom: 24px;
+      background: linear-gradient(rgba(18,18,18,0.85), rgba(18,18,18,0.95)),
+                  url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+      padding: 28px 18px; text-align: center;
+      border: 1px solid var(--border-light);
     }
-
-    .category-badge {
-      background: #eef2ff;
-      padding: 4px 14px;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #0057a3;
+    .hero-inner .article-badge {
       display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent); font-size: 0.65rem;
+      font-weight: 600; letter-spacing: 0.5px;
+      text-transform: uppercase; padding: 4px 12px;
+      border-radius: 40px; margin-bottom: 12px;
+    }
+    .hero-inner h1 {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      font-weight: 700; line-height: 1.25;
+      letter-spacing: -0.02em; margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary);
+      font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+      max-width: 640px; margin: 0 auto 14px; padding: 0 6px;
     }
 
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin: 0.75rem 0 0.5rem;
-      line-height: 1.25;
-      color: #002856;
+    .article-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 8px 14px; font-size: 0.72rem;
+      color: var(--text-muted);
+      align-items: center; justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 3px; vertical-align: middle;
     }
 
-    .meta-info {
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.85rem;
-      color: #5f7d9c;
-      border-bottom: 1px solid #e2edf5;
-      padding-bottom: 1rem;
-      margin-bottom: 1.8rem;
+    .article-body {
+      font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+      color: var(--text-secondary);
+      overflow-wrap: break-word; word-wrap: break-word;
     }
 
-    .content-card {
-      background: white;
-      border-radius: 32px;
-      padding: 2rem;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.02);
-      border: 1px solid #eef3fc;
+    .article-body h2 {
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      font-weight: 600; color: var(--text-primary);
+      margin: 28px 0 14px; padding-left: 12px;
+      border-left: 4px solid var(--accent);
+      display: flex; align-items: center; gap: 8px;
+      flex-wrap: wrap; line-height: 1.3;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+    .article-body h2 iconify-icon { font-size: 1.1em; flex-shrink: 0; }
+
+    .article-body h3 {
+      font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+      font-weight: 600; color: var(--text-primary);
+      margin: 20px 0 10px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
 
-    .section-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin: 1.8rem 0 1rem;
-      color: #00356b;
-      border-left: 5px solid #1e6ec5;
-      padding-left: 1rem;
-    }
-
-    .section-title2 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin: 1.5rem 0 0.8rem;
-      color: #00356b;
+    .article-body p { margin-bottom: 12px; text-align: left; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      word-break: break-word;
     }
 
     .highlight-box {
-      background: #f0f7fe;
-      border-left: 5px solid #1e6ec5;
-      padding: 1.2rem 1.5rem;
-      border-radius: 20px;
-      margin: 1.6rem 0;
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 16px; margin: 16px 0;
+      font-size: clamp(0.82rem, 2.8vw, 0.9rem);
+      line-height: 1.55;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 6px;
+      vertical-align: middle; font-size: 1.1em;
+    }
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    .table-wrap {
+      position: relative; overflow-x: auto;
+      margin: 16px 0; border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+    }
+    .table-wrap::after {
+      content: ''; position: absolute;
+      top: 0; right: 0; width: 24px; height: 100%;
+      background: linear-gradient(to left, var(--bg-sidebar), transparent);
+      pointer-events: none; opacity: 0.7; transition: opacity 0.3s;
+    }
+    .table-wrap.scrolled-end::after { opacity: 0; }
+
+    .table-wrap table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.78rem; min-width: 480px;
+    }
+    .table-wrap th {
+      background: var(--bg-card); color: var(--text-primary);
+      font-weight: 600; padding: 10px 12px;
+      text-align: left; border-bottom: 1px solid var(--border-light);
+      white-space: nowrap; font-size: 0.75rem;
+    }
+    .table-wrap td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .table-wrap tr:last-child td { border-bottom: none; }
+
+    .scroll-hint {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.68rem; color: var(--text-muted);
+      margin-top: -8px; margin-bottom: 12px; padding-left: 4px;
+    }
+    .scroll-hint iconify-icon { color: var(--accent); }
+
+    .badge {
+      display: inline-block; font-size: 0.65rem;
+      font-weight: 600; padding: 2px 10px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent); white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1); color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1); color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1); color: var(--orange);
+    }
+    .badge.blue {
+      border-color: rgba(126, 200, 227, 0.35);
+      background: rgba(126, 200, 227, 0.1); color: var(--blue);
+    }
+    .badge.purple {
+      border-color: rgba(197, 163, 224, 0.35);
+      background: rgba(197, 163, 224, 0.1); color: var(--purple);
     }
 
-    .info-note {
-      background: #e9f4fe;
-      border-radius: 18px;
-      padding: 1rem;
-      margin: 1.2rem 0;
-      font-size: 0.9rem;
+    .checklist-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 8px; margin-top: 10px;
     }
+    .checklist-card {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 12px 14px; display: flex;
+      align-items: center; gap: 10px;
+      border: 1px solid var(--border-light);
+      cursor: pointer; font-size: 0.82rem;
+      color: var(--text-secondary); min-height: 48px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .checklist-card:active {
+      background: var(--bg-card-hover);
+      border-color: var(--accent); transform: scale(0.99);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.3rem; color: var(--accent); flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
 
-    .warning-box {
-      background: #fff6e5;
-      border-left: 5px solid #e67e22;
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
-      margin: 1.5rem 0;
+    .grid-3 {
+      display: grid; grid-template-columns: 1fr;
+      gap: 10px; margin-top: 10px;
     }
-
-    .rule-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.2rem;
-      margin: 1.5rem 0;
-    }
-    .rule-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 1.2rem;
-      border: 1px solid #e9f0f5;
-      transition: all 0.2s;
-    }
-    .rule-card:hover {
-      transform: translateY(-3px);
-      border-color: #cde0ef;
-    }
-    .rule-number {
-      font-weight: 800;
-      font-size: 1rem;
-      color: #1e6ec5;
-      margin-bottom: 0.5rem;
-    }
-
-    .steps-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
-    }
-    .step-card {
-      flex: 1;
-      min-width: 180px;
-      background: #f8fafd;
-      border-radius: 24px;
-      padding: 1.2rem;
+    .card {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 16px 14px; border: 1px solid var(--border-light);
       text-align: center;
-      border: 1px solid #e2edf5;
     }
-    .step-number {
-      width: 48px;
-      height: 48px;
-      background: #1e6ec5;
-      color: white;
-      border-radius: 30px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
+    .card:active { transform: scale(0.98); }
+    .card iconify-icon {
+      font-size: 1.7rem; color: var(--accent);
+      margin-bottom: 6px; display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.88rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 4px;
+    }
+    .card p { font-size: 0.76rem; color: var(--text-secondary); margin: 0; }
+
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px; margin: 18px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent); margin-top: 0;
+      font-size: 1rem; display: flex; align-items: center; gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 18px; padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px; color: var(--text-secondary);
+      font-size: 0.83rem; line-height: 1.55;
     }
 
-    .sidebar-widget {
-      background: white;
-      border-radius: 24px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      border: 1px solid #eef3fc;
-      transition: transform 0.2s;
+    .source-note {
+      margin-top: 28px; padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.72rem; color: var(--text-muted);
+      display: flex; flex-direction: column; gap: 8px;
     }
-    .sidebar-widget:hover {
-      transform: translateY(-4px);
-    }
-    .sidebar-widget h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      border-left: 4px solid #1e6ec5;
-      padding-left: 0.75rem;
+    .source-note iconify-icon {
+      color: var(--accent); vertical-align: middle;
     }
 
-    .footer {
-      background: #0a1929;
-      color: #bbd3ef;
-      text-align: center;
-      padding: 2rem 0;
-      margin-top: 2rem;
+    .back-to-top {
+      position: fixed; bottom: 20px; right: 16px;
+      background: var(--accent); color: #121212;
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0;
+      transform: translateY(10px); transition: 0.25s;
+      z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.4);
+      font-size: 1.2rem; border: none;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:active { transform: scale(0.92); }
+
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .mindmap-container {
+      position: relative; margin: 20px 0;
+      padding: 14px 12px; background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .mindmap-container::after {
+      content: ''; position: absolute;
+      top: 0; right: 0; width: 20px; height: 100%;
+      background: linear-gradient(to left, var(--bg-card), transparent);
+      pointer-events: none; opacity: 0.85;
+    }
+    .mindmap-svg {
+      width: 100%; height: auto;
+      min-width: 640px; display: block;
+      touch-action: pan-x pan-y;
+    }
+    .mindmap-node { cursor: pointer; transition: all 0.3s ease; }
+    .mindmap-node:active rect,
+    .mindmap-node:active circle { filter: brightness(1.4); }
+    .mindmap-node text {
+      font-family: var(--font); font-size: 11px;
+      fill: var(--text-primary); pointer-events: none;
+      font-weight: 500;
+    }
+    .mindmap-node .node-desc { font-size: 9px; fill: var(--text-muted); }
+    .mindmap-line {
+      stroke: var(--border-light); stroke-width: 1.5;
+      fill: none; opacity: 0.6;
+    }
+    .mindmap-hint {
+      text-align: center; font-size: 0.72rem;
+      color: var(--text-muted); margin-top: 8px;
+      display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .mindmap-hint iconify-icon { color: var(--accent); }
+
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 500; display: flex;
+      align-items: flex-end; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s; padding: 0;
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal-content {
+      background: var(--bg-sidebar);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 28px;
+      width: 100%; max-width: 100%;
+      max-height: 85vh; overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+      position: relative; -webkit-overflow-scrolling: touch;
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+    .modal-content::before {
+      content: ''; position: absolute;
+      top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 4px;
+      background: var(--border-light); border-radius: 2px;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.2rem;
+      transition: var(--transition); z-index: 2;
+    }
+    .modal-close:active {
+      background: var(--accent); color: #121212; transform: scale(0.92);
+    }
+    .modal-content h3 {
+      font-size: 1.05rem; color: var(--accent);
+      margin: 16px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+      padding-right: 44px; line-height: 1.3;
+    }
+    .modal-content h3 iconify-icon { font-size: 1.2em; flex-shrink: 0; }
+    .modal-content p {
+      font-size: 0.87rem; color: var(--text-secondary);
+      margin-bottom: 10px; text-align: left; line-height: 1.55;
+    }
+    .modal-content ul {
+      margin: 8px 0 12px 18px;
+      color: var(--text-secondary); font-size: 0.85rem;
+    }
+    .modal-content ul li { margin-bottom: 6px; line-height: 1.5; }
+
+    .btn-home {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #121212;
+      padding: 12px 24px; border-radius: 40px;
+      font-weight: 600; font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255, 219, 112, 0.3);
+      min-height: 44px; transition: transform 0.2s;
+    }
+    .btn-home:active { transform: scale(0.95); }
+
+    .tab-title {
+      font-size: clamp(1.4rem, 5vw, 1.8rem);
+      font-weight: 700; color: var(--text-primary);
+      margin-bottom: 6px; padding-left: 14px;
+      border-left: 4px solid var(--accent);
+      letter-spacing: -0.02em;
+    }
+    .tab-subtitle {
+      font-size: 0.88rem; color: var(--text-muted);
+      margin-bottom: 24px; padding-left: 18px;
     }
 
-    @media (max-width: 780px) {
-      h1 { font-size: 1.7rem; }
-      .content-card { padding: 1.3rem; }
-      .nav-links a { margin-left: 1rem; }
-      .section-title { font-size: 1.3rem; }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 16px; margin-top: 8px;
+    }
+    .about-card {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 18px 18px; border: 1px solid var(--border-light);
+      transition: border-color 0.2s;
+    }
+    .about-card:hover { border-color: var(--accent); }
+    .about-card iconify-icon {
+      color: var(--accent); font-size: 1.5rem;
+      margin-bottom: 8px; display: block;
+    }
+    .about-card h3 {
+      font-size: 0.98rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 6px;
+    }
+    .about-card p {
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;
+    }
+
+    .resume-item {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 16px 18px; border: 1px solid var(--border-light);
+      margin-bottom: 12px; border-left: 4px solid var(--accent);
+    }
+    .resume-item .resume-header {
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: baseline;
+      gap: 8px; margin-bottom: 4px;
+    }
+    .resume-item h3 {
+      font-size: 1rem; font-weight: 600; color: var(--text-primary);
+    }
+    .resume-item .resume-date {
+      font-size: 0.75rem; color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      padding: 2px 10px; border-radius: 40px; font-weight: 500;
+    }
+    .resume-item .resume-role {
+      font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .resume-item ul {
+      margin: 6px 0 0 18px; font-size: 0.83rem;
+      color: var(--text-secondary);
+    }
+    .resume-item ul li { margin-bottom: 4px; }
+
+    .portfolio-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 12px; margin-top: 8px;
+    }
+    .portfolio-item {
+      background: var(--bg-card); border-radius: var(--radius-sm);
+      padding: 16px 18px; border: 1px solid var(--border-light);
+      display: flex; align-items: flex-start; gap: 14px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .portfolio-item:hover {
+      border-color: var(--accent); transform: translateY(-2px);
+    }
+    .portfolio-item .pf-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(255, 219, 112, 0.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .portfolio-item .pf-icon iconify-icon {
+      color: var(--accent); font-size: 1.4rem;
+    }
+    .portfolio-item h3 {
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 3px;
+    }
+    .portfolio-item p {
+      font-size: 0.8rem; color: var(--text-secondary); margin: 0;
+    }
+
+    .contact-list {
+      display: flex; flex-direction: column;
+      gap: 12px; margin-top: 8px;
+    }
+    .contact-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px; background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      text-decoration: none; color: var(--text-primary);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .contact-row:active {
+      background: var(--bg-card-hover); border-color: var(--accent);
+    }
+    .contact-row iconify-icon {
+      color: var(--accent); font-size: 1.3rem; flex-shrink: 0;
+    }
+    .contact-row .contact-info { flex: 1; min-width: 0; }
+    .contact-row .contact-label {
+      font-size: 0.68rem; text-transform: uppercase;
+      color: var(--text-muted); letter-spacing: 0.5px;
+    }
+    .contact-row .contact-value {
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--text-primary); word-break: break-word;
+    }
+
+    @media (min-width: 768px) {
+      body { padding: 30px 20px; font-size: 15px; }
+      .main-layout {
+        flex-direction: row; gap: 30px; align-items: flex-start;
+      }
+      .sidebar {
+        flex: 0 0 260px; flex-direction: column;
+        padding: 28px 22px 24px; text-align: center;
+        position: sticky; top: 30px; gap: 0;
+      }
+      .sidebar-avatar { width: 90px; height: 90px; margin: 0 auto 14px; }
+      .sidebar-header { flex: none; width: 100%; min-width: 0; }
+      .sidebar-name { font-size: 1.2rem; }
+      .sidebar-title { font-size: 0.78rem; padding: 4px 14px; margin: 6px 0 16px; }
+      .sidebar-divider {
+        display: block; height: 1px;
+        background: var(--border-light); margin: 16px 0;
+      }
+      .sidebar-contact {
+        display: flex; flex-direction: column;
+        gap: 12px; padding-top: 0;
+        border-top: none; font-size: 0.8rem;
+      }
+      .sidebar-social {
+        padding-top: 0; border-top: none;
+        margin-top: 16px; gap: 10px;
+      }
+      .sidebar-social a { min-width: 36px; min-height: 36px; font-size: 1.3rem; }
+
+      .article-card { padding: 28px 30px; }
+      .hero-inner { padding: 40px 24px; margin-bottom: 28px; }
+
+      .table-wrap::after { display: none; }
+      .table-wrap table { min-width: 0; font-size: 0.85rem; }
+      .table-wrap th { padding: 12px 14px; font-size: 0.82rem; }
+      .table-wrap td { padding: 11px 14px; }
+
+      .grid-3 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+      .checklist-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+      .checklist-card { padding: 10px 14px; min-height: 0; }
+
+      .about-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .portfolio-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+      .modal-overlay { align-items: center; padding: 20px; }
+      .modal-content {
+        border-radius: var(--radius); max-width: 560px;
+        padding: 28px 30px; max-height: 80vh;
+        border-bottom: 1px solid var(--border-light);
+        transform: scale(0.9) translateY(20px);
+      }
+      .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+      .modal-content::before { display: none; }
+      .modal-close { top: 14px; right: 18px; width: 36px; height: 36px; }
+      .modal-content h3 { font-size: 1.15rem; padding-right: 0; }
+
+      .mindmap-container { padding: 20px; }
+      .mindmap-svg { min-width: 700px; }
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar { flex: 0 0 280px; padding: 30px 22px 26px; }
+      .sidebar-avatar { width: 100px; height: 100px; }
+      .sidebar-name { font-size: 1.3rem; }
+      .sidebar-title { font-size: 0.85rem; }
+
+      .article-card { padding: 32px 34px; }
+      .hero-inner { padding: 46px 28px; }
+
+      .checklist-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    }
+
+    @media (max-width: 400px) {
+      body { padding: 12px 10px; }
+      .article-card { padding: 16px 12px; }
+      .hero-inner { padding: 22px 14px; }
+      .hero-inner h1 { font-size: 1.1rem; }
+      .navbar a { font-size: 0.72rem; padding: 8px 14px; }
+      .sidebar-avatar { width: 52px; height: 52px; }
+      .sidebar-name { font-size: 0.95rem; }
+      .sidebar-social a { font-size: 1.2rem; min-width: 40px; min-height: 40px; }
+      .checklist-card { font-size: 0.78rem; padding: 10px 12px; }
+      .modal-content { padding: 20px 16px 24px; }
+    }
+
+    @media (hover: none) {
+      .card:hover { transform: none; }
+      .checklist-card:hover { transform: none; }
+      .navbar a:hover { background: transparent; color: var(--text-secondary); }
+      .back-to-top:hover { background: var(--accent); transform: translateY(0); }
+      .about-card:hover { border-color: var(--border-light); }
+      .portfolio-item:hover { border-color: var(--border-light); transform: none; }
     }
   </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="container">
-    <div class="nav-wrap">
-      <div class="logo">
-        <a href="#">Tony EXIM</a>
-        <span>Lương Hồng Quang | Chuyên gia Xuất nhập khẩu & Logistics</span>
-      </div>
-      <div class="nav-links">
-        <a href="#">Trang chủ</a>
-        <a href="#">Blog</a>
-        <a href="#">Dịch vụ</a>
-        <a href="#">Liên hệ</a>
-      </div>
+  <div id="loading"><div class="loader"></div></div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose" aria-label="Đóng"><iconify-icon icon="close-outline"></iconify-icon></button>
+      <div id="modalBody"></div>
     </div>
   </div>
-</header>
 
-<div class="container">
-  <article id="post-171">
-    <div class="entry-content is-layout-constrained">
-      <div class="blog-layout">
-        <div class="blog-main">
-          <div class="post-meta">
-            <span class="category-badge"><i class="fas fa-barcode"></i> Kỹ năng nghiệp vụ</span>
-            <h1>Quy trình phân loại mã HS – Kỹ năng sống còn trong nghề thủ tục hải quan</h1>
-            <div class="meta-info">
-              <span><i class="far fa-calendar-alt"></i> 05/06/2026</span>
-              <span><i class="fas fa-user-check"></i> Lương Hồng Quang (Tony EXIM)</span>
-              <span><i class="fas fa-clock"></i> 12 phút đọc</span>
-            </div>
-          </div>
-          <div class="content-card">
-            <p><strong>Kỹ năng xác định mã HS, một kỹ năng cơ bản nhưng là thiết yếu và sống còn trong nghề thủ tục hải quan.</strong> Việc phân loại hàng hóa và xác định đúng mã số HS không chỉ ảnh hưởng đến nghĩa vụ thuế mà còn quyết định toàn bộ quy trình thông quan có suôn sẻ hay không. Dưới đây là quy trình bài bản giúp doanh nghiệp làm chủ hệ thống HS.</p>
+  <div class="main-layout">
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
 
-            <!-- 1. Tổng quan về mã HS -->
-            <div class="section-title">1. Tổng quan về Mã HS</div>
-            <p>Mã HS (Harmonized System) là hệ thống phân loại hàng hóa tiêu chuẩn hóa quốc tế do Tổ chức Hải quan Thế giới (WCO) quản lý. Hệ thống này tạo ra một "ngôn ngữ" chung, loại bỏ sự mơ hồ trong tên gọi sản phẩm giữa các quốc gia. Tại Việt Nam, mã HS hiện được quy định tại <strong>Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam</strong> ban hành kèm theo Thông tư 31/2022/TT-BTC, có hiệu lực từ ngày 30/12/2022.</p>
+      <div class="sidebar-divider"></div>
 
-            <div class="highlight-box">
-              <strong>📊 Cấu trúc mã HS tại Việt Nam (8 số)</strong><br>
-              - 2 số đầu: Chương của hàng hóa<br>
-              - 2 số tiếp theo: Nhóm của hàng hóa<br>
-              - 2 số tiếp theo: Phân nhóm của hàng hóa<br>
-              - 2 số cuối: Mã số chi tiết theo Danh mục Việt Nam
-            </div>
-
-            <div class="info-note">
-              <strong>⚖️ Vai trò của mã HS</strong><br>
-              - Là căn cứ tuyệt đối để xác định thuế suất thuế NK, XK, GTGT, TTĐB<br>
-              - Nhận diện hàng hóa có thuộc diện cấm, hạn chế, cần kiểm tra chuyên ngành<br>
-              - Thống kê thương mại quốc tế, quản lý rủi ro hải quan
-            </div>
-
-            <!-- 2. Sáu quy tắc tổng quát giải thích (GRIs) -->
-            <div class="section-title">2. Sáu quy tắc tổng quát giải thích (GRIs)</div>
-            <p>Đây là 6 nguyên tắc pháp lý mang tính "xương sống" của việc áp mã. Việc phân loại phải tuân thủ nghiêm ngặt thứ tự các quy tắc này.</p>
-
-            <div class="rule-grid">
-              <div class="rule-card"><div class="rule-number">📌 Quy tắc 1</div><strong>Phân loại theo nội dung nhóm và chú giải</strong><br>Tên của Phần, Chương chỉ nhằm mục đích dễ tra cứu. Việc phân loại phải được xác định theo nội dung của từng Nhóm (4 số) và các Chú giải Phần/Chương có liên quan.</div>
-              <div class="rule-card"><div class="rule-number">📌 Quy tắc 2</div><strong>Hàng chưa hoàn chỉnh & hỗn hợp</strong><br>Hàng chưa hoàn chỉnh đã mang đặc tính cơ bản của thành phẩm được phân loại như thành phẩm. Hỗn hợp, hợp chất của nguyên liệu cũng thuộc nhóm của nguyên liệu đó.</div>
-              <div class="rule-card"><div class="rule-number">📌 Quy tắc 3</div><strong>Hàng thuộc nhiều nhóm</strong><br>Ưu tiên nhóm mô tả cụ thể nhất. Nếu không, phân loại theo nguyên liệu/bộ phận tạo nên đặc tính cơ bản. Cuối cùng là nhóm có số thứ tự sau cùng.</div>
-              <div class="rule-card"><div class="rule-number">📌 Quy tắc 4</div><strong>Phân loại theo sự giống nhau</strong><br>Khi không thể áp dụng các quy tắc trên, phân loại vào nhóm hàng tương tự nhất.</div>
-              <div class="rule-card"><div class="rule-number">📌 Quy tắc 5</div><strong>Bao bì đóng gói</strong><br>Bao bì chuyên dùng, có hình dạng đặc biệt để đựng hàng hóa xác định thì phân loại cùng hàng hóa đó.</div>
-              <div class="rule-card"><div class="rule-number">📌 Quy tắc 6</div><strong>Cấp độ Phân nhóm</strong><br>Các quy tắc từ 1 đến 5 được áp dụng tương tự để phân loại ở cấp độ phân nhóm (6 số) và mã số 8 số.</div>
-            </div>
-
-            <!-- 3. Quy trình 5 bước "Vàng" xác định mã HS -->
-            <div class="section-title">3. Quy trình 5 bước "Vàng" xác định mã HS</div>
-            <p>Đây là quy trình thao tác chuẩn (SOP) để xác định mã HS, giúp tránh tra cứu cảm tính và sai sót nghiệp vụ.</p>
-
-            <div class="steps-container">
-              <div class="step-card"><div class="step-number">1</div><strong>Giải phẫu sản phẩm</strong><br>Thu thập tên gọi, thành phần, quy trình sản xuất, công dụng chính.</div>
-              <div class="step-card"><div class="step-number">2</div><strong>Khoanh vùng sơ bộ</strong><br>Tra Phần, Chương tiềm năng. Đọc kỹ Chú giải loại trừ của Phần/Chương đó.</div>
-              <div class="step-card"><div class="step-number">3</div><strong>Áp dụng tuần tự GRIs</strong><br>Bắt đầu với Quy tắc 1 → 2 → 3 → 6 để chốt mã 8 số.</div>
-              <div class="step-card"><div class="step-number">4</div><strong>Tham chiếu hỗ trợ</strong><br>Đối chiếu với ENs của WCO, cơ sở dữ liệu xác định trước của TCHQ.</div>
-              <div class="step-card"><div class="step-number">5</div><strong>Rà soát & lưu trữ</strong><br>Ghi chép logic áp mã. Lưu hồ sơ giải trình để bảo vệ doanh nghiệp.</div>
-            </div>
-
-            <div class="info-note"><strong>🔍 Bước 1 – Giải phẫu sản phẩm:</strong> Đây là bước cốt lõi. Thu thập tối đa thông tin: Tên thương mại/kỹ thuật, thành phần cấu tạo (%), quy trình sản xuất, thông số, và quan trọng nhất là <strong>công dụng/mục đích sử dụng chính</strong>. Không có thông tin chuẩn, mọi bước sau đều vô nghĩa.</div>
-            <div class="info-note"><strong>🗺️ Bước 2 – Khoanh vùng sơ bộ:</strong> Dựa vào bản chất hàng hóa, tra cứu Danh mục để tìm các Phần, Chương tiềm năng. <strong>Bắt buộc:</strong> Đọc kỹ các dòng Chú giải của Phần và Chương đó để kiểm tra các quy định loại trừ.</div>
-            <div class="info-note"><strong>⚙️ Bước 3 – Áp dụng tuần tự GRIs:</strong> Bắt đầu với Quy tắc 1 để xác định Nhóm 4 số. Nếu chưa được, tiếp tục xét Quy tắc 2, 3. Khi chốt được Nhóm 4 số, dùng Quy tắc 6 để đi sâu xuống Phân nhóm 6 số. Cuối cùng đối chiếu Danh mục Việt Nam để chọn mã 8 số.</div>
-            <div class="info-note"><strong>📚 Bước 4 – Tham chiếu hỗ trợ:</strong> Đối chiếu chéo quyết định của bạn với các nguồn: Chú giải chi tiết Hệ thống Hài hòa (ENs) của WCO, Cơ sở dữ liệu Xác định trước mã số đã công bố của Tổng cục Hải quan, hoặc tham vấn chuyên gia.</div>
-            <div class="info-note"><strong>💾 Bước 5 – Rà soát & lưu trữ:</strong> Ghi chép lại logic áp mã: Đã dùng Quy tắc nào? Dựa vào Chú giải nào? Lưu lại catalogue, bản vẽ kỹ thuật. Bộ hồ sơ này là 'tấm khiên' chứng minh sự minh bạch khi cơ quan Hải quan yêu cầu giải trình sau thông quan.</div>
-
-            <!-- 4. Nhận diện rủi ro & sai lầm -->
-            <div class="section-title">4. Nhận diện rủi ro & sai lầm phổ biến</div>
-            <div class="warning-box">
-              <strong>⚠️ Hậu quả của áp sai mã HS:</strong>
-              <ul style="margin-top: 0.5rem; margin-left: 1.2rem;">
-                <li><strong>Rủi ro tài chính:</strong> Truy thu thuế, phạt chậm nộp, phạt vi phạm hành chính (theo Nghị định 169/2026/NĐ-CP).</li>
-                <li><strong>Vi phạm chính sách:</strong> Bỏ sót giấy phép, kiểm tra chuyên ngành → hàng bị giữ, buộc tái xuất hoặc tịch thu.</li>
-                <li><strong>Chậm trễ & uy tín:</strong> Lô hàng bị ách tắc, phát sinh chi phí lưu kho, doanh nghiệp bị xếp hạng rủi ro cao.</li>
-              </ul>
-            </div>
-            <div class="rule-grid">
-              <div class="rule-card"><div class="rule-number">📄</div>Thiếu thông tin chi tiết SP – không nắm rõ công dụng, thành phần, tính chất hàng hóa.</div>
-              <div class="rule-card"><div class="rule-number">📖</div>Bỏ qua/Hiểu sai Chú giải – không đọc Chú giải Phần/Chương trước khi tra mã.</div>
-              <div class="rule-card"><div class="rule-number">🔀</div>Áp dụng sai quy tắc GRIs – không tuân thủ thứ tự ưu tiên của 6 quy tắc.</div>
-              <div class="rule-card"><div class="rule-number">🤖</div>Dựa vào gợi ý mù quáng của AI, chatbot mà không kiểm chứng pháp lý.</div>
-              <div class="rule-card"><div class="rule-number">⚙️</div>Phân loại máy móc theo cảm tính – không nghiên cứu nguyên lý hoạt động.</div>
-              <div class="rule-card"><div class="rule-number">📅</div>Dùng Danh mục/Biểu thuế cũ khi đã có cập nhật mới.</div>
-            </div>
-
-            <!-- 5. Chiến lược thực chiến -->
-            <div class="section-title">5. Chiến lược thực chiến cho doanh nghiệp</div>
-            <div class="highlight-box">
-              <strong>📜 Xác định trước mã số (Advance Ruling)</strong><br>
-              “Kim bài miễn tử” cho hàng hóa phức tạp. Gửi hồ sơ xin Tổng cục Hải quan xác định mã HS trước khi nhập/xuất. Kết quả này có giá trị pháp lý ràng buộc, đảm bảo an toàn tuyệt đối.
-            </div>
-            <div class="highlight-box">
-              <strong>🧠 Hiểu bản chất là số 1</strong><br>
-              Không bao giờ phân loại nếu chưa rõ thiết bị hoạt động ra sao hoặc hóa chất dùng làm gì. Hãy yêu cầu bộ phận kỹ thuật hoặc nhà cung cấp làm rõ công dụng chính của sản phẩm.
-            </div>
-            <div class="highlight-box">
-              <strong>🛡️ Nguyên tắc thận trọng</strong><br>
-              Khi kẹt giữa 2 mã có lý lẽ tương đương, việc tạm thời chọn mã có thuế suất cao hơn (nếu không làm sai lệch bản chất hàng) là cách phòng vệ để tránh truy thu/phạt tiền sau này.
-            </div>
-            <div class="highlight-box">
-              <strong>🤖 Giới hạn của công nghệ</strong><br>
-              AI/Chatbot hay phần mềm tra cứu chỉ mang tính tham khảo. Mọi quyết định cuối cùng phải dựa trên văn bản quy phạm pháp luật (Thông tư 31/2022/TT-BTC và các chú giải).
-            </div>
-
-            <div class="info-note" style="margin-top: 1.5rem;">
-              <i class="fas fa-lightbulb"></i> <strong>Lời khuyên từ Tony EXIM:</strong> Tôi đã chứng kiến không ít doanh nghiệp thiệt hại hàng trăm triệu đồng chỉ vì sai mã HS ở những lô hàng tưởng chừng đơn giản. Hãy đầu tư thời gian để hiểu sâu về sản phẩm và các quy tắc phân loại. Xây dựng quy trình nội bộ với 5 bước trên, lưu trữ hồ sơ giải trình cẩn thận – đó là cách bảo vệ doanh nghiệp bền vững nhất.
-            </div>
-
-            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #6c86a3; text-align: center;">© 2026 Tony EXIM – Lương Hồng Quang. Thông tin mang tính giáo dục và tham khảo nghiệp vụ.</p>
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
           </div>
         </div>
-
-        <!-- Sidebar -->
-        <div class="blog-sidebar">
-          <div class="sidebar-widget">
-            <h3><i class="fas fa-user"></i> Tác giả</h3>
-            <p><strong>Lương Hồng Quang (Tony)</strong><br>Chuyên gia xuất nhập khẩu với hơn 5 năm kinh nghiệm phân loại hàng hóa, xử lý vướng mắc mã HS cho nhiều doanh nghiệp.</p>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
           </div>
-          <div class="sidebar-widget">
-            <h3><i class="fas fa-chart-line"></i> Bài viết liên quan</h3>
-            <ul style="list-style: none;">
-              <li style="margin-bottom: 12px;">📄 <a href="#" style="text-decoration: none; color: #1e6ec5;">HS Code Master – Xác định mã HS chuẩn xác</a></li>
-              <li style="margin-bottom: 12px;">⚖️ <a href="#" style="text-decoration: none; color: #1e6ec5;">22 chỉ tiêu tuyệt đối không được khai bổ sung</a></li>
-              <li style="margin-bottom: 12px;">🚢 <a href="#" style="text-decoration: none; color: #1e6ec5;">ETA, ETD là gì? Giải nghĩa chi tiết</a></li>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call" aria-label="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook" aria-label="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram" aria-label="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo" aria-label="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype" aria-label="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn" aria-label="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+<nav class="navbar">
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+</nav>
+
+      <!-- ====== TAB: ABOUT ====== -->
+      <section id="about" class="tab-panel" data-page="about">
+        <article class="article-card">
+          <h2 class="tab-title">About Me</h2>
+          <p class="tab-subtitle">Import-Export Specialist · Logistics &amp; Supply Chain</p>
+          <div class="about-grid">
+            <div class="about-card">
+              <iconify-icon icon="person-outline"></iconify-icon>
+              <h3>Giới thiệu</h3>
+              <p>Tôi là <strong>Lương Hồng Quang</strong> — chuyên viên Xuất Nhập Khẩu với kinh nghiệm thực chiến trong lĩnh vực hải quan, logistics và chuỗi cung ứng.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="briefcase-outline"></iconify-icon>
+              <h3>Kinh nghiệm</h3>
+              <p>Đã trải qua nhiều vị trí: <strong>Import-Export Officer</strong> tại Vina Pride Seafoods, <strong>Sales Logistics</strong> tại BPL Logistics, <strong>R&amp;D</strong> tại Dunlopillo Vietnam.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="school-outline"></iconify-icon>
+              <h3>Học vấn</h3>
+              <p>Tốt nghiệp <strong>Đại học Sư phạm Kỹ thuật TP.HCM (HCMUTE)</strong> — chuyên ngành Quản lý Công nghiệp.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="bulb-outline"></iconify-icon>
+              <h3>Định hướng</h3>
+              <p>Trở thành chuyên gia <strong>Compliance &amp; Trade Operations</strong> — giúp doanh nghiệp tuân thủ pháp luật XNK.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====== TAB: RESUME ====== -->
+      <section id="resume" class="tab-panel" data-page="resume">
+        <article class="article-card">
+          <h2 class="tab-title">Resume</h2>
+          <p class="tab-subtitle">Kinh nghiệm làm việc &amp; Học vấn</p>
+
+          <h3 style="color: var(--accent); font-size: 1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            <iconify-icon icon="briefcase-outline"></iconify-icon> Kinh nghiệm làm việc
+          </h3>
+
+          <div class="resume-item">
+            <div class="resume-header">
+              <h3>VINA PRIDE SEAFOODS</h3>
+              <span class="resume-date">2/2025 – nay</span>
+            </div>
+            <div class="resume-role">Import-Export Officer</div>
+            <ul>
+              <li>Lập chứng từ XNK: Invoice, Packing List, Bill of Lading, C/O trên hệ thống Ecosys &amp; Comis</li>
+              <li>Kiểm tra HS code, thuế GTGT XNK trước khi khai báo</li>
+              <li>Điều phối với khách hàng/đại lý nước ngoài, hãng tàu, ngân hàng, bảo hiểm</li>
+              <li>Đối chiếu công nợ, theo dõi thanh toán cho đối tác dịch vụ</li>
             </ul>
           </div>
-          <div class="sidebar-widget">
-            <h3><i class="fas fa-download"></i> Tài liệu tham khảo</h3>
-            <p>Download checklist "5 bước xác định mã HS" và bảng tra cứu 6 quy tắc GRIs.</p>
-            <a href="#" style="display: inline-block; background: #0a4b7a; color: white; padding: 6px 18px; border-radius: 30px; text-decoration: none; margin-top: 10px;">Tải ngay</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </article>
-</div>
 
-<footer class="footer">
-  <div class="container">
-    <p>© 2026 Tony EXIM – Lương Hồng Quang. Chia sẻ kiến thức xuất nhập khẩu, phân loại HS Code và logistics.</p>
+          <div class="resume-item">
+            <div class="resume-header">
+              <h3>BPL Logistics</h3>
+              <span class="resume-date">3/2023 – 1/2025</span>
+            </div>
+            <div class="resume-role">Sales Logistics</div>
+            <ul>
+              <li>Lập kế hoạch kinh doanh, đào tạo nhân viên sales mới</li>
+              <li>Cung cấp dịch vụ vận tải biển, hàng không, door-to-door</li>
+              <li>Phát triển khách hàng mới, duy trì quan hệ khách hàng hiện hữu</li>
+              <li>Quản lý hợp đồng và quy trình báo giá</li>
+            </ul>
+          </div>
+
+          <div class="resume-item">
+            <div class="resume-header">
+              <h3>Dunlopillo Vietnam</h3>
+              <span class="resume-date">5/2022 – 12/2022</span>
+            </div>
+            <div class="resume-role">Research &amp; Development</div>
+            <ul>
+              <li>Thay đổi nguyên liệu trong quy cách thương mại, cập nhật thay đổi</li>
+              <li>Lập kế hoạch, tổ chức giám sát hoạt động sản xuất</li>
+              <li>Quản lý thử nghiệm, kiểm tra độ bền và độ cứng của nệm</li>
+            </ul>
+          </div>
+
+          <h3 style="color: var(--accent); font-size: 1rem; margin: 26px 0 14px; display: flex; align-items: center; gap: 8px;">
+            <iconify-icon icon="school-outline"></iconify-icon> Học vấn
+          </h3>
+
+          <div class="resume-item">
+            <div class="resume-header">
+              <h3>HCMC University of Technology and Education</h3>
+              <span class="resume-date">2019 – 2023</span>
+            </div>
+            <div class="resume-role">Industrial Management</div>
+            <ul>
+              <li>Đào tạo về hoạch định chiến lược, vận hành doanh nghiệp</li>
+              <li>Chứng chỉ: Drive</li>
+            </ul>
+          </div>
+
+          <div class="resume-item">
+            <div class="resume-header">
+              <h3>Nguyen Trai High School</h3>
+              <span class="resume-date">2016 – 2019</span>
+            </div>
+            <ul>
+              <li>Tham gia nhiều hoạt động ngoại khóa, chứng chỉ tin học cơ bản</li>
+              <li>Tình nguyện viên dọn dẹp môi trường</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====== TAB: PORTFOLIO ====== -->
+      <section id="portfolio" class="tab-panel" data-page="portfolio">
+        <article class="article-card">
+          <h2 class="tab-title">Portfolio</h2>
+          <p class="tab-subtitle">Chứng chỉ chuyên môn &amp; Kỹ năng</p>
+
+          <h3 style="color: var(--accent); font-size: 1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            <iconify-icon icon="ribbon-outline"></iconify-icon> Chứng chỉ
+          </h3>
+
+          <div class="portfolio-grid">
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="logo-sap"></iconify-icon></div>
+              <div>
+                <h3>S&amp;P Certified – SAP Business One</h3>
+                <p>Supply Chain Management</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="cube-outline"></iconify-icon></div>
+              <div>
+                <h3>Managing Logistics in SAP Business One</h3>
+                <p>Become Level</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="shield-checkmark-outline"></iconify-icon></div>
+              <div>
+                <h3>ISO 9001:2015 QMS Foundation</h3>
+                <p>Quality Management System</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="megaphone-outline"></iconify-icon></div>
+              <div>
+                <h3>Digital Marketing in 4.0 ERA</h3>
+                <p>Marketing</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="globe-outline"></iconify-icon></div>
+              <div>
+                <h3>International Business I</h3>
+                <p>Trade</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="layers-outline"></iconify-icon></div>
+              <div>
+                <h3>Inventory Management</h3>
+                <p>Product</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="warning-outline"></iconify-icon></div>
+              <div>
+                <h3>Safety Data Sheet Awareness</h3>
+                <p>Research</p>
+              </div>
+            </div>
+            <div class="portfolio-item">
+              <div class="pf-icon"><iconify-icon icon="document-text-outline"></iconify-icon></div>
+              <div>
+                <h3>Contracts &amp; Employment Law</h3>
+                <p>Foreign Trade</p>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="color: var(--accent); font-size: 1rem; margin: 26px 0 14px; display: flex; align-items: center; gap: 8px;">
+            <iconify-icon icon="stats-chart-outline"></iconify-icon> Kỹ năng
+          </h3>
+
+          <div class="about-grid">
+            <div class="about-card">
+              <iconify-icon icon="flash-outline"></iconify-icon>
+              <h3>Khả năng chịu áp lực</h3>
+              <p>80% — Xử lý tốt các tình huống căng thẳng trong thông quan.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="chatbubbles-outline"></iconify-icon>
+              <h3>Giao tiếp</h3>
+              <p>70% — Làm việc hiệu quả với đối tác trong nước và quốc tế.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="bulb-outline"></iconify-icon>
+              <h3>Tư duy phản biện</h3>
+              <p>85% — Phân tích tình huống, đưa ra giải pháp tối ưu.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="calendar-outline"></iconify-icon>
+              <h3>Lập kế hoạch &amp; Dự báo</h3>
+              <p>90% — Dự báo nhu cầu, lập kế hoạch vận chuyển hiệu quả.</p>
+            </div>
+            <div class="about-card">
+              <iconify-icon icon="people-outline"></iconify-icon>
+              <h3>Làm việc nhóm</h3>
+              <p>60% — Phối hợp đa phòng ban trong chuỗi cung ứng.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====== TAB: BLOG (nội dung chính) ====== -->
+      <section id="blog" class="tab-panel active" data-page="blog">
+        <article class="article-card">
+          <div class="hero-inner">
+            <span class="article-badge">
+              <iconify-icon icon="search-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+              Hải quan · Mã HS Code · Phân loại hàng hóa
+            </span>
+            <h1>
+              Mã HS Code Là Gì?<br />
+              <span>Quy Trình Phân Loại &amp; Danh Mục Pháp Lý</span>
+            </h1>
+            <p>Tổng hợp toàn diện về mã HS code — khái niệm, cấu trúc, danh mục hàng hóa xuất nhập khẩu Việt Nam và quy trình phân loại theo Quyết định 117/QĐ-CHQ. Cập nhật mới nhất 2026.</p>
+            <div class="article-meta">
+              <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+              <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hải quan</span>
+              <span><iconify-icon icon="time-outline"></iconify-icon> 20 phút đọc</span>
+            </div>
+          </div>
+
+          <div class="article-body">
+            <!-- ====== MỞ ĐẦU: MÃ HS CODE LÀ GÌ ====== -->
+            <div class="conclusion-box reveal">
+              <h3><iconify-icon icon="help-circle-outline"></iconify-icon> Mã HS code là gì?</h3>
+              <p style="margin-top: 8px;">
+                <strong>HS Code</strong> (Harmonized System Code) là mã số mã hóa một loại hàng hóa nhất định, được quy định tại <strong>Khoản 16 Điều 4 Luật Hải quan 2014</strong>. Mã HS giúp xác định tên gọi, tính chất, cấu tạo, công dụng và quy cách đóng gói của hàng hóa, phục vụ cho việc áp thuế và quản lý nhà nước trong lĩnh vực thương mại[reference:0][reference:1].
+              </p>
+              <p style="margin-top: 10px;">
+                Hệ thống HS do <strong>Tổ chức Hải quan Thế giới (WCO)</strong> xây dựng, gồm hơn 5.200 nhóm hàng ở cấp độ 6 số. Các quốc gia thành viên áp dụng thống nhất 6 số đầu, sau đó có thể bổ sung thêm 2 hoặc 4 số để phục vụ nhu cầu quản lý riêng. <strong>Việt Nam hiện áp dụng mã HS chi tiết đến 8 chữ số</strong>[reference:2].
+              </p>
+            </div>
+
+            <!-- ====== PHẦN 1: HS CODE LÀ GÌ ====== -->
+            <h2><iconify-icon icon="book-outline"></iconify-icon> 1. Mã HS code là gì và vì sao bắt buộc?</h2>
+            <p>
+              <strong>HS Code</strong> được viết tắt của <em>Harmonized System Codes</em> — Hệ thống hài hòa mô tả và mã hóa hàng hóa. Tại Việt Nam, hệ thống này được gọi là <strong>Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam</strong>, bao gồm[reference:3]:
+            </p>
+            <ul style="margin: 10px 0 14px 18px; color: var(--text-secondary);">
+              <li><strong>Quy tắc tổng quát</strong> để tìm mã HS tương ứng với hàng hóa</li>
+              <li><strong>Chú giải bắt buộc</strong> với từng nhóm hàng và phân nhóm hàng</li>
+              <li><strong>Danh mục các nhóm hàng</strong> (4 số) và <strong>phân nhóm hàng</strong> (6 số), chi tiết đến 8 số</li>
+            </ul>
+
+            <h3><iconify-icon icon="layers-outline"></iconify-icon> 1.1. Cấu trúc mã HS code 8 chữ số của Việt Nam</h3>
+            <p>
+              Mã HS của Việt Nam được xây dựng trên cơ sở <strong>Công ước quốc tế về Hệ thống hài hòa mô tả và mã hóa hàng hóa (Công ước HS)</strong> mà Việt Nam tham gia từ năm 1998, kết hợp với <strong>Danh mục Biểu thuế hài hòa ASEAN (AHTN)</strong> phiên bản 2022[reference:4].
+            </p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Cấp độ</th>
+                    <th>Số chữ số</th>
+                    <th>Ý nghĩa</th>
+                    <th>Ví dụ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Phần</strong></td>
+                    <td>—</td>
+                    <td>Gồm 21 phần, phân chia theo nhóm ngành lớn</td>
+                    <td>Phần XV: Kim loại cơ bản</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Chương</strong></td>
+                    <td>2 số</td>
+                    <td>Gồm 97 chương (Chương 77 dự phòng)</td>
+                    <td>Chương 72: Sắt và thép</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Nhóm</strong></td>
+                    <td>4 số</td>
+                    <td>1.228 nhóm ở cấp độ 4 số</td>
+                    <td>7208: Thép cán nóng</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Phân nhóm</strong></td>
+                    <td>6 số</td>
+                    <td>4.084 nhóm ở cấp độ 6 số (chuẩn quốc tế)</td>
+                    <td>7208.51: Thép dày > 10mm</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mã chi tiết</strong></td>
+                    <td>8 số</td>
+                    <td>11.414 dòng hàng ở cấp độ 8 số (Việt Nam)</td>
+                    <td>7208.51.00: Loại cụ thể</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="scroll-hint">
+              <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+              Vuốt ngang để xem đầy đủ bảng
+            </div>
+
+            <h3><iconify-icon icon="globe-outline"></iconify-icon> 1.2. Vì sao mã HS code bắt buộc trong XNK?</h3>
+            <p>
+              Theo <strong>Điều 3 Thông tư 31/2022/TT-BTC</strong>, hệ thống HS được sử dụng để[reference:5]:
+            </p>
+            <div class="grid-3 reveal">
+              <div class="card">
+                <iconify-icon icon="cash-outline"></iconify-icon>
+                <h3>Xây dựng Biểu thuế</h3>
+                <p>Áp dụng cho hàng hóa xuất khẩu, nhập khẩu</p>
+              </div>
+              <div class="card">
+                <iconify-icon icon="search-outline"></iconify-icon>
+                <h3>Phân loại hàng hóa</h3>
+                <p>Phục vụ hoạt động ngoại thương</p>
+              </div>
+              <div class="card">
+                <iconify-icon icon="stats-chart-outline"></iconify-icon>
+                <h3>Thống kê XNK</h3>
+                <p>Theo dõi, phân tích dữ liệu thương mại</p>
+              </div>
+              <div class="card">
+                <iconify-icon icon="shield-outline"></iconify-icon>
+                <h3>Quản lý nhà nước</h3>
+                <p>Kiểm tra chuyên ngành, giấy phép, hạn ngạch</p>
+              </div>
+            </div>
+            <div class="highlight-box danger">
+              <iconify-icon icon="alert-circle-outline"></iconify-icon>
+              <strong>Lưu ý:</strong> Mã HS sai có thể dẫn đến <strong>áp sai mức thuế</strong>, bị <strong>truy thu thuế</strong>, <strong>xử phạt hành chính</strong>, hoặc <strong>tạm giữ hàng hóa</strong>. Doanh nghiệp có thể gửi yêu cầu <strong>xác định trước mã HS</strong> đến Tổng cục Hải quan để tránh tranh chấp khi hàng đến cảng[reference:6].
+            </div>
+
+            <!-- ====== PHẦN 2: DANH MỤC HS CODE QUY ĐỊNH Ở ĐÂU ====== -->
+            <h2><iconify-icon icon="document-text-outline"></iconify-icon> 2. Danh mục mã HS code hàng hóa XNK được quy định ở đâu?</h2>
+            <p>
+              <span class="badge blue">CĂN CỨ PHÁP LÝ</span>
+            </p>
+            <p>
+              Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam được quy định trong các văn bản pháp luật sau:
+            </p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Văn bản</th>
+                    <th>Nội dung</th>
+                    <th>Hiệu lực</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Luật Hải quan 2014 (54/2014/QH13)</strong></td>
+                    <td>Khoản 16 Điều 4: Định nghĩa HS Code; Điều 26: Phân loại hàng hóa</td>
+                    <td><span class="badge success">01/01/2015</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Thông tư 31/2022/TT-BTC</strong></td>
+                    <td>Ban hành Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam (thay thế TT 65/2017/TT-BTC)</td>
+                    <td><span class="badge success">30/12/2022</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Nghị định 206/2025/NĐ-CP</strong></td>
+                    <td>Biểu thuế nhập khẩu ưu đãi đặc biệt</td>
+                    <td><span class="badge warning">Cập nhật</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Văn bản hợp nhất 73/2026/VBHN-TT-BCT</strong></td>
+                    <td>Sửa đổi, bổ sung Danh mục chi tiết theo mã số HS của hàng hóa XNK</td>
+                    <td><span class="badge blue">14/09/2026</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="scroll-hint">
+              <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+              Vuốt ngang để xem đầy đủ bảng
+            </div>
+
+            <h3><iconify-icon icon="documents-outline"></iconify-icon> 2.1. Cấu trúc Danh mục hàng hóa XNK Việt Nam</h3>
+            <p>
+              Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam ban hành kèm theo Thông tư 31/2022/TT-BTC gồm:
+            </p>
+            <ul style="margin: 10px 0 14px 18px; color: var(--text-secondary);">
+              <li><strong>21 Phần</strong> — phân chia theo nhóm ngành lớn</li>
+              <li><strong>97 Chương</strong> — trong đó Chương 77 là chương dự phòng</li>
+              <li><strong>1.228 nhóm hàng</strong> ở cấp độ 4 số</li>
+              <li><strong>4.084 phân nhóm</strong> ở cấp độ 6 số</li>
+              <li><strong>11.414 dòng hàng</strong> ở cấp độ 8 số</li>
+            </ul>
+
+            <h3><iconify-icon icon="table-outline"></iconify-icon> 2.2. Cấu trúc 6 cột của Danh mục</h3>
+            <p>Mỗi Chương của Danh mục hàng hóa xuất khẩu, nhập khẩu được chia thành <strong>6 cột</strong>[reference:7]:</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Cột</th>
+                    <th>Nội dung</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Cột 1</strong></td>
+                    <td>Mã hàng</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cột 2</strong></td>
+                    <td>Mô tả hàng hóa bằng tiếng Việt</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cột 3</strong></td>
+                    <td>Đơn vị tính</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cột 4</strong></td>
+                    <td>Code (Mã hàng)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cột 5</strong></td>
+                    <td>Description (Mô tả hàng hóa bằng tiếng Anh)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cột 6</strong></td>
+                    <td>Unit of quantity (Đơn vị tính)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- ====== PHẦN 3: QUY TRÌNH PHÂN LOẠI ====== -->
+            <h2><iconify-icon icon="git-merge-outline"></iconify-icon> 3. Quy trình phân loại hàng hóa theo Quyết định 117/QĐ-CHQ</h2>
+            <p>
+              Kể từ ngày <strong>01/02/2026</strong>, cơ quan Hải quan chính thức áp dụng Quy trình xác định trước mã số; kiểm tra tên hàng, mô tả hàng hóa, mã số, mức thuế trong thông quan và thống nhất công tác phân loại hàng hóa theo <strong>Quyết định số 117/QĐ-CHQ</strong> ngày 20/01/2026 của Cục trưởng Cục Hải quan.
+            </p>
+            <div class="highlight-box">
+              <iconify-icon icon="information-circle-outline"></iconify-icon>
+              <strong>Điểm cốt lõi:</strong> Quyết định 117/QĐ-CHQ thay thế Quyết định số 1921/QĐ-TCHQ ngày 28/6/2018, chuẩn hóa quy trình phân loại, xác định trước mã số và kiểm tra hàng hóa trong thông quan. Mọi kết quả phân loại đều có <strong>giá trị pháp lý bắt buộc áp dụng thống nhất</strong> tại tất cả các chi cục hải quan.
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Bước</th>
+                    <th>Nội dung</th>
+                    <th>Trách nhiệm</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Bước 1</strong></td>
+                    <td><strong>Tự phân loại và khai báo:</strong> Doanh nghiệp tự phân loại, khai báo mã HS trên tờ khai hải quan theo Danh mục hàng hóa XNK Việt Nam</td>
+                    <td>Người khai hải quan</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bước 2</strong></td>
+                    <td><strong>Kiểm tra tính chính xác:</strong> Cơ quan hải quan kiểm tra tính chính xác của mã HS đã khai dựa trên hồ sơ, tài liệu kỹ thuật kèm theo</td>
+                    <td>Công chức hải quan</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bước 3</strong></td>
+                    <td><strong>Yêu cầu bổ sung:</strong> Nếu nghi ngờ sai mã, cơ quan yêu cầu doanh nghiệp cung cấp thêm hồ sơ, tài liệu kỹ thuật hoặc lấy mẫu phân tích</td>
+                    <td>Công chức hải quan</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bước 4</strong></td>
+                    <td><strong>Kết luận và thông báo:</strong> Cơ quan hải quan ban hành Thông báo kết quả phân loại, có giá trị pháp lý bắt buộc áp dụng thống nhất</td>
+                    <td>Ban Nghiệp vụ thuế hải quan</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="scroll-hint">
+              <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+              Vuốt ngang để xem đầy đủ bảng
+            </div>
+
+            <h3><iconify-icon icon="time-outline"></iconify-icon> 3.1. Thời hạn giải quyết</h3>
+            <ul style="margin: 10px 0 14px 18px; color: var(--text-secondary);">
+              <li><strong>05 ngày làm việc:</strong> Thời hạn ban hành Thông báo kết quả phân tích đối với trường hợp thông thường</li>
+              <li><strong>20 ngày làm việc:</strong> Thời hạn ban hành Thông báo kết quả phân tích đối với trường hợp phức tạp, cần lấy ý kiến chuyên gia hoặc kiểm định chuyên sâu</li>
+            </ul>
+
+            <h3><iconify-icon icon="warning-outline"></iconify-icon> 3.2. Kiểm tra tên hàng, mô tả hàng hóa trong thông quan</h3>
+            <p>
+              Công chức Hải quan có trách nhiệm soi chiếu kỹ lưỡng các thông số cốt lõi như: <strong>thành phần cấu tạo, model, công suất, mục đích sử dụng</strong>. Những trường hợp doanh nghiệp mô tả hàng hóa chung chung, không rõ bản chất kỹ thuật sẽ bị hệ thống cảnh báo và yêu cầu giải trình bổ sung.
+            </p>
+
+            <!-- ====== PHẦN 4: SO SÁNH ====== -->
+            <h2><iconify-icon icon="swap-horizontal-outline"></iconify-icon> 4. So sánh trước và sau Quyết định 117/QĐ-CHQ</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tiêu chí</th>
+                    <th>Trước QĐ 117</th>
+                    <th>Sau QĐ 117</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Căn cứ pháp lý</strong></td>
+                    <td>QĐ 1921/QĐ-TCHQ (2018)</td>
+                    <td><span class="badge success">QĐ 117/QĐ-CHQ (2026)</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Hiệu lực</strong></td>
+                    <td>—</td>
+                    <td><span class="badge">01/02/2026</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Giá trị pháp lý</strong></td>
+                    <td>Chưa thống nhất toàn hệ thống</td>
+                    <td><span class="badge success">Bắt buộc áp dụng thống nhất</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Thời hạn giải quyết</strong></td>
+                    <td>Không rõ ràng</td>
+                    <td><span class="badge warning">5-20 ngày làm việc</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Xác định trước mã số</strong></td>
+                    <td>Chưa có quy trình chuẩn</td>
+                    <td><span class="badge success">Quy trình chuẩn hóa</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="scroll-hint">
+              <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+              Vuốt ngang để xem đầy đủ bảng
+            </div>
+
+            <!-- ====== PHẦN 5: CHECKLIST ====== -->
+            <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist tra cứu &amp; phân loại mã HS code</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+              <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+              Nhấn vào từng mục để đánh dấu hoàn thành.
+            </p>
+
+            <h3><iconify-icon icon="search-outline"></iconify-icon> Trước khi tra cứu mã HS</h3>
+            <div class="checklist-grid reveal">
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Nắm rõ thành phần, cấu tạo, công dụng của hàng hóa</span>
+              </div>
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Thu thập tài liệu kỹ thuật, catalogue, hình ảnh hàng hóa</span>
+              </div>
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Tra cứu Danh mục hàng hóa XNK Việt Nam (TT 31/2022/TT-BTC)</span>
+              </div>
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Đối chiếu với các văn bản sửa đổi, bổ sung mới nhất (VBHN 73/2026)</span>
+              </div>
+            </div>
+
+            <h3 style="margin-top: 22px;"><iconify-icon icon="git-merge-outline"></iconify-icon> Trong quá trình phân loại</h3>
+            <div class="checklist-grid reveal">
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Áp dụng Quyết định 117/QĐ-CHQ về quy trình phân loại</span>
+              </div>
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Kiểm tra tên hàng, mô tả hàng hóa khớp với mã HS khai báo</span>
+              </div>
+              <div class="checklist-card" data-checked="false">
+                <iconify-icon icon="square-outline"></iconify-icon>
+                <span>Sử dụng dịch vụ xác định trước mã HS cho hàng hóa phức tạp</span>
+              </div>
+            </div>
+
+            <!-- ====== PHẦN 6: KHUYẾN NGHỊ ====== -->
+            <div class="highlight-box success" style="margin-top: 26px;">
+              <iconify-icon icon="bulb-outline"></iconify-icon>
+              <strong>Khuyến nghị:</strong> Doanh nghiệp nên tra cứu mã HS trên Cổng thông tin Tổng cục Hải quan
+              (<a href="https://customs.gov.vn" target="_blank" rel="noopener">customs.gov.vn</a>) và sử dụng dịch vụ
+              <strong>xác định trước mã số</strong> đối với hàng hóa phức tạp để tránh rủi ro trong quá trình thông quan.
+            </div>
+
+            <div class="source-note">
+              <span>
+                <iconify-icon icon="link-outline"></iconify-icon>
+                Nguồn: Cổng TTĐT Chính phủ, Tổng cục Hải quan, LuatVietnam, Thư viện Pháp luật
+              </span>
+              <span>
+                <iconify-icon icon="document-text-outline"></iconify-icon>
+                Căn cứ: Luật Hải quan 2014; Thông tư 31/2022/TT-BTC; Quyết định 117/QĐ-CHQ; VBHN 73/2026/VBHN-TT-BCT
+              </span>
+            </div>
+
+            <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid var(--border-light);">
+              <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-home">
+                <iconify-icon icon="arrow-back-outline"></iconify-icon>
+                Về trang chủ Tony-EXIM
+              </a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====== TAB: CONTACT ====== -->
+      <section id="contact" class="tab-panel" data-page="contact">
+        <article class="article-card">
+          <h2 class="tab-title">Contact</h2>
+          <p class="tab-subtitle">Liên hệ với tôi qua các kênh dưới đây</p>
+
+          <div class="contact-list">
+            <a href="mailto:luonghongquang.works@gmail.com" class="contact-row">
+              <iconify-icon icon="mail-outline"></iconify-icon>
+              <div class="contact-info">
+                <div class="contact-label">Email</div>
+                <div class="contact-value">luonghongquang.works@gmail.com</div>
+              </div>
+            </a>
+            <a href="tel:+84977979850" class="contact-row">
+              <iconify-icon icon="call-outline"></iconify-icon>
+              <div class="contact-info">
+                <div class="contact-label">Phone</div>
+                <div class="contact-value">+84 977 979 850</div>
+              </div>
+            </a>
+            <a href="https://zalo.me/0977979850" class="contact-row">
+              <iconify-icon icon="chatbubbles-outline"></iconify-icon>
+              <div class="contact-info">
+                <div class="contact-label">Zalo</div>
+                <div class="contact-value">+84 977 979 850</div>
+              </div>
+            </a>
+            <a href="skype:live:.cid.a2714c7614c51e0e?chat" class="contact-row">
+              <iconify-icon icon="logo-skype"></iconify-icon>
+              <div class="contact-info">
+                <div class="contact-label">Skype</div>
+                <div class="contact-value">live:.cid.a2714c7614c51e0e</div>
+              </div>
+            </a>
+            <a href="https://www.linkedin.com/in/luonghongquang" class="contact-row" target="_blank" rel="noopener">
+              <iconify-icon icon="logo-linkedin"></iconify-icon>
+              <div class="contact-info">
+                <div class="contact-label">LinkedIn</div>
+                <div class="contact-value">linkedin.com/in/luonghongquang</div>
+              </div>
+            </a>
+            <div class="contact-row" style="cursor: default;">
+              <iconify-icon icon="location-outline"></iconify-icon>
+              <div class="contact-info">
+                <div class="contact-label">Location</div>
+                <div class="contact-value">Thu Duc, Ho Chi Minh, Viet Nam</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-home">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </article>
+      </section>
+    </div>
   </div>
-</footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </button>
+
+  <script>
+    (function() {
+      const loading = document.getElementById('loading');
+      let hidden = false;
+      function hideLoading() {
+        if (hidden) return;
+        hidden = true;
+        loading.classList.add('hidden');
+      }
+      window.addEventListener('load', () => setTimeout(hideLoading, 400));
+      setTimeout(hideLoading, 3000);
+      document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoading, 800));
+    })();
+
+    const navLinks = document.querySelectorAll('.navbar a[data-tab]');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    function switchTab(tabName, updateHash = true) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+
+      const targetLink = document.querySelector(`.navbar a[data-tab="${tabName}"]`);
+      const targetPanel = document.getElementById(tabName);
+
+      if (targetLink) targetLink.classList.add('active');
+      if (targetPanel) targetPanel.classList.add('active');
+
+      if (targetPanel) {
+        targetPanel.querySelectorAll('.reveal').forEach(el => el.classList.remove('visible'));
+        setTimeout(() => {
+          targetPanel.querySelectorAll('.reveal').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              el.classList.add('visible');
+            }
+          });
+        }, 50);
+      }
+
+      if (updateHash) {
+        history.replaceState(null, '', '#' + tabName);
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabName = link.dataset.tab;
+        switchTab(tabName);
+      });
+    });
+
+    function initTabFromHash() {
+      const hash = window.location.hash.replace('#', '') || 'blog';
+      const validTabs = ['about', 'resume', 'portfolio', 'blog', 'contact'];
+      const initialTab = validTabs.includes(hash) ? hash : 'blog';
+      switchTab(initialTab, false);
+    }
+
+    window.addEventListener('DOMContentLoaded', initTabFromHash);
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '') || 'blog';
+      const validTabs = ['about', 'resume', 'portfolio', 'blog', 'contact'];
+      if (validTabs.includes(hash)) {
+        switchTab(hash, false);
+      }
+    });
+
+    const backBtn = document.getElementById('backToTop');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 400) backBtn.classList.add('show');
+          else backBtn.classList.remove('show');
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
+
+    document.querySelectorAll('.checklist-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+
+    document.querySelectorAll('.table-wrap').forEach(wrap => {
+      function checkScroll() {
+        const isEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+        wrap.classList.toggle('scrolled-end', isEnd);
+      }
+      wrap.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    function openModal(key) {
+      const modalData = {
+        central: {
+          icon: 'flag-outline',
+          title: 'Mã HS Code là gì?',
+          body: `<p><strong>HS Code</strong> (Harmonized System Code) là mã số mã hóa một loại hàng hóa nhất định, được quy định tại Khoản 16 Điều 4 Luật Hải quan 2014.</p>
+          <p>Mã HS giúp xác định tên gọi, tính chất, cấu tạo, công dụng và quy cách đóng gói của hàng hóa, phục vụ cho việc áp thuế và quản lý nhà nước.</p>
+          <p>Việt Nam áp dụng mã HS chi tiết đến <strong>8 chữ số</strong>.</p>`
+        },
+        danhmuc: {
+          icon: 'document-text-outline',
+          title: 'Danh mục HS code quy định ở đâu?',
+          body: `<p>Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam được quy định trong:</p>
+          <ul>
+            <li><strong>Luật Hải quan 2014</strong> (Khoản 16 Điều 4; Điều 26)</li>
+            <li><strong>Thông tư 31/2022/TT-BTC</strong> — Danh mục hàng hóa XNK Việt Nam</li>
+            <li><strong>Nghị định 206/2025/NĐ-CP</strong> — Biểu thuế nhập khẩu ưu đãi đặc biệt</li>
+            <li><strong>VBHN 73/2026/VBHN-TT-BCT</strong> — Sửa đổi, bổ sung danh mục mã HS</li>
+          </ul>`
+        }
+      };
+      const data = modalData[key];
+      if (!data) return;
+      modalBody.innerHTML = `
+        <h3><iconify-icon icon="${data.icon}"></iconify-icon> ${data.title}</h3>
+        ${data.body}
+      `;
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.openModal = openModal;
+
+    document.addEventListener('touchmove', (e) => {
+      if (modalOverlay.classList.contains('active') && !e.target.closest('.modal-content')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  </script>
 </body>
 </html>
