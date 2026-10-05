@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Luật Hóa Chất 2025 · 69/2025/QH15 · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+      --blue: #7ec8e3;
+      --purple: #c5a3e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* ====== LOADING ====== */
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.4s;
+    }
+    .loader {
+      width: 48px; height: 48px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ====== LAYOUT ====== */
+    .main-layout {
+      display: flex; gap: 30px;
+      max-width: 1280px; width: 100%;
+      align-items: flex-start;
+    }
+
+    /* ====== SIDEBAR ====== */
+    .sidebar {
+      flex: 0 0 280px;
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 30px 22px 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      position: sticky; top: 30px;
+      text-align: center;
+    }
+    .sidebar-avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%; object-fit: cover;
+      margin: 0 auto 16px; display: block;
+      border: 3px solid var(--accent); background: #333;
+    }
+    .sidebar-name {
+      font-size: 1.3rem; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text-primary);
+    }
+    .sidebar-title {
+      font-size: 0.85rem; font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block; padding: 4px 14px;
+      border-radius: 40px; margin: 6px 0 18px;
+    }
+    .sidebar-divider { height: 1px; background: var(--border-light); margin: 18px 0; }
+    .sidebar-contact {
+      display: flex; flex-direction: column;
+      gap: 14px; text-align: left; font-size: 0.82rem;
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--text-secondary);
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.2rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      transition: color 0.2s; word-break: break-all;
+    }
+    .sidebar-contact .item a:hover { color: var(--accent); }
+    .sidebar-contact .label {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
+      display: block; margin-bottom: 1px;
+    }
+    .sidebar-social {
+      display: flex; justify-content: center;
+      gap: 12px; margin-top: 18px; flex-wrap: wrap;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary); font-size: 1.4rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .sidebar-social a:hover { color: var(--accent); transform: translateY(-2px); }
+
+    /* ====== MAIN ====== */
+    .main-content { flex: 1; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px;
+      padding: 6px 10px;
+      display: flex; gap: 4px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      flex-wrap: wrap; justify-content: center;
+    }
+    .navbar a {
+      display: inline-block; background: transparent;
+      border: none; color: var(--text-secondary);
+      font-family: var(--font); font-size: 0.85rem;
+      font-weight: 500; padding: 8px 22px;
+      border-radius: 40px; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .navbar a:hover { color: var(--text-primary); background: var(--bg-card); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    /* ====== ARTICLE CARD ====== */
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 32px 34px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero inner */
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 30px;
+      background: linear-gradient(rgba(18,18,18,0.82), rgba(18,18,18,0.94)),
+                  url('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      padding: 46px 28px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+    .hero-inner .article-badge {
+      display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent);
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 4px 16px; border-radius: 40px;
+      margin-bottom: 14px;
+    }
+    .hero-inner h1 {
+      font-size: 2rem; font-weight: 700;
+      line-height: 1.25; letter-spacing: -0.02em;
+      margin-bottom: 10px; color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary); font-size: 0.95rem;
+      max-width: 640px; margin: 0 auto 18px;
+    }
+
+    .article-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 20px; font-size: 0.82rem;
+      color: var(--text-muted);
+      align-items: center; justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    .article-body { font-size: 0.95rem; color: var(--text-secondary); }
+
+    .article-body h2 {
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--text-primary);
+      margin: 34px 0 16px;
+      padding-left: 14px;
+      border-left: 4px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+
+    .article-body h3 {
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--text-primary);
+      margin: 22px 0 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .article-body p { margin-bottom: 14px; text-align: justify; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      transition: border-color 0.2s;
+    }
+    .article-body a:hover { border-bottom-color: var(--accent); }
+
+    /* Highlight box */
+    .highlight-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 16px 22px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 8px;
+      vertical-align: middle;
+    }
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto; margin: 18px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1);
+      color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1);
+      color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1);
+      color: var(--orange);
+    }
+    .badge.blue {
+      border-color: rgba(126, 200, 227, 0.35);
+      background: rgba(126, 200, 227, 0.1);
+      color: var(--blue);
+    }
+    .badge.purple {
+      border-color: rgba(197, 163, 224, 0.35);
+      background: rgba(197, 163, 224, 0.1);
+      color: var(--purple);
+    }
+
+    /* Step list */
+    .step-list {
+      list-style: none; margin: 14px 0;
+      counter-reset: step-counter;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .step-list li {
+      position: relative;
+      padding: 16px 20px 16px 62px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      counter-increment: step-counter;
+      transition: var(--transition);
+    }
+    .step-list li:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateX(4px);
+    }
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 16px; top: 16px;
+      width: 34px; height: 34px;
+      background: rgba(255, 219, 112, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .step-list li strong { color: var(--text-primary); display: block; margin-bottom: 4px; }
+    .step-list li .step-note {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-top: 6px;
+    }
+
+    /* Checklist */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .checklist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 12px;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+      cursor: pointer; font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+    .checklist-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.2rem; color: var(--accent);
+      flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
+
+    /* Grid 3 */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 18px 16px;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+    }
+    .card iconify-icon {
+      font-size: 1.9rem;
+      color: var(--accent);
+      margin-bottom: 8px; display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.92rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 5px;
+    }
+    .card p { font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+
+    /* Callout ket luan */
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent);
+      margin-top: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Source note */
+    .source-note {
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex; flex-wrap: wrap;
+      gap: 10px 20px; align-items: center;
+    }
+    .source-note iconify-icon {
+      color: var(--accent); vertical-align: middle;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed; bottom: 30px; right: 30px;
+      background: var(--accent); color: #121212;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s; z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.35);
+      font-size: 1.1rem;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:hover { background: #ffd95c; transform: translateY(-2px); }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ====== MINDMAP ====== */
+    .mindmap-container {
+      position: relative;
+      margin: 24px 0;
+      padding: 20px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      overflow-x: auto;
+    }
+    .mindmap-svg {
+      width: 100%;
+      height: auto;
+      min-width: 700px;
+    }
+    .mindmap-node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mindmap-node:hover rect,
+    .mindmap-node:hover circle {
+      filter: brightness(1.3);
+      stroke-width: 3;
+    }
+    .mindmap-node text {
+      font-family: var(--font);
+      font-size: 11px;
+      fill: var(--text-primary);
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .mindmap-node .node-desc {
+      font-size: 9px;
+      fill: var(--text-muted);
+    }
+    .mindmap-line {
+      stroke: var(--border-light);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+
+    /* ====== POP-UP MODAL ====== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+    .modal-content {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 28px 30px;
+      max-width: 560px;
+      width: 100%;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    .modal-close:hover {
+      background: var(--accent);
+      color: #121212;
+      transform: rotate(90deg);
+    }
+    .modal-content h3 {
+      font-size: 1.15rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .modal-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+    .modal-content ul {
+      margin: 8px 0 12px 20px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+    }
+    .modal-content ul li { margin-bottom: 4px; }
+
+    /* ====== BOUNCE ANIMATION ====== */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .bounce-icon {
+      display: inline-block;
+      animation: bounce 1.8s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 219, 112, 0.3); }
+      50% { box-shadow: 0 0 20px 6px rgba(255, 219, 112, 0.12); }
+    }
+    .pulse-card {
+      animation: pulseGlow 3s infinite;
+    }
+
+    /* ====== SHAKE on hover for warning ====== */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+    .shake-hover:hover {
+      animation: shake 0.3s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main-layout { flex-direction: column; }
+      .sidebar {
+        flex: none; width: 100%;
+        position: static;
+        display: flex; flex-wrap: wrap;
+        gap: 16px; text-align: left;
+        padding: 22px 20px; align-items: center;
+      }
+      .sidebar-avatar { width: 70px; height: 70px; margin: 0; flex-shrink: 0; }
+      .sidebar-header { flex: 1; min-width: 150px; }
+      .sidebar-name { font-size: 1.1rem; }
+      .sidebar-title { font-size: 0.75rem; margin: 2px 0 0; }
+      .sidebar-divider { display: none; }
+      .sidebar-contact {
+        flex-direction: row; flex-wrap: wrap;
+        gap: 10px 20px; width: 100%; margin-top: 4px;
+      }
+      .sidebar-social { width: 100%; justify-content: flex-start; margin-top: 4px; }
+      .article-card { padding: 24px 20px; }
+      .hero-inner { padding: 32px 20px; }
+      .hero-inner h1 { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 14px 10px; }
+      .article-card { padding: 18px 14px; }
+      .hero-inner h1 { font-size: 1.15rem; }
+      .navbar a { font-size: 0.72rem; padding: 6px 12px; }
+      .article-body h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading"><div class="loader"></div></div>
+
+  <!-- ====== MODAL POP-UP ====== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose"><iconify-icon icon="close-outline"></iconify-icon></button>
+      <div id="modalBody">
+        <!-- Nội dung modal sẽ được JS đổ vào -->
+      </div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+      <nav class="navbar">
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+        <a href="#">About</a>
+        <a href="#">Resume</a>
+        <a href="#">Portfolio</a>
+        <a href="#" class="active">Blog</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <article class="article-card">
+        <!-- Hero inner -->
+        <div class="hero-inner">
+          <span class="article-badge">
+            <iconify-icon icon="flask-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+            Hóa chất · Pháp luật · Chuyển đổi số
+          </span>
+          <h1>
+            Luật Hóa Chất 2025<br />
+            <span>69/2025/QH15</span>
+          </h1>
+          <p>Toàn cảnh Luật Hóa chất mới — hiệu lực từ 01/01/2026, thiết lập cơ chế quản lý hóa chất theo vòng đời, tăng cường kiểm soát hóa chất nguy hiểm và hội nhập quốc tế sâu rộng.</p>
+          <div class="article-meta">
+            <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+            <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hóa chất</span>
+            <span><iconify-icon icon="time-outline"></iconify-icon> 20 phút đọc</span>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <!-- KẾT LUẬN -->
+          <div class="conclusion-box reveal">
+            <h3><iconify-icon icon="checkmark-done-outline"></iconify-icon> Kết luận</h3>
+            <p style="margin-top: 8px;">Luật Hóa chất 2025 (<strong>69/2025/QH15</strong>) gồm <strong>7 chương, 48 điều</strong>, hiệu lực từ <strong>01/01/2026</strong>, thay thế hoàn toàn Luật Hóa chất 2007. 5 nhóm thay đổi trọng tâm:</p>
+            <ol>
+              <li><strong>Quản lý hóa chất theo vòng đời</strong> — từ sản xuất, kinh doanh, XNK, vận chuyển, tồn trữ, sử dụng đến xử lý chất thải</li>
+              <li><strong>Thay thế "hóa chất hạn chế SXKD" bằng "hóa chất cần kiểm soát đặc biệt"</strong> — tăng cường kiểm soát chống thất thoát</li>
+              <li><strong>Bổ sung nguyên tắc hóa học xanh</strong> — yêu cầu chủ đầu tư dự án hóa chất áp dụng trong thiết kế, lựa chọn công nghệ</li>
+              <li><strong>Quy định mới về giấy phép XNK hóa chất</strong> — tách riêng giấy phép sản xuất và kinh doanh</li>
+              <li><strong>Chuyển đổi số trong quản lý nhà nước về hóa chất</strong> — thể chế hóa Nghị quyết 57-NQ/TW</li>
+            </ol>
+          </div>
+
+          <!-- CĂN CỨ PHÁP LÝ -->
+          <h2><iconify-icon icon="book-outline"></iconify-icon> Căn cứ pháp lý &amp; thông tin cơ bản</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Thông tin</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Số hiệu</strong></td>
+                  <td><span class="badge">69/2025/QH15</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày thông qua</strong></td>
+                  <td>14/6/2025 — Kỳ họp thứ 9, Quốc hội khóa XV</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày ban hành</strong></td>
+                  <td>14/6/2025</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày hiệu lực</strong></td>
+                  <td><span class="badge success">01/01/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>7 Chương, 48 Điều</td>
+                </tr>
+                <tr>
+                  <td><strong>Thay thế</strong></td>
+                  <td>Luật Hóa chất 06/2007/QH12 (có hiệu lực từ 01/7/2008)</td>
+                </tr>
+                <tr>
+                  <td><strong>Văn bản hướng dẫn</strong></td>
+                  <td>NĐ 24/2026/NĐ-CP, NĐ 25/2026/NĐ-CP, NĐ 26/2026/NĐ-CP, TT 01/2026/TT-BCT, TT 02/2026/TT-BCT</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- MINDMAP TỔNG QUAN -->
+          <h2><iconify-icon icon="git-network-outline"></iconify-icon> Sơ đồ tư duy tổng quan Luật Hóa chất 2025</h2>
+          <div class="mindmap-container reveal">
+            <svg class="mindmap-svg" viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg">
+              <!-- Lines -->
+              <line x1="460" y1="240" x2="170" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="440" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="440" class="mindmap-line" />
+
+              <!-- Central node -->
+              <g class="mindmap-node" onclick="openModal('central')">
+                <circle cx="460" cy="240" r="58" fill="#ffdb70" stroke="#d4b24a" stroke-width="2.5"/>
+                <text x="460" y="232" text-anchor="middle" font-weight="700" font-size="13" fill="#121212">Luật Hóa chất</text>
+                <text x="460" y="250" text-anchor="middle" font-weight="700" font-size="11" fill="#121212">69/2025</text>
+              </g>
+
+              <!-- Left nodes -->
+              <g class="mindmap-node" onclick="openModal('vongdoi')">
+                <rect x="40" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="115" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Quản lý vòng đời</text>
+                <text x="115" y="92" text-anchor="middle" class="node-desc">SX → Xử lý chất thải</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('danhmuc')">
+                <rect x="40" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">3 danh mục</text>
+                <text x="115" y="212" text-anchor="middle" class="node-desc">Cấm · ĐK · KSĐB</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('hóa học xanh')">
+                <rect x="40" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#c5a3e0" stroke-width="1.8"/>
+                <text x="115" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Hóa học xanh</text>
+                <text x="115" y="332" text-anchor="middle" class="node-desc">Nguyên tắc mới</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('hanhvi')">
+                <rect x="40" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ff8a8a" stroke-width="1.8"/>
+                <text x="115" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">7 hành vi cấm</text>
+                <text x="115" y="452" text-anchor="middle" class="node-desc">Bổ sung chiếm đoạt</text>
+              </g>
+
+              <!-- Right nodes -->
+              <g class="mindmap-node" onclick="openModal('xuatnhapkhau')">
+                <rect x="730" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffdb70" stroke-width="1.8"/>
+                <text x="805" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">XNK hóa chất</text>
+                <text x="805" y="92" text-anchor="middle" class="node-desc">Giấy phép mới</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('hóachấtmới')">
+                <rect x="730" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="805" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Hóa chất mới</text>
+                <text x="805" y="212" text-anchor="middle" class="node-desc">Đăng ký &amp; đánh giá</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('tuvan')">
+                <rect x="730" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffb87a" stroke-width="1.8"/>
+                <text x="805" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Tư vấn chuyên ngành</text>
+                <text x="805" y="332" text-anchor="middle" class="node-desc">Ngành nghề có ĐK</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('tontru')">
+                <rect x="730" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Tồn trữ hóa chất</text>
+                <text x="805" y="452" text-anchor="middle" class="node-desc">Dịch vụ có ĐK</text>
+              </g>
+            </svg>
+            <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
+              <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+              Nhấn vào từng ô để xem chi tiết
+            </p>
+          </div>
+
+          <!-- PHẦN 1 -->
+          <h2><iconify-icon icon="repeat-outline"></iconify-icon> 1. Quản lý hóa chất theo vòng đời</h2>
+          <p>
+            <span class="badge blue">ĐỔI MỚI CỐT LÕI</span>
+          </p>
+          <p>
+            Khác với Luật Hóa chất 2007 chủ yếu quản lý ở khâu sản xuất và kinh doanh, Luật Hóa chất 2025 thiết lập cơ chế <strong>quản lý hóa chất theo toàn bộ vòng đời</strong>: từ sản xuất, kinh doanh, xuất khẩu, nhập khẩu, vận chuyển, tồn trữ, sử dụng hóa chất đến xử lý chất thải từ hoạt động hóa chất[reference:0].
+          </p>
+          <div class="grid-3 reveal">
+            <div class="card">
+              <iconify-icon icon="factory-outline"></iconify-icon>
+              <h3>Sản xuất</h3>
+              <p>Kiểm soát từ khâu đầu vào, công nghệ, thiết bị</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="cart-outline"></iconify-icon>
+              <h3>Kinh doanh &amp; XNK</h3>
+              <p>Giấy phép, điều kiện, khai báo hải quan</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="cube-outline"></iconify-icon>
+              <h3>Vận chuyển &amp; Tồn trữ</h3>
+              <p>An toàn hóa chất, dịch vụ tồn trữ có điều kiện</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="flask-outline"></iconify-icon>
+              <h3>Sử dụng</h3>
+              <p>Tuân thủ quy định an toàn, huấn luyện</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="trash-outline"></iconify-icon>
+              <h3>Xử lý chất thải</h3>
+              <p>Quản lý chất thải từ hoạt động hóa chất</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              <h3>Thông tin &amp; CSDL</h3>
+              <p>Khai báo, cập nhật dữ liệu hóa chất</p>
+            </div>
+          </div>
+
+          <!-- PHẦN 2 -->
+          <h2><iconify-icon icon="list-outline"></iconify-icon> 2. Ba danh mục hóa chất theo Luật mới</h2>
+          <p>
+            Tại Luật Hóa chất 2025, hóa chất được quản lý theo <strong>03 danh mục chính</strong> (Điều 9)[reference:1]:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Danh mục</th>
+                  <th>Đặc điểm</th>
+                  <th>Yêu cầu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hóa chất cấm</strong></td>
+                  <td>Mặc định không được sản xuất, kinh doanh, XNK</td>
+                  <td>Chỉ được phép trong trường hợp đặc biệt theo quy định</td>
+                </tr>
+                <tr>
+                  <td><strong>Hóa chất sản xuất, kinh doanh có điều kiện</strong></td>
+                  <td>Phải có Giấy chứng nhận đủ điều kiện</td>
+                  <td>Tách riêng giấy phép cho hoạt động sản xuất và kinh doanh</td>
+                </tr>
+                <tr>
+                  <td><strong>Hóa chất cần kiểm soát đặc biệt</strong></td>
+                  <td>Thay thế "hóa chất hạn chế SXKD" trong Luật 2007</td>
+                  <td>Phải có giấy phép SX, kinh doanh, XNK; lập phiếu kiểm soát mua-bán</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight-box warning">
+            <iconify-icon icon="warning-outline"></iconify-icon>
+            <strong>Điểm mới quan trọng:</strong> Luật thay thế khái niệm <strong>"hóa chất hạn chế sản xuất, kinh doanh"</strong> bằng <strong>"hóa chất cần kiểm soát đặc biệt"</strong>, đồng thời bổ sung quy định về việc lập phiếu kiểm soát mua, bán hóa chất cần kiểm soát đặc biệt và chỉ được bán cho các đối tượng nhất định[reference:2].
+          </div>
+
+          <!-- PHẦN 3 -->
+          <h2><iconify-icon icon="leaf-outline"></iconify-icon> 3. Nguyên tắc hóa học xanh</h2>
+          <p>
+            <span class="badge success">MỚI</span>
+          </p>
+          <p>
+            Luật Hóa chất 2025 bổ sung <strong>nguyên tắc hóa học xanh</strong> (Điều 5), yêu cầu chủ đầu tư dự án hóa chất áp dụng bộ nguyên tắc này trong thiết kế, lựa chọn công nghệ, thiết bị, quy trình sản xuất, sử dụng và thải bỏ hóa chất nhằm <strong>giảm thiểu hoặc loại bỏ việc sử dụng và tạo ra hóa chất nguy hiểm</strong>[reference:3].
+          </p>
+          <div class="highlight-box success">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Ý nghĩa:</strong> Đây là bước tiến quan trọng hướng tới phát triển bền vững, phù hợp với xu hướng quốc tế về sản xuất xanh, giảm phát thải và bảo vệ môi trường.
+          </div>
+
+          <!-- PHẦN 4 -->
+          <h2><iconify-icon icon="close-circle-outline"></iconify-icon> 4. Các hành vi bị nghiêm cấm</h2>
+          <p>
+            <span class="badge danger">BỔ SUNG</span>
+          </p>
+          <p>
+            Điều 3 Luật Hóa chất 2025 quy định <strong>07 hành vi bị nghiêm cấm</strong>, trong đó bổ sung nhiều hành vi mới so với Luật 2007[reference:4]:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hành vi bị cấm</th>
+                  <th>Ghi chú</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Chiếm đoạt hóa chất</strong></td>
+                  <td><span class="badge danger">BỔ SUNG MỚI</span></td>
+                </tr>
+                <tr>
+                  <td>Sản xuất, kinh doanh, vận chuyển, tồn trữ, sử dụng, mua, bán, trao đổi, tặng cho, gửi, mượn, cho mượn, thuê, cho thuê, cầm cố hóa chất trái pháp luật</td>
+                  <td>Mở rộng phạm vi so với luật cũ</td>
+                </tr>
+                <tr>
+                  <td>Không cung cấp hoặc cố ý cung cấp không đầy đủ, không kịp thời, sai lệch thông tin về đặc tính nguy hiểm của hóa chất</td>
+                  <td>Bảo vệ quyền được biết của người tiêu dùng</td>
+                </tr>
+                <tr>
+                  <td>Nhập khẩu hóa chất không rõ nguồn gốc, vượt ngưỡng cho phép</td>
+                  <td>Kiểm soát chặt nguồn gốc</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PHẦN 5 -->
+          <h2><iconify-icon icon="airplane-outline"></iconify-icon> 5. Quy định mới về xuất nhập khẩu hóa chất</h2>
+          <p>
+            <span class="badge warning">TRỌNG TÂM CHO DN XNK</span>
+          </p>
+          <p><strong>Các trường hợp được XNK hóa chất có điều kiện:</strong></p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Tổ chức sản xuất hóa chất có điều kiện được xuất khẩu hóa chất do chính tổ chức đó sản xuất theo Giấy chứng nhận đủ điều kiện sản xuất</li>
+            <li>Tổ chức kinh doanh hóa chất có điều kiện được xuất khẩu, nhập khẩu hóa chất theo Giấy chứng nhận đủ điều kiện kinh doanh</li>
+            <li>Tổ chức, cá nhân sử dụng hóa chất được nhập khẩu hóa chất có điều kiện để phục vụ mục đích sử dụng[reference:5]</li>
+          </ul>
+
+          <p><strong>Các trường hợp được XNK hóa chất cần kiểm soát đặc biệt:</strong></p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Tổ chức sản xuất hóa chất cần kiểm soát đặc biệt được xuất khẩu hóa chất do chính tổ chức đó sản xuất theo Giấy phép sản xuất và Giấy phép xuất khẩu</li>
+            <li>Tổ chức kinh doanh hóa chất cần kiểm soát đặc biệt được xuất khẩu, nhập khẩu hóa chất theo Giấy phép kinh doanh và Giấy phép xuất khẩu, nhập khẩu[reference:6]</li>
+          </ul>
+
+          <div class="highlight-box warning">
+            <iconify-icon icon="megaphone-outline"></iconify-icon>
+            <strong>Lưu ý:</strong> Từ ngày <strong>05/3/2026</strong>, thủ tục cấp Giấy phép xuất khẩu, nhập khẩu hóa chất cần kiểm soát đặc biệt đã được triển khai <strong>trực tuyến</strong> trên Cổng dịch vụ công quốc gia[reference:7].
+          </div>
+
+          <!-- PHẦN 6 -->
+          <h2><iconify-icon icon="sparkles-outline"></iconify-icon> 6. Đăng ký hóa chất mới</h2>
+          <p>
+            <span class="badge blue">CƠ CHẾ MỚI</span>
+          </p>
+          <p>
+            Luật Hóa chất 2025 thiết lập cơ chế <strong>đăng ký hóa chất mới</strong> với các đặc điểm chính:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nội dung</th>
+                  <th>Quy định</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Khái niệm hóa chất mới</strong></td>
+                  <td>Là chất chưa có trong Danh mục hóa chất quốc gia Việt Nam và chưa được công nhận trong các danh mục hóa chất nước ngoài (EU REACH, Japan ENCS...)</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ chế đánh giá</strong></td>
+                  <td>Thành lập Hội đồng đánh giá hóa chất mới (7-9 thành viên), thời hạn đánh giá 90 ngày kể từ khi nhận đủ hồ sơ</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời gian theo dõi</strong></td>
+                  <td>Hóa chất mới sau khi đăng ký phải chịu sự giám sát tăng cường trong <strong>5 năm đầu</strong> lưu hành trên thị trường</td>
+                </tr>
+                <tr>
+                  <td><strong>Thẩm quyền</strong></td>
+                  <td>Cục Hóa chất (Bộ Công Thương) tiếp nhận và tổ chức đánh giá[reference:8]</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PHẦN 7 -->
+          <h2><iconify-icon icon="people-outline"></iconify-icon> 7. Tư vấn chuyên ngành hóa chất</h2>
+          <p>
+            <span class="badge purple">NGHỀ KINH DOANH CÓ ĐIỀU KIỆN</span>
+          </p>
+          <p>
+            Luật quy định hoạt động tư vấn chuyên ngành hóa chất là <strong>ngành nghề kinh doanh có điều kiện</strong>, bao gồm:
+          </p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Tư vấn xây dựng</li>
+            <li>Tư vấn lựa chọn công nghệ, thiết bị</li>
+            <li>Tư vấn an toàn, an ninh hóa chất</li>
+          </ul>
+          <p>
+            Luật cũng quy định rõ điều kiện đối với <strong>tổ chức và cá nhân</strong> hoạt động tư vấn chuyên ngành hóa chất, đồng thời yêu cầu <strong>cấp chứng chỉ</strong> đối với cá nhân hoạt động tư vấn[reference:9].
+          </p>
+
+          <!-- PHẦN 8 -->
+          <h2><iconify-icon icon="business-outline"></iconify-icon> 8. Dịch vụ tồn trữ hóa chất</h2>
+          <p>
+            <span class="badge success">LẦN ĐẦU LUẬT HÓA</span>
+          </p>
+          <p>
+            Lần đầu tiên, <strong>dịch vụ tồn trữ hóa chất</strong> được đưa vào diện quản lý có điều kiện. Theo Nghị định 26/2026/NĐ-CP, tổ chức, cá nhân cung cấp dịch vụ tồn trữ hóa chất phải có <strong>Giấy chứng nhận đủ điều kiện</strong>.
+          </p>
+          <div class="highlight-box warning">
+            <iconify-icon icon="megaphone-outline"></iconify-icon>
+            <strong>Lộ trình:</strong> Nghĩa vụ chứng nhận đủ điều kiện cung cấp dịch vụ tồn trữ hóa chất có hiệu lực từ <strong>01/7/2026</strong>[reference:10].
+          </div>
+
+          <!-- PHẦN 9 -->
+          <h2><iconify-icon icon="document-text-outline"></iconify-icon> 9. Khai báo hóa chất nhập khẩu</h2>
+          <p>
+            <span class="badge blue">MỞ RỘNG PHẠM VI</span>
+          </p>
+          <p>
+            Theo Nghị định 26/2026/NĐ-CP, cơ chế khai báo hóa chất nhập khẩu được mở rộng đáng kể:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nội dung</th>
+                  <th>Quy định</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Đối tượng khai báo</strong></td>
+                  <td>Tổ chức, cá nhân nhập khẩu hóa chất thuộc <strong>Chương 28 và Chương 29</strong> của Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam</td>
+                </tr>
+                <tr>
+                  <td><strong>Phương thức</strong></td>
+                  <td>Khai báo trên <strong>Cổng thông tin một cửa quốc gia</strong> trước khi thông quan</td>
+                </tr>
+                <tr>
+                  <td><strong>Phạm vi</strong></td>
+                  <td>Bất kể hóa chất có thuộc danh mục kiểm soát đặc biệt hay không — miễn là thuộc Chương 28, 29[reference:11]</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PHẦN 10 -->
+          <h2><iconify-icon icon="alert-circle-outline"></iconify-icon> 10. Xử phạt vi phạm hành chính</h2>
+          <p>
+            Theo Nghị định <strong>275/2026/NĐ-CP</strong> (hiệu lực từ <strong>25/8/2026</strong>, thay thế NĐ71/2019/NĐ-CP), mức xử phạt trong lĩnh vực hóa chất đã <strong>tăng mạnh</strong>[reference:12]:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hành vi vi phạm</th>
+                  <th>Mức phạt cũ</th>
+                  <th>Mức phạt mới</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Không sử dụng GHS để phân loại hóa chất</td>
+                  <td>3-5 triệu đồng</td>
+                  <td><span class="badge danger">25-30 triệu đồng (tăng 8 lần)</span></td>
+                </tr>
+                <tr>
+                  <td>Đưa hóa chất vào sử dụng/lưu thông nhưng không phân loại</td>
+                  <td>10-15 triệu đồng</td>
+                  <td><span class="badge danger">35-40 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Không có bảng nội quy an toàn hóa chất</td>
+                  <td>3-5 triệu đồng</td>
+                  <td><span class="badge warning">10-15 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Kinh doanh hóa chất không có kho tồn trữ hoặc thuê kho không đủ điều kiện</td>
+                  <td>15-20 triệu đồng</td>
+                  <td><span class="badge warning">25-30 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Sản xuất hóa chất không có kho tồn trữ</td>
+                  <td>15-20 triệu đồng</td>
+                  <td><span class="badge danger">35-40 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Hóa chất có điều kiện/KSĐB/cấm không phân khu, sắp xếp</td>
+                  <td>3-5 triệu đồng</td>
+                  <td><span class="badge warning">15-20 triệu đồng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box danger">
+            <iconify-icon icon="alert-circle-outline"></iconify-icon>
+            <strong>Mức phạt tối đa:</strong> Cá nhân vi phạm trong lĩnh vực hóa chất có thể bị phạt tới <strong>50 triệu đồng</strong>; trong lĩnh vực vật liệu nổ công nghiệp có thể bị phạt tới <strong>100 triệu đồng</strong>[reference:13].
+          </div>
+
+          <!-- SO SÁNH LUẬT CŨ - MỚI -->
+          <h2><iconify-icon icon="swap-horizontal-outline"></iconify-icon> So sánh Luật Hóa chất 2007 vs 2025</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tiêu chí</th>
+                  <th>Luật 06/2007/QH12</th>
+                  <th>Luật 69/2025/QH15</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>8 chương, 71 điều</td>
+                  <td><span class="badge success">7 chương, 48 điều</span> (tinh gọn hơn)</td>
+                </tr>
+                <tr>
+                  <td><strong>Phạm vi quản lý</strong></td>
+                  <td>Chủ yếu SX, kinh doanh</td>
+                  <td><span class="badge blue">Toàn bộ vòng đời</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Danh mục hóa chất</strong></td>
+                  <td>Hạn chế SXKD</td>
+                  <td><span class="badge warning">Cần kiểm soát đặc biệt</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Nguyên tắc hóa học xanh</strong></td>
+                  <td>Chưa có</td>
+                  <td><span class="badge success">Điều 5 — MỚI</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Tư vấn chuyên ngành</strong></td>
+                  <td>Chưa quy định</td>
+                  <td><span class="badge purple">Ngành nghề có điều kiện</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Chuyển đổi số</strong></td>
+                  <td>Chưa có</td>
+                  <td><span class="badge blue">Thể chế hóa NQ 57-NQ/TW</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Hành vi bị cấm</strong></td>
+                  <td>Danh mục cơ bản</td>
+                  <td><span class="badge danger">Bổ sung chiếm đoạt hóa chất</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Giấy phép SX &amp; KD</strong></td>
+                  <td>Gộp chung</td>
+                  <td><span class="badge success">Tách riêng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- CHECKLIST -->
+          <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist tuân thủ cho doanh nghiệp XNK hóa chất</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+            <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+            Nhấn vào từng mục để đánh dấu hoàn thành.
+          </p>
+
+          <h3><iconify-icon icon="search-outline"></iconify-icon> Trước khi nhập khẩu</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Xác định CAS và thành phần hóa chất</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Chuẩn bị SDS tiếng Việt theo chuẩn GHS 16 phần</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Tra NĐ24/2026/NĐ-CP để xác định nhóm quản lý</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra hóa chất thuộc Chương 28 hay 29 để khai báo</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Nếu thuộc KSĐB: Nộp hồ sơ cấp phép trực tuyến</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Nếu là hóa chất mới: Đăng ký theo NĐ26/TT01</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 26px;"><iconify-icon icon="cube-outline"></iconify-icon> Trong quá trình nhập khẩu</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Khai báo đầy đủ thông tin hóa chất trên tờ khai hải quan</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Xuất trình giấy phép (nếu có) trước khi thông quan</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Thực hiện khai báo trên Cổng một cửa quốc gia</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 26px;"><iconify-icon icon="archive-outline"></iconify-icon> Sau thông quan</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Lưu hồ sơ tuân thủ theo lô (tối thiểu 3 năm)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Duy trì điều kiện an toàn (huấn luyện, PNUPSC)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Thực hiện báo cáo định kỳ nếu có yêu cầu</span>
+            </div>
+          </div>
+
+          <!-- KHUYẾN NGHỊ -->
+          <div class="highlight-box success" style="margin-top: 30px;">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Khuyến nghị:</strong> Doanh nghiệp nên thường xuyên truy cập Cổng thông tin Cục Hóa chất – Bộ Công Thương
+            (<a href="https://cuchoachat.gov.vn" target="_blank" rel="noopener">cuchoachat.gov.vn</a>) và Cổng Dịch vụ công Quốc gia
+            để cập nhật văn bản mới, đồng thời chủ động rà soát quy trình nội bộ để đáp ứng yêu cầu của Luật Hóa chất 2025.
+          </div>
+
+          <div class="source-note">
+            <span>
+              <iconify-icon icon="link-outline"></iconify-icon>
+              Nguồn tham khảo: Cổng TTĐT Chính phủ, LuatVietnam, Cục Hóa chất
+            </span>
+            <span>
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              Căn cứ pháp lý: Luật Hóa chất 69/2025/QH15
+            </span>
+          </div>
+
+          <!-- Nút về trang chủ -->
+          <div style="margin-top: 40px; text-align: center; padding-top: 28px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #121212; padding: 10px 26px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255, 219, 112, 0.25);">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="back-to-top" id="backToTop">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </div>
+
+  <script>
+    /* ====== LOADING ====== */
+    window.addEventListener('load', () => {
+      const loading = document.getElementById('loading');
+      loading.style.opacity = '0';
+      setTimeout(() => { loading.style.display = 'none'; }, 500);
+    });
+
+    /* ====== BACK TO TOP ====== */
+    const backBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) backBtn.classList.add('show');
+      else backBtn.classList.remove('show');
+    });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ====== REVEAL ON SCROLL ====== */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    /* ====== CHECKLIST TOGGLE ====== */
+    const checklistCards = document.querySelectorAll('.checklist-card');
+    checklistCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+
+    /* ====== MODAL POP-UP ====== */
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    const modalData = {
+      central: {
+        icon: 'flag-outline',
+        title: 'Luật Hóa chất 69/2025/QH15',
+        body: `<p><strong>Tổng quan:</strong> Luật Hóa chất 2025 được Quốc hội thông qua ngày 14/6/2025, có hiệu lực từ 01/01/2026. Luật gồm <strong>7 chương, 48 điều</strong>, thay thế Luật Hóa chất 2007.</p>
+        <ul>
+          <li>Quản lý hóa chất theo toàn bộ vòng đời</li>
+          <li>3 danh mục: cấm, SXKD có điều kiện, kiểm soát đặc biệt</li>
+          <li>Nguyên tắc hóa học xanh</li>
+          <li>Tách riêng giấy phép SX và KD</li>
+          <li>Chuyển đổi số trong quản lý nhà nước</li>
+        </ul>`
+      },
+      vongdoi: {
+        icon: 'repeat-outline',
+        title: 'Quản lý hóa chất theo vòng đời',
+        body: `<p>Luật Hóa chất 2025 thiết lập cơ chế quản lý hóa chất theo <strong>toàn bộ vòng đời</strong>:</p>
+        <ul>
+          <li>Sản xuất</li>
+          <li>Kinh doanh, xuất khẩu, nhập khẩu</li>
+          <li>Vận chuyển, tồn trữ</li>
+          <li>Sử dụng hóa chất</li>
+          <li>Xử lý chất thải từ hoạt động hóa chất</li>
+        </ul>
+        <p>Đây là điểm khác biệt lớn so với Luật 2007 (chủ yếu quản lý SX và kinh doanh).</p>`
+      },
+      danhmuc: {
+        icon: 'list-outline',
+        title: 'Ba danh mục hóa chất',
+        body: `<p>Tại Luật Hóa chất 2025 (Điều 9), hóa chất được quản lý theo 03 danh mục chính:</p>
+        <ul>
+          <li><strong>Hóa chất cấm</strong> — mặc định không được SX, KD, XNK</li>
+          <li><strong>Hóa chất SXKD có điều kiện</strong> — phải có Giấy chứng nhận đủ điều kiện</li>
+          <li><strong>Hóa chất cần kiểm soát đặc biệt</strong> — thay thế "hóa chất hạn chế SXKD"; phải có giấy phép SX, KD, XNK</li>
+        </ul>
+        <p>Luật cũng yêu cầu lập phiếu kiểm soát mua, bán hóa chất cần kiểm soát đặc biệt.</p>`
+      },
+      hóachấtmới: {
+        icon: 'sparkles-outline',
+        title: 'Đăng ký hóa chất mới',
+        body: `<p>Luật thiết lập cơ chế đăng ký hóa chất mới:</p>
+        <ul>
+          <li><strong>Hóa chất mới</strong> là chất chưa có trong Danh mục hóa chất quốc gia VN và chưa được công nhận trong các danh mục nước ngoài (EU REACH, Japan ENCS...)</li>
+          <li>Thành lập Hội đồng đánh giá (7-9 thành viên)</li>
+          <li>Thời hạn đánh giá: 90 ngày kể từ khi nhận đủ hồ sơ</li>
+          <li>Giám sát tăng cường trong <strong>5 năm đầu</strong> lưu hành</li>
+        </ul>
+        <p>Thẩm quyền: Cục Hóa chất (Bộ Công thương).</p>`
+      },
+      hóa học xanh: {
+        icon: 'leaf-outline',
+        title: 'Nguyên tắc hóa học xanh',
+        body: `<p>Luật Hóa chất 2025 bổ sung <strong>nguyên tắc hóa học xanh</strong> (Điều 5):</p>
+        <ul>
+          <li>Chủ đầu tư dự án hóa chất phải áp dụng trong thiết kế, lựa chọn công nghệ, thiết bị</li>
+          <li>Nhằm giảm thiểu hoặc loại bỏ việc sử dụng và tạo ra hóa chất nguy hiểm</li>
+          <li>Hướng tới phát triển xanh, bền vững, thân thiện môi trường</li>
+        </ul>
+        <p>Đây là bước tiến quan trọng phù hợp xu hướng quốc tế.</p>`
+      },
+      hanhvi: {
+        icon: 'close-circle-outline',
+        title: 'Các hành vi bị nghiêm cấm',
+        body: `<p>Điều 3 Luật Hóa chất 2025 quy định <strong>07 hành vi bị nghiêm cấm</strong>:</p>
+        <ul>
+          <li><strong>Chiếm đoạt hóa chất</strong> <span class="badge danger">BỔ SUNG MỚI</span></li>
+          <li>Sản xuất, kinh doanh, vận chuyển, tồn trữ, sử dụng, mua, bán, trao đổi, tặng cho, gửi, mượn, thuê, cầm cố hóa chất trái pháp luật</li>
+          <li>Không cung cấp hoặc cố ý cung cấp không đầy đủ, không kịp thời, sai lệch thông tin về đặc tính nguy hiểm của hóa chất</li>
+          <li>Nhập khẩu hóa chất không rõ nguồn gốc, vượt ngưỡng cho phép</li>
+        </ul>`
+      },
+      xuatnhapkhau: {
+        icon: 'airplane-outline',
+        title: 'Quy định mới về XNK hóa chất',
+        body: `<p><strong>Hóa chất có điều kiện:</strong></p>
+        <ul>
+          <li>Tổ chức SX được XK hóa chất do chính mình SX theo Giấy chứng nhận đủ điều kiện SX</li>
+          <li>Tổ chức KD được XNK theo Giấy chứng nhận đủ điều kiện KD</li>
+          <li>Tổ chức, cá nhân sử dụng được NK để phục vụ mục đích sử dụng</li>
+        </ul>
+        <p><strong>Hóa chất cần kiểm soát đặc biệt:</strong></p>
+        <ul>
+          <li>Tổ chức SX được XK theo Giấy phép SX + Giấy phép XK</li>
+          <li>Tổ chức KD được XNK theo Giấy phép KD + Giấy phép XNK</li>
+        </ul>
+        <p><strong>Lưu ý:</strong> Từ 05/3/2026, thủ tục cấp phép XNK hóa chất KSĐB đã triển khai trực tuyến.</p>`
+      },
+      tuvan: {
+        icon: 'people-outline',
+        title: 'Tư vấn chuyên ngành hóa chất',
+        body: `<p>Hoạt động tư vấn chuyên ngành hóa chất là <strong>ngành nghề kinh doanh có điều kiện</strong>, bao gồm:</p>
+        <ul>
+          <li>Tư vấn xây dựng</li>
+          <li>Tư vấn lựa chọn công nghệ, thiết bị</li>
+          <li>Tư vấn an toàn, an ninh hóa chất</li>
+        </ul>
+        <p>Luật quy định điều kiện đối với tổ chức và cá nhân hoạt động tư vấn, đồng thời yêu cầu <strong>cấp chứng chỉ</strong> đối với cá nhân.</p>`
+      },
+      tontru: {
+        icon: 'business-outline',
+        title: 'Dịch vụ tồn trữ hóa chất',
+        body: `<p>Lần đầu tiên, <strong>dịch vụ tồn trữ hóa chất</strong> được đưa vào diện quản lý có điều kiện.</p>
+        <ul>
+          <li>Tổ chức, cá nhân cung cấp dịch vụ tồn trữ hóa chất phải có <strong>Giấy chứng nhận đủ điều kiện</strong></li>
+          <li>Nghĩa vụ chứng nhận có hiệu lực từ <strong>01/7/2026</strong></li>
+        </ul>
+        <p>Đây là quy định mới quan trọng đối với các doanh nghiệp logistics, kho bãi.</p>`
+      }
+    };
+
+    function openModal(key) {
+      const data = modalData[key];
+      if (!data) return;
+      modalBody.innerHTML = `
+        <h3><iconify-icon icon="${data.icon}"></iconify-icon> ${data.title}</h3>
+        ${data.body}
+      `;
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.openModal = openModal;
+  </script>
+</body>
+</html>
