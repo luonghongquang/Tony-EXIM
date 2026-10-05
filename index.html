@@ -1755,4 +1755,56 @@
 
 </body>
 
+<script>
+  /* ====== HASH ROUTING cho trang chủ Tony-EXIM ====== */
+  (function() {
+    const validTabs = ['about', 'resume', 'portfolio', 'blog', 'contact'];
+
+    function activateTab(tabName) {
+      // Tìm tất cả nút navbar và các article
+      const navButtons = document.querySelectorAll('[data-nav-link]');
+      const articles = document.querySelectorAll('article[data-page]');
+
+      // Xóa active ở tất cả
+      navButtons.forEach(btn => btn.classList.remove('active'));
+      articles.forEach(art => art.classList.remove('active'));
+
+      // Kích hoạt tab được chọn
+      navButtons.forEach(btn => {
+        if (btn.textContent.trim().toLowerCase() === tabName) {
+          btn.classList.add('active');
+        }
+      });
+      const targetArticle = document.querySelector(`article[data-page="${tabName}"]`);
+      if (targetArticle) targetArticle.classList.add('active');
+
+      // Cuộn lên đầu
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Khi load trang: đọc hash và mở đúng tab
+    function initFromHash() {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (validTabs.includes(hash)) {
+        activateTab(hash);
+      }
+    }
+
+    // Khi bấm nút navbar → cập nhật hash để share link được
+    document.querySelectorAll('[data-nav-link]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const tabName = this.textContent.trim().toLowerCase();
+        if (validTabs.includes(tabName)) {
+          history.replaceState(null, '', '#' + tabName);
+        }
+      });
+    });
+
+    // Chạy khi DOM sẵn sàng + khi hash thay đổi (bấm back/forward)
+    window.addEventListener('DOMContentLoaded', initFromHash);
+    window.addEventListener('hashchange', initFromHash);
+  })();
+</script>
+
+  
 </html>
