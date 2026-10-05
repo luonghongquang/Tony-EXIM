@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Quy Trình Tuân Thủ Hóa Chất XNK · Luật 69/2025/QH15 · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* ====== LOADING ====== */
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.4s;
+    }
+    .loader {
+      width: 48px; height: 48px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ====== LAYOUT ====== */
+    .main-layout {
+      display: flex; gap: 30px;
+      max-width: 1280px; width: 100%;
+      align-items: flex-start;
+    }
+
+    /* ====== SIDEBAR ====== */
+    .sidebar {
+      flex: 0 0 280px;
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 30px 22px 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      position: sticky; top: 30px;
+      text-align: center;
+    }
+    .sidebar-avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%; object-fit: cover;
+      margin: 0 auto 16px; display: block;
+      border: 3px solid var(--accent); background: #333;
+    }
+    .sidebar-name {
+      font-size: 1.3rem; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text-primary);
+    }
+    .sidebar-title {
+      font-size: 0.85rem; font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block; padding: 4px 14px;
+      border-radius: 40px; margin: 6px 0 18px;
+    }
+    .sidebar-divider { height: 1px; background: var(--border-light); margin: 18px 0; }
+    .sidebar-contact {
+      display: flex; flex-direction: column;
+      gap: 14px; text-align: left; font-size: 0.82rem;
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--text-secondary);
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.2rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      transition: color 0.2s; word-break: break-all;
+    }
+    .sidebar-contact .item a:hover { color: var(--accent); }
+    .sidebar-contact .label {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
+      display: block; margin-bottom: 1px;
+    }
+    .sidebar-social {
+      display: flex; justify-content: center;
+      gap: 12px; margin-top: 18px; flex-wrap: wrap;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary); font-size: 1.4rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .sidebar-social a:hover { color: var(--accent); transform: translateY(-2px); }
+
+    /* ====== MAIN ====== */
+    .main-content { flex: 1; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px;
+      padding: 6px 10px;
+      display: flex; gap: 4px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      flex-wrap: wrap; justify-content: center;
+    }
+    .navbar a {
+      display: inline-block; background: transparent;
+      border: none; color: var(--text-secondary);
+      font-family: var(--font); font-size: 0.85rem;
+      font-weight: 500; padding: 8px 22px;
+      border-radius: 40px; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .navbar a:hover { color: var(--text-primary); background: var(--bg-card); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    /* ====== ARTICLE CARD ====== */
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 32px 34px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero inner */
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 30px;
+      background: linear-gradient(rgba(18,18,18,0.78), rgba(18,18,18,0.92)),
+                  url('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      padding: 46px 28px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+    .hero-inner .article-badge {
+      display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent);
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 4px 16px; border-radius: 40px;
+      margin-bottom: 14px;
+    }
+    .hero-inner h1 {
+      font-size: 2rem; font-weight: 700;
+      line-height: 1.25; letter-spacing: -0.02em;
+      margin-bottom: 10px; color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary); font-size: 0.95rem;
+      max-width: 640px; margin: 0 auto 18px;
+    }
+
+    .article-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 20px; font-size: 0.82rem;
+      color: var(--text-muted);
+      align-items: center; justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    .article-body { font-size: 0.95rem; color: var(--text-secondary); }
+
+    .article-body h2 {
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--text-primary);
+      margin: 34px 0 16px;
+      padding-left: 14px;
+      border-left: 4px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+
+    .article-body h3 {
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--text-primary);
+      margin: 22px 0 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .article-body p { margin-bottom: 14px; text-align: justify; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      transition: border-color 0.2s;
+    }
+    .article-body a:hover { border-bottom-color: var(--accent); }
+
+    /* Highlight box */
+    .highlight-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 16px 22px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto; margin: 18px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1);
+      color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1);
+      color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1);
+      color: var(--orange);
+    }
+
+    /* Step list */
+    .step-list {
+      list-style: none; margin: 14px 0;
+      counter-reset: step-counter;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .step-list li {
+      position: relative;
+      padding: 16px 20px 16px 62px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      counter-increment: step-counter;
+      transition: var(--transition);
+    }
+    .step-list li:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateX(4px);
+    }
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 16px; top: 16px;
+      width: 34px; height: 34px;
+      background: rgba(255, 219, 112, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .step-list li strong { color: var(--text-primary); display: block; margin-bottom: 4px; }
+    .step-list li .step-note {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-top: 6px;
+    }
+
+    /* Checklist */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .checklist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 12px;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+      cursor: pointer; font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+    .checklist-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.2rem; color: var(--accent);
+      flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
+
+    /* Grid 3 */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 18px 16px;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+    }
+    .card iconify-icon {
+      font-size: 1.9rem;
+      color: var(--accent);
+      margin-bottom: 8px; display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.92rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 5px;
+    }
+    .card p { font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+
+    /* Callout ket luan */
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent);
+      margin-top: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Source note */
+    .source-note {
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex; flex-wrap: wrap;
+      gap: 10px 20px; align-items: center;
+    }
+    .source-note iconify-icon {
+      color: var(--accent); vertical-align: middle;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed; bottom: 30px; right: 30px;
+      background: var(--accent); color: #121212;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s; z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.35);
+      font-size: 1.1rem;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:hover { background: #ffd95c; transform: translateY(-2px); }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main-layout { flex-direction: column; }
+      .sidebar {
+        flex: none; width: 100%;
+        position: static;
+        display: flex; flex-wrap: wrap;
+        gap: 16px; text-align: left;
+        padding: 22px 20px; align-items: center;
+      }
+      .sidebar-avatar { width: 70px; height: 70px; margin: 0; flex-shrink: 0; }
+      .sidebar-header { flex: 1; min-width: 150px; }
+      .sidebar-name { font-size: 1.1rem; }
+      .sidebar-title { font-size: 0.75rem; margin: 2px 0 0; }
+      .sidebar-divider { display: none; }
+      .sidebar-contact {
+        flex-direction: row; flex-wrap: wrap;
+        gap: 10px 20px; width: 100%; margin-top: 4px;
+      }
+      .sidebar-social { width: 100%; justify-content: flex-start; margin-top: 4px; }
+      .article-card { padding: 24px 20px; }
+      .hero-inner { padding: 32px 20px; }
+      .hero-inner h1 { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 14px 10px; }
+      .article-card { padding: 18px 14px; }
+      .hero-inner h1 { font-size: 1.15rem; }
+      .navbar a { font-size: 0.72rem; padding: 6px 12px; }
+      .article-body h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading"><div class="loader"></div></div>
+
+  <div class="main-layout">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+      <nav class="navbar-item">
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">About</a>
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Resume</a>
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Portfolio</a>
+        <a href="https://luonghongquang.github.io/Tony-EXIM/" class="active">Blog</a>
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Contact</a>
+      </nav>
+
+      <article class="article-card">
+        <!-- Hero inner -->
+        <div class="hero-inner">
+          <span class="article-badge">
+            <iconify-icon icon="flask-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+            Hóa chất · Hải quan · Compliance
+          </span>
+          <h1>
+            Quy Trình Tuân Thủ Hóa Chất XNK<br />
+            <span>Theo Luật 69/2025/QH15</span>
+          </h1>
+          <p>Hướng dẫn chi tiết 4 lớp tuân thủ cho doanh nghiệp xuất nhập khẩu hóa chất trong kỷ nguyên pháp lý mới 2026.</p>
+          <div class="article-meta">
+            <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+            <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hóa chất</span>
+            <span><iconify-icon icon="time-outline"></iconify-icon> 15 phút đọc</span>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <!-- KẾT LUẬN -->
+          <div class="conclusion-box reveal">
+            <h3><iconify-icon icon="checkmark-done-outline"></iconify-icon> Kết luận</h3>
+            <p style="margin-top: 8px;">Doanh nghiệp XNK hóa chất cần xây dựng <strong>quy trình tuân thủ 4 lớp</strong>:</p>
+            <ol>
+              <li><strong>Định danh hóa chất</strong> (tên/CAS/SDS/GHS) — trước khi đàm phán</li>
+              <li><strong>Tra cứu danh mục quản lý</strong> (NĐ24) — trước khi ký hợp đồng</li>
+              <li><strong>Xin giấy phép/điều kiện</strong> (NĐ26 + TT01) — trước khi thông quan</li>
+              <li><strong>Đảm bảo an toàn</strong> (NĐ25) — nếu có kho/lưu giữ</li>
+            </ol>
+          </div>
+
+          <!-- CĂN CỨ PHÁP LÝ -->
+          <h2><iconify-icon icon="book-outline"></iconify-icon> Căn cứ pháp lý</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Văn bản</th>
+                  <th>Vai trò</th>
+                  <th>Hiệu lực</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Luật Hóa chất 69/2025/QH15</strong></td>
+                  <td>Khung pháp lý gốc, quy định nguyên tắc quản lý, XNK, hóa chất nguy hiểm trong sản phẩm/hàng hóa</td>
+                  <td><span class="badge">01/01/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>NĐ 24/2026/NĐ-CP</strong></td>
+                  <td>"Bản đồ danh mục" — liệt kê 4 danh mục hóa chất</td>
+                  <td><span class="badge">17/01/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>NĐ 25/2026/NĐ-CP</strong></td>
+                  <td>An toàn - an ninh hóa chất (huấn luyện, PNUPSC, tư vấn)</td>
+                  <td><span class="badge">17/01/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>NĐ 26/2026/NĐ-CP</strong></td>
+                  <td>Cơ chế quản lý &amp; thủ tục (giấy phép, điều kiện, dịch vụ tồn trữ)</td>
+                  <td><span class="badge">17/01/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TT 01/2026/TT-BCT</strong></td>
+                  <td>Hướng dẫn vận hành: mẫu biểu, hồ sơ, khai báo CSDL</td>
+                  <td><span class="badge">17/01/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>NĐ 275/2026/NĐ-CP</strong></td>
+                  <td>Xử phạt vi phạm hành chính (thay thế NĐ71/2019)</td>
+                  <td><span class="badge danger">25/8/2026</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight-box">
+            <iconify-icon icon="information-circle-outline"></iconify-icon>
+            <strong>Nguồn:</strong> Bộ Công Thương đã ban hành Thông báo số 363/BCT-HC ngày 17/1/2026 về phối hợp
+            triển khai các thủ tục hành chính theo Luật Hóa chất 69/2025/QH15.
+          </div>
+
+          <!-- PHẦN 1 -->
+          <h2><iconify-icon icon="pricetag-outline"></iconify-icon> 1. Định danh &amp; Phân loại hóa chất</h2>
+          <p>
+            <strong>Khi nào kích hoạt:</strong> Mọi lô hàng hóa chất/chế phẩm.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nội dung</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Dữ liệu tối thiểu</strong></td>
+                  <td>Tên hóa chất + tên thương mại; CAS (nếu là chất) hoặc thành phần + % (nếu là hỗn hợp); SDS, phân loại GHS, UN number</td>
+                </tr>
+                <tr>
+                  <td><strong>Mục đích</strong></td>
+                  <td>Chuẩn hóa master data để tra cứu danh mục NĐ24</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>NĐ24</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box warning">
+            <iconify-icon icon="warning-outline"></iconify-icon>
+            <strong>Lưu ý nghiệp vụ:</strong> Danh mục quản lý trong NĐ24 đi theo <strong>định danh hóa chất</strong>
+            (tên/CAS) và <strong>tính nguy hại</strong>, không đi theo mã HS. Đây là điểm khác biệt lớn so với quy định cũ.
+          </div>
+          <div class="highlight-box danger">
+            <iconify-icon icon="alert-circle-outline"></iconify-icon>
+            <strong>BẮT BUỘC:</strong> Thiếu CAS hoặc thành phần → không thể kết luận hóa chất thuộc nhóm nào.
+          </div>
+
+          <!-- PHẦN 2 -->
+          <h2><iconify-icon icon="search-outline"></iconify-icon> 2. Tra danh mục quản lý (NĐ24)</h2>
+          <p>
+            <strong>Khi nào kích hoạt:</strong> Mọi lô hàng hóa chất. <strong>Thời điểm thực hiện:</strong> Trước khi ký hợp đồng.
+          </p>
+          <p>NĐ24 quy định <strong>4 danh mục</strong>:</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Danh mục</th>
+                  <th>Đặc điểm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hóa chất cơ bản thuộc lĩnh vực công nghiệp hóa chất trọng điểm</strong></td>
+                  <td>Quản lý ở mức khuyến khích phát triển</td>
+                </tr>
+                <tr>
+                  <td><strong>Hóa chất SXKD có điều kiện</strong></td>
+                  <td>Phải có Giấy chứng nhận đủ điều kiện</td>
+                </tr>
+                <tr>
+                  <td><strong>Hóa chất cần kiểm soát đặc biệt</strong></td>
+                  <td>Phải có giấy phép XNK</td>
+                </tr>
+                <tr>
+                  <td><strong>Hóa chất phải xây dựng KH PNUPSC</strong></td>
+                  <td>Phải lập kế hoạch phòng ngừa, ứng phó sự cố</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PHẦN 3 -->
+          <h2><iconify-icon icon="document-text-outline"></iconify-icon> 3. Giấy phép &amp; Điều kiện (NĐ26 + TT01)</h2>
+
+          <h3><iconify-icon icon="close-circle-outline"></iconify-icon> 3.1. Hóa chất cấm</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Điều kiện</strong></td>
+                  <td>Mặc định không XNK; nếu thuộc trường hợp được phép → xin giấy phép theo NĐ26/TT01, quản trị chặt số lượng, mục đích, tuyến</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời điểm</strong></td>
+                  <td>Trước khi thông quan</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>NĐ26 + TT01</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3><iconify-icon icon="shield-checkmark-outline"></iconify-icon> 3.2. Hóa chất SXKD có điều kiện</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Điều kiện</strong></td>
+                  <td>DN nhập khẩu để kinh doanh: chuẩn bị/duy trì điều kiện kinh doanh tương ứng; đảm bảo XNK "đi kèm" điều kiện hợp lệ (certificate/đủ điều kiện)</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời điểm</strong></td>
+                  <td>Trước khi mở tờ khai</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>Luật (Điều 12) + NĐ24</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3><iconify-icon icon="lock-closed-outline"></iconify-icon> 3.3. Hóa chất kiểm soát đặc biệt</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Điều kiện</strong></td>
+                  <td>Xin phép kinh doanh (nếu thuộc diện); lập phiếu kiểm soát mua-bán, quản lý dữ liệu trên CSDL; tăng kiểm soát chống thất thoát</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời điểm</strong></td>
+                  <td>Trước giao dịch &amp; trong vận hành</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>Luật (Điều 12 có ràng buộc giao dịch quốc tế) + TT01</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box warning">
+            <iconify-icon icon="megaphone-outline"></iconify-icon>
+            Từ ngày <strong>5/3/2026</strong>, thủ tục cấp giấy phép xuất nhập khẩu đối với hóa chất cần kiểm soát đặc biệt
+            đã được triển khai <strong>trực tuyến</strong> trên Cổng dịch vụ công quốc gia.
+          </div>
+
+          <h3><iconify-icon icon="sparkles-outline"></iconify-icon> 3.4. Hóa chất mới</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Điều kiện</strong></td>
+                  <td>Thực hiện thủ tục đăng ký hóa chất mới theo NĐ26/TT01 (đánh giá dữ liệu, thời hạn xử lý…) trước khi thương mại hóa</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời điểm</strong></td>
+                  <td>Trước nhập/đưa ra thị trường</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>NĐ26</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PHẦN 4 -->
+          <h2><iconify-icon icon="flask-outline"></iconify-icon> 4. Hóa chất nguy hiểm trong sản phẩm/hàng hóa</h2>
+          <p>
+            <strong>Khi nào kích hoạt:</strong> DN nhập sản phẩm có chứa hóa chất nguy hiểm thuộc danh mục phải công bố
+            (sơn, keo, tẩy rửa, mực in, đồ điện tử…).
+          </p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Kiểm tra danh mục, test/thử tập nồng độ</li>
+            <li>Công bố nồng độ trên CSDL chuyên ngành trước khi đưa sản phẩm ra thị trường</li>
+            <li>Công khai thông tin phù hợp cho khách hàng/BQLNN</li>
+          </ul>
+          <p><strong>Thời điểm:</strong> Trước khi bán/lưu thông. <strong>Cơ sở pháp lý:</strong> Luật (Điều 31-32) + TT01.</p>
+
+          <!-- PHẦN 5 -->
+          <h2><iconify-icon icon="construct-outline"></iconify-icon> 5. An toàn - An ninh hóa chất (NĐ25)</h2>
+
+          <h3><iconify-icon icon="school-outline"></iconify-icon> 5.1. Huấn luyện an toàn</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Khi nào</strong></td>
+                  <td>DN có người lao động tiếp xúc/hàng hóa nguy hiểm (kho, bốc xếp, sang chiết…)</td>
+                </tr>
+                <tr>
+                  <td><strong>Phải làm</strong></td>
+                  <td>Lập kế hoạch huấn luyện theo nhóm đối tượng; lưu hồ sơ huấn luyện và quyết định công nhận kết quả</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>NĐ25</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3><iconify-icon icon="alert-circle-outline"></iconify-icon> 5.2. Kế hoạch PNUPSC</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Khi nào</strong></td>
+                  <td>DN tồn trữ hóa chất nguy hiểm đạt ngưỡng theo Phụ lục (tính theo từng chất hoặc tổng tỷ lệ)</td>
+                </tr>
+                <tr>
+                  <td><strong>Phải làm</strong></td>
+                  <td>Tính ngưỡng tồn trữ; nếu đạt → lập kế hoạch PNUPSC, trình thẩm định/phê duyệt; tổ chức diễn tập/chuẩn bị vật tư ứng phó</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>NĐ25 (cơ chế hoạch) + NĐ24 (danh mục/ngưỡng)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box">
+            <iconify-icon icon="information-circle-outline"></iconify-icon>
+            NĐ25/2026/NĐ-CP gồm <strong>8 chương, 41 điều</strong>, quy định chi tiết về phát triển ngành công nghiệp hóa chất
+            và an toàn, an ninh hóa chất.
+          </div>
+
+          <!-- PHẦN 6 -->
+          <h2><iconify-icon icon="business-outline"></iconify-icon> 6. Dịch vụ tồn trữ hóa chất (3PL/cho thuê kho)</h2>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Khi nào</strong></td>
+                  <td>DN cho đơn vị khác thuê kho chứa hóa chất</td>
+                </tr>
+                <tr>
+                  <td><strong>Phải làm</strong></td>
+                  <td>Chuẩn bị điều kiện và chứng nhận đủ điều kiện cung cấp dịch vụ tồn trữ; cập nhật lộ trình hiệu lực 01/07/2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời điểm</strong></td>
+                  <td>Trước khi ký HĐ dịch vụ</td>
+                </tr>
+                <tr>
+                  <td><strong>Cơ sở pháp lý</strong></td>
+                  <td>Luật (mô hiệu lực) + NĐ26/TT01</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box warning">
+            <iconify-icon icon="megaphone-outline"></iconify-icon>
+            Từ <strong>01/07/2026</strong>, quy định về chứng nhận đủ điều kiện cung cấp dịch vụ tồn trữ hóa chất
+            chính thức có hiệu lực.
+          </div>
+
+          <!-- PHẦN 7 -->
+          <h2><iconify-icon icon="archive-outline"></iconify-icon> 7. Lưu trữ hồ sơ &amp; Truy xuất dữ liệu</h2>
+          <p>
+            <strong>Khi nào:</strong> Xuyên suốt. <strong>Phải làm:</strong> Thiết lập "hồ sơ tuân thủ theo lô":
+          </p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Chứng từ XNK + SDS + phân loại</li>
+            <li>Khai báo/CSDL + giấy phép + hồ sơ huấn luyện</li>
+            <li>Lưu tối thiểu theo yêu cầu (Luật nghĩa vụ lưu giữ thông tin hóa chất nguy hiểm tối thiểu <strong>3 năm</strong>)</li>
+          </ul>
+
+          <!-- PHẦN 8 -->
+          <h2><iconify-icon icon="warning-outline"></iconify-icon> 8. Quản trị sự cố/mất mát/rò rỉ</h2>
+          <p>
+            <strong>Khi nào:</strong> Khi xảy ra sự cố. <strong>Phải làm:</strong> Kích hoạt quy trình ứng phó theo kế hoạch/biện pháp;
+            báo cáo &amp; cung cấp thông tin đầy đủ; lưu nhật ký sự cố.
+          </p>
+          <p>
+            <strong>Cơ sở pháp lý:</strong> Luật (cấm cung cấp thông tin thiếu/không kịp thời; nghĩa vụ thông tin) + NĐ25.
+          </p>
+
+          <!-- QUY TRÌNH THỰC HIỆN -->
+          <h2><iconify-icon icon="list-outline"></iconify-icon> Quy trình thực hiện cho doanh nghiệp</h2>
+          <ol class="step-list reveal">
+            <li>
+              <strong>Bước 1: Định danh hóa chất (trước đàm phán)</strong>
+              Thu thập: Tên hóa chất, CAS, thành phần + %, SDS, phân loại GHS. Xác định hình thức đóng gói, khối lượng/lô, kế hoạch tồn trữ.
+              <span class="step-note">📌 Trước đàm phán</span>
+            </li>
+            <li>
+              <strong>Bước 2: Tra cứu danh mục (trước ký hợp đồng)</strong>
+              Tra NĐ24: Hóa chất thuộc nhóm nào? Xác định: Cấm / SXKD có điều kiện / KSĐB / Phải lập KH PNUPSC / Hóa chất mới.
+              <span class="step-note">🔍 Trước ký hợp đồng</span>
+            </li>
+            <li>
+              <strong>Bước 3: Kích hoạt thủ tục pháp lý (trước thông quan)</strong>
+              Nếu thuộc diện bị siết: Thực hiện thủ tục theo NĐ26 + TT01. Nếu thuộc KSĐB: Nộp hồ sơ cấp phép trực tuyến qua Cổng DVC Quốc gia (từ 05/3/2026). Nếu là hóa chất mới: Đăng ký theo NĐ26/TT01.
+              <span class="step-note">📋 Trước thông quan</span>
+            </li>
+            <li>
+              <strong>Bước 4: Chuẩn bị an toàn (nếu có kho/lưu giữ)</strong>
+              Lập kế hoạch huấn luyện an toàn theo NĐ25. Tính ngưỡng tồn trữ → nếu đạt → lập KH PNUPSC. Nếu cung cấp dịch vụ tồn trữ: Chuẩn bị chứng nhận đủ điều kiện (hiệu lực 01/07/2026).
+              <span class="step-note">🏭 Nếu có kho/lưu giữ</span>
+            </li>
+            <li>
+              <strong>Bước 5: Kiểm tra sản phẩm/hàng hóa</strong>
+              Nếu nhập sản phẩm có chứa hóa chất nguy hiểm: Công bố nồng độ trên CSDL chuyên ngành.
+              <span class="step-note">🧪 Kiểm tra sản phẩm</span>
+            </li>
+            <li>
+              <strong>Bước 6: Khai báo hải quan</strong>
+              Khai báo đầy đủ thông tin hóa chất trên tờ khai. Xuất trình giấy phép (nếu có) trước khi thông quan.
+              <span class="step-note">📄 Khai báo hải quan</span>
+            </li>
+            <li>
+              <strong>Bước 7: Lưu hồ sơ &amp; Báo cáo sau thông quan</strong>
+              Lưu hồ sơ tuân thủ theo lô (tối thiểu 3 năm). Thực hiện báo cáo định kỳ nếu có yêu cầu.
+              <span class="step-note">💾 Sau thông quan</span>
+            </li>
+          </ol>
+
+          <!-- RỦI RO & MỨC XỬ PHẠT -->
+          <h2><iconify-icon icon="alert-circle-outline"></iconify-icon> Rủi ro &amp; mức xử phạt</h2>
+          <p>
+            Theo Nghị định <strong>275/2026/NĐ-CP</strong> (hiệu lực từ <strong>25/8/2026</strong>,
+            thay thế NĐ71/2019/NĐ-CP), mức xử phạt đã <strong>tăng mạnh</strong>:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hành vi vi phạm</th>
+                  <th>Mức phạt cũ</th>
+                  <th>Mức phạt mới</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Không sử dụng GHS (từ phiên bản 2/2007 trở lên) để phân loại hóa chất</td>
+                  <td>3-5 triệu đồng</td>
+                  <td><span class="badge danger">25-30 triệu đồng (tăng 8 lần)</span></td>
+                </tr>
+                <tr>
+                  <td>Đưa hóa chất vào sử dụng/lưu thông nhưng không phân loại</td>
+                  <td>10-15 triệu đồng</td>
+                  <td><span class="badge danger">35-40 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Không có bảng nội quy an toàn hóa chất</td>
+                  <td>3-5 triệu đồng</td>
+                  <td><span class="badge warning">10-15 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Kinh doanh hóa chất không có kho tồn trữ hoặc thuê kho không đủ điều kiện</td>
+                  <td>15-20 triệu đồng</td>
+                  <td><span class="badge warning">25-30 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Sản xuất hóa chất không có kho tồn trữ</td>
+                  <td>15-20 triệu đồng</td>
+                  <td><span class="badge danger">35-40 triệu đồng</span></td>
+                </tr>
+                <tr>
+                  <td>Hóa chất có điều kiện/KSĐB/cấm không phân khu, sắp xếp</td>
+                  <td>3-5 triệu đồng</td>
+                  <td><span class="badge warning">15-20 triệu đồng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box danger">
+            <iconify-icon icon="alert-circle-outline"></iconify-icon>
+            <strong>Mức phạt tối đa:</strong> Cá nhân vi phạm trong lĩnh vực hóa chất có thể bị phạt tới
+            <strong>50 triệu đồng</strong>.
+          </div>
+
+          <!-- CHECKLIST HÀNH ĐỘNG -->
+          <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist hành động</h2>
+
+          <h3><iconify-icon icon="cart-outline"></iconify-icon> Trước khi nhập khẩu</h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+            <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+            Nhấn vào từng mục để đánh dấu hoàn thành.
+          </p>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Xác định CAS và thành phần hóa chất</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Chuẩn bị SDS tiếng Việt theo chuẩn GHS 16 phần</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Tra NĐ24 để xác định nhóm quản lý</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra ngưỡng tồn trữ theo Phụ lục NĐ24 (nếu có kho)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Nếu thuộc KSĐB: Nộp hồ sơ cấp phép trực tuyến qua Cổng DVC Quốc gia</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Nếu là hóa chất mới: Đăng ký hóa chất mới theo NĐ26/TT01</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 26px;"><iconify-icon icon="cube-outline"></iconify-icon> Trong quá trình nhập khẩu</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Khai báo đầy đủ thông tin hóa chất trên tờ khai hải quan</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Xuất trình giấy phép (nếu có) trước khi thông quan</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra kiểm tra chuyên ngành nếu thuộc diện</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 26px;"><iconify-icon icon="archive-outline"></iconify-icon> Sau thông quan</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Lưu hồ sơ tuân thủ theo lô (tối thiểu 3 năm)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Thực hiện báo cáo định kỳ (nếu có)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Duy trì điều kiện an toàn (huấn luyện, PNUPSC)</span>
+            </div>
+          </div>
+
+          <!-- ĐÁNH GIÁ ĐỘ CHẮC CHẮN -->
+          <h2><iconify-icon icon="stats-chart-outline"></iconify-icon> Đánh giá độ chắc chắn</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nội dung</th>
+                  <th>Mức độ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Hệ thống văn bản pháp luật</td>
+                  <td><span class="badge success">🟢 CAO</span> — Đã có đầy đủ Luật + 3 NĐ + 2 TT</td>
+                </tr>
+                <tr>
+                  <td>Quy trình cấp phép trực tuyến</td>
+                  <td><span class="badge success">🟢 CAO</span> — Đã triển khai từ 05/3/2026</td>
+                </tr>
+                <tr>
+                  <td>Mức xử phạt vi phạm</td>
+                  <td><span class="badge success">🟢 CAO</span> — NĐ275/2026 đã có hiệu lực</td>
+                </tr>
+                <tr>
+                  <td>Ngưỡng tồn trữ cụ thể theo từng chất</td>
+                  <td><span class="badge warning">🟡 TRUNG BÌNH</span> — Cần tra Phụ lục NĐ24</td>
+                </tr>
+                <tr>
+                  <td>Quy định chuyển tiếp NĐ71 → NĐ275</td>
+                  <td><span class="badge">🟠 CẦN XÁC MINH</span> — Cần đối chiếu thêm</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- NGUỒN TRÍCH DẪN -->
+          <h2><iconify-icon icon="link-outline"></iconify-icon> Nguồn trích dẫn</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Văn bản</th>
+                  <th>Số hiệu</th>
+                  <th>Ngày hiệu lực</th>
+                  <th>Link nguồn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Luật Hóa chất</td>
+                  <td>69/2025/QH15</td>
+                  <td>01/01/2026</td>
+                  <td><a href="https://chinhphu.vn" target="_blank" rel="noopener">Cổng TTĐT Chính phủ</a></td>
+                </tr>
+                <tr>
+                  <td>NĐ danh mục hóa chất</td>
+                  <td>24/2026/NĐ-CP</td>
+                  <td>17/01/2026</td>
+                  <td><a href="https://luatvietnam.vn" target="_blank" rel="noopener">luatvietnam.vn</a></td>
+                </tr>
+                <tr>
+                  <td>NĐ an toàn - an ninh hóa chất</td>
+                  <td>25/2026/NĐ-CP</td>
+                  <td>17/01/2026</td>
+                  <td><a href="https://cuchoachat.gov.vn" target="_blank" rel="noopener">cuchoachat.gov.vn</a></td>
+                </tr>
+                <tr>
+                  <td>NĐ quản lý hoạt động hóa chất</td>
+                  <td>26/2026/NĐ-CP</td>
+                  <td>17/01/2026</td>
+                  <td><a href="https://cuchoachat.gov.vn" target="_blank" rel="noopener">cuchoachat.gov.vn</a></td>
+                </tr>
+                <tr>
+                  <td>TT hướng dẫn Luật Hóa chất</td>
+                  <td>01/2026/TT-BCT</td>
+                  <td>17/01/2026</td>
+                  <td><a href="https://moit.gov.vn" target="_blank" rel="noopener">moit.gov.vn</a></td>
+                </tr>
+                <tr>
+                  <td>TT biện pháp thi hành NĐ25</td>
+                  <td>02/2026/TT-BCT</td>
+                  <td>17/01/2026</td>
+                  <td><a href="https://moit.gov.vn" target="_blank" rel="noopener">moit.gov.vn</a></td>
+                </tr>
+                <tr>
+                  <td>NĐ xử phạt vi phạm hành chính</td>
+                  <td>275/2026/NĐ-CP</td>
+                  <td>25/8/2026</td>
+                  <td><a href="https://baovephapluat.vn" target="_blank" rel="noopener">baovephapluat.vn</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight-box success">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Khuyến nghị:</strong> Doanh nghiệp nên thường xuyên truy cập Cổng thông tin Cục Hóa chất – Bộ Công Thương
+            (<a href="https://cuchoachat.gov.vn" target="_blank" rel="noopener">cuchoachat.gov.vn</a>) và Cổng Dịch vụ công Quốc gia
+            để cập nhật văn bản mới và thực hiện thủ tục trực tuyến.
+          </div>
+
+          <div class="source-note">
+            <span>
+              <iconify-icon icon="link-outline"></iconify-icon>
+              Nguồn tham khảo: Thư viện Infographic Hải quan Xuất Nhập Khẩu &amp; Logistics
+            </span>
+            <span>
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              Cập nhật theo Luật Hóa chất 69/2025/QH15 và các Nghị định 24, 25, 26/2026/NĐ-CP
+            </span>
+          </div>
+
+          <!-- Nút về trang chủ -->
+          <div style="margin-top: 40px; text-align: center; padding-top: 28px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #121212; padding: 10px 26px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255, 219, 112, 0.25);">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="back-to-top" id="backToTop">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      const loading = document.getElementById('loading');
+      loading.style.opacity = '0';
+      setTimeout(() => { loading.style.display = 'none'; }, 500);
+    });
+
+    const backBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) backBtn.classList.add('show');
+      else backBtn.classList.remove('show');
+    });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    const checklistCards = document.querySelectorAll('.checklist-card');
+    checklistCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
