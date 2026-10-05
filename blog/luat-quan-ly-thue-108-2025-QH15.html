@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Luật Quản Lý Thuế 2025 · 108/2025/QH15 · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+      --blue: #7ec8e3;
+      --purple: #c5a3e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* ====== LOADING ====== */
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.4s;
+    }
+    .loader {
+      width: 48px; height: 48px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ====== LAYOUT ====== */
+    .main-layout {
+      display: flex; gap: 30px;
+      max-width: 1280px; width: 100%;
+      align-items: flex-start;
+    }
+
+    /* ====== SIDEBAR ====== */
+    .sidebar {
+      flex: 0 0 280px;
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 30px 22px 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      position: sticky; top: 30px;
+      text-align: center;
+    }
+    .sidebar-avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%; object-fit: cover;
+      margin: 0 auto 16px; display: block;
+      border: 3px solid var(--accent); background: #333;
+    }
+    .sidebar-name {
+      font-size: 1.3rem; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text-primary);
+    }
+    .sidebar-title {
+      font-size: 0.85rem; font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block; padding: 4px 14px;
+      border-radius: 40px; margin: 6px 0 18px;
+    }
+    .sidebar-divider { height: 1px; background: var(--border-light); margin: 18px 0; }
+    .sidebar-contact {
+      display: flex; flex-direction: column;
+      gap: 14px; text-align: left; font-size: 0.82rem;
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--text-secondary);
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.2rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      transition: color 0.2s; word-break: break-all;
+    }
+    .sidebar-contact .item a:hover { color: var(--accent); }
+    .sidebar-contact .label {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
+      display: block; margin-bottom: 1px;
+    }
+    .sidebar-social {
+      display: flex; justify-content: center;
+      gap: 12px; margin-top: 18px; flex-wrap: wrap;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary); font-size: 1.4rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .sidebar-social a:hover { color: var(--accent); transform: translateY(-2px); }
+
+    /* ====== MAIN ====== */
+    .main-content { flex: 1; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px;
+      padding: 6px 10px;
+      display: flex; gap: 4px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      flex-wrap: wrap; justify-content: center;
+    }
+    .navbar a {
+      display: inline-block; background: transparent;
+      border: none; color: var(--text-secondary);
+      font-family: var(--font); font-size: 0.85rem;
+      font-weight: 500; padding: 8px 22px;
+      border-radius: 40px; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .navbar a:hover { color: var(--text-primary); background: var(--bg-card); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    /* ====== ARTICLE CARD ====== */
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 32px 34px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero inner */
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 30px;
+      background: linear-gradient(rgba(18,18,18,0.82), rgba(18,18,18,0.94)),
+                  url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      padding: 46px 28px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+    .hero-inner .article-badge {
+      display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent);
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 4px 16px; border-radius: 40px;
+      margin-bottom: 14px;
+    }
+    .hero-inner h1 {
+      font-size: 2rem; font-weight: 700;
+      line-height: 1.25; letter-spacing: -0.02em;
+      margin-bottom: 10px; color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary); font-size: 0.95rem;
+      max-width: 640px; margin: 0 auto 18px;
+    }
+
+    .article-meta {
+      display: flex; flex-wrap: wrap;
+      gap: 20px; font-size: 0.82rem;
+      color: var(--text-muted);
+      align-items: center; justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    .article-body { font-size: 0.95rem; color: var(--text-secondary); }
+
+    .article-body h2 {
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--text-primary);
+      margin: 34px 0 16px;
+      padding-left: 14px;
+      border-left: 4px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+
+    .article-body h3 {
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--text-primary);
+      margin: 22px 0 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .article-body p { margin-bottom: 14px; text-align: justify; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      transition: border-color 0.2s;
+    }
+    .article-body a:hover { border-bottom-color: var(--accent); }
+
+    /* Highlight box */
+    .highlight-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 16px 22px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 8px;
+      vertical-align: middle;
+    }
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto; margin: 18px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1);
+      color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1);
+      color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1);
+      color: var(--orange);
+    }
+    .badge.blue {
+      border-color: rgba(126, 200, 227, 0.35);
+      background: rgba(126, 200, 227, 0.1);
+      color: var(--blue);
+    }
+
+    /* Step list */
+    .step-list {
+      list-style: none; margin: 14px 0;
+      counter-reset: step-counter;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .step-list li {
+      position: relative;
+      padding: 16px 20px 16px 62px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      counter-increment: step-counter;
+      transition: var(--transition);
+    }
+    .step-list li:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateX(4px);
+    }
+    .step-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 16px; top: 16px;
+      width: 34px; height: 34px;
+      background: rgba(255, 219, 112, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .step-list li strong { color: var(--text-primary); display: block; margin-bottom: 4px; }
+    .step-list li .step-note {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-top: 6px;
+    }
+
+    /* Checklist */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .checklist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 12px;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+      cursor: pointer; font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+    .checklist-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.2rem; color: var(--accent);
+      flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
+
+    /* Grid 3 */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 18px 16px;
+      border: 1px solid var(--border-light);
+      transition: var(--transition);
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+    }
+    .card iconify-icon {
+      font-size: 1.9rem;
+      color: var(--accent);
+      margin-bottom: 8px; display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.92rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 5px;
+    }
+    .card p { font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+
+    /* Callout ket luan */
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent);
+      margin-top: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Source note */
+    .source-note {
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex; flex-wrap: wrap;
+      gap: 10px 20px; align-items: center;
+    }
+    .source-note iconify-icon {
+      color: var(--accent); vertical-align: middle;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed; bottom: 30px; right: 30px;
+      background: var(--accent); color: #121212;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s; z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.35);
+      font-size: 1.1rem;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:hover { background: #ffd95c; transform: translateY(-2px); }
+
+    /* Reveal */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ====== MINDMAP ====== */
+    .mindmap-container {
+      position: relative;
+      margin: 24px 0;
+      padding: 20px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      overflow-x: auto;
+    }
+    .mindmap-svg {
+      width: 100%;
+      height: auto;
+      min-width: 700px;
+    }
+    .mindmap-node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mindmap-node:hover rect,
+    .mindmap-node:hover circle {
+      filter: brightness(1.3);
+      stroke-width: 3;
+    }
+    .mindmap-node text {
+      font-family: var(--font);
+      font-size: 11px;
+      fill: var(--text-primary);
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .mindmap-node .node-desc {
+      font-size: 9px;
+      fill: var(--text-muted);
+    }
+    .mindmap-line {
+      stroke: var(--border-light);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+
+    /* ====== POP-UP MODAL ====== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+    .modal-content {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 28px 30px;
+      max-width: 560px;
+      width: 100%;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    .modal-close:hover {
+      background: var(--accent);
+      color: #121212;
+      transform: rotate(90deg);
+    }
+    .modal-content h3 {
+      font-size: 1.15rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .modal-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+    .modal-content ul {
+      margin: 8px 0 12px 20px;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+    }
+    .modal-content ul li { margin-bottom: 4px; }
+
+    /* ====== BOUNCE ANIMATION ====== */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .bounce-icon {
+      display: inline-block;
+      animation: bounce 1.8s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 219, 112, 0.3); }
+      50% { box-shadow: 0 0 20px 6px rgba(255, 219, 112, 0.12); }
+    }
+    .pulse-card {
+      animation: pulseGlow 3s infinite;
+    }
+
+    /* ====== SHAKE on hover for warning ====== */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+    .shake-hover:hover {
+      animation: shake 0.3s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main-layout { flex-direction: column; }
+      .sidebar {
+        flex: none; width: 100%;
+        position: static;
+        display: flex; flex-wrap: wrap;
+        gap: 16px; text-align: left;
+        padding: 22px 20px; align-items: center;
+      }
+      .sidebar-avatar { width: 70px; height: 70px; margin: 0; flex-shrink: 0; }
+      .sidebar-header { flex: 1; min-width: 150px; }
+      .sidebar-name { font-size: 1.1rem; }
+      .sidebar-title { font-size: 0.75rem; margin: 2px 0 0; }
+      .sidebar-divider { display: none; }
+      .sidebar-contact {
+        flex-direction: row; flex-wrap: wrap;
+        gap: 10px 20px; width: 100%; margin-top: 4px;
+      }
+      .sidebar-social { width: 100%; justify-content: flex-start; margin-top: 4px; }
+      .article-card { padding: 24px 20px; }
+      .hero-inner { padding: 32px 20px; }
+      .hero-inner h1 { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 14px 10px; }
+      .article-card { padding: 18px 14px; }
+      .hero-inner h1 { font-size: 1.15rem; }
+      .navbar a { font-size: 0.72rem; padding: 6px 12px; }
+      .article-body h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading"><div class="loader"></div></div>
+
+  <!-- ====== MODAL POP-UP ====== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose"><iconify-icon icon="close-outline"></iconify-icon></button>
+      <div id="modalBody">
+        <!-- Nội dung modal sẽ được JS đổ vào -->
+      </div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+      <nav class="navbar">
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+        <a href="#">About</a>
+        <a href="#">Resume</a>
+        <a href="#">Portfolio</a>
+        <a href="#" class="active">Blog</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <article class="article-card">
+        <!-- Hero inner -->
+        <div class="hero-inner">
+          <span class="article-badge">
+            <iconify-icon icon="cash-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+            Thuế · Quản lý thuế · Chuyển đổi số
+          </span>
+          <h1>
+            Luật Quản Lý Thuế 2025<br />
+            <span>108/2025/QH15</span>
+          </h1>
+          <p>Hướng dẫn toàn diện về Luật Quản lý thuế mới — hiệu lực từ 01/07/2026, đánh dấu bước chuyển mình mạnh mẽ sang quản trị số và lấy người nộp thuế làm trung tâm.</p>
+          <div class="article-meta">
+            <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+            <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Thuế</span>
+            <span><iconify-icon icon="time-outline"></iconify-icon> 18 phút đọc</span>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <!-- KẾT LUẬN -->
+          <div class="conclusion-box reveal">
+            <h3><iconify-icon icon="checkmark-done-outline"></iconify-icon> Kết luận</h3>
+            <p style="margin-top: 8px;">Luật Quản lý thuế 2025 (108/2025/QH15) có <strong>9 chương, 53 điều</strong>, hiệu lực từ <strong>01/07/2026</strong>, mang đến 5 nhóm thay đổi trọng tâm:</p>
+            <ol>
+              <li><strong>Mở rộng đối tượng nộp thuế</strong> — bao gồm tổ chức, cá nhân nước ngoài kinh doanh trên nền tảng thương mại điện tử, nền tảng số</li>
+              <li><strong>Phân nhóm người nộp thuế</strong> — lần đầu tiên được luật hóa, tạo cơ sở quản lý rủi ro</li>
+              <li><strong>Chuyển đổi số toàn diện</strong> — mã số thuế là số định danh cá nhân, hóa đơn điện tử, dịch vụ công trực tuyến toàn trình</li>
+              <li><strong>Mở rộng quyền người nộp thuế</strong> — không yêu cầu cung cấp lại thông tin cơ quan thuế đã có</li>
+              <li><strong>Tăng cường hành vi bị cấm</strong> — làm lộ thông tin NNT, tấn công hệ thống thuế, phát tán thông tin sai sự thật</li>
+            </ol>
+          </div>
+
+          <!-- CĂN CỨ PHÁP LÝ -->
+          <h2><iconify-icon icon="book-outline"></iconify-icon> Căn cứ pháp lý &amp; thông tin cơ bản</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Thông tin</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Số hiệu</strong></td>
+                  <td><span class="badge">108/2025/QH15</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày thông qua</strong></td>
+                  <td>10/12/2025 — Kỳ họp thứ 10, Quốc hội khóa XV</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày ban hành</strong></td>
+                  <td>10/12/2025</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày hiệu lực</strong></td>
+                  <td><span class="badge success">01/07/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>9 Chương, 53 Điều</td>
+                </tr>
+                <tr>
+                  <td><strong>Kế thừa</strong></td>
+                  <td>Luật Quản lý thuế 38/2019/QH14 (kế thừa các quy định còn phù hợp)</td>
+                </tr>
+                <tr>
+                  <td><strong>Lưu ý hiệu lực</strong></td>
+                  <td>Riêng quy định về kê khai, tính thuế đối với hộ kinh doanh, cá nhân kinh doanh và sử dụng hóa đơn điện tử của nhóm này có hiệu lực từ <strong>01/01/2026</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- MINDMAP TỔNG QUAN -->
+          <h2><iconify-icon icon="git-network-outline"></iconify-icon> Sơ đồ tư duy tổng quan Luật Quản lý thuế 2025</h2>
+          <div class="mindmap-container reveal">
+            <svg class="mindmap-svg" viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg">
+              <!-- Lines -->
+              <line x1="460" y1="240" x2="170" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="440" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="440" class="mindmap-line" />
+
+              <!-- Central node -->
+              <g class="mindmap-node" onclick="openModal('central')">
+                <circle cx="460" cy="240" r="58" fill="#ffdb70" stroke="#d4b24a" stroke-width="2.5"/>
+                <text x="460" y="232" text-anchor="middle" font-weight="700" font-size="13" fill="#121212">Luật QLT</text>
+                <text x="460" y="250" text-anchor="middle" font-weight="700" font-size="11" fill="#121212">108/2025</text>
+              </g>
+
+              <!-- Left nodes -->
+              <g class="mindmap-node" onclick="openModal('doituong')">
+                <rect x="40" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="115" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Đối tượng</text>
+                <text x="115" y="92" text-anchor="middle" class="node-desc">Mở rộng NNT nước ngoài</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('phannhom')">
+                <rect x="40" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Phân nhóm NNT</text>
+                <text x="115" y="212" text-anchor="middle" class="node-desc">Lần đầu luật hóa</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('masothue')">
+                <rect x="40" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#c5a3e0" stroke-width="1.8"/>
+                <text x="115" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Mã số thuế</text>
+                <text x="115" y="332" text-anchor="middle" class="node-desc">Số định danh cá nhân</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('hanhvi')">
+                <rect x="40" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ff8a8a" stroke-width="1.8"/>
+                <text x="115" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Hành vi bị cấm</text>
+                <text x="115" y="452" text-anchor="middle" class="node-desc">Tăng cường xử lý</text>
+              </g>
+
+              <!-- Right nodes -->
+              <g class="mindmap-node" onclick="openModal('chuyendoiso')">
+                <rect x="730" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffdb70" stroke-width="1.8"/>
+                <text x="805" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Chuyển đổi số</text>
+                <text x="805" y="92" text-anchor="middle" class="node-desc">Toàn trình, điện tử</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('quyen')">
+                <rect x="730" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="805" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Quyền NNT</text>
+                <text x="805" y="212" text-anchor="middle" class="node-desc">Mở rộng, giảm thủ tục</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('thoihan')">
+                <rect x="730" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffb87a" stroke-width="1.8"/>
+                <text x="805" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Thời hạn khai bổ sung</text>
+                <text x="805" y="332" text-anchor="middle" class="node-desc">Rút ngắn 10 → 5 năm</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('thuongmai')">
+                <rect x="730" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Thương mại điện tử</text>
+                <text x="805" y="452" text-anchor="middle" class="node-desc">Quản lý xuyên biên giới</text>
+              </g>
+            </svg>
+            <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
+              <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+              Nhấn vào từng ô để xem chi tiết
+            </p>
+          </div>
+
+          <!-- PHẦN 1 -->
+          <h2><iconify-icon icon="people-outline"></iconify-icon> 1. Phạm vi áp dụng &amp; đối tượng người nộp thuế</h2>
+          <p>
+            Luật áp dụng đối với <strong>người nộp thuế, cơ quan quản lý thuế, công chức quản lý thuế</strong> và các cơ quan, tổ chức, cá nhân có liên quan.
+          </p>
+          <p><strong>Người nộp thuế bao gồm:</strong></p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh</li>
+            <li>Tổ chức, cá nhân nước ngoài có hoạt động kinh doanh hoặc có thu nhập phát sinh tại Việt Nam</li>
+            <li><strong>Tổ chức, cá nhân nước ngoài kinh doanh trên nền tảng thương mại điện tử, nền tảng số khác</strong> <span class="badge blue">MỚI</span></li>
+            <li>Tổ chức, cá nhân thực hiện khấu trừ, nộp thay theo quy định</li>
+          </ul>
+
+          <div class="highlight-box warning">
+            <iconify-icon icon="warning-outline"></iconify-icon>
+            <strong>Điểm mới quan trọng:</strong> Luật mở rộng đối tượng nộp thuế sang <strong>tổ chức, cá nhân nước ngoài kinh doanh trên nền tảng thương mại điện tử, nền tảng số</strong> — đây là bước tiến quan trọng để quản lý thuế trong nền kinh tế số xuyên biên giới.
+          </div>
+
+          <!-- PHẦN 2 -->
+          <h2><iconify-icon icon="analytics-outline"></iconify-icon> 2. Phân nhóm người nộp thuế</h2>
+          <p>
+            <span class="badge success">LẦN ĐẦU TIÊN LUẬT HÓA</span>
+          </p>
+          <p>
+            Cơ quan thuế thực hiện <strong>phân nhóm người nộp thuế</strong> để xác định chế độ ưu tiên, phân bổ nguồn lực quản lý và áp dụng biện pháp quản lý phù hợp.
+          </p>
+          <p><strong>Tiêu chí phân nhóm:</strong></p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Ngành nghề, lĩnh vực, đặc thù, phương thức hoạt động</li>
+            <li>Loại hình pháp lý, cơ cấu sở hữu</li>
+            <li>Quy mô hoạt động, quy mô doanh thu, số nộp ngân sách</li>
+            <li><strong>Mức độ tuân thủ và lịch sử tuân thủ pháp luật về thuế</strong></li>
+            <li>Các tiêu chí khác theo quy định của Bộ trưởng Bộ Tài chính</li>
+          </ul>
+
+          <div class="highlight-box">
+            <iconify-icon icon="information-circle-outline"></iconify-icon>
+            <strong>Ý nghĩa:</strong> Việc phân nhóm là cơ sở để cơ quan thuế áp dụng <strong>quản lý rủi ro</strong> thay vì kiểm tra tràn lan, giúp doanh nghiệp tuân thủ tốt được hưởng chế độ ưu tiên, giảm thời gian và chi phí tuân thủ.
+          </div>
+
+          <!-- PHẦN 3 -->
+          <h2><iconify-icon icon="card-outline"></iconify-icon> 3. Đăng ký thuế &amp; sử dụng mã số thuế</h2>
+          <p>
+            <span class="badge blue">THAY ĐỔI LỚN</span>
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nội dung</th>
+                  <th>Quy định mới</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Phạm vi đăng ký thuế</strong></td>
+                  <td>Đăng ký lần đầu, thay đổi thông tin, thông báo tạm ngừng hoạt động, chấm dứt hiệu lực mã số thuế</td>
+                </tr>
+                <tr>
+                  <td><strong>Mã số thuế cá nhân</strong></td>
+                  <td>Mã số thuế của cá nhân, hộ gia đình, hộ kinh doanh, cá nhân kinh doanh được sử dụng thống nhất là <strong>số định danh cá nhân</strong> theo quy định pháp luật về căn cước</td>
+                </tr>
+                <tr>
+                  <td><strong>Lợi ích</strong></td>
+                  <td>Đồng bộ dữ liệu quốc gia, đơn giản hóa thủ tục hành chính, giảm đầu mối</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PHẦN 4 -->
+          <h2><iconify-icon icon="shield-checkmark-outline"></iconify-icon> 4. Quyền &amp; nghĩa vụ người nộp thuế</h2>
+          <p>
+            <span class="badge success">MỞ RỘNG QUYỀN</span>
+          </p>
+          <div class="grid-3 reveal">
+            <div class="card pulse-card">
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              <h3>Không cung cấp lại</h3>
+              <p>Cơ quan thuế không yêu cầu NNT cung cấp lại thông tin, chứng từ đã có trong hệ thống dữ liệu</p>
+            </div>
+            <div class="card pulse-card">
+              <iconify-icon icon="time-outline"></iconify-icon>
+              <h3>Rút ngắn thời hạn</h3>
+              <p>Thời hạn khai bổ sung hồ sơ khai thuế rút từ 10 năm xuống còn 5 năm</p>
+            </div>
+            <div class="card pulse-card">
+              <iconify-icon icon="checkmark-circle-outline"></iconify-icon>
+              <h3>Tự khai — tự chịu</h3>
+              <p>NNT tự khai, tự tính, tự nộp, tự chịu trách nhiệm trên cơ sở dữ liệu, hóa đơn, chứng từ điện tử</p>
+            </div>
+          </div>
+
+          <!-- PHẦN 5 -->
+          <h2><iconify-icon icon="close-circle-outline"></iconify-icon> 5. Các hành vi bị cấm</h2>
+          <p>
+            <span class="badge danger">TĂNG CƯỜNG</span>
+          </p>
+          <p>Luật bổ sung nhiều hành vi bị cấm mới, phản ánh bối cảnh chuyển đổi số:</p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li><strong>Làm lộ thông tin người nộp thuế</strong> — bảo vệ dữ liệu cá nhân và doanh nghiệp</li>
+            <li><strong>Làm sai lệch kết quả thanh tra, kiểm tra thuế</strong></li>
+            <li><strong>Cản trở hoạt động quản lý thuế</strong></li>
+            <li><strong>Sử dụng trái phép hóa đơn điện tử</strong></li>
+            <li><strong>Tấn công hệ thống thông tin thuế</strong></li>
+            <li><strong>Phát tán thông tin sai sự thật</strong> về thuế</li>
+          </ul>
+
+          <div class="highlight-box danger shake-hover">
+            <iconify-icon icon="alert-circle-outline"></iconify-icon>
+            <strong>Lưu ý:</strong> Đây là những hành vi vi phạm nghiêm trọng, có thể dẫn đến xử phạt hành chính hoặc truy cứu trách nhiệm hình sự tùy theo mức độ.
+          </div>
+
+          <!-- PHẦN 6 -->
+          <h2><iconify-icon icon="git-branch-outline"></iconify-icon> 6. Quản lý thuế đối với thương mại điện tử</h2>
+          <p>
+            <span class="badge blue">TRỌNG TÂM MỚI</span>
+          </p>
+          <p>
+            Luật dành quy định riêng cho hoạt động <strong>thương mại điện tử, kinh doanh trên nền tảng số</strong>, bao gồm:
+          </p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Trách nhiệm của sàn thương mại điện tử trong việc khai thuế, nộp thuế thay cho người bán</li>
+            <li>Quản lý thuế đối với tổ chức, cá nhân nước ngoài không có cơ sở thường trú tại Việt Nam</li>
+            <li>Kết nối, chia sẻ dữ liệu giữa cơ quan thuế và các nền tảng số</li>
+          </ul>
+
+          <!-- PHẦN 7 -->
+          <h2><iconify-icon icon="time-outline"></iconify-icon> 7. Thời hạn khai bổ sung &amp; xử lý vi phạm</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nội dung</th>
+                  <th>Luật cũ (2019)</th>
+                  <th>Luật mới (2025)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Thời hạn khai bổ sung</strong></td>
+                  <td>10 năm</td>
+                  <td><span class="badge warning">5 năm</span> (rút ngắn một nửa)</td>
+                </tr>
+                <tr>
+                  <td><strong>Các trường hợp không xử phạt</strong></td>
+                  <td>Theo quy định cũ</td>
+                  <td>Mở rộng thêm nhiều trường hợp mới</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box warning">
+            <iconify-icon icon="warning-outline"></iconify-icon>
+            <strong>Lưu ý:</strong> Luật cũng quy định rõ trách nhiệm sử dụng đúng mục đích các hàng hóa, dịch vụ miễn thuế, khoản thu khác, không chịu thuế theo kê khai.
+          </div>
+
+          <!-- PHẦN 8 -->
+          <h2><iconify-icon icon="laptop-outline"></iconify-icon> 8. Chuyển đổi số &amp; ứng dụng công nghệ thông tin</h2>
+          <p>
+            <span class="badge success">ĐỘT PHÁ</span>
+          </p>
+          <p>
+            Luật bổ sung quy định mới về <strong>ứng dụng công nghệ thông tin và chuyển đổi số</strong> trong quản lý thuế:
+          </p>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Tích hợp, xử lý toàn bộ quy trình nghiệp vụ trên nền tảng số</li>
+            <li>Cung cấp dịch vụ công trực tuyến <strong>toàn trình</strong> cho người nộp thuế</li>
+            <li>Kết nối, chia sẻ dữ liệu giữa cơ quan thuế, hải quan và các cơ quan liên quan</li>
+            <li>Xây dựng cơ quan thuế điện tử, hướng đến quản trị số</li>
+          </ul>
+
+          <div class="highlight-box success">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Mục tiêu:</strong> Lấy <strong>người nộp thuế làm trung tâm</strong> trong chuyển đổi số — giảm thời gian, chi phí tuân thủ, tăng tính minh bạch và hiệu quả quản lý.
+          </div>
+
+          <!-- SO SÁNH LUẬT CŨ - MỚI -->
+          <h2><iconify-icon icon="swap-horizontal-outline"></iconify-icon> So sánh Luật Quản lý thuế 2019 vs 2025</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tiêu chí</th>
+                  <th>Luật 38/2019/QH14</th>
+                  <th>Luật 108/2025/QH15</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>14 chương, 152 điều</td>
+                  <td><span class="badge success">9 chương, 53 điều</span> (tinh gọn hơn)</td>
+                </tr>
+                <tr>
+                  <td><strong>Đối tượng NNT</strong></td>
+                  <td>Chưa bao gồm tổ chức, cá nhân nước ngoài trên nền tảng số</td>
+                  <td><span class="badge blue">Mở rộng</span> bao gồm NNT nước ngoài trên nền tảng TMĐT, nền tảng số</td>
+                </tr>
+                <tr>
+                  <td><strong>Phân nhóm NNT</strong></td>
+                  <td>Chưa được luật hóa</td>
+                  <td><span class="badge success">Lần đầu luật hóa</span> — cơ sở quản lý rủi ro</td>
+                </tr>
+                <tr>
+                  <td><strong>Mã số thuế cá nhân</strong></td>
+                  <td>Mã số thuế riêng</td>
+                  <td><span class="badge blue">Số định danh cá nhân</span> thống nhất</td>
+                </tr>
+                <tr>
+                  <td><strong>Thời hạn khai bổ sung</strong></td>
+                  <td>10 năm</td>
+                  <td><span class="badge warning">5 năm</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Hành vi bị cấm</strong></td>
+                  <td>Danh mục cơ bản</td>
+                  <td><span class="badge danger">Bổ sung nhiều hành vi mới</span> liên quan đến dữ liệu, hệ thống</td>
+                </tr>
+                <tr>
+                  <td><strong>Chuyển đổi số</strong></td>
+                  <td>Quy định còn phân tán</td>
+                  <td><span class="badge success">Chương riêng</span> về ứng dụng CNTT và chuyển đổi số</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- CHECKLIST -->
+          <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist tuân thủ cho doanh nghiệp</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px;">
+            <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+            Nhấn vào từng mục để đánh dấu hoàn thành.
+          </p>
+
+          <h3><iconify-icon icon="document-text-outline"></iconify-icon> Trước khi Luật có hiệu lực (01/07/2026)</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Rà soát toàn bộ mã số thuế cá nhân, hộ kinh doanh</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Chuẩn bị dữ liệu để chuyển sang số định danh cá nhân</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Đánh giá lại quy trình khai thuế, nộp thuế điện tử</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Cập nhật phần mềm kế toán, hóa đơn điện tử theo quy định mới</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 26px;"><iconify-icon icon="cube-outline"></iconify-icon> Trong quá trình hoạt động</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Thực hiện đúng nguyên tắc tự khai, tự tính, tự nộp, tự chịu trách nhiệm</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Duy trì lịch sử tuân thủ tốt để được phân nhóm ưu tiên</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Không cung cấp lại thông tin cơ quan thuế đã có (tiết kiệm thời gian)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra kỹ hồ sơ khai thuế trước khi nộp (tránh khai bổ sung)</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 26px;"><iconify-icon icon="shield-outline"></iconify-icon> Phòng ngừa vi phạm</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Bảo mật thông tin người nộp thuế, không để lộ dữ liệu</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Tuân thủ quy định về sử dụng hóa đơn điện tử</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Không cản trở hoạt động thanh tra, kiểm tra thuế</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Cập nhật thông tin chính thống, không phát tán tin sai sự thật</span>
+            </div>
+          </div>
+
+          <!-- KHUYẾN NGHỊ -->
+          <div class="highlight-box success" style="margin-top: 30px;">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Khuyến nghị:</strong> Doanh nghiệp nên thường xuyên truy cập Cổng thông tin điện tử Cục Thuế
+            (<a href="https://gdt.gov.vn" target="_blank" rel="noopener">gdt.gov.vn</a>) và Cổng Dịch vụ công Quốc gia
+            để cập nhật văn bản mới, đồng thời chủ động rà soát quy trình nội bộ để đáp ứng yêu cầu của Luật Quản lý thuế 2025.
+          </div>
+
+          <div class="source-note">
+            <span>
+              <iconify-icon icon="link-outline"></iconify-icon>
+              Nguồn tham khảo: Cổng TTĐT Chính phủ, LuatVietnam, Cục Thuế
+            </span>
+            <span>
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              Căn cứ pháp lý: Luật Quản lý thuế 108/2025/QH15
+            </span>
+          </div>
+
+          <!-- Nút về trang chủ -->
+          <div style="margin-top: 40px; text-align: center; padding-top: 28px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #121212; padding: 10px 26px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255, 219, 112, 0.25);">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="back-to-top" id="backToTop">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </div>
+
+  <script>
+    /* ====== LOADING ====== */
+    window.addEventListener('load', () => {
+      const loading = document.getElementById('loading');
+      loading.style.opacity = '0';
+      setTimeout(() => { loading.style.display = 'none'; }, 500);
+    });
+
+    /* ====== BACK TO TOP ====== */
+    const backBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) backBtn.classList.add('show');
+      else backBtn.classList.remove('show');
+    });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ====== REVEAL ON SCROLL ====== */
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    /* ====== CHECKLIST TOGGLE ====== */
+    const checklistCards = document.querySelectorAll('.checklist-card');
+    checklistCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+
+    /* ====== MODAL POP-UP ====== */
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    const modalData = {
+      central: {
+        icon: 'flag-outline',
+        title: 'Luật Quản lý thuế 108/2025/QH15',
+        body: `<p><strong>Tổng quan:</strong> Luật Quản lý thuế 2025 được Quốc hội thông qua ngày 10/12/2025, có hiệu lực từ 01/07/2026. Luật gồm <strong>9 chương, 53 điều</strong>, kế thừa Luật Quản lý thuế 38/2019/QH14 và bổ sung nhiều quy định mới.</p>
+        <ul>
+          <li>Mở rộng đối tượng nộp thuế</li>
+          <li>Lần đầu tiên luật hóa phân nhóm NNT</li>
+          <li>Mã số thuế là số định danh cá nhân</li>
+          <li>Rút ngắn thời hạn khai bổ sung từ 10 xuống 5 năm</li>
+          <li>Tăng cường chuyển đổi số và dịch vụ công trực tuyến</li>
+        </ul>`
+      },
+      doituong: {
+        icon: 'people-outline',
+        title: 'Đối tượng nộp thuế mở rộng',
+        body: `<p>Luật mở rộng đối tượng nộp thuế bao gồm:</p>
+        <ul>
+          <li>Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh</li>
+          <li>Tổ chức, cá nhân nước ngoài có hoạt động kinh doanh hoặc thu nhập phát sinh tại Việt Nam</li>
+          <li><strong>MỚI:</strong> Tổ chức, cá nhân nước ngoài kinh doanh trên nền tảng thương mại điện tử, nền tảng số khác</li>
+          <li>Tổ chức, cá nhân thực hiện khấu trừ, nộp thay</li>
+        </ul>
+        <p>Đây là bước tiến quan trọng để quản lý thuế trong nền kinh tế số xuyên biên giới.</p>`
+      },
+      phannhom: {
+        icon: 'analytics-outline',
+        title: 'Phân nhóm người nộp thuế',
+        body: `<p><strong>Lần đầu tiên được luật hóa!</strong> Cơ quan thuế phân nhóm NNT để xác định chế độ ưu tiên, phân bổ nguồn lực và áp dụng biện pháp quản lý phù hợp.</p>
+        <p><strong>Tiêu chí phân nhóm:</strong></p>
+        <ul>
+          <li>Ngành nghề, lĩnh vực, đặc thù, phương thức hoạt động</li>
+          <li>Loại hình pháp lý, cơ cấu sở hữu</li>
+          <li>Quy mô hoạt động, quy mô doanh thu, số nộp ngân sách</li>
+          <li>Mức độ tuân thủ và lịch sử tuân thủ pháp luật về thuế</li>
+        </ul>
+        <p>Doanh nghiệp tuân thủ tốt sẽ được hưởng chế độ ưu tiên, giảm kiểm tra, giảm chi phí tuân thủ.</p>`
+      },
+      masothue: {
+        icon: 'card-outline',
+        title: 'Mã số thuế = Số định danh cá nhân',
+        body: `<p>Mã số thuế của cá nhân, hộ gia đình, hộ kinh doanh và cá nhân kinh doanh được sử dụng thống nhất là <strong>số định danh cá nhân</strong> theo quy định của pháp luật về căn cước.</p>
+        <p><strong>Lợi ích:</strong></p>
+        <ul>
+          <li>Đồng bộ dữ liệu quốc gia về dân cư</li>
+          <li>Đơn giản hóa thủ tục hành chính</li>
+          <li>Giảm đầu mối, giảm thời gian đăng ký</li>
+          <li>Tăng cường quản lý thuế theo hướng hiện đại</li>
+        </ul>`
+      },
+      hanhvi: {
+        icon: 'close-circle-outline',
+        title: 'Các hành vi bị cấm',
+        body: `<p>Luật bổ sung nhiều hành vi bị cấm mới, phản ánh bối cảnh chuyển đổi số:</p>
+        <ul>
+          <li>Làm lộ thông tin người nộp thuế</li>
+          <li>Làm sai lệch kết quả thanh tra, kiểm tra thuế</li>
+          <li>Cản trở hoạt động quản lý thuế</li>
+          <li>Sử dụng trái phép hóa đơn điện tử</li>
+          <li>Tấn công hệ thống thông tin thuế</li>
+          <li>Phát tán thông tin sai sự thật về thuế</li>
+        </ul>
+        <p><strong>Lưu ý:</strong> Đây là những hành vi vi phạm nghiêm trọng, có thể bị xử phạt hành chính hoặc truy cứu trách nhiệm hình sự.</p>`
+      },
+      chuyendoiso: {
+        icon: 'laptop-outline',
+        title: 'Chuyển đổi số trong quản lý thuế',
+        body: `<p>Luật bổ sung quy định mới về ứng dụng công nghệ thông tin và chuyển đổi số:</p>
+        <ul>
+          <li>Tích hợp, xử lý toàn bộ quy trình nghiệp vụ trên nền tảng số</li>
+          <li>Cung cấp dịch vụ công trực tuyến <strong>toàn trình</strong> cho NNT</li>
+          <li>Kết nối, chia sẻ dữ liệu giữa cơ quan thuế, hải quan và các cơ quan liên quan</li>
+          <li>Xây dựng cơ quan thuế điện tử, hướng đến quản trị số</li>
+        </ul>
+        <p><strong>Mục tiêu:</strong> Lấy người nộp thuế làm trung tâm trong chuyển đổi số.</p>`
+      },
+      quyen: {
+        icon: 'shield-checkmark-outline',
+        title: 'Quyền của người nộp thuế được mở rộng',
+        body: `<p>Luật Quản lý thuế 2025 mở rộng đáng kể quyền của NNT:</p>
+        <ul>
+          <li><strong>Không cung cấp lại:</strong> Cơ quan thuế không yêu cầu NNT cung cấp lại thông tin, chứng từ đã có trong hệ thống dữ liệu</li>
+          <li><strong>Rút ngắn thời hạn:</strong> Khai bổ sung hồ sơ khai thuế từ 10 năm xuống còn 5 năm</li>
+          <li><strong>Tự khai — tự chịu:</strong> NNT tự khai, tự tính, tự nộp, tự chịu trách nhiệm trên cơ sở dữ liệu, hóa đơn, chứng từ điện tử</li>
+          <li>Được phân nhóm ưu tiên nếu có lịch sử tuân thủ tốt</li>
+        </ul>`
+      },
+      thoihan: {
+        icon: 'time-outline',
+        title: 'Thời hạn khai bổ sung rút ngắn',
+        body: `<p>Một trong những thay đổi quan trọng nhất của Luật Quản lý thuế 2025:</p>
+        <ul>
+          <li><strong>Thời hạn khai bổ sung hồ sơ khai thuế</strong> rút từ <strong>10 năm</strong> xuống còn <strong>5 năm</strong> kể từ ngày hết thời hạn nộp hồ sơ của kỳ tính thuế</li>
+          <li>Mở rộng thêm nhiều trường hợp không xử phạt vi phạm hành chính về quản lý thuế</li>
+        </ul>
+        <p>Điều này tạo áp lực cho doanh nghiệp phải rà soát kỹ hồ sơ khai thuế trước khi nộp, đồng thời cũng tạo điều kiện thuận lợi hơn cho những doanh nghiệp chủ động tuân thủ.</p>`
+      },
+      thuongmai: {
+        icon: 'cart-outline',
+        title: 'Quản lý thuế thương mại điện tử',
+        body: `<p>Luật dành quy định riêng cho hoạt động thương mại điện tử và kinh doanh trên nền tảng số:</p>
+        <ul>
+          <li>Trách nhiệm của sàn thương mại điện tử trong việc khai thuế, nộp thuế thay cho người bán</li>
+          <li>Quản lý thuế đối với tổ chức, cá nhân nước ngoài không có cơ sở thường trú tại Việt Nam</li>
+          <li>Kết nối, chia sẻ dữ liệu giữa cơ quan thuế và các nền tảng số</li>
+          <li>Kiểm soát thu nhập từ hoạt động kinh doanh online</li>
+        </ul>
+        <p>Đây là nội dung trọng tâm mới, thể hiện quyết tâm quản lý thuế trong nền kinh tế số.</p>`
+      }
+    };
+
+    function openModal(key) {
+      const data = modalData[key];
+      if (!data) return;
+      modalBody.innerHTML = `
+        <h3><iconify-icon icon="${data.icon}"></iconify-icon> ${data.title}</h3>
+        ${data.body}
+      `;
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Expose openModal to global scope for SVG onclick
+    window.openModal = openModal;
+  </script>
+</body>
+</html>
