@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#121212" />
+  <title>Nghị Định 169/2026/NĐ-CP · Xử Phạt Vi Phạm Hành Chính Hải Quan · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+      --blue: #7ec8e3;
+      --purple: #c5a3e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 15px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* ====== LOADING ====== */
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s;
+    }
+    #loading.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader {
+      width: 44px; height: 44px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ====== LAYOUT ====== */
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1280px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    /* ====== SIDEBAR ====== */
+    .sidebar {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+    }
+    .sidebar-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--accent);
+      background: #333;
+      flex-shrink: 0;
+    }
+    .sidebar-header {
+      flex: 1;
+      min-width: 140px;
+    }
+    .sidebar-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-top: 4px;
+    }
+    .sidebar-divider { display: none; }
+    .sidebar-contact {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      text-align: left;
+      font-size: 0.78rem;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.1rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      word-break: break-all;
+    }
+    .sidebar-contact .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: block;
+    }
+    .sidebar-social {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+      flex-wrap: wrap;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary);
+      font-size: 1.4rem;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .sidebar-social a:active {
+      background: var(--bg-card);
+      color: var(--accent);
+      transform: scale(0.92);
+    }
+
+    /* ====== MAIN ====== */
+    .main-content { width: 100%; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px;
+      padding: 6px 10px;
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      overflow-y: hidden;
+      justify-content: flex-start;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .navbar::-webkit-scrollbar { display: none; }
+    .navbar a {
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .navbar a:active { transform: scale(0.95); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    /* ====== ARTICLE ====== */
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: linear-gradient(rgba(18,18,18,0.85), rgba(18,18,18,0.95)),
+                  url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+      padding: 28px 18px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+    .hero-inner .article-badge {
+      display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 40px;
+      margin-bottom: 12px;
+    }
+    .hero-inner h1 {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary);
+      font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+      max-width: 640px;
+      margin: 0 auto 14px;
+      padding: 0 6px;
+    }
+
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      align-items: center;
+      justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 3px;
+      vertical-align: middle;
+    }
+
+    .article-body {
+      font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+      color: var(--text-secondary);
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    .article-body h2 {
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 28px 0 14px;
+      padding-left: 12px;
+      border-left: 4px solid var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      line-height: 1.3;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+    .article-body h2 iconify-icon { font-size: 1.1em; flex-shrink: 0; }
+
+    .article-body h3 {
+      font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .article-body p { margin-bottom: 12px; text-align: left; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      word-break: break-word;
+    }
+
+    .highlight-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: clamp(0.82rem, 2.8vw, 0.9rem);
+      line-height: 1.55;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 6px;
+      vertical-align: middle;
+      font-size: 1.1em;
+    }
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    /* ====== TABLE ====== */
+    .table-wrap {
+      position: relative;
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .table-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(to left, var(--bg-sidebar), transparent);
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .table-wrap.scrolled-end::after { opacity: 0; }
+
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      min-width: 480px;
+    }
+    .table-wrap th {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+      font-size: 0.75rem;
+    }
+    .table-wrap td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .table-wrap tr:last-child td { border-bottom: none; }
+
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: -8px;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+    .scroll-hint iconify-icon { color: var(--accent); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1);
+      color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1);
+      color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1);
+      color: var(--orange);
+    }
+    .badge.blue {
+      border-color: rgba(126, 200, 227, 0.35);
+      background: rgba(126, 200, 227, 0.1);
+      color: var(--blue);
+    }
+    .badge.purple {
+      border-color: rgba(197, 163, 224, 0.35);
+      background: rgba(197, 163, 224, 0.1);
+      color: var(--purple);
+    }
+
+    /* ====== CHECKLIST ====== */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .checklist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      min-height: 48px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .checklist-card:active {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      transform: scale(0.99);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.3rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
+
+    /* ====== GRID 3 ====== */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 16px 14px;
+      border: 1px solid var(--border-light);
+      text-align: center;
+    }
+    .card:active { transform: scale(0.98); }
+    .card iconify-icon {
+      font-size: 1.7rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .card p { font-size: 0.76rem; color: var(--text-secondary); margin: 0; }
+
+    /* ====== CONCLUSION ====== */
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    /* ====== SOURCE ====== */
+    .source-note {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .source-note iconify-icon {
+      color: var(--accent);
+      vertical-align: middle;
+    }
+
+    /* ====== BACK TO TOP ====== */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 16px;
+      background: var(--accent);
+      color: #121212;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s;
+      z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.4);
+      font-size: 1.2rem;
+      border: none;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:active { transform: scale(0.92); }
+
+    /* ====== REVEAL ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ====== MINDMAP ====== */
+    .mindmap-container {
+      position: relative;
+      margin: 20px 0;
+      padding: 14px 12px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .mindmap-container::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(to left, var(--bg-card), transparent);
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .mindmap-svg {
+      width: 100%;
+      height: auto;
+      min-width: 640px;
+      display: block;
+      touch-action: pan-x pan-y;
+    }
+    .mindmap-node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mindmap-node:active rect,
+    .mindmap-node:active circle {
+      filter: brightness(1.4);
+    }
+    .mindmap-node text {
+      font-family: var(--font);
+      font-size: 11px;
+      fill: var(--text-primary);
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .mindmap-node .node-desc {
+      font-size: 9px;
+      fill: var(--text-muted);
+    }
+    .mindmap-line {
+      stroke: var(--border-light);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+    .mindmap-hint {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .mindmap-hint iconify-icon { color: var(--accent); }
+
+    /* ====== MODAL ====== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 500;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      padding: 0;
+    }
+    .modal-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+    .modal-content {
+      background: var(--bg-sidebar);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 28px;
+      width: 100%;
+      max-width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: 2px;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      z-index: 2;
+    }
+    .modal-close:active {
+      background: var(--accent);
+      color: #121212;
+      transform: scale(0.92);
+    }
+    .modal-content h3 {
+      font-size: 1.05rem;
+      color: var(--accent);
+      margin: 16px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 44px;
+      line-height: 1.3;
+    }
+    .modal-content h3 iconify-icon { font-size: 1.2em; flex-shrink: 0; }
+    .modal-content p {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-align: left;
+      line-height: 1.55;
+    }
+    .modal-content ul {
+      margin: 8px 0 12px 18px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .modal-content ul li {
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    /* ====== BUTTON HOME ====== */
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #121212;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255, 219, 112, 0.3);
+      min-height: 44px;
+      transition: transform 0.2s;
+    }
+    .btn-home:active { transform: scale(0.95); }
+
+    /* ============================================
+       TABLET & DESKTOP
+       ============================================ */
+    @media (min-width: 768px) {
+      body {
+        padding: 30px 20px;
+        font-size: 15px;
+      }
+      .main-layout {
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+      }
+      .sidebar {
+        flex: 0 0 260px;
+        flex-direction: column;
+        padding: 28px 22px 24px;
+        text-align: center;
+        position: sticky;
+        top: 30px;
+        gap: 0;
+      }
+      .sidebar-avatar {
+        width: 90px; height: 90px;
+        margin: 0 auto 14px;
+      }
+      .sidebar-header {
+        flex: none;
+        width: 100%;
+        min-width: 0;
+      }
+      .sidebar-name { font-size: 1.2rem; }
+      .sidebar-title {
+        font-size: 0.78rem;
+        padding: 4px 14px;
+        margin: 6px 0 16px;
+      }
+      .sidebar-divider {
+        display: block;
+        height: 1px;
+        background: var(--border-light);
+        margin: 16px 0;
+      }
+      .sidebar-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 0;
+        border-top: none;
+        font-size: 0.8rem;
+      }
+      .sidebar-social {
+        padding-top: 0;
+        border-top: none;
+        margin-top: 16px;
+        gap: 10px;
+      }
+      .sidebar-social a {
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 1.3rem;
+      }
+
+      .article-card {
+        padding: 28px 30px;
+      }
+      .hero-inner {
+        padding: 40px 24px;
+        margin-bottom: 28px;
+      }
+
+      .table-wrap::after { display: none; }
+      .table-wrap table {
+        min-width: 0;
+        font-size: 0.85rem;
+      }
+      .table-wrap th { padding: 12px 14px; font-size: 0.82rem; }
+      .table-wrap td { padding: 11px 14px; }
+
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+      }
+      .checklist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+      }
+      .checklist-card {
+        padding: 10px 14px;
+        min-height: 0;
+      }
+
+      .modal-overlay {
+        align-items: center;
+        padding: 20px;
+      }
+      .modal-content {
+        border-radius: var(--radius);
+        max-width: 560px;
+        padding: 28px 30px;
+        max-height: 80vh;
+        border-bottom: 1px solid var(--border-light);
+        transform: scale(0.9) translateY(20px);
+      }
+      .modal-overlay.active .modal-content {
+        transform: scale(1) translateY(0);
+      }
+      .modal-content::before { display: none; }
+      .modal-close {
+        top: 14px; right: 18px;
+        width: 36px; height: 36px;
+      }
+      .modal-content h3 {
+        font-size: 1.15rem;
+        padding-right: 0;
+      }
+
+      .mindmap-container {
+        padding: 20px;
+      }
+      .mindmap-svg {
+        min-width: 700px;
+      }
+    }
+
+    /* ============================================
+       DESKTOP LỚN
+       ============================================ */
+    @media (min-width: 1024px) {
+      .sidebar {
+        flex: 0 0 280px;
+        padding: 30px 22px 26px;
+      }
+      .sidebar-avatar {
+        width: 100px; height: 100px;
+      }
+      .sidebar-name { font-size: 1.3rem; }
+      .sidebar-title { font-size: 0.85rem; }
+
+      .article-card {
+        padding: 32px 34px;
+      }
+      .hero-inner {
+        padding: 46px 28px;
+      }
+
+      .checklist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    /* ============================================
+       MOBILE NHỎ
+       ============================================ */
+    @media (max-width: 400px) {
+      body { padding: 12px 10px; }
+      .article-card { padding: 16px 12px; }
+      .hero-inner { padding: 22px 14px; }
+      .hero-inner h1 { font-size: 1.1rem; }
+      .navbar a { font-size: 0.72rem; padding: 8px 14px; }
+      .sidebar-avatar { width: 52px; height: 52px; }
+      .sidebar-name { font-size: 0.95rem; }
+      .sidebar-social a { font-size: 1.2rem; min-width: 40px; min-height: 40px; }
+      .checklist-card { font-size: 0.78rem; padding: 10px 12px; }
+      .modal-content { padding: 20px 16px 24px; }
+    }
+
+    /* ============================================
+       TOUCH
+       ============================================ */
+    @media (hover: none) {
+      .card:hover { transform: none; }
+      .checklist-card:hover { transform: none; }
+      .navbar a:hover { background: transparent; color: var(--text-secondary); }
+      .back-to-top:hover { background: var(--accent); transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ====== LOADING ====== -->
+  <div id="loading"><div class="loader"></div></div>
+
+  <!-- ====== MODAL ====== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose" aria-label="Đóng"><iconify-icon icon="close-outline"></iconify-icon></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call" aria-label="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook" aria-label="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram" aria-label="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo" aria-label="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype" aria-label="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn" aria-label="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+      <nav class="navbar">
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+        <a href="#">About</a>
+        <a href="#">Resume</a>
+        <a href="#">Portfolio</a>
+        <a href="#" class="active">Blog</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <article class="article-card">
+        <!-- Hero inner -->
+        <div class="hero-inner">
+          <span class="article-badge">
+            <iconify-icon icon="shield-checkmark-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+            Hải quan · Xử phạt · 2026
+          </span>
+          <h1>
+            Nghị Định 169/2026/NĐ-CP<br />
+            <span>Xử Phạt Vi Phạm Hành Chính Hải Quan</span>
+          </h1>
+          <p>Toàn cảnh Nghị định mới — hiệu lực từ 01/7/2026, thay thế NĐ 128/2020/NĐ-CP, với nhiều điểm mới quan trọng về tang vật vi phạm, khai thuế, trốn thuế và mức xử phạt.</p>
+          <div class="article-meta">
+            <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+            <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hải quan</span>
+            <span><iconify-icon icon="time-outline"></iconify-icon> 18 phút đọc</span>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <!-- KẾT LUẬN -->
+          <div class="conclusion-box reveal">
+            <h3><iconify-icon icon="checkmark-done-outline"></iconify-icon> Tóm tắt nhanh</h3>
+            <p style="margin-top: 8px;">Nghị định <strong>169/2026/NĐ-CP</strong> được Chính phủ ban hành ngày <strong>15/5/2026</strong>, gồm <strong>4 chương, 40 điều</strong>, hiệu lực từ <strong>01/7/2026</strong>, thay thế hoàn toàn NĐ 128/2020/NĐ-CP. Các điểm mới trọng tâm:</p>
+            <ol>
+              <li><strong>Xác định rõ tang vật vi phạm</strong> — không bao gồm hàng hóa đã khai hải quan đúng quy định</li>
+              <li><strong>Bổ sung mức phạt</strong> đối với vi phạm thời hạn làm thủ tục hải quan, nộp hồ sơ thuế</li>
+              <li><strong>Làm rõ hành vi trốn thuế</strong> — xử lý khai sai mã số, thuế suất đã được hướng dẫn</li>
+              <li><strong>Tăng cường ứng dụng công nghệ số</strong> trong xử phạt vi phạm hành chính</li>
+              <li><strong>Bãi bỏ chế tài không còn phù hợp</strong> với thực tiễn quản lý hải quan</li>
+            </ol>
+          </div>
+
+          <!-- CĂN CỨ PHÁP LÝ -->
+          <h2><iconify-icon icon="book-outline"></iconify-icon> Thông tin cơ bản</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Thông tin</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Số hiệu</strong></td>
+                  <td><span class="badge">169/2026/NĐ-CP</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày ban hành</strong></td>
+                  <td>15/5/2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày hiệu lực</strong></td>
+                  <td><span class="badge success">01/7/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>4 Chương, 40 Điều</td>
+                </tr>
+                <tr>
+                  <td><strong>Thay thế</strong></td>
+                  <td>Nghị định 128/2020/NĐ-CP</td>
+                </tr>
+                <tr>
+                  <td><strong>Đối tượng áp dụng</strong></td>
+                  <td>Tổ chức, cá nhân trong nước và nước ngoài vi phạm hành chính trong lĩnh vực hải quan trên lãnh thổ Việt Nam</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <!-- MINDMAP -->
+          <h2><iconify-icon icon="git-network-outline"></iconify-icon> Sơ đồ tư duy tổng quan</h2>
+          <div class="mindmap-container reveal">
+            <svg class="mindmap-svg" viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <!-- Lines -->
+              <line x1="460" y1="240" x2="170" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="440" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="440" class="mindmap-line" />
+
+              <!-- Central -->
+              <g class="mindmap-node" onclick="openModal('central')">
+                <circle cx="460" cy="240" r="58" fill="#ffdb70" stroke="#d4b24a" stroke-width="2.5"/>
+                <text x="460" y="232" text-anchor="middle" font-weight="700" font-size="13" fill="#121212">NĐ 169/2026</text>
+                <text x="460" y="250" text-anchor="middle" font-weight="700" font-size="11" fill="#121212">Hải quan</text>
+              </g>
+
+              <!-- Left nodes -->
+              <g class="mindmap-node" onclick="openModal('tangvat')">
+                <rect x="40" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="115" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Tang vật vi phạm</text>
+                <text x="115" y="92" text-anchor="middle" class="node-desc">Định nghĩa mới</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('thoihan')">
+                <rect x="40" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Thời hạn thủ tục</text>
+                <text x="115" y="212" text-anchor="middle" class="node-desc">Bổ sung mức phạt</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('khaithue')">
+                <rect x="40" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#c5a3e0" stroke-width="1.8"/>
+                <text x="115" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Khai thuế sai</text>
+                <text x="115" y="332" text-anchor="middle" class="node-desc">Làm rõ hành vi</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('trontue')">
+                <rect x="40" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ff8a8a" stroke-width="1.8"/>
+                <text x="115" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Trốn thuế</text>
+                <text x="115" y="452" text-anchor="middle" class="node-desc">Khai sai mã số</text>
+              </g>
+
+              <!-- Right nodes -->
+              <g class="mindmap-node" onclick="openModal('congnghe')">
+                <rect x="730" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffdb70" stroke-width="1.8"/>
+                <text x="805" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Công nghệ số</text>
+                <text x="805" y="92" text-anchor="middle" class="node-desc">Xử phạt điện tử</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('muctien')">
+                <rect x="730" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="805" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Mức tiền mặt</text>
+                <text x="805" y="212" text-anchor="middle" class="node-desc">Phạt đến 50 triệu</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('khaihq')">
+                <rect x="730" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffb87a" stroke-width="1.8"/>
+                <text x="805" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Khai hải quan</text>
+                <text x="805" y="332" text-anchor="middle" class="node-desc">Phạt đến 40 triệu</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('doituong')">
+                <rect x="730" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Đối tượng</text>
+                <text x="805" y="452" text-anchor="middle" class="node-desc">Trong &amp; ngoài nước</text>
+              </g>
+            </svg>
+          </div>
+          <div class="mindmap-hint">
+            <iconify-icon icon="hand-left-outline"></iconify-icon>
+            Nhấn vào từng ô để xem chi tiết · Vuốt ngang để xem toàn bộ sơ đồ
+          </div>
+
+          <!-- PHẦN 1 -->
+          <h2><iconify-icon icon="document-text-outline"></iconify-icon> 1. Phạm vi điều chỉnh &amp; đối tượng áp dụng</h2>
+          <p>
+            Nghị định quy định về <strong>hành vi vi phạm hành chính</strong>; hình thức xử phạt, mức xử phạt, biện pháp khắc phục hậu quả; đối tượng bị xử phạt; thẩm quyền xử phạt và việc thi hành các hình thức xử phạt trong lĩnh vực hải quan[reference:0].
+          </p>
+          <p><strong>Vi phạm hành chính trong lĩnh vực hải quan bao gồm:</strong></p>
+          <ul style="margin: 10px 0 14px 18px; color: var(--text-secondary);">
+            <li>Vi phạm quy định về thủ tục hải quan</li>
+            <li>Vi phạm quy định về kiểm tra, giám sát, kiểm soát hải quan</li>
+            <li>Vi phạm hành chính về quản lý thuế đối với hàng hóa xuất khẩu, nhập khẩu</li>
+            <li>Vi phạm các quy định khác có liên quan đến hàng hóa xuất khẩu, nhập khẩu</li>
+          </ul>
+          <p><strong>Đối tượng áp dụng:</strong></p>
+          <ul style="margin: 10px 0 14px 18px; color: var(--text-secondary);">
+            <li>Tổ chức, cá nhân trong nước và nước ngoài có hành vi vi phạm trên lãnh thổ Việt Nam</li>
+            <li>Người có thẩm quyền lập biên bản, xử phạt vi phạm hành chính</li>
+            <li>Cơ quan, tổ chức, cá nhân khác có liên quan</li>
+          </ul>
+
+          <!-- PHẦN 2 -->
+          <h2><iconify-icon icon="cube-outline"></iconify-icon> 2. Điểm mới về tang vật vi phạm hành chính</h2>
+          <p>
+            <span class="badge blue">LÀM RÕ</span>
+          </p>
+          <p>
+            Khoản 2 Điều 3 Nghị định xác định rõ <strong>tang vật vi phạm hành chính</strong> là vật, tiền, hàng hóa có liên quan trực tiếp đến vi phạm hành chính; <strong>không bao gồm vật, tiền, hàng hóa đã khai hải quan theo đúng quy định của pháp luật</strong>[reference:1].
+          </p>
+          <div class="highlight-box">
+            <iconify-icon icon="information-circle-outline"></iconify-icon>
+            <strong>Ý nghĩa:</strong> Quy định này giúp phân biệt rõ giữa hàng hóa hợp pháp và tang vật vi phạm, tránh tình trạng tạm giữ, tịch thu sai đối với hàng hóa đã được khai báo đúng.
+          </div>
+
+          <!-- PHẦN 3 -->
+          <h2><iconify-icon icon="time-outline"></iconify-icon> 3. Mức phạt vi phạm về thời hạn thủ tục hải quan</h2>
+          <p>
+            <span class="badge warning">BỔ SUNG MỚI</span>
+          </p>
+          <p>
+            Điều 8 Nghị định 169/2026/NĐ-CP bổ sung mức phạt đối với một số vi phạm về thời hạn làm thủ tục hải quan, nộp hồ sơ thuế[reference:2]:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mức phạt</th>
+                  <th>Hành vi vi phạm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge">1 - 2 triệu đồng</span></td>
+                  <td>Không báo cáo hàng quý của doanh nghiệp ưu tiên đúng hạn; không sửa đổi, bổ sung chứng từ hồ sơ hải quan tàu bay, tàu biển đúng hạn; không thông báo kế hoạch chuyển tải, sang mạn đúng hạn</td>
+                </tr>
+                <tr>
+                  <td><span class="badge warning">2 - 5 triệu đồng</span></td>
+                  <td>Nộp báo cáo quyết toán, thông báo tình hình sử dụng hàng hóa miễn thuế không đúng hạn; thông báo thời hạn, địa điểm giao nhận hàng theo chỉ định không đúng hạn; báo cáo tình hình sử dụng phương tiện quay vòng không đúng hạn</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <!-- PHẦN 4 -->
+          <h2><iconify-icon icon="document-text-outline"></iconify-icon> 4. Mức phạt vi phạm về khai hải quan</h2>
+          <p>
+            <span class="badge danger">TRỌNG TÂM</span>
+          </p>
+          <p>
+            Theo Điều 9 Nghị định 169/2026/NĐ-CP, người vi phạm quy định về khai hải quan sẽ bị phạt tiền[reference:3]:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mức phạt</th>
+                  <th>Hành vi vi phạm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge">1 - 2 triệu đồng</span></td>
+                  <td>Khai sai về số lượng hàng hóa</td>
+                </tr>
+                <tr>
+                  <td><span class="badge warning">2 - 4 triệu đồng</span></td>
+                  <td>Khai sai về số lượng, chủng loại hàng hóa</td>
+                </tr>
+                <tr>
+                  <td><span class="badge warning">3 - 5 triệu đồng</span></td>
+                  <td>Khai sai so với thực tế về xuất xứ hàng hóa xuất khẩu, nhập khẩu</td>
+                </tr>
+                <tr>
+                  <td><span class="badge danger">Đến 40 triệu đồng</span></td>
+                  <td>Khai hải quan sai có thể bị phạt đến 40 triệu đồng (tùy mức độ, tính chất vi phạm)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <!-- PHẦN 5 -->
+          <h2><iconify-icon icon="cash-outline"></iconify-icon> 5. Xử phạt hành vi trốn thuế &amp; khai sai thuế</h2>
+          <p>
+            <span class="badge danger">BỔ SUNG</span>
+          </p>
+          <p>
+            Khoản 5 Điều 15 Nghị định 169/2026/NĐ-CP bổ sung quy định xử lý đối với các trường hợp <strong>khai sai mã số hàng hóa, thuế suất, mức thuế</strong> đối với những mặt hàng đã được Bộ Tài chính, cơ quan hải quan hướng dẫn[reference:4].
+          </p>
+          <p>
+            Điểm b khoản 4 Điều 10 làm rõ hành vi vi phạm do cơ quan tố tụng hình sự chuyển đến mà cá nhân, tổ chức <strong>không tự nguyện khắc phục hậu quả</strong> bằng cách nộp đủ số tiền thuế phải nộp trước thời điểm ban hành quyết định xử phạt[reference:5].
+          </p>
+
+          <!-- PHẦN 6 -->
+          <h2><iconify-icon icon="cash-outline"></iconify-icon> 6. Phạt tiền mặt, vàng mang theo vượt mức quy định</h2>
+          <p>
+            <span class="badge warning">ĐIỂM MỚI</span>
+          </p>
+          <p>
+            Nghị định quy định mức phạt <strong>đến 50 triệu đồng</strong> đối với người xuất cảnh không khai hoặc khai sai số tiền mặt, vàng mang theo vượt mức quy định[reference:6].
+          </p>
+          <div class="highlight-box warning">
+            <iconify-icon icon="warning-outline"></iconify-icon>
+            <strong>Lưu ý:</strong> Đây là mức phạt cao, doanh nghiệp và cá nhân cần đặc biệt lưu ý khi làm thủ tục xuất nhập cảnh có mang theo ngoại tệ, vàng.
+          </div>
+
+          <!-- SO SÁNH -->
+          <h2><iconify-icon icon="swap-horizontal-outline"></iconify-icon> So sánh NĐ 128/2020 vs NĐ 169/2026</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tiêu chí</th>
+                  <th>NĐ 128/2020/NĐ-CP</th>
+                  <th>NĐ 169/2026/NĐ-CP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>4 chương, 40 điều</td>
+                  <td><span class="badge success">4 chương, 40 điều</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Hiệu lực</strong></td>
+                  <td>—</td>
+                  <td><span class="badge">01/7/2026</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Tang vật vi phạm</strong></td>
+                  <td>Chưa làm rõ</td>
+                  <td><span class="badge blue">Làm rõ — không bao gồm hàng đã khai đúng</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Thời hạn thủ tục</strong></td>
+                  <td>Chưa có mức phạt riêng</td>
+                  <td><span class="badge warning">Bổ sung mức phạt 1-5 triệu</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Trốn thuế</strong></td>
+                  <td>Chưa rõ trường hợp khai sai mã số</td>
+                  <td><span class="badge danger">Bổ sung xử lý khai sai mã số, thuế suất</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Công nghệ số</strong></td>
+                  <td>Chưa quy định</td>
+                  <td><span class="badge success">Tăng cường ứng dụng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- CHECKLIST -->
+          <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist tuân thủ cho doanh nghiệp XNK</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+            <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+            Nhấn vào từng mục để đánh dấu hoàn thành.
+          </p>
+
+          <h3><iconify-icon icon="search-outline"></iconify-icon> Trước khi làm thủ tục hải quan</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra kỹ số lượng, chủng loại, xuất xứ hàng hóa</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Đối chiếu mã số hàng hóa, thuế suất với hướng dẫn của cơ quan hải quan</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Chuẩn bị đầy đủ hồ sơ, chứng từ theo quy định</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 22px;"><iconify-icon icon="cube-outline"></iconify-icon> Trong quá trình làm thủ tục</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Khai báo trung thực, đầy đủ thông tin trên tờ khai</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Nộp báo cáo, thông báo đúng thời hạn quy định</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Thông báo kế hoạch chuyển tải, sang mạn đúng hạn</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 22px;"><iconify-icon icon="shield-outline"></iconify-icon> Phòng ngừa vi phạm</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Cập nhật Nghị định 169/2026/NĐ-CP trước 01/7/2026</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Khai báo đúng số tiền mặt, vàng khi xuất nhập cảnh</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Lưu hồ sơ, chứng từ đầy đủ để giải trình khi cần</span>
+            </div>
+          </div>
+
+          <!-- KHUYẾN NGHỊ -->
+          <div class="highlight-box success" style="margin-top: 26px;">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Khuyến nghị:</strong> Doanh nghiệp nên thường xuyên truy cập Cổng thông tin điện tử Cục Hải quan
+            (<a href="https://customs.gov.vn" target="_blank" rel="noopener">customs.gov.vn</a>) để cập nhật văn bản mới,
+            đồng thời rà soát quy trình nội bộ để đáp ứng yêu cầu của Nghị định 169/2026/NĐ-CP trước ngày 01/7/2026.
+          </div>
+
+          <div class="source-note">
+            <span>
+              <iconify-icon icon="link-outline"></iconify-icon>
+              Nguồn: Cổng TTĐT Chính phủ, LuatVietnam, Báo Bảo vệ Pháp luật
+            </span>
+            <span>
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              Căn cứ: Nghị định 169/2026/NĐ-CP ngày 15/5/2026
+            </span>
+          </div>
+
+          <!-- Nút về trang chủ -->
+          <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-home">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </button>
+
+  <script>
+    /* ====== LOADING ====== */
+    (function() {
+      const loading = document.getElementById('loading');
+      let hidden = false;
+      function hideLoading() {
+        if (hidden) return;
+        hidden = true;
+        loading.classList.add('hidden');
+      }
+      window.addEventListener('load', () => setTimeout(hideLoading, 400));
+      setTimeout(hideLoading, 3000);
+      document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoading, 800));
+    })();
+
+    /* ====== BACK TO TOP ====== */
+    const backBtn = document.getElementById('backToTop');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 400) backBtn.classList.add('show');
+          else backBtn.classList.remove('show');
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ====== REVEAL ====== */
+    if ('IntersectionObserver' in window) {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+      reveals.forEach(el => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
+
+    /* ====== CHECKLIST ====== */
+    document.querySelectorAll('.checklist-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+
+    /* ====== SCROLL HINT ====== */
+    document.querySelectorAll('.table-wrap').forEach(wrap => {
+      function checkScroll() {
+        const isEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+        wrap.classList.toggle('scrolled-end', isEnd);
+      }
+      wrap.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+
+    /* ====== MODAL ====== */
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    const modalData = {
+      central: {
+        icon: 'flag-outline',
+        title: 'Nghị định 169/2026/NĐ-CP',
+        body: `<p><strong>Tổng quan:</strong> Nghị định 169/2026/NĐ-CP được Chính phủ ban hành ngày 15/5/2026, gồm 4 chương, 40 điều, hiệu lực từ 01/7/2026, thay thế hoàn toàn NĐ 128/2020/NĐ-CP.</p>
+        <ul>
+          <li>Xác định rõ tang vật vi phạm</li>
+          <li>Bổ sung mức phạt về thời hạn thủ tục</li>
+          <li>Làm rõ hành vi trốn thuế</li>
+          <li>Tăng cường ứng dụng công nghệ số</li>
+        </ul>`
+      },
+      tangvat: {
+        icon: 'cube-outline',
+        title: 'Tang vật vi phạm hành chính',
+        body: `<p>Khoản 2 Điều 3 Nghị định xác định rõ:</p>
+        <ul>
+          <li>Tang vật vi phạm là vật, tiền, hàng hóa có liên quan trực tiếp đến vi phạm hành chính</li>
+          <li><strong>Không bao gồm</strong> vật, tiền, hàng hóa đã khai hải quan theo đúng quy định của pháp luật</li>
+        </ul>
+        <p>Quy định này giúp tránh tạm giữ, tịch thu sai đối với hàng hóa hợp pháp.</p>`
+      },
+      thoihan: {
+        icon: 'time-outline',
+        title: 'Mức phạt về thời hạn thủ tục',
+        body: `<p>Điều 8 Nghị định 169/2026/NĐ-CP bổ sung mức phạt:</p>
+        <ul>
+          <li><strong>1 - 2 triệu đồng:</strong> Không báo cáo hàng quý đúng hạn; không sửa đổi chứng từ hải quan tàu bay, tàu biển đúng hạn; không thông báo kế hoạch chuyển tải đúng hạn</li>
+          <li><strong>2 - 5 triệu đồng:</strong> Nộp báo cáo quyết toán không đúng hạn; thông báo thời hạn giao nhận hàng không đúng hạn; báo cáo tình hình sử dụng phương tiện quay vòng không đúng hạn</li>
+        </ul>`
+      },
+      khaithue: {
+        icon: 'document-text-outline',
+        title: 'Khai thuế sai',
+        body: `<p>Điểm b khoản 4 Điều 10 làm rõ:</p>
+        <ul>
+          <li>Hành vi vi phạm do cơ quan tố tụng hình sự chuyển đến</li>
+          <li>Cá nhân, tổ chức <strong>không tự nguyện khắc phục hậu quả</strong> bằng cách nộp đủ số tiền thuế phải nộp trước thời điểm ban hành quyết định xử phạt</li>
+        </ul>
+        <p>Quy định này giúp xử lý nghiêm các trường hợp cố tình không khắc phục hậu quả.</p>`
+      },
+      trontue: {
+        icon: 'close-circle-outline',
+        title: 'Trốn thuế',
+        body: `<p>Khoản 5 Điều 15 Nghị định 169/2026/NĐ-CP bổ sung quy định:</p>
+        <ul>
+          <li>Xử lý đối với trường hợp <strong>khai sai mã số hàng hóa, thuế suất, mức thuế</strong></li>
+          <li>Áp dụng với mặt hàng đã được Bộ Tài chính, cơ quan hải quan hướng dẫn</li>
+          <li>Cá nhân, tổ chức vi phạm đã được hướng dẫn nhưng vẫn khai sai</li>
+        </ul>
+        <p>Quy định này nhằm xử lý nghiêm hành vi trốn thuế qua khai sai mã số, thuế suất.</p>`
+      },
+      congnghe: {
+        icon: 'laptop-outline',
+        title: 'Ứng dụng công nghệ số',
+        body: `<p>Nghị định tăng cường ứng dụng công nghệ số trong xử phạt vi phạm hành chính:</p>
+        <ul>
+          <li>Hỗ trợ xử lý vi phạm nhanh chóng, minh bạch</li>
+          <li>Giảm thủ tục giấy tờ</li>
+          <li>Tăng cường kết nối, chia sẻ dữ liệu</li>
+        </ul>
+        <p>Đây là bước tiến phù hợp với xu hướng chuyển đổi số của ngành hải quan.</p>`
+      },
+      muctien: {
+        icon: 'cash-outline',
+        title: 'Phạt tiền mặt, vàng mang theo',
+        body: `<p>Nghị định quy định mức phạt <strong>đến 50 triệu đồng</strong> đối với:</p>
+        <ul>
+          <li>Người xuất cảnh không khai số tiền mặt, vàng mang theo vượt mức quy định</li>
+          <li>Người xuất cảnh khai sai số tiền mặt, vàng mang theo vượt mức quy định</li>
+        </ul>
+        <p>Cá nhân, doanh nghiệp cần đặc biệt lưu ý khi làm thủ tục xuất nhập cảnh có mang theo ngoại tệ, vàng.</p>`
+      },
+      khaihq: {
+        icon: 'document-text-outline',
+        title: 'Khai hải quan sai',
+        body: `<p>Theo Điều 9 Nghị định 169/2026/NĐ-CP:</p>
+        <ul>
+          <li><strong>1 - 2 triệu đồng:</strong> Khai sai về số lượng hàng hóa</li>
+          <li><strong>2 - 4 triệu đồng:</strong> Khai sai về số lượng, chủng loại</li>
+          <li><strong>3 - 5 triệu đồng:</strong> Khai sai về xuất xứ hàng hóa</li>
+          <li><strong>Đến 40 triệu đồng:</strong> Khai hải quan sai (tùy mức độ)</li>
+        </ul>`
+      },
+      doituong: {
+        icon: 'people-outline',
+        title: 'Đối tượng áp dụng',
+        body: `<p>Nghị định áp dụng cho:</p>
+        <ul>
+          <li>Tổ chức, cá nhân trong nước</li>
+          <li>Tổ chức, cá nhân nước ngoài có hành vi vi phạm trên lãnh thổ Việt Nam</li>
+          <li>Người có thẩm quyền lập biên bản, xử phạt vi phạm hành chính</li>
+          <li>Cơ quan, tổ chức, cá nhân khác có liên quan</li>
+        </ul>
+        <p>Trừ trường hợp Điều ước quốc tế mà Việt Nam là thành viên có quy định khác.</p>`
+      }
+    };
+
+    function openModal(key) {
+      const data = modalData[key];
+      if (!data) return;
+      modalBody.innerHTML = `
+        <h3><iconify-icon icon="${data.icon}"></iconify-icon> ${data.title}</h3>
+        ${data.body}
+      `;
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.openModal = openModal;
+
+    document.addEventListener('touchmove', (e) => {
+      if (modalOverlay.classList.contains('active') && !e.target.closest('.modal-content')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  </script>
+</body>
+</html>
