@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#121212" />
+  <title>Nghị Định 30/2020/NĐ-CP · Công Tác Văn Thư &amp; Thể Thức Văn Bản · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <!-- Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+      --blue: #7ec8e3;
+      --purple: #c5a3e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 15px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* ====== LOADING ====== */
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s;
+    }
+    #loading.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader {
+      width: 44px; height: 44px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ====== LAYOUT ====== */
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1280px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    /* ====== SIDEBAR ====== */
+    .sidebar {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+    }
+    .sidebar-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--accent);
+      background: #333;
+      flex-shrink: 0;
+    }
+    .sidebar-header { flex: 1; min-width: 140px; }
+    .sidebar-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-top: 4px;
+    }
+    .sidebar-divider { display: none; }
+    .sidebar-contact {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      text-align: left;
+      font-size: 0.78rem;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.1rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      word-break: break-all;
+    }
+    .sidebar-contact .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: block;
+    }
+    .sidebar-social {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+      flex-wrap: wrap;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary);
+      font-size: 1.4rem;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .sidebar-social a:active {
+      background: var(--bg-card);
+      color: var(--accent);
+      transform: scale(0.92);
+    }
+
+    /* ====== MAIN ====== */
+    .main-content { width: 100%; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px;
+      padding: 6px 10px;
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      overflow-y: hidden;
+      justify-content: flex-start;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .navbar::-webkit-scrollbar { display: none; }
+    .navbar a {
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .navbar a:active { transform: scale(0.95); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    /* ====== ARTICLE ====== */
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: linear-gradient(rgba(18,18,18,0.85), rgba(18,18,18,0.95)),
+                  url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+      padding: 28px 18px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+    .hero-inner .article-badge {
+      display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 40px;
+      margin-bottom: 12px;
+    }
+    .hero-inner h1 {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary);
+      font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+      max-width: 640px;
+      margin: 0 auto 14px;
+      padding: 0 6px;
+    }
+
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      align-items: center;
+      justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 3px;
+      vertical-align: middle;
+    }
+
+    .article-body {
+      font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+      color: var(--text-secondary);
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    .article-body h2 {
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 28px 0 14px;
+      padding-left: 12px;
+      border-left: 4px solid var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      line-height: 1.3;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+    .article-body h2 iconify-icon { font-size: 1.1em; flex-shrink: 0; }
+
+    .article-body h3 {
+      font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .article-body p { margin-bottom: 12px; text-align: left; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      word-break: break-word;
+    }
+
+    .highlight-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: clamp(0.82rem, 2.8vw, 0.9rem);
+      line-height: 1.55;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 6px;
+      vertical-align: middle;
+      font-size: 1.1em;
+    }
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    /* ====== TABLE ====== */
+    .table-wrap {
+      position: relative;
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .table-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(to left, var(--bg-sidebar), transparent);
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .table-wrap.scrolled-end::after { opacity: 0; }
+
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      min-width: 480px;
+    }
+    .table-wrap th {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+      font-size: 0.75rem;
+    }
+    .table-wrap td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .table-wrap tr:last-child td { border-bottom: none; }
+
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: -8px;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+    .scroll-hint iconify-icon { color: var(--accent); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1);
+      color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1);
+      color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1);
+      color: var(--orange);
+    }
+    .badge.blue {
+      border-color: rgba(126, 200, 227, 0.35);
+      background: rgba(126, 200, 227, 0.1);
+      color: var(--blue);
+    }
+    .badge.purple {
+      border-color: rgba(197, 163, 224, 0.35);
+      background: rgba(197, 163, 224, 0.1);
+      color: var(--purple);
+    }
+
+    /* ====== CHECKLIST ====== */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .checklist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      min-height: 48px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .checklist-card:active {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      transform: scale(0.99);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.3rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
+
+    /* ====== GRID 3 ====== */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 16px 14px;
+      border: 1px solid var(--border-light);
+      text-align: center;
+    }
+    .card:active { transform: scale(0.98); }
+    .card iconify-icon {
+      font-size: 1.7rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .card p { font-size: 0.76rem; color: var(--text-secondary); margin: 0; }
+
+    /* ====== CONCLUSION ====== */
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    /* ====== SOURCE ====== */
+    .source-note {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .source-note iconify-icon {
+      color: var(--accent);
+      vertical-align: middle;
+    }
+
+    /* ====== BACK TO TOP ====== */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 16px;
+      background: var(--accent);
+      color: #121212;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s;
+      z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.4);
+      font-size: 1.2rem;
+      border: none;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:active { transform: scale(0.92); }
+
+    /* ====== REVEAL ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ====== MINDMAP ====== */
+    .mindmap-container {
+      position: relative;
+      margin: 20px 0;
+      padding: 14px 12px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .mindmap-container::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(to left, var(--bg-card), transparent);
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .mindmap-svg {
+      width: 100%;
+      height: auto;
+      min-width: 640px;
+      display: block;
+      touch-action: pan-x pan-y;
+    }
+    .mindmap-node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mindmap-node:active rect,
+    .mindmap-node:active circle {
+      filter: brightness(1.4);
+    }
+    .mindmap-node text {
+      font-family: var(--font);
+      font-size: 11px;
+      fill: var(--text-primary);
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .mindmap-node .node-desc {
+      font-size: 9px;
+      fill: var(--text-muted);
+    }
+    .mindmap-line {
+      stroke: var(--border-light);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+    .mindmap-hint {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .mindmap-hint iconify-icon { color: var(--accent); }
+
+    /* ====== MODAL ====== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 500;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      padding: 0;
+    }
+    .modal-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+    .modal-content {
+      background: var(--bg-sidebar);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 28px;
+      width: 100%;
+      max-width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: 2px;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      z-index: 2;
+    }
+    .modal-close:active {
+      background: var(--accent);
+      color: #121212;
+      transform: scale(0.92);
+    }
+    .modal-content h3 {
+      font-size: 1.05rem;
+      color: var(--accent);
+      margin: 16px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 44px;
+      line-height: 1.3;
+    }
+    .modal-content h3 iconify-icon { font-size: 1.2em; flex-shrink: 0; }
+    .modal-content p {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-align: left;
+      line-height: 1.55;
+    }
+    .modal-content ul {
+      margin: 8px 0 12px 18px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .modal-content ul li {
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    /* ====== BUTTON HOME ====== */
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #121212;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255, 219, 112, 0.3);
+      min-height: 44px;
+      transition: transform 0.2s;
+    }
+    .btn-home:active { transform: scale(0.95); }
+
+    /* ============================================
+       TABLET & DESKTOP
+       ============================================ */
+    @media (min-width: 768px) {
+      body {
+        padding: 30px 20px;
+        font-size: 15px;
+      }
+      .main-layout {
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+      }
+      .sidebar {
+        flex: 0 0 260px;
+        flex-direction: column;
+        padding: 28px 22px 24px;
+        text-align: center;
+        position: sticky;
+        top: 30px;
+        gap: 0;
+      }
+      .sidebar-avatar {
+        width: 90px; height: 90px;
+        margin: 0 auto 14px;
+      }
+      .sidebar-header {
+        flex: none;
+        width: 100%;
+        min-width: 0;
+      }
+      .sidebar-name { font-size: 1.2rem; }
+      .sidebar-title {
+        font-size: 0.78rem;
+        padding: 4px 14px;
+        margin: 6px 0 16px;
+      }
+      .sidebar-divider {
+        display: block;
+        height: 1px;
+        background: var(--border-light);
+        margin: 16px 0;
+      }
+      .sidebar-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 0;
+        border-top: none;
+        font-size: 0.8rem;
+      }
+      .sidebar-social {
+        padding-top: 0;
+        border-top: none;
+        margin-top: 16px;
+        gap: 10px;
+      }
+      .sidebar-social a {
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 1.3rem;
+      }
+
+      .article-card {
+        padding: 28px 30px;
+      }
+      .hero-inner {
+        padding: 40px 24px;
+        margin-bottom: 28px;
+      }
+
+      .table-wrap::after { display: none; }
+      .table-wrap table {
+        min-width: 0;
+        font-size: 0.85rem;
+      }
+      .table-wrap th { padding: 12px 14px; font-size: 0.82rem; }
+      .table-wrap td { padding: 11px 14px; }
+
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+      }
+      .checklist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+      }
+      .checklist-card {
+        padding: 10px 14px;
+        min-height: 0;
+      }
+
+      .modal-overlay {
+        align-items: center;
+        padding: 20px;
+      }
+      .modal-content {
+        border-radius: var(--radius);
+        max-width: 560px;
+        padding: 28px 30px;
+        max-height: 80vh;
+        border-bottom: 1px solid var(--border-light);
+        transform: scale(0.9) translateY(20px);
+      }
+      .modal-overlay.active .modal-content {
+        transform: scale(1) translateY(0);
+      }
+      .modal-content::before { display: none; }
+      .modal-close {
+        top: 14px; right: 18px;
+        width: 36px; height: 36px;
+      }
+      .modal-content h3 {
+        font-size: 1.15rem;
+        padding-right: 0;
+      }
+
+      .mindmap-container {
+        padding: 20px;
+      }
+      .mindmap-svg {
+        min-width: 700px;
+      }
+    }
+
+    /* ============================================
+       DESKTOP LỚN
+       ============================================ */
+    @media (min-width: 1024px) {
+      .sidebar {
+        flex: 0 0 280px;
+        padding: 30px 22px 26px;
+      }
+      .sidebar-avatar {
+        width: 100px; height: 100px;
+      }
+      .sidebar-name { font-size: 1.3rem; }
+      .sidebar-title { font-size: 0.85rem; }
+
+      .article-card {
+        padding: 32px 34px;
+      }
+      .hero-inner {
+        padding: 46px 28px;
+      }
+
+      .checklist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    /* ============================================
+       MOBILE NHỎ
+       ============================================ */
+    @media (max-width: 400px) {
+      body { padding: 12px 10px; }
+      .article-card { padding: 16px 12px; }
+      .hero-inner { padding: 22px 14px; }
+      .hero-inner h1 { font-size: 1.1rem; }
+      .navbar a { font-size: 0.72rem; padding: 8px 14px; }
+      .sidebar-avatar { width: 52px; height: 52px; }
+      .sidebar-name { font-size: 0.95rem; }
+      .sidebar-social a { font-size: 1.2rem; min-width: 40px; min-height: 40px; }
+      .checklist-card { font-size: 0.78rem; padding: 10px 12px; }
+      .modal-content { padding: 20px 16px 24px; }
+    }
+
+    /* ============================================
+       TOUCH
+       ============================================ */
+    @media (hover: none) {
+      .card:hover { transform: none; }
+      .checklist-card:hover { transform: none; }
+      .navbar a:hover { background: transparent; color: var(--text-secondary); }
+      .back-to-top:hover { background: var(--accent); transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ====== LOADING ====== -->
+  <div id="loading"><div class="loader"></div></div>
+
+  <!-- ====== MODAL ====== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose" aria-label="Đóng"><iconify-icon icon="close-outline"></iconify-icon></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call" aria-label="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook" aria-label="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram" aria-label="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo" aria-label="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype" aria-label="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn" aria-label="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="main-content">
+      <nav class="navbar">
+        <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+        <a href="#">About</a>
+        <a href="#">Resume</a>
+        <a href="#">Portfolio</a>
+        <a href="#" class="active">Blog</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <article class="article-card">
+        <!-- Hero inner -->
+        <div class="hero-inner">
+          <span class="article-badge">
+            <iconify-icon icon="document-text-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+            Văn thư · Thể thức · Hành chính
+          </span>
+          <h1>
+            Nghị Định 30/2020/NĐ-CP<br />
+            <span>Công Tác Văn Thư &amp; Thể Thức Văn Bản</span>
+          </h1>
+          <p>Toàn cảnh Nghị định quy định về công tác văn thư, thể thức và kỹ thuật trình bày văn bản hành chính — có hiệu lực từ 05/3/2020, thay thế NĐ 110/2004/NĐ-CP và NĐ 09/2010/NĐ-CP.</p>
+          <div class="article-meta">
+            <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+            <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Hành chính</span>
+            <span><iconify-icon icon="time-outline"></iconify-icon> 22 phút đọc</span>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <!-- KẾT LUẬN -->
+          <div class="conclusion-box reveal">
+            <h3><iconify-icon icon="checkmark-done-outline"></iconify-icon> Kết luận</h3>
+            <p style="margin-top: 8px;">Nghị định <strong>30/2020/NĐ-CP</strong> gồm <strong>7 chương, 38 điều</strong>, hiệu lực từ <strong>05/3/2020</strong>, thay thế NĐ 110/2004/NĐ-CP và NĐ 09/2010/NĐ-CP. 6 điểm mới trọng tâm:</p>
+            <ol>
+              <li><strong>Bổ sung quy định về văn bản điện tử</strong> — soạn thảo, ký ban hành, quản lý văn bản điện tử</li>
+              <li><strong>Quy định 29 loại văn bản hành chính</strong> — giảm 04 loại so với trước</li>
+              <li><strong>Thể thức văn bản hành chính</strong> — quy định chi tiết tại Phụ lục I</li>
+              <li><strong>Bổ sung quy định về bản sao</strong> — sao y bản chính, trích sao, sao lục</li>
+              <li><strong>Quy định về chữ ký số</strong> — chữ ký số của cơ quan, tổ chức</li>
+              <li><strong>Quản lý, sử dụng thiết bị lưu khóa bí mật</strong> trong công tác văn thư</li>
+            </ol>
+          </div>
+
+          <!-- CĂN CỨ PHÁP LÝ -->
+          <h2><iconify-icon icon="book-outline"></iconify-icon> Thông tin cơ bản</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Thông tin</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Số hiệu</strong></td>
+                  <td><span class="badge">30/2020/NĐ-CP</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày ban hành</strong></td>
+                  <td>05/3/2020</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày hiệu lực</strong></td>
+                  <td><span class="badge success">05/3/2020</span> (có hiệu lực kể từ ngày ký)</td>
+                </tr>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>7 Chương, 38 Điều</td>
+                </tr>
+                <tr>
+                  <td><strong>Thay thế</strong></td>
+                  <td>NĐ 110/2004/NĐ-CP và NĐ 09/2010/NĐ-CP</td>
+                </tr>
+                <tr>
+                  <td><strong>Đối tượng áp dụng</strong></td>
+                  <td>Cơ quan, tổ chức nhà nước; doanh nghiệp nhà nước; tổ chức chính trị, chính trị - xã hội, xã hội, xã hội - nghề nghiệp; đơn vị vũ trang nhân dân</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <!-- MINDMAP -->
+          <h2><iconify-icon icon="git-network-outline"></iconify-icon> Sơ đồ tư duy tổng quan</h2>
+          <div class="mindmap-container reveal">
+            <svg class="mindmap-svg" viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <!-- Lines -->
+              <line x1="460" y1="240" x2="170" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="440" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="440" class="mindmap-line" />
+
+              <!-- Central -->
+              <g class="mindmap-node" onclick="openModal('central')">
+                <circle cx="460" cy="240" r="58" fill="#ffdb70" stroke="#d4b24a" stroke-width="2.5"/>
+                <text x="460" y="232" text-anchor="middle" font-weight="700" font-size="12" fill="#121212">NĐ 30/2020</text>
+                <text x="460" y="250" text-anchor="middle" font-weight="700" font-size="11" fill="#121212">Văn thư</text>
+              </g>
+
+              <!-- Left nodes -->
+              <g class="mindmap-node" onclick="openModal('phamvi')">
+                <rect x="40" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="115" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Phạm vi &amp; Đối tượng</text>
+                <text x="115" y="92" text-anchor="middle" class="node-desc">Mở rộng cho DN nhà nước</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('vanban')">
+                <rect x="40" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">29 loại văn bản</text>
+                <text x="115" y="212" text-anchor="middle" class="node-desc">Giảm 04 loại</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('thethuc')">
+                <rect x="40" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#c5a3e0" stroke-width="1.8"/>
+                <text x="115" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Thể thức văn bản</text>
+                <text x="115" y="332" text-anchor="middle" class="node-desc">Phụ lục I</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('bansao')">
+                <rect x="40" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ff8a8a" stroke-width="1.8"/>
+                <text x="115" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Bản sao văn bản</text>
+                <text x="115" y="452" text-anchor="middle" class="node-desc">Sao y, trích sao, sao lục</text>
+              </g>
+
+              <!-- Right nodes -->
+              <g class="mindmap-node" onclick="openModal('dientu')">
+                <rect x="730" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffdb70" stroke-width="1.8"/>
+                <text x="805" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Văn bản điện tử</text>
+                <text x="805" y="92" text-anchor="middle" class="node-desc">Điểm mới nổi bật</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('chuky')">
+                <rect x="730" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="805" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Chữ ký số</text>
+                <text x="805" y="212" text-anchor="middle" class="node-desc">Cơ quan, tổ chức</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('quanly')">
+                <rect x="730" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffb87a" stroke-width="1.8"/>
+                <text x="805" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Quản lý văn bản</text>
+                <text x="805" y="332" text-anchor="middle" class="node-desc">Đi &amp; đến</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('luutru')">
+                <rect x="730" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Lập hồ sơ</text>
+                <text x="805" y="452" text-anchor="middle" class="node-desc">Nộp lưu trữ</text>
+              </g>
+            </svg>
+          </div>
+          <div class="mindmap-hint">
+            <iconify-icon icon="hand-left-outline"></iconify-icon>
+            Nhấn vào từng ô để xem chi tiết · Vuốt ngang để xem toàn bộ sơ đồ
+          </div>
+
+          <!-- PHẦN 1 -->
+          <h2><iconify-icon icon="layers-outline"></iconify-icon> 1. Phạm vi điều chỉnh &amp; đối tượng áp dụng</h2>
+          <p>
+            Nghị định quy định về <strong>công tác văn thư</strong> và <strong>quản lý nhà nước về công tác văn thư</strong>, bao gồm: soạn thảo, ký ban hành văn bản; quản lý văn bản; lập hồ sơ và nộp lưu hồ sơ, tài liệu vào Lưu trữ cơ quan; quản lý và sử dụng con dấu, thiết bị lưu khóa bí mật trong công tác văn thư[reference:0].
+          </p>
+          <p><strong>Đối tượng áp dụng gồm 2 nhóm:</strong></p>
+          <div class="grid-3 reveal">
+            <div class="card">
+              <iconify-icon icon="business-outline"></iconify-icon>
+              <h3>Cơ quan, tổ chức nhà nước</h3>
+              <p>Bao gồm cơ quan nhà nước, tổ chức chính trị, chính trị - xã hội, xã hội, xã hội - nghề nghiệp, đơn vị vũ trang nhân dân</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="briefcase-outline"></iconify-icon>
+              <h3>Doanh nghiệp nhà nước</h3>
+              <p>Được áp dụng đầy đủ các quy định về công tác văn thư</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="people-outline"></iconify-icon>
+              <h3>Tổ chức khác</h3>
+              <p>Được khuyến khích áp dụng quy định của Nghị định</p>
+            </div>
+          </div>
+
+          <!-- PHẦN 2 -->
+          <h2><iconify-icon icon="documents-outline"></iconify-icon> 2. Các loại văn bản hành chính</h2>
+          <p>
+            <span class="badge blue">GIẢM 04 LOẠI</span>
+          </p>
+          <p>
+            Nghị định 30/2020/NĐ-CP quy định <strong>29 loại văn bản hành chính</strong>, giảm 04 loại so với quy định trước đây[reference:1]. Các loại văn bản bao gồm:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nhóm văn bản</th>
+                  <th>Loại văn bản</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Văn bản có tên loại</strong></td>
+                  <td>Nghị quyết (cá biệt), Quyết định (cá biệt), Chỉ thị, Quy chế, Quy định, Thông cáo, Thông báo, Hướng dẫn, Chương trình, Kế hoạch, Phương án, Đề án, Dự án, Báo cáo, Biên bản, Tờ trình, Hợp đồng, Công văn, Công điện, Bản ghi nhớ, Bản thỏa thuận, Giấy ủy quyền, Giấy mời, Giấy giới thiệu, Giấy nghỉ phép, Phiếu gửi, Phiếu chuyển, Phiếu báo, Thư công</td>
+                </tr>
+                <tr>
+                  <td><strong>Văn bản không có tên loại</strong></td>
+                  <td>Công văn</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <!-- PHẦN 3 -->
+          <h2><iconify-icon icon="format-outline"></iconify-icon> 3. Thể thức văn bản hành chính — Các thành phần chính</h2>
+          <p>
+            <span class="badge warning">TRỌNG TÂM</span>
+          </p>
+          <p>
+            Theo Điều 8 Nghị định 30/2020/NĐ-CP, thể thức văn bản hành chính bao gồm các thành phần chính sau[reference:2][reference:3]:
+          </p>
+
+          <h3><iconify-icon icon="flag-outline"></iconify-icon> 3.1. Quốc hiệu và Tiêu ngữ</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Quốc hiệu</strong></td>
+                  <td>"CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM" — chữ in hoa, cỡ chữ 12-13, kiểu chữ đứng, đậm, ở phía trên cùng bên phải trang đầu tiên[reference:4]</td>
+                </tr>
+                <tr>
+                  <td><strong>Tiêu ngữ</strong></td>
+                  <td>"Độc lập – Tự do – Hạnh phúc" — chữ in thường, cỡ chữ 13-14, kiểu chữ đứng, đậm, canh giữa dưới Quốc hiệu; có đường kẻ ngang bên dưới[reference:5]</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3><iconify-icon icon="business-outline"></iconify-icon> 3.2. Tên cơ quan, tổ chức ban hành văn bản</h3>
+          <p>Ghi đầy đủ tên cơ quan, tổ chức ban hành văn bản; đối với cơ quan, tổ chức có tên viết tắt thì ghi tên viết tắt sau tên đầy đủ. Trình bày bằng chữ in hoa, cỡ chữ 12-13, kiểu chữ đứng, đậm, canh giữa.</p>
+
+          <h3><iconify-icon icon="hash-outline"></iconify-icon> 3.3. Số, ký hiệu của văn bản</h3>
+          <p>
+            Số và ký hiệu văn bản của cơ quan, tổ chức là <strong>duy nhất trong một năm</strong>, thống nhất giữa văn bản giấy và văn bản điện tử[reference:6]. Ký hiệu văn bản bao gồm chữ viết tắt tên loại văn bản và chữ viết tắt tên cơ quan ban hành[reference:7].
+          </p>
+          <div class="highlight-box">
+            <iconify-icon icon="information-circle-outline"></iconify-icon>
+            <strong>Ví dụ:</strong> Số: 30/2020/NĐ-CP — trong đó "30" là số thứ tự, "2020" là năm ban hành, "NĐ" là Nghị định, "CP" là Chính phủ.
+          </div>
+
+          <h3><iconify-icon icon="calendar-outline"></iconify-icon> 3.4. Địa danh và thời gian ban hành văn bản</h3>
+          <p>Ghi địa danh và ngày, tháng, năm ban hành văn bản; đối với văn bản có tên loại thì địa danh và thời gian ban hành được ghi dưới tên cơ quan ban hành. Cỡ chữ 13-14, kiểu chữ nghiêng, canh giữa.</p>
+
+          <h3><iconify-icon icon="document-text-outline"></iconify-icon> 3.5. Tên loại và trích yếu nội dung văn bản</h3>
+          <p>Tên loại văn bản (Nghị quyết, Quyết định, Chỉ thị...) ghi bằng chữ in hoa, cỡ chữ 13-14, kiểu chữ đứng, đậm, canh giữa. Trích yếu nội dung văn bản ghi bằng chữ in thường, cỡ chữ 13-14, kiểu chữ đứng, đậm, canh giữa, đặt dưới tên loại văn bản.</p>
+
+          <h3><iconify-icon icon="align-left-outline"></iconify-icon> 3.6. Nội dung văn bản</h3>
+          <p>Nội dung văn bản được trình bày bằng chữ in thường, cỡ chữ 13-14, kiểu chữ đứng; lề trái cách mép trái 30-35mm, lề phải cách mép phải 15-20mm[reference:8].</p>
+
+          <h3><iconify-icon icon="people-outline"></iconify-icon> 3.7. Nơi nhận</h3>
+          <p>
+            Thành phần "Nơi nhận" gồm 2 phần[reference:9][reference:10]:
+          </p>
+          <ul style="margin: 10px 0 14px 18px; color: var(--text-secondary);">
+            <li><strong>Phần 9a:</strong> Áp dụng đối với Tờ trình, Báo cáo của cơ quan, tổ chức cấp dưới gửi cơ quan, tổ chức cấp trên và Công văn</li>
+            <li><strong>Phần 9b:</strong> Áp dụng đối với các văn bản khác</li>
+          </ul>
+
+          <h3><iconify-icon icon="edit-outline"></iconify-icon> 3.8. Chữ ký số của cơ quan, tổ chức</h3>
+          <p>
+            <span class="badge success">ĐIỂM MỚI</span>
+          </p>
+          <p>
+            Nghị định bổ sung quy định về <strong>chữ ký số của cơ quan, tổ chức</strong>, bao gồm: hình ảnh chữ ký số của cơ quan, tổ chức; số và ký hiệu văn bản; thời gian ký (ngày tháng năm; giờ phút giây; múi giờ Việt Nam theo tiêu chuẩn ISO 8601)[reference:11].
+          </p>
+
+          <!-- PHẦN 4 -->
+          <h2><iconify-icon icon="color-palette-outline"></iconify-icon> 4. Kỹ thuật trình bày văn bản hành chính</h2>
+          <p>
+            <span class="badge blue">QUY ĐỊNH CHI TIẾT</span>
+          </p>
+          <p>
+            Kỹ thuật trình bày văn bản hành chính được quy định tại <strong>Phụ lục I</strong> Nghị định 30/2020/NĐ-CP[reference:12], bao gồm:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Yếu tố</th>
+                  <th>Quy định</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Khổ giấy</strong></td>
+                  <td>A4 (210 mm × 297 mm)</td>
+                </tr>
+                <tr>
+                  <td><strong>Kiểu trình bày</strong></td>
+                  <td>Theo chiều dài của khổ A4. Trường hợp có bảng, biểu có thể trình bày theo chiều rộng</td>
+                </tr>
+                <tr>
+                  <td><strong>Định lề trang</strong></td>
+                  <td>Mép trên và dưới: 20-25 mm; mép trái: 30-35 mm; mép phải: 15-20 mm</td>
+                </tr>
+                <tr>
+                  <td><strong>Phông chữ</strong></td>
+                  <td>Times New Roman, bộ mã Unicode theo TCVN 6909:2001, màu đen</td>
+                </tr>
+                <tr>
+                  <td><strong>Cỡ chữ</strong></td>
+                  <td>Theo quy định cụ thể cho từng yếu tố thể thức</td>
+                </tr>
+                <tr>
+                  <td><strong>Số trang</strong></td>
+                  <td>Đánh từ số 1, chữ số Ả Rập, cỡ chữ 13-14, kiểu chữ đứng, canh giữa lề trên, không hiển thị số trang thứ nhất</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <!-- PHẦN 5 -->
+          <h2><iconify-icon icon="copy-outline"></iconify-icon> 5. Bản sao văn bản</h2>
+          <p>
+            <span class="badge purple">QUY ĐỊNH MỚI</span>
+          </p>
+          <p>
+            Nghị định 30/2020/NĐ-CP quy định <strong>3 hình thức bản sao</strong>[reference:13]:
+          </p>
+          <div class="grid-3 reveal">
+            <div class="card">
+              <iconify-icon icon="document-outline"></iconify-icon>
+              <h3>Sao y bản chính</h3>
+              <p>Bản sao đầy đủ, chính xác nội dung của văn bản; được thực hiện từ bản chính. Có giá trị pháp lý như bản chính</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="cut-outline"></iconify-icon>
+              <h3>Trích sao</h3>
+              <p>Bản sao một phần nội dung của văn bản; được thực hiện từ bản chính</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="copy-outline"></iconify-icon>
+              <h3>Sao lục</h3>
+              <p>Bản sao toàn bộ nội dung văn bản; được thực hiện từ bản sao y bản chính</p>
+            </div>
+          </div>
+
+          <h3><iconify-icon icon="format-list-bulleted-outline"></iconify-icon> Thể thức bản sao</h3>
+          <p>
+            Các thành phần thể thức bản sao được trình bày trên cùng một tờ giấy (khổ A4), ngay sau phần cuối cùng của văn bản cần sao[reference:14]. Hình thức sao được ghi rõ: "SAO Y BẢN CHÍNH", "TRÍCH SAO" hoặc "SAO LỤC"[reference:15].
+          </p>
+
+          <!-- SO SÁNH -->
+          <h2><iconify-icon icon="swap-horizontal-outline"></iconify-icon> So sánh NĐ 110/2004 vs NĐ 30/2020</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tiêu chí</th>
+                  <th>NĐ 110/2004/NĐ-CP</th>
+                  <th>NĐ 30/2020/NĐ-CP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cấu trúc</strong></td>
+                  <td>6 chương, 36 điều</td>
+                  <td><span class="badge success">7 chương, 38 điều</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Văn bản điện tử</strong></td>
+                  <td>Chưa quy định</td>
+                  <td><span class="badge blue">Bổ sung đầy đủ</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Số loại văn bản</strong></td>
+                  <td>33 loại</td>
+                  <td><span class="badge warning">29 loại (giảm 4)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Chữ ký số</strong></td>
+                  <td>Chưa quy định</td>
+                  <td><span class="badge success">Có quy định chi tiết</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Bản sao văn bản</strong></td>
+                  <td>Quy định cơ bản</td>
+                  <td><span class="badge purple">Quy định đầy đủ 3 hình thức</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Thiết bị lưu khóa bí mật</strong></td>
+                  <td>Chưa quy định</td>
+                  <td><span class="badge blue">Bổ sung chương riêng</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- CHECKLIST -->
+          <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist tuân thủ thể thức văn bản</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+            <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+            Nhấn vào từng mục để đánh dấu hoàn thành.
+          </p>
+
+          <h3><iconify-icon icon="document-text-outline"></iconify-icon> Kiểm tra thể thức văn bản</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Quốc hiệu và Tiêu ngữ đúng quy cách</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Tên cơ quan, tổ chức ban hành văn bản đầy đủ</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Số, ký hiệu văn bản duy nhất trong năm</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Địa danh và thời gian ban hành chính xác</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Tên loại và trích yếu nội dung văn bản đúng</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 22px;"><iconify-icon icon="color-palette-outline"></iconify-icon> Kiểm tra kỹ thuật trình bày</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Khổ giấy A4, định lề đúng quy định</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Phông chữ Times New Roman, mã Unicode</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Cỡ chữ, kiểu chữ đúng từng thành phần</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Số trang đánh đúng quy định</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 22px;"><iconify-icon icon="shield-outline"></iconify-icon> Kiểm tra văn bản điện tử</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Chữ ký số của cơ quan, tổ chức đầy đủ</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Thời gian ký đúng định dạng ISO 8601</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Số, ký hiệu thống nhất giữa bản giấy và điện tử</span>
+            </div>
+          </div>
+
+          <!-- KHUYẾN NGHỊ -->
+          <div class="highlight-box success" style="margin-top: 26px;">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Khuyến nghị:</strong> Cơ quan, tổ chức cần thường xuyên kiểm tra thể thức văn bản trước khi ban hành, đồng thời cập nhật quy định mới về văn bản điện tử và chữ ký số để đáp ứng yêu cầu chuyển đổi số trong công tác văn thư.
+          </div>
+
+          <div class="source-note">
+            <span>
+              <iconify-icon icon="link-outline"></iconify-icon>
+              Nguồn: Cổng TTĐT Chính phủ, LuatVietnam, Cục Văn thư và Lưu trữ Nhà nước
+            </span>
+            <span>
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              Căn cứ: Nghị định 30/2020/NĐ-CP ngày 05/3/2020
+            </span>
+          </div>
+
+          <!-- Nút về trang chủ -->
+          <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-home">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </button>
+
+  <script>
+    /* ====== LOADING ====== */
+    (function() {
+      const loading = document.getElementById('loading');
+      let hidden = false;
+      function hideLoading() {
+        if (hidden) return;
+        hidden = true;
+        loading.classList.add('hidden');
+      }
+      window.addEventListener('load', () => setTimeout(hideLoading, 400));
+      setTimeout(hideLoading, 3000);
+      document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoading, 800));
+    })();
+
+    /* ====== BACK TO TOP ====== */
+    const backBtn = document.getElementById('backToTop');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 400) backBtn.classList.add('show');
+          else backBtn.classList.remove('show');
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ====== REVEAL ====== */
+    if ('IntersectionObserver' in window) {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+      reveals.forEach(el => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
+
+    /* ====== CHECKLIST ====== */
+    document.querySelectorAll('.checklist-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+
+    /* ====== SCROLL HINT ====== */
+    document.querySelectorAll('.table-wrap').forEach(wrap => {
+      function checkScroll() {
+        const isEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+        wrap.classList.toggle('scrolled-end', isEnd);
+      }
+      wrap.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+
+    /* ====== MODAL ====== */
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    const modalData = {
+      central: {
+        icon: 'flag-outline',
+        title: 'Nghị định 30/2020/NĐ-CP',
+        body: `<p><strong>Tổng quan:</strong> Nghị định 30/2020/NĐ-CP được Chính phủ ban hành ngày 05/3/2020, gồm 7 chương, 38 điều, có hiệu lực kể từ ngày ký. Thay thế NĐ 110/2004/NĐ-CP và NĐ 09/2010/NĐ-CP.</p>
+        <ul>
+          <li>Bổ sung quy định về văn bản điện tử</li>
+          <li>Quy định 29 loại văn bản hành chính</li>
+          <li>Thể thức văn bản chi tiết tại Phụ lục I</li>
+          <li>Quy định về bản sao văn bản</li>
+          <li>Chữ ký số của cơ quan, tổ chức</li>
+          <li>Quản lý thiết bị lưu khóa bí mật</li>
+        </ul>`
+      },
+      phamvi: {
+        icon: 'layers-outline',
+        title: 'Phạm vi &amp; Đối tượng áp dụng',
+        body: `<p>Nghị định quy định về công tác văn thư và quản lý nhà nước về công tác văn thư, bao gồm:</p>
+        <ul>
+          <li>Soạn thảo, ký ban hành văn bản</li>
+          <li>Quản lý văn bản</li>
+          <li>Lập hồ sơ và nộp lưu hồ sơ, tài liệu vào Lưu trữ cơ quan</li>
+          <li>Quản lý và sử dụng con dấu, thiết bị lưu khóa bí mật</li>
+        </ul>
+        <p><strong>Đối tượng áp dụng:</strong> Cơ quan, tổ chức nhà nước; doanh nghiệp nhà nước; tổ chức chính trị, chính trị - xã hội, xã hội, xã hội - nghề nghiệp; đơn vị vũ trang nhân dân.</p>`
+      },
+      vanban: {
+        icon: 'documents-outline',
+        title: '29 loại văn bản hành chính',
+        body: `<p>Nghị định quy định 29 loại văn bản hành chính, giảm 04 loại so với quy định trước đây:</p>
+        <ul>
+          <li>Nghị quyết (cá biệt), Quyết định (cá biệt), Chỉ thị</li>
+          <li>Quy chế, Quy định, Thông cáo, Thông báo</li>
+          <li>Hướng dẫn, Chương trình, Kế hoạch, Phương án, Đề án, Dự án</li>
+          <li>Báo cáo, Biên bản, Tờ trình, Hợp đồng, Công văn, Công điện</li>
+          <li>Bản ghi nhớ, Bản thỏa thuận, Giấy ủy quyền, Giấy mời, Giấy giới thiệu, Giấy nghỉ phép</li>
+          <li>Phiếu gửi, Phiếu chuyển, Phiếu báo, Thư công</li>
+        </ul>`
+      },
+      thethuc: {
+        icon: 'format-outline',
+        title: 'Thể thức văn bản hành chính',
+        body: `<p>Các thành phần chính của thể thức văn bản hành chính (Điều 8):</p>
+        <ul>
+          <li><strong>Quốc hiệu và Tiêu ngữ</strong></li>
+          <li><strong>Tên cơ quan, tổ chức ban hành</strong></li>
+          <li><strong>Số, ký hiệu văn bản</strong> — duy nhất trong năm</li>
+          <li><strong>Địa danh và thời gian ban hành</strong></li>
+          <li><strong>Tên loại và trích yếu nội dung</strong></li>
+          <li><strong>Nội dung văn bản</strong></li>
+          <li><strong>Nơi nhận</strong> — gồm 2 phần 9a và 9b</li>
+          <li><strong>Chữ ký số của cơ quan, tổ chức</strong></li>
+        </ul>
+        <p>Kỹ thuật trình bày chi tiết tại Phụ lục I Nghị định 30/2020/NĐ-CP.</p>`
+      },
+      bansao: {
+        icon: 'copy-outline',
+        title: 'Bản sao văn bản',
+        body: `<p>Nghị định quy định 3 hình thức bản sao:</p>
+        <ul>
+          <li><strong>Sao y bản chính:</strong> Bản sao đầy đủ, chính xác nội dung; thực hiện từ bản chính; có giá trị pháp lý như bản chính</li>
+          <li><strong>Trích sao:</strong> Bản sao một phần nội dung; thực hiện từ bản chính</li>
+          <li><strong>Sao lục:</strong> Bản sao toàn bộ nội dung; thực hiện từ bản sao y bản chính</li>
+        </ul>
+        <p>Thể thức bản sao được trình bày trên cùng tờ giấy A4, ghi rõ hình thức sao.</p>`
+      },
+      dientu: {
+        icon: 'laptop-outline',
+        title: 'Văn bản điện tử',
+        body: `<p>Điểm mới nổi bật của Nghị định 30/2020/NĐ-CP:</p>
+        <ul>
+          <li>Bổ sung quy định về soạn thảo, ký ban hành văn bản điện tử</li>
+          <li>Quản lý văn bản điện tử</li>
+          <li>Lập hồ sơ và nộp lưu hồ sơ, tài liệu điện tử vào lưu trữ cơ quan</li>
+          <li>Quản lý và sử dụng thiết bị lưu khóa bí mật</li>
+        </ul>
+        <p>Đáp ứng yêu cầu chuyển đổi số trong hoạt động của cơ quan, tổ chức.</p>`
+      },
+      chuky: {
+        icon: 'edit-outline',
+        title: 'Chữ ký số của cơ quan, tổ chức',
+        body: `<p>Nghị định bổ sung quy định về chữ ký số của cơ quan, tổ chức:</p>
+        <ul>
+          <li><strong>Hình ảnh chữ ký số</strong> của cơ quan, tổ chức</li>
+          <li><strong>Số và ký hiệu văn bản</strong></li>
+          <li><strong>Thời gian ký:</strong> ngày tháng năm; giờ phút giây; múi giờ Việt Nam theo tiêu chuẩn ISO 8601</li>
+        </ul>
+        <p>Đây là quy định quan trọng để đảm bảo tính pháp lý của văn bản điện tử.</p>`
+      },
+      quanly: {
+        icon: 'archive-outline',
+        title: 'Quản lý văn bản',
+        body: `<p>Nghị định quy định về quản lý văn bản đi và văn bản đến:</p>
+        <ul>
+          <li><strong>Quản lý văn bản đi:</strong> Cấp số, đóng dấu, đăng ký, phát hành</li>
+          <li><strong>Quản lý văn bản đến:</strong> Tiếp nhận, đăng ký, trình, chuyển giao</li>
+          <li><strong>Sao văn bản:</strong> Quy định chi tiết về các hình thức sao</li>
+        </ul>
+        <p>Việc quản lý được thực hiện thống nhất giữa văn bản giấy và văn bản điện tử.</p>`
+      },
+      luutru: {
+        icon: 'folder-open-outline',
+        title: 'Lập hồ sơ &amp; Nộp lưu trữ',
+        body: `<p>Quy định về lập hồ sơ và nộp lưu hồ sơ, tài liệu vào Lưu trữ cơ quan:</p>
+        <ul>
+          <li>Lập hồ sơ công việc</li>
+          <li>Lập hồ sơ nguyên tắc</li>
+          <li>Lập hồ sơ tài liệu điện tử</li>
+          <li>Nộp lưu hồ sơ, tài liệu vào Lưu trữ cơ quan</li>
+          <li>Trách nhiệm của đơn vị và cá nhân trong việc lập hồ sơ</li>
+        </ul>`
+      }
+    };
+
+    function openModal(key) {
+      const data = modalData[key];
+      if (!data) return;
+      modalBody.innerHTML = `
+        <h3><iconify-icon icon="${data.icon}"></iconify-icon> ${data.title}</h3>
+        ${data.body}
+      `;
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.openModal = openModal;
+
+    document.addEventListener('touchmove', (e) => {
+      if (modalOverlay.classList.contains('active') && !e.target.closest('.modal-content')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  </script>
+</body>
+</html>
