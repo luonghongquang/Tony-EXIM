@@ -63,7 +63,13 @@
       position: fixed; inset: 0;
       background: var(--bg-body);
       display: flex; align-items: center; justify-content: center;
-      z-index: 9999; transition: opacity 0.4s;
+      z-index: 9999;
+      transition: opacity 0.4s;
+    }
+    #loading.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
     .loader {
       width: 48px; height: 48px;
@@ -610,7 +616,7 @@
     }
     .modal-content ul li { margin-bottom: 4px; }
 
-    /* ====== BOUNCE ANIMATION ====== */
+    /* ====== ANIMATIONS ====== */
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
@@ -628,7 +634,6 @@
       animation: pulseGlow 3s infinite;
     }
 
-    /* ====== SHAKE on hover for warning ====== */
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-3px); }
@@ -673,15 +678,14 @@
   </style>
 </head>
 <body>
+  <!-- ====== LOADING (có cơ chế dự phòng) ====== -->
   <div id="loading"><div class="loader"></div></div>
 
   <!-- ====== MODAL POP-UP ====== -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content" id="modalContent">
       <button class="modal-close" id="modalClose"><iconify-icon icon="close-outline"></iconify-icon></button>
-      <div id="modalBody">
-        <!-- Nội dung modal sẽ được JS đổ vào -->
-      </div>
+      <div id="modalBody"></div>
     </div>
   </div>
 
@@ -750,7 +754,7 @@
         <div class="hero-inner">
           <span class="article-badge">
             <iconify-icon icon="flask-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
-            Hóa chất · Pháp luật · Chuyển đổi số
+            Hóa chất · Pháp luật · 2026
           </span>
           <h1>
             Luật Hóa Chất 2025<br />
@@ -815,7 +819,7 @@
                 </tr>
                 <tr>
                   <td><strong>Văn bản hướng dẫn</strong></td>
-                  <td>NĐ 24/2026/NĐ-CP, NĐ 25/2026/NĐ-CP, NĐ 26/2026/NĐ-CP, TT 01/2026/TT-BCT, TT 02/2026/TT-BCT</td>
+                  <td>NĐ 24/2026/NĐ-CP, NĐ 25/2026/NĐ-CP, NĐ 26/2026/NĐ-CP, TT 01/2026/TT-BCT</td>
                 </tr>
               </tbody>
             </table>
@@ -850,10 +854,10 @@
               </g>
               <g class="mindmap-node" onclick="openModal('danhmuc')">
                 <rect x="40" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
-                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">3 danh mục</text>
-                <text x="115" y="212" text-anchor="middle" class="node-desc">Cấm · ĐK · KSĐB</text>
+                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">4 danh mục</text>
+                <text x="115" y="212" text-anchor="middle" class="node-desc">Cấm · ĐK · KSĐB · PNUPSC</text>
               </g>
-              <g class="mindmap-node" onclick="openModal('hóa học xanh')">
+              <g class="mindmap-node" onclick="openModal('hóahọc xanh')">
                 <rect x="40" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#c5a3e0" stroke-width="1.8"/>
                 <text x="115" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Hóa học xanh</text>
                 <text x="115" y="332" text-anchor="middle" class="node-desc">Nguyên tắc mới</text>
@@ -880,10 +884,10 @@
                 <text x="805" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Tư vấn chuyên ngành</text>
                 <text x="805" y="332" text-anchor="middle" class="node-desc">Ngành nghề có ĐK</text>
               </g>
-              <g class="mindmap-node" onclick="openModal('tontru')">
+              <g class="mindmap-node" onclick="openModal('chuyendoiso')">
                 <rect x="730" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
-                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Tồn trữ hóa chất</text>
-                <text x="805" y="452" text-anchor="middle" class="node-desc">Dịch vụ có ĐK</text>
+                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Chuyển đổi số</text>
+                <text x="805" y="452" text-anchor="middle" class="node-desc">CSDL chuyên ngành</text>
               </g>
             </svg>
             <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
@@ -898,7 +902,7 @@
             <span class="badge blue">ĐỔI MỚI CỐT LÕI</span>
           </p>
           <p>
-            Khác với Luật Hóa chất 2007 chủ yếu quản lý ở khâu sản xuất và kinh doanh, Luật Hóa chất 2025 thiết lập cơ chế <strong>quản lý hóa chất theo toàn bộ vòng đời</strong>: từ sản xuất, kinh doanh, xuất khẩu, nhập khẩu, vận chuyển, tồn trữ, sử dụng hóa chất đến xử lý chất thải từ hoạt động hóa chất[reference:0].
+            Khác với Luật Hóa chất 2007 chủ yếu quản lý ở khâu sản xuất và kinh doanh, Luật Hóa chất 2025 thiết lập cơ chế <strong>quản lý hóa chất theo toàn bộ vòng đời</strong>: từ sản xuất, kinh doanh, xuất khẩu, nhập khẩu, vận chuyển, tồn trữ, sử dụng hóa chất đến xử lý chất thải từ hoạt động hóa chất.[reference:0]
           </p>
           <div class="grid-3 reveal">
             <div class="card">
@@ -934,9 +938,9 @@
           </div>
 
           <!-- PHẦN 2 -->
-          <h2><iconify-icon icon="list-outline"></iconify-icon> 2. Ba danh mục hóa chất theo Luật mới</h2>
+          <h2><iconify-icon icon="list-outline"></iconify-icon> 2. Bốn danh mục hóa chất theo Nghị định 24/2026/NĐ-CP</h2>
           <p>
-            Tại Luật Hóa chất 2025, hóa chất được quản lý theo <strong>03 danh mục chính</strong> (Điều 9)[reference:1]:
+            Nghị định <strong>24/2026/NĐ-CP</strong> (hiệu lực 17/01/2026) quy định <strong>4 danh mục hóa chất</strong> thuộc phạm vi điều chỉnh của Luật Hóa chất[reference:1]:
           </p>
           <div class="table-wrap">
             <table>
@@ -949,9 +953,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Hóa chất cấm</strong></td>
-                  <td>Mặc định không được sản xuất, kinh doanh, XNK</td>
-                  <td>Chỉ được phép trong trường hợp đặc biệt theo quy định</td>
+                  <td><strong>Hóa chất cơ bản thuộc lĩnh vực công nghiệp hóa chất trọng điểm</strong></td>
+                  <td>Quản lý ở mức khuyến khích phát triển</td>
+                  <td>Ưu đãi đầu tư, hỗ trợ phát triển</td>
                 </tr>
                 <tr>
                   <td><strong>Hóa chất sản xuất, kinh doanh có điều kiện</strong></td>
@@ -963,13 +967,18 @@
                   <td>Thay thế "hóa chất hạn chế SXKD" trong Luật 2007</td>
                   <td>Phải có giấy phép SX, kinh doanh, XNK; lập phiếu kiểm soát mua-bán</td>
                 </tr>
+                <tr>
+                  <td><strong>Hóa chất phải xây dựng Kế hoạch phòng ngừa, ứng phó sự cố</strong></td>
+                  <td>Danh mục mới</td>
+                  <td>Phải lập kế hoạch PNUPSC theo ngưỡng quy định</td>
+                </tr>
               </tbody>
             </table>
           </div>
 
           <div class="highlight-box warning">
             <iconify-icon icon="warning-outline"></iconify-icon>
-            <strong>Điểm mới quan trọng:</strong> Luật thay thế khái niệm <strong>"hóa chất hạn chế sản xuất, kinh doanh"</strong> bằng <strong>"hóa chất cần kiểm soát đặc biệt"</strong>, đồng thời bổ sung quy định về việc lập phiếu kiểm soát mua, bán hóa chất cần kiểm soát đặc biệt và chỉ được bán cho các đối tượng nhất định[reference:2].
+            <strong>Điểm mới quan trọng:</strong> Luật thay thế khái niệm <strong>"hóa chất hạn chế sản xuất, kinh doanh"</strong> bằng <strong>"hóa chất cần kiểm soát đặc biệt"</strong>, đồng thời bổ sung quy định về việc lập phiếu kiểm soát mua, bán hóa chất cần kiểm soát đặc biệt[reference:2].
           </div>
 
           <!-- PHẦN 3 -->
@@ -978,7 +987,7 @@
             <span class="badge success">MỚI</span>
           </p>
           <p>
-            Luật Hóa chất 2025 bổ sung <strong>nguyên tắc hóa học xanh</strong> (Điều 5), yêu cầu chủ đầu tư dự án hóa chất áp dụng bộ nguyên tắc này trong thiết kế, lựa chọn công nghệ, thiết bị, quy trình sản xuất, sử dụng và thải bỏ hóa chất nhằm <strong>giảm thiểu hoặc loại bỏ việc sử dụng và tạo ra hóa chất nguy hiểm</strong>[reference:3].
+            Luật Hóa chất 2025 bổ sung <strong>nguyên tắc hóa học xanh</strong>, yêu cầu chủ đầu tư dự án hóa chất áp dụng bộ nguyên tắc này trong thiết kế, lựa chọn công nghệ, thiết bị, quy trình sản xuất, sử dụng và thải bỏ hóa chất nhằm <strong>giảm thiểu hoặc loại bỏ việc sử dụng và tạo ra hóa chất nguy hiểm</strong>[reference:3].
           </p>
           <div class="highlight-box success">
             <iconify-icon icon="bulb-outline"></iconify-icon>
@@ -1031,18 +1040,18 @@
           <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
             <li>Tổ chức sản xuất hóa chất có điều kiện được xuất khẩu hóa chất do chính tổ chức đó sản xuất theo Giấy chứng nhận đủ điều kiện sản xuất</li>
             <li>Tổ chức kinh doanh hóa chất có điều kiện được xuất khẩu, nhập khẩu hóa chất theo Giấy chứng nhận đủ điều kiện kinh doanh</li>
-            <li>Tổ chức, cá nhân sử dụng hóa chất được nhập khẩu hóa chất có điều kiện để phục vụ mục đích sử dụng[reference:5]</li>
+            <li>Tổ chức, cá nhân sử dụng hóa chất được nhập khẩu hóa chất có điều kiện để phục vụ mục đích sử dụng</li>
           </ul>
 
           <p><strong>Các trường hợp được XNK hóa chất cần kiểm soát đặc biệt:</strong></p>
           <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
             <li>Tổ chức sản xuất hóa chất cần kiểm soát đặc biệt được xuất khẩu hóa chất do chính tổ chức đó sản xuất theo Giấy phép sản xuất và Giấy phép xuất khẩu</li>
-            <li>Tổ chức kinh doanh hóa chất cần kiểm soát đặc biệt được xuất khẩu, nhập khẩu hóa chất theo Giấy phép kinh doanh và Giấy phép xuất khẩu, nhập khẩu[reference:6]</li>
+            <li>Tổ chức kinh doanh hóa chất cần kiểm soát đặc biệt được xuất khẩu, nhập khẩu hóa chất theo Giấy phép kinh doanh và Giấy phép xuất khẩu, nhập khẩu</li>
           </ul>
 
           <div class="highlight-box warning">
             <iconify-icon icon="megaphone-outline"></iconify-icon>
-            <strong>Lưu ý:</strong> Từ ngày <strong>05/3/2026</strong>, thủ tục cấp Giấy phép xuất khẩu, nhập khẩu hóa chất cần kiểm soát đặc biệt đã được triển khai <strong>trực tuyến</strong> trên Cổng dịch vụ công quốc gia[reference:7].
+            <strong>Lưu ý:</strong> Từ ngày <strong>05/3/2026</strong>, thủ tục cấp Giấy phép xuất khẩu, nhập khẩu hóa chất cần kiểm soát đặc biệt đã được triển khai <strong>trực tuyến</strong> trên Cổng dịch vụ công quốc gia.
           </div>
 
           <!-- PHẦN 6 -->
@@ -1076,7 +1085,7 @@
                 </tr>
                 <tr>
                   <td><strong>Thẩm quyền</strong></td>
-                  <td>Cục Hóa chất (Bộ Công Thương) tiếp nhận và tổ chức đánh giá[reference:8]</td>
+                  <td>Cục Hóa chất (Bộ Công Thương) tiếp nhận và tổ chức đánh giá</td>
                 </tr>
               </tbody>
             </table>
@@ -1088,7 +1097,7 @@
             <span class="badge purple">NGHỀ KINH DOANH CÓ ĐIỀU KIỆN</span>
           </p>
           <p>
-            Luật quy định hoạt động tư vấn chuyên ngành hóa chất là <strong>ngành nghề kinh doanh có điều kiện</strong>, bao gồm:
+            Luật quy định hoạt động tư vấn chuyên ngành hóa chất là <strong>ngành nghề kinh doanh có điều kiện</strong>, bao gồm[reference:5]:
           </p>
           <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
             <li>Tư vấn xây dựng</li>
@@ -1096,107 +1105,23 @@
             <li>Tư vấn an toàn, an ninh hóa chất</li>
           </ul>
           <p>
-            Luật cũng quy định rõ điều kiện đối với <strong>tổ chức và cá nhân</strong> hoạt động tư vấn chuyên ngành hóa chất, đồng thời yêu cầu <strong>cấp chứng chỉ</strong> đối với cá nhân hoạt động tư vấn[reference:9].
+            Nghị định <strong>25/2026/NĐ-CP</strong> quy định chi tiết điều kiện đối với tổ chức và cá nhân hoạt động tư vấn, đồng thời yêu cầu <strong>cấp chứng chỉ</strong> đối với cá nhân hoạt động tư vấn[reference:6].
           </p>
 
           <!-- PHẦN 8 -->
-          <h2><iconify-icon icon="business-outline"></iconify-icon> 8. Dịch vụ tồn trữ hóa chất</h2>
+          <h2><iconify-icon icon="laptop-outline"></iconify-icon> 8. Chuyển đổi số trong quản lý nhà nước về hóa chất</h2>
           <p>
-            <span class="badge success">LẦN ĐẦU LUẬT HÓA</span>
+            <span class="badge success">THỂ CHẾ HÓA NQ 57-NQ/TW</span>
           </p>
           <p>
-            Lần đầu tiên, <strong>dịch vụ tồn trữ hóa chất</strong> được đưa vào diện quản lý có điều kiện. Theo Nghị định 26/2026/NĐ-CP, tổ chức, cá nhân cung cấp dịch vụ tồn trữ hóa chất phải có <strong>Giấy chứng nhận đủ điều kiện</strong>.
+            Luật bổ sung quy định về <strong>chuyển đổi số trong quản lý nhà nước về hóa chất</strong> nhằm thể chế hóa Nghị quyết số 57-NQ/TW ngày 22/12/2024 của Bộ Chính trị[reference:7]. Các nội dung chính bao gồm:
           </p>
-          <div class="highlight-box warning">
-            <iconify-icon icon="megaphone-outline"></iconify-icon>
-            <strong>Lộ trình:</strong> Nghĩa vụ chứng nhận đủ điều kiện cung cấp dịch vụ tồn trữ hóa chất có hiệu lực từ <strong>01/7/2026</strong>[reference:10].
-          </div>
-
-          <!-- PHẦN 9 -->
-          <h2><iconify-icon icon="document-text-outline"></iconify-icon> 9. Khai báo hóa chất nhập khẩu</h2>
-          <p>
-            <span class="badge blue">MỞ RỘNG PHẠM VI</span>
-          </p>
-          <p>
-            Theo Nghị định 26/2026/NĐ-CP, cơ chế khai báo hóa chất nhập khẩu được mở rộng đáng kể:
-          </p>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nội dung</th>
-                  <th>Quy định</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Đối tượng khai báo</strong></td>
-                  <td>Tổ chức, cá nhân nhập khẩu hóa chất thuộc <strong>Chương 28 và Chương 29</strong> của Danh mục hàng hóa xuất khẩu, nhập khẩu Việt Nam</td>
-                </tr>
-                <tr>
-                  <td><strong>Phương thức</strong></td>
-                  <td>Khai báo trên <strong>Cổng thông tin một cửa quốc gia</strong> trước khi thông quan</td>
-                </tr>
-                <tr>
-                  <td><strong>Phạm vi</strong></td>
-                  <td>Bất kể hóa chất có thuộc danh mục kiểm soát đặc biệt hay không — miễn là thuộc Chương 28, 29[reference:11]</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- PHẦN 10 -->
-          <h2><iconify-icon icon="alert-circle-outline"></iconify-icon> 10. Xử phạt vi phạm hành chính</h2>
-          <p>
-            Theo Nghị định <strong>275/2026/NĐ-CP</strong> (hiệu lực từ <strong>25/8/2026</strong>, thay thế NĐ71/2019/NĐ-CP), mức xử phạt trong lĩnh vực hóa chất đã <strong>tăng mạnh</strong>[reference:12]:
-          </p>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Hành vi vi phạm</th>
-                  <th>Mức phạt cũ</th>
-                  <th>Mức phạt mới</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Không sử dụng GHS để phân loại hóa chất</td>
-                  <td>3-5 triệu đồng</td>
-                  <td><span class="badge danger">25-30 triệu đồng (tăng 8 lần)</span></td>
-                </tr>
-                <tr>
-                  <td>Đưa hóa chất vào sử dụng/lưu thông nhưng không phân loại</td>
-                  <td>10-15 triệu đồng</td>
-                  <td><span class="badge danger">35-40 triệu đồng</span></td>
-                </tr>
-                <tr>
-                  <td>Không có bảng nội quy an toàn hóa chất</td>
-                  <td>3-5 triệu đồng</td>
-                  <td><span class="badge warning">10-15 triệu đồng</span></td>
-                </tr>
-                <tr>
-                  <td>Kinh doanh hóa chất không có kho tồn trữ hoặc thuê kho không đủ điều kiện</td>
-                  <td>15-20 triệu đồng</td>
-                  <td><span class="badge warning">25-30 triệu đồng</span></td>
-                </tr>
-                <tr>
-                  <td>Sản xuất hóa chất không có kho tồn trữ</td>
-                  <td>15-20 triệu đồng</td>
-                  <td><span class="badge danger">35-40 triệu đồng</span></td>
-                </tr>
-                <tr>
-                  <td>Hóa chất có điều kiện/KSĐB/cấm không phân khu, sắp xếp</td>
-                  <td>3-5 triệu đồng</td>
-                  <td><span class="badge warning">15-20 triệu đồng</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="highlight-box danger">
-            <iconify-icon icon="alert-circle-outline"></iconify-icon>
-            <strong>Mức phạt tối đa:</strong> Cá nhân vi phạm trong lĩnh vực hóa chất có thể bị phạt tới <strong>50 triệu đồng</strong>; trong lĩnh vực vật liệu nổ công nghiệp có thể bị phạt tới <strong>100 triệu đồng</strong>[reference:13].
-          </div>
+          <ul style="margin: 12px 0 16px 22px; color: var(--text-secondary);">
+            <li>Xây dựng <strong>Cơ sở dữ liệu chuyên ngành hóa chất</strong> tập trung, thống nhất</li>
+            <li>Kết nối, chia sẻ dữ liệu giữa cơ quan quản lý nhà nước và doanh nghiệp</li>
+            <li>Số hóa hồ sơ, thủ tục hành chính trong lĩnh vực hóa chất</li>
+            <li>Quản lý hoạt động mua, bán hóa chất cần kiểm soát đặc biệt qua hệ thống điện tử</li>
+          </ul>
 
           <!-- SO SÁNH LUẬT CŨ - MỚI -->
           <h2><iconify-icon icon="swap-horizontal-outline"></iconify-icon> So sánh Luật Hóa chất 2007 vs 2025</h2>
@@ -1273,7 +1198,7 @@
             </div>
             <div class="checklist-card" data-checked="false">
               <iconify-icon icon="square-outline"></iconify-icon>
-              <span>Tra NĐ24/2026/NĐ-CP để xác định nhóm quản lý</span>
+              <span>Tra NĐ 24/2026/NĐ-CP để xác định nhóm quản lý</span>
             </div>
             <div class="checklist-card" data-checked="false">
               <iconify-icon icon="square-outline"></iconify-icon>
@@ -1285,7 +1210,7 @@
             </div>
             <div class="checklist-card" data-checked="false">
               <iconify-icon icon="square-outline"></iconify-icon>
-              <span>Nếu là hóa chất mới: Đăng ký theo NĐ26/TT01</span>
+              <span>Nếu là hóa chất mới: Đăng ký theo NĐ 26/TT 01</span>
             </div>
           </div>
 
@@ -1357,12 +1282,30 @@
   </div>
 
   <script>
-    /* ====== LOADING ====== */
-    window.addEventListener('load', () => {
+    /* ====== LOADING (CƠ CHẾ DỰ PHÒNG 2 LỚP) ====== */
+    (function() {
       const loading = document.getElementById('loading');
-      loading.style.opacity = '0';
-      setTimeout(() => { loading.style.display = 'none'; }, 500);
-    });
+      let hidden = false;
+
+      function hideLoading() {
+        if (hidden) return;
+        hidden = true;
+        loading.classList.add('hidden');
+      }
+
+      // Lớp 1: Khi trang load xong
+      window.addEventListener('load', () => {
+        setTimeout(hideLoading, 400);
+      });
+
+      // Lớp 2: Dự phòng - ẩn sau tối đa 3 giây dù load chưa xong
+      setTimeout(hideLoading, 3000);
+
+      // Lớp 3: Dự phòng - ẩn khi DOM sẵn sàng
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(hideLoading, 800);
+      });
+    })();
 
     /* ====== BACK TO TOP ====== */
     const backBtn = document.getElementById('backToTop');
@@ -1411,7 +1354,7 @@
         body: `<p><strong>Tổng quan:</strong> Luật Hóa chất 2025 được Quốc hội thông qua ngày 14/6/2025, có hiệu lực từ 01/01/2026. Luật gồm <strong>7 chương, 48 điều</strong>, thay thế Luật Hóa chất 2007.</p>
         <ul>
           <li>Quản lý hóa chất theo toàn bộ vòng đời</li>
-          <li>3 danh mục: cấm, SXKD có điều kiện, kiểm soát đặc biệt</li>
+          <li>4 danh mục hóa chất theo NĐ 24/2026/NĐ-CP</li>
           <li>Nguyên tắc hóa học xanh</li>
           <li>Tách riêng giấy phép SX và KD</li>
           <li>Chuyển đổi số trong quản lý nhà nước</li>
@@ -1432,31 +1375,20 @@
       },
       danhmuc: {
         icon: 'list-outline',
-        title: 'Ba danh mục hóa chất',
-        body: `<p>Tại Luật Hóa chất 2025 (Điều 9), hóa chất được quản lý theo 03 danh mục chính:</p>
+        title: 'Bốn danh mục hóa chất',
+        body: `<p>Nghị định 24/2026/NĐ-CP quy định 04 danh mục hóa chất:</p>
         <ul>
-          <li><strong>Hóa chất cấm</strong> — mặc định không được SX, KD, XNK</li>
-          <li><strong>Hóa chất SXKD có điều kiện</strong> — phải có Giấy chứng nhận đủ điều kiện</li>
-          <li><strong>Hóa chất cần kiểm soát đặc biệt</strong> — thay thế "hóa chất hạn chế SXKD"; phải có giấy phép SX, KD, XNK</li>
+          <li><strong>Hóa chất cơ bản thuộc lĩnh vực công nghiệp hóa chất trọng điểm</strong></li>
+          <li><strong>Hóa chất sản xuất, kinh doanh có điều kiện</strong></li>
+          <li><strong>Hóa chất cần kiểm soát đặc biệt</strong> — thay thế "hóa chất hạn chế SXKD"</li>
+          <li><strong>Hóa chất phải xây dựng Kế hoạch phòng ngừa, ứng phó sự cố</strong></li>
         </ul>
-        <p>Luật cũng yêu cầu lập phiếu kiểm soát mua, bán hóa chất cần kiểm soát đặc biệt.</p>`
+        <p>Nghị định có hiệu lực từ 17/01/2026.</p>`
       },
-      hóachấtmới: {
-        icon: 'sparkles-outline',
-        title: 'Đăng ký hóa chất mới',
-        body: `<p>Luật thiết lập cơ chế đăng ký hóa chất mới:</p>
-        <ul>
-          <li><strong>Hóa chất mới</strong> là chất chưa có trong Danh mục hóa chất quốc gia VN và chưa được công nhận trong các danh mục nước ngoài (EU REACH, Japan ENCS...)</li>
-          <li>Thành lập Hội đồng đánh giá (7-9 thành viên)</li>
-          <li>Thời hạn đánh giá: 90 ngày kể từ khi nhận đủ hồ sơ</li>
-          <li>Giám sát tăng cường trong <strong>5 năm đầu</strong> lưu hành</li>
-        </ul>
-        <p>Thẩm quyền: Cục Hóa chất (Bộ Công thương).</p>`
-      },
-      hóa học xanh: {
+      'hóahọc xanh': {
         icon: 'leaf-outline',
         title: 'Nguyên tắc hóa học xanh',
-        body: `<p>Luật Hóa chất 2025 bổ sung <strong>nguyên tắc hóa học xanh</strong> (Điều 5):</p>
+        body: `<p>Luật Hóa chất 2025 bổ sung <strong>nguyên tắc hóa học xanh</strong>:</p>
         <ul>
           <li>Chủ đầu tư dự án hóa chất phải áp dụng trong thiết kế, lựa chọn công nghệ, thiết bị</li>
           <li>Nhằm giảm thiểu hoặc loại bỏ việc sử dụng và tạo ra hóa chất nguy hiểm</li>
@@ -1500,17 +1432,18 @@
           <li>Tư vấn lựa chọn công nghệ, thiết bị</li>
           <li>Tư vấn an toàn, an ninh hóa chất</li>
         </ul>
-        <p>Luật quy định điều kiện đối với tổ chức và cá nhân hoạt động tư vấn, đồng thời yêu cầu <strong>cấp chứng chỉ</strong> đối với cá nhân.</p>`
+        <p>Nghị định 25/2026/NĐ-CP quy định điều kiện đối với tổ chức và cá nhân hoạt động tư vấn, đồng thời yêu cầu <strong>cấp chứng chỉ</strong> đối với cá nhân.</p>`
       },
-      tontru: {
-        icon: 'business-outline',
-        title: 'Dịch vụ tồn trữ hóa chất',
-        body: `<p>Lần đầu tiên, <strong>dịch vụ tồn trữ hóa chất</strong> được đưa vào diện quản lý có điều kiện.</p>
+      chuyendoiso: {
+        icon: 'laptop-outline',
+        title: 'Chuyển đổi số trong quản lý hóa chất',
+        body: `<p>Luật bổ sung quy định về <strong>chuyển đổi số</strong> nhằm thể chế hóa Nghị quyết 57-NQ/TW:</p>
         <ul>
-          <li>Tổ chức, cá nhân cung cấp dịch vụ tồn trữ hóa chất phải có <strong>Giấy chứng nhận đủ điều kiện</strong></li>
-          <li>Nghĩa vụ chứng nhận có hiệu lực từ <strong>01/7/2026</strong></li>
-        </ul>
-        <p>Đây là quy định mới quan trọng đối với các doanh nghiệp logistics, kho bãi.</p>`
+          <li>Xây dựng Cơ sở dữ liệu chuyên ngành hóa chất</li>
+          <li>Kết nối, chia sẻ dữ liệu giữa cơ quan quản lý và doanh nghiệp</li>
+          <li>Số hóa hồ sơ, thủ tục hành chính</li>
+          <li>Quản lý hoạt động mua, bán hóa chất KSĐB qua hệ thống điện tử</li>
+        </ul>`
       }
     };
 
