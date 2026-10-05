@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#121212" />
+  <title>Nghị Định 28/2026/NĐ-CP · Danh Mục Tiền Chất · Tony EXIM</title>
+
+  <link rel="shortcut icon" href="./assets/images/logo2.png" type="image/x-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg-body: #121212;
+      --bg-sidebar: #1e1e1e;
+      --bg-card: #2b2b2b;
+      --bg-card-hover: #3a3a3a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --accent: #ffdb70;
+      --accent-dark: #d4b24a;
+      --border-light: #3a3a3a;
+      --shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.5);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --font: 'Poppins', sans-serif;
+      --green: #7ee0a5;
+      --red: #ff8a8a;
+      --orange: #ffb87a;
+      --blue: #7ec8e3;
+      --purple: #c5a3e0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 15px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    #loading {
+      position: fixed; inset: 0;
+      background: var(--bg-body);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s;
+    }
+    #loading.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader {
+      width: 44px; height: 44px;
+      border: 4px solid var(--bg-card);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1280px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .sidebar {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+    }
+    .sidebar-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--accent);
+      background: #333;
+      flex-shrink: 0;
+    }
+    .sidebar-header { flex: 1; min-width: 140px; }
+    .sidebar-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--accent);
+      background: rgba(255, 219, 112, 0.1);
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-top: 4px;
+    }
+    .sidebar-divider { display: none; }
+    .sidebar-contact {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      text-align: left;
+      font-size: 0.78rem;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+    }
+    .sidebar-contact .item {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+    .sidebar-contact .item iconify-icon {
+      color: var(--accent); font-size: 1.1rem; flex-shrink: 0;
+    }
+    .sidebar-contact .item a {
+      color: var(--text-primary); text-decoration: none;
+      word-break: break-all;
+    }
+    .sidebar-contact .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: block;
+    }
+    .sidebar-social {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-light);
+      flex-wrap: wrap;
+    }
+    .sidebar-social a {
+      color: var(--text-secondary);
+      font-size: 1.4rem;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .sidebar-social a:active {
+      background: var(--bg-card);
+      color: var(--accent);
+      transform: scale(0.92);
+    }
+
+    .main-content { width: 100%; min-width: 0; }
+
+    .navbar {
+      background: var(--bg-sidebar);
+      border-radius: 40px;
+      padding: 6px 10px;
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      overflow-y: hidden;
+      justify-content: flex-start;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .navbar::-webkit-scrollbar { display: none; }
+    .navbar a {
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .navbar a:active { transform: scale(0.95); }
+    .navbar a.active { background: var(--accent); color: #121212; font-weight: 600; }
+
+    .article-card {
+      background: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: linear-gradient(rgba(18,18,18,0.85), rgba(18,18,18,0.95)),
+                  url('https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+      padding: 28px 18px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+    }
+    .hero-inner .article-badge {
+      display: inline-block;
+      background: rgba(255, 219, 112, 0.15);
+      color: var(--accent);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 40px;
+      margin-bottom: 12px;
+    }
+    .hero-inner h1 {
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    .hero-inner h1 span { color: var(--accent); }
+    .hero-inner p {
+      color: var(--text-secondary);
+      font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+      max-width: 640px;
+      margin: 0 auto 14px;
+      padding: 0 6px;
+    }
+
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      align-items: center;
+      justify-content: center;
+    }
+    .article-meta iconify-icon {
+      color: var(--accent); margin-right: 3px;
+      vertical-align: middle;
+    }
+
+    .article-body {
+      font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+      color: var(--text-secondary);
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    .article-body h2 {
+      font-size: clamp(1.05rem, 4vw, 1.3rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 28px 0 14px;
+      padding-left: 12px;
+      border-left: 4px solid var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      line-height: 1.3;
+    }
+    .article-body h2:first-of-type { margin-top: 0; }
+    .article-body h2 iconify-icon { font-size: 1.1em; flex-shrink: 0; }
+
+    .article-body h3 {
+      font-size: clamp(0.95rem, 3.2vw, 1.05rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .article-body p { margin-bottom: 12px; text-align: left; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px dashed rgba(255, 219, 112, 0.4);
+      word-break: break-word;
+    }
+
+    .highlight-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 16px;
+      margin: 16px 0;
+      font-size: clamp(0.82rem, 2.8vw, 0.9rem);
+      line-height: 1.55;
+    }
+    .highlight-box iconify-icon {
+      color: var(--accent); margin-right: 6px;
+      vertical-align: middle;
+      font-size: 1.1em;
+    }
+    .highlight-box.danger { border-left-color: var(--red); }
+    .highlight-box.danger iconify-icon { color: var(--red); }
+    .highlight-box.warning { border-left-color: var(--orange); }
+    .highlight-box.warning iconify-icon { color: var(--orange); }
+    .highlight-box.success { border-left-color: var(--green); }
+    .highlight-box.success iconify-icon { color: var(--green); }
+
+    .table-wrap {
+      position: relative;
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .table-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(to left, var(--bg-sidebar), transparent);
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .table-wrap.scrolled-end::after { opacity: 0; }
+
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      min-width: 480px;
+    }
+    .table-wrap th {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+      font-size: 0.75rem;
+    }
+    .table-wrap td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .table-wrap tr:last-child td { border-bottom: none; }
+
+    .scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: -8px;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+    .scroll-hint iconify-icon { color: var(--accent); }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 219, 112, 0.3);
+      background: rgba(255, 219, 112, 0.1);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .badge.danger {
+      border-color: rgba(255, 138, 138, 0.35);
+      background: rgba(255, 138, 138, 0.1);
+      color: var(--red);
+    }
+    .badge.success {
+      border-color: rgba(126, 224, 165, 0.35);
+      background: rgba(126, 224, 165, 0.1);
+      color: var(--green);
+    }
+    .badge.warning {
+      border-color: rgba(255, 184, 122, 0.35);
+      background: rgba(255, 184, 122, 0.1);
+      color: var(--orange);
+    }
+    .badge.blue {
+      border-color: rgba(126, 200, 227, 0.35);
+      background: rgba(126, 200, 227, 0.1);
+      color: var(--blue);
+    }
+    .badge.purple {
+      border-color: rgba(197, 163, 224, 0.35);
+      background: rgba(197, 163, 224, 0.1);
+      color: var(--purple);
+    }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .checklist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      min-height: 48px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .checklist-card:active {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      transform: scale(0.99);
+    }
+    .checklist-card iconify-icon {
+      font-size: 1.3rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .checklist-card.completed span { text-decoration: line-through; opacity: 0.55; }
+    .checklist-card.completed iconify-icon { color: var(--green); }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 16px 14px;
+      border: 1px solid var(--border-light);
+      text-align: center;
+    }
+    .card:active { transform: scale(0.98); }
+    .card iconify-icon {
+      font-size: 1.7rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+      margin-left: auto; margin-right: auto;
+    }
+    .card h3 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .card p { font-size: 0.76rem; color: var(--text-secondary); margin: 0; }
+
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(255, 219, 112, 0.08), rgba(255, 219, 112, 0.02));
+      border: 1px solid rgba(255, 219, 112, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+    .conclusion-box h3 {
+      color: var(--accent);
+      margin-top: 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conclusion-box ol {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+    .conclusion-box ol li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    .source-note {
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .source-note iconify-icon {
+      color: var(--accent);
+      vertical-align: middle;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 16px;
+      background: var(--accent);
+      color: #121212;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s;
+      z-index: 98;
+      box-shadow: 0 6px 18px rgba(255, 219, 112, 0.4);
+      font-size: 1.2rem;
+      border: none;
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    .back-to-top:active { transform: scale(0.92); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .mindmap-container {
+      position: relative;
+      margin: 20px 0;
+      padding: 14px 12px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .mindmap-container::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(to left, var(--bg-card), transparent);
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .mindmap-svg {
+      width: 100%;
+      height: auto;
+      min-width: 640px;
+      display: block;
+      touch-action: pan-x pan-y;
+    }
+    .mindmap-node {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mindmap-node:active rect,
+    .mindmap-node:active circle {
+      filter: brightness(1.4);
+    }
+    .mindmap-node text {
+      font-family: var(--font);
+      font-size: 11px;
+      fill: var(--text-primary);
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .mindmap-node .node-desc {
+      font-size: 9px;
+      fill: var(--text-muted);
+    }
+    .mindmap-line {
+      stroke: var(--border-light);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.6;
+    }
+    .mindmap-hint {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .mindmap-hint iconify-icon { color: var(--accent); }
+
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 500;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      padding: 0;
+    }
+    .modal-overlay.active {
+      opacity: 1; visibility: visible;
+    }
+    .modal-content {
+      background: var(--bg-sidebar);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 28px;
+      width: 100%;
+      max-width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: 2px;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      z-index: 2;
+    }
+    .modal-close:active {
+      background: var(--accent);
+      color: #121212;
+      transform: scale(0.92);
+    }
+    .modal-content h3 {
+      font-size: 1.05rem;
+      color: var(--accent);
+      margin: 16px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 44px;
+      line-height: 1.3;
+    }
+    .modal-content h3 iconify-icon { font-size: 1.2em; flex-shrink: 0; }
+    .modal-content p {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      text-align: left;
+      line-height: 1.55;
+    }
+    .modal-content ul {
+      margin: 8px 0 12px 18px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .modal-content ul li {
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #121212;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255, 219, 112, 0.3);
+      min-height: 44px;
+      transition: transform 0.2s;
+    }
+    .btn-home:active { transform: scale(0.95); }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 30px 20px;
+        font-size: 15px;
+      }
+      .main-layout {
+        flex-direction: row;
+        gap: 30px;
+        align-items: flex-start;
+      }
+      .sidebar {
+        flex: 0 0 260px;
+        flex-direction: column;
+        padding: 28px 22px 24px;
+        text-align: center;
+        position: sticky;
+        top: 30px;
+        gap: 0;
+      }
+      .sidebar-avatar {
+        width: 90px; height: 90px;
+        margin: 0 auto 14px;
+      }
+      .sidebar-header {
+        flex: none;
+        width: 100%;
+        min-width: 0;
+      }
+      .sidebar-name { font-size: 1.2rem; }
+      .sidebar-title {
+        font-size: 0.78rem;
+        padding: 4px 14px;
+        margin: 6px 0 16px;
+      }
+      .sidebar-divider {
+        display: block;
+        height: 1px;
+        background: var(--border-light);
+        margin: 16px 0;
+      }
+      .sidebar-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 0;
+        border-top: none;
+        font-size: 0.8rem;
+      }
+      .sidebar-social {
+        padding-top: 0;
+        border-top: none;
+        margin-top: 16px;
+        gap: 10px;
+      }
+      .sidebar-social a {
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 1.3rem;
+      }
+
+      .article-card {
+        padding: 28px 30px;
+      }
+      .hero-inner {
+        padding: 40px 24px;
+        margin-bottom: 28px;
+      }
+
+      .table-wrap::after { display: none; }
+      .table-wrap table {
+        min-width: 0;
+        font-size: 0.85rem;
+      }
+      .table-wrap th { padding: 12px 14px; font-size: 0.82rem; }
+      .table-wrap td { padding: 11px 14px; }
+
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+      }
+      .checklist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+      }
+      .checklist-card {
+        padding: 10px 14px;
+        min-height: 0;
+      }
+
+      .modal-overlay {
+        align-items: center;
+        padding: 20px;
+      }
+      .modal-content {
+        border-radius: var(--radius);
+        max-width: 560px;
+        padding: 28px 30px;
+        max-height: 80vh;
+        border-bottom: 1px solid var(--border-light);
+        transform: scale(0.9) translateY(20px);
+      }
+      .modal-overlay.active .modal-content {
+        transform: scale(1) translateY(0);
+      }
+      .modal-content::before { display: none; }
+      .modal-close {
+        top: 14px; right: 18px;
+        width: 36px; height: 36px;
+      }
+      .modal-content h3 {
+        font-size: 1.15rem;
+        padding-right: 0;
+      }
+
+      .mindmap-container {
+        padding: 20px;
+      }
+      .mindmap-svg {
+        min-width: 700px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar {
+        flex: 0 0 280px;
+        padding: 30px 22px 26px;
+      }
+      .sidebar-avatar {
+        width: 100px; height: 100px;
+      }
+      .sidebar-name { font-size: 1.3rem; }
+      .sidebar-title { font-size: 0.85rem; }
+
+      .article-card {
+        padding: 32px 34px;
+      }
+      .hero-inner {
+        padding: 46px 28px;
+      }
+
+      .checklist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+
+    @media (max-width: 400px) {
+      body { padding: 12px 10px; }
+      .article-card { padding: 16px 12px; }
+      .hero-inner { padding: 22px 14px; }
+      .hero-inner h1 { font-size: 1.1rem; }
+      .navbar a { font-size: 0.72rem; padding: 8px 14px; }
+      .sidebar-avatar { width: 52px; height: 52px; }
+      .sidebar-name { font-size: 0.95rem; }
+      .sidebar-social a { font-size: 1.2rem; min-width: 40px; min-height: 40px; }
+      .checklist-card { font-size: 0.78rem; padding: 10px 12px; }
+      .modal-content { padding: 20px 16px 24px; }
+    }
+
+    @media (hover: none) {
+      .card:hover { transform: none; }
+      .checklist-card:hover { transform: none; }
+      .navbar a:hover { background: transparent; color: var(--text-secondary); }
+      .back-to-top:hover { background: var(--accent); transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading"><div class="loader"></div></div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose" aria-label="Đóng"><iconify-icon icon="close-outline"></iconify-icon></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <img
+        src="https://luonghongquang.github.io/Tony-EXIM/assets/images/my-avatar.png"
+        alt="Luong Hong Quang"
+        class="sidebar-avatar"
+      />
+      <div class="sidebar-header">
+        <h1 class="sidebar-name">Luong Hong Quang</h1>
+        <p class="sidebar-title">Import-Export Officer</p>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-contact">
+        <div class="item">
+          <iconify-icon icon="mail-outline"></iconify-icon>
+          <div>
+            <span class="label">Email</span>
+            <a href="mailto:luonghongquang.works@gmail.com">luonghongquang.works@gmail.com</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="phone-portrait-outline"></iconify-icon>
+          <div>
+            <span class="label">Phone</span>
+            <a href="https://zalo.me/0977979850">+84 977 979 850</a>
+          </div>
+        </div>
+        <div class="item">
+          <iconify-icon icon="location-outline"></iconify-icon>
+          <div>
+            <span class="label">Location</span>
+            <span>Thu Duc, Ho Chi Minh, Viet Nam</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-social">
+        <a href="tel:+84977979850" title="Call" aria-label="Call"><iconify-icon icon="call"></iconify-icon></a>
+        <a href="https://www.facebook.com/hongquang.here" title="Facebook" aria-label="Facebook"><iconify-icon icon="logo-facebook"></iconify-icon></a>
+        <a href="https://www.instagram.com/uri.here" title="Instagram" aria-label="Instagram"><iconify-icon icon="logo-instagram"></iconify-icon></a>
+        <a href="https://zalo.me/0977979850" title="Zalo" aria-label="Zalo"><iconify-icon icon="videocam"></iconify-icon></a>
+        <a href="skype:live:.cid.a2714c7614c51e0e?chat" title="Skype" aria-label="Skype"><iconify-icon icon="logo-skype"></iconify-icon></a>
+        <a href="https://www.linkedin.com/in/luonghongquang" title="LinkedIn" aria-label="LinkedIn"><iconify-icon icon="logo-linkedin"></iconify-icon></a>
+      </div>
+    </aside>
+
+    <div class="main-content">
+<nav class="navbar">
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+</nav>
+
+      <article class="article-card">
+        <div class="hero-inner">
+          <span class="article-badge">
+            <iconify-icon icon="shield-alert-outline" style="vertical-align: middle; margin-right: 4px;"></iconify-icon>
+            Pháp luật · Ma túy · Tiền chất
+          </span>
+          <h1>
+            Nghị Định 28/2026/NĐ-CP<br />
+            <span>Danh Mục Chất Ma Túy &amp; Tiền Chất</span>
+          </h1>
+          <p>Toàn cảnh Nghị định mới — ban hành ngày 19/01/2026, có hiệu lực ngay từ ngày ký, thay thế NĐ 57/2022/NĐ-CP và NĐ 90/2024/NĐ-CP. Quy định 4 danh mục với tổng số 694 chất ma túy và tiền chất.</p>
+          <div class="article-meta">
+            <span><iconify-icon icon="calendar-outline"></iconify-icon> 05/10/2026</span>
+            <span><iconify-icon icon="folder-open-outline"></iconify-icon> Pháp luật Phòng chống ma túy</span>
+            <span><iconify-icon icon="time-outline"></iconify-icon> 15 phút đọc</span>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <div class="conclusion-box reveal">
+            <h3><iconify-icon icon="checkmark-done-outline"></iconify-icon> Tóm tắt nhanh</h3>
+            <p style="margin-top: 8px;">Nghị định <strong>28/2026/NĐ-CP</strong> được Chính phủ ban hành ngày <strong>19/01/2026</strong>, có hiệu lực ngay từ ngày ký. Nghị định ban hành kèm theo <strong>4 danh mục</strong> chất ma túy và tiền chất:</p>
+            <ol>
+              <li><strong>Danh mục I:</strong> 58 chất ma túy tuyệt đối cấm sử dụng (chia IA, IB)</li>
+              <li><strong>Danh mục II:</strong> 476 chất ma túy được sử dụng hạn chế (chia IIA, IIB)</li>
+              <li><strong>Danh mục III:</strong> 81 chất ma túy được sử dụng trong nghiên cứu, y tế, thú y</li>
+              <li><strong>Danh mục IV:</strong> 79 tiền chất (chia IVA: 31, IVB: 30, IVC: 18)</li>
+            </ol>
+          </div>
+
+          <h2><iconify-icon icon="book-outline"></iconify-icon> Thông tin cơ bản</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Thông tin</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Số hiệu</strong></td>
+                  <td><span class="badge">28/2026/NĐ-CP</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày ban hành</strong></td>
+                  <td>19/01/2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Ngày hiệu lực</strong></td>
+                  <td><span class="badge success">19/01/2026</span> (kể từ ngày ký)</td>
+                </tr>
+                <tr>
+                  <td><strong>Thay thế</strong></td>
+                  <td>NĐ 57/2022/NĐ-CP và NĐ 90/2024/NĐ-CP</td>
+                </tr>
+                <tr>
+                  <td><strong>Đối tượng áp dụng</strong></td>
+                  <td>Cơ quan, tổ chức, cá nhân có liên quan đến quản lý, sử dụng chất ma túy, tiền chất</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <h2><iconify-icon icon="git-network-outline"></iconify-icon> Sơ đồ tư duy tổng quan</h2>
+          <div class="mindmap-container reveal">
+            <svg class="mindmap-svg" viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <line x1="460" y1="240" x2="170" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="170" y2="440" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="80" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="200" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="320" class="mindmap-line" />
+              <line x1="460" y1="240" x2="750" y2="440" class="mindmap-line" />
+
+              <g class="mindmap-node" onclick="openModal('central')">
+                <circle cx="460" cy="240" r="58" fill="#ffdb70" stroke="#d4b24a" stroke-width="2.5"/>
+                <text x="460" y="232" text-anchor="middle" font-weight="700" font-size="12" fill="#121212">NĐ 28/2026</text>
+                <text x="460" y="250" text-anchor="middle" font-weight="700" font-size="11" fill="#121212">Ma túy</text>
+              </g>
+
+              <g class="mindmap-node" onclick="openModal('dm1')">
+                <rect x="40" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ff8a8a" stroke-width="1.8"/>
+                <text x="115" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Danh mục I</text>
+                <text x="115" y="92" text-anchor="middle" class="node-desc">58 chất cấm tuyệt đối</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('dm2')">
+                <rect x="40" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffb87a" stroke-width="1.8"/>
+                <text x="115" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">Danh mục II</text>
+                <text x="115" y="212" text-anchor="middle" class="node-desc">476 chất hạn chế</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('dm3')">
+                <rect x="40" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="115" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Danh mục III</text>
+                <text x="115" y="332" text-anchor="middle" class="node-desc">81 chất y tế, thú y</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('dm4')">
+                <rect x="40" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="115" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Danh mục IV</text>
+                <text x="115" y="452" text-anchor="middle" class="node-desc">79 tiền chất</text>
+              </g>
+
+              <g class="mindmap-node" onclick="openModal('tamung')">
+                <rect x="730" y="52" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#ffdb70" stroke-width="1.8"/>
+                <text x="805" y="76" text-anchor="middle" font-weight="600" fill="#f5f5f5">Tạm ứng</text>
+                <text x="805" y="92" text-anchor="middle" class="node-desc">Carisoprodol, Etomidate</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('butanediol')">
+                <rect x="730" y="172" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ec8e3" stroke-width="1.8"/>
+                <text x="805" y="196" text-anchor="middle" font-weight="600" fill="#f5f5f5">1,4-Butanediol</text>
+                <text x="805" y="212" text-anchor="middle" class="node-desc">Tiền chất</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('quanly')">
+                <rect x="730" y="292" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#c5a3e0" stroke-width="1.8"/>
+                <text x="805" y="316" text-anchor="middle" font-weight="600" fill="#f5f5f5">Trách nhiệm</text>
+                <text x="805" y="332" text-anchor="middle" class="node-desc">Phân công 5 Bộ</text>
+              </g>
+              <g class="mindmap-node" onclick="openModal('chatmoi')">
+                <rect x="730" y="412" width="150" height="56" rx="14" fill="#2b2b2b" stroke="#7ee0a5" stroke-width="1.8"/>
+                <text x="805" y="436" text-anchor="middle" font-weight="600" fill="#f5f5f5">Chất mới</text>
+                <text x="805" y="452" text-anchor="middle" class="node-desc">Bổ sung danh mục</text>
+              </g>
+            </svg>
+          </div>
+          <div class="mindmap-hint">
+            <iconify-icon icon="hand-left-outline"></iconify-icon>
+            Nhấn vào từng ô để xem chi tiết · Vuốt ngang để xem toàn bộ sơ đồ
+          </div>
+
+          <h2><iconify-icon icon="warning-outline"></iconify-icon> 1. Danh mục I — Các chất ma túy tuyệt đối cấm sử dụng</h2>
+          <p>
+            <span class="badge danger">58 CHẤT</span>
+          </p>
+          <p>
+            Bao gồm các chất ma túy <strong>tuyệt đối cấm sử dụng trong y học và đời sống xã hội</strong>; việc sử dụng các chất này chỉ được phép trong nghiên cứu, kiểm nghiệm, giám định, vì mục đích quốc phòng, an ninh theo quy định đặc biệt của cơ quan có thẩm quyền [citation:1][citation:8].
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Phân nhóm</th>
+                  <th>Đặc điểm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>IA — Chất gây nghiện</strong></td>
+                  <td>Bao gồm các chất gây nghiện và muối, đồng phân, ester, ether và muối của các đồng phân, ester, ether có thể tồn tại</td>
+                </tr>
+                <tr>
+                  <td><strong>IB — Chất hướng thần</strong></td>
+                  <td>Bao gồm các chất hướng thần và muối, đồng phân, muối của đồng phân có thể tồn tại</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="highlight-box danger">
+            <iconify-icon icon="alert-circle-outline"></iconify-icon>
+            <strong>Ví dụ điển hình:</strong> Cần sa và các chế phẩm từ cần sa; Heroin, Diacetylmorphine; các chế phẩm từ thuốc phiện; nhựa thuốc phiện và các hỗn hợp từ cây thuốc phiện [citation:7].
+          </div>
+
+          <h2><iconify-icon icon="time-outline"></iconify-icon> 2. Danh mục II — Các chất ma túy được sử dụng hạn chế</h2>
+          <p>
+            <span class="badge warning">476 CHẤT</span>
+          </p>
+          <p>
+            Bao gồm các chất ma túy <strong>được sử dụng hạn chế</strong> trong nghiên cứu, kiểm nghiệm, giám định, vì mục đích quốc phòng, an ninh hoặc trong lĩnh vực y tế theo quy định của cơ quan có thẩm quyền [citation:1][citation:4].
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Phân nhóm</th>
+                  <th>Đặc điểm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>IIA — Chất gây nghiện</strong></td>
+                  <td>Các chất gây nghiện và muối, đồng phân, ester, ether, muối của các đồng phân, ester, ether có thể tồn tại</td>
+                </tr>
+                <tr>
+                  <td><strong>IIB — Chất hướng thần</strong></td>
+                  <td>Các chất hướng thần và muối, đồng phân, muối của đồng phân có thể tồn tại</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2><iconify-icon icon="medical-outline"></iconify-icon> 3. Danh mục III — Các chất ma túy được sử dụng trong y tế, thú y</h2>
+          <p>
+            <span class="badge blue">81 CHẤT</span>
+          </p>
+          <p>
+            Bao gồm các chất ma túy <strong>được sử dụng trong nghiên cứu, kiểm nghiệm, giám định, vì mục đích quốc phòng, an ninh hoặc trong lĩnh vực y tế, thú y</strong> theo quy định của cơ quan có thẩm quyền [citation:4][citation:8].
+          </p>
+          <div class="highlight-box success">
+            <iconify-icon icon="checkmark-circle-outline"></iconify-icon>
+            Danh mục III bao gồm các chất hướng thần và muối, đồng phân, muối của đồng phân có thể tồn tại — đây là nhóm chất có thể được sử dụng trong y tế với sự kiểm soát chặt chẽ.
+          </div>
+
+          <h2><iconify-icon icon="flask-outline"></iconify-icon> 4. Danh mục IV — Các tiền chất</h2>
+          <p>
+            <span class="badge purple">79 TIỀN CHẤT</span>
+          </p>
+          <p>
+            Danh mục IV quy định về <strong>các tiền chất</strong> — là các hóa chất được sử dụng làm nguyên liệu đầu vào trong quá trình sản xuất chất ma túy. Danh mục này được chia thành 3 phân nhóm [citation:1][citation:4][citation:8]:
+          </p>
+          <div class="grid-3 reveal">
+            <div class="card">
+              <iconify-icon icon="close-circle-outline" style="color: var(--red);"></iconify-icon>
+              <h3>IVA — 31 tiền chất</h3>
+              <p>Tiền chất thiết yếu, tham gia vào cấu trúc chất ma túy, <strong>không có ứng dụng hợp pháp</strong> trong y học và đời sống xã hội; được sử dụng hạn chế trong nghiên cứu, kiểm nghiệm, giám định, vì mục đích quốc phòng, an ninh</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="checkmark-circle-outline" style="color: var(--green);"></iconify-icon>
+              <h3>IVB — 30 tiền chất</h3>
+              <p>Tiền chất thiết yếu, tham gia vào cấu trúc chất ma túy, <strong>có ứng dụng hợp pháp</strong> trong y học và đời sống xã hội</p>
+            </div>
+            <div class="card">
+              <iconify-icon icon="color-filter-outline" style="color: var(--blue);"></iconify-icon>
+              <h3>IVC — 18 tiền chất</h3>
+              <p>Tiền chất là <strong>hóa chất, dung môi, chất xúc tác</strong> dùng trong quá trình sản xuất chất ma túy</p>
+            </div>
+          </div>
+
+          <h2><iconify-icon icon="calendar-outline"></iconify-icon> 5. Lộ trình áp dụng đối với một số chất cụ thể</h2>
+          <p>
+            Nghị định quy định lộ trình áp dụng riêng đối với một số chất cụ thể:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Chất</th>
+                  <th>Lộ trình áp dụng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Carisoprodol, Etomidate</strong></td>
+                  <td>Các tổ chức, cá nhân sản xuất, kinh doanh hợp pháp thực hiện quy định về quản lý chất ma túy theo Nghị định này <strong>kể từ ngày 01/6/2026</strong> [citation:1][citation:4][citation:8]</td>
+                </tr>
+                <tr>
+                  <td><strong>1,4-Butanediol</strong></td>
+                  <td>Các tổ chức, cá nhân sản xuất, kinh doanh hợp pháp thực hiện quy định về quản lý tiền chất theo Nghị định này <strong>trước ngày 31/12/2026</strong> [citation:1][citation:4][citation:8]</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <h2><iconify-icon icon="people-outline"></iconify-icon> 6. Trách nhiệm quản lý của các Bộ, ngành</h2>
+          <p>
+            Nghị định quy định rõ trách nhiệm quản lý nhà nước của từng Bộ, ngành đối với các chất ma túy và tiền chất [citation:1][citation:4][citation:7]:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Bộ, ngành</th>
+                  <th>Trách nhiệm</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Bộ Công an</strong></td>
+                  <td>Quản lý nhà nước các chất ma túy, tiền chất phục vụ nghiên cứu, kiểm nghiệm, giám định (trừ các chất thuộc lĩnh vực y tế, nông nghiệp, môi trường, công nghiệp, quốc phòng) và vì mục đích quốc phòng, an ninh</td>
+                </tr>
+                <tr>
+                  <td><strong>Bộ Công Thương</strong></td>
+                  <td>Quản lý nhà nước về các tiền chất sử dụng trong lĩnh vực công nghiệp</td>
+                </tr>
+                <tr>
+                  <td><strong>Bộ Y tế</strong></td>
+                  <td>Ban hành danh mục và quản lý nhà nước về các chất ma túy, tiền chất được sử dụng trong lĩnh vực y tế</td>
+                </tr>
+                <tr>
+                  <td><strong>Bộ Nông nghiệp và Môi trường</strong></td>
+                  <td>Ban hành danh mục và quản lý nhà nước các chất ma túy, tiền chất được sử dụng trong lĩnh vực nông nghiệp và môi trường</td>
+                </tr>
+                <tr>
+                  <td><strong>Bộ Quốc phòng</strong></td>
+                  <td>Quản lý nhà nước về các tiền chất được sử dụng trong lĩnh vực quốc phòng</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scroll-hint">
+            <iconify-icon icon="swap-horizontal-outline"></iconify-icon>
+            Vuốt ngang để xem đầy đủ bảng
+          </div>
+
+          <h2><iconify-icon icon="sparkles-outline"></iconify-icon> 7. Quy định về phát hiện chất mới</h2>
+          <p>
+            <span class="badge success">ĐIỂM MỚI</span>
+          </p>
+          <p>
+            Khi phát hiện <strong>chất mới chưa có trong các danh mục</strong> ban hành kèm theo Nghị định này liên quan đến mục đích bất hợp pháp hoặc theo quy định tại ba Công ước của Liên hợp quốc về phòng, chống ma túy, Bộ Công an có trách nhiệm chủ trì, phối hợp với Bộ Y tế, Bộ Công Thương, Bộ Khoa học và Công nghệ, Bộ Nông nghiệp và Môi trường, Bộ Quốc phòng và các cơ quan có liên quan xem xét, trình Chính phủ sửa đổi, bổ sung và công bố các danh mục đó [citation:4][citation:8][citation:12].
+          </p>
+          <div class="highlight-box success">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Ý nghĩa:</strong> Cơ chế này đảm bảo danh mục chất ma túy và tiền chất luôn được cập nhật kịp thời với sự xuất hiện của các chất mới, đáp ứng yêu cầu thực tiễn trong công tác phòng, chống ma túy.
+          </div>
+
+          <h2><iconify-icon icon="checkbox-outline"></iconify-icon> Checklist tuân thủ</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+            <iconify-icon icon="hand-left-outline" style="color: var(--accent); vertical-align: middle;"></iconify-icon>
+            Nhấn vào từng mục để đánh dấu hoàn thành.
+          </p>
+
+          <h3><iconify-icon icon="search-outline"></iconify-icon> Đối với doanh nghiệp sản xuất, kinh doanh hóa chất</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Rà soát danh mục chất ma túy, tiền chất theo NĐ 28/2026</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra lộ trình áp dụng cho Carisoprodol, Etomidate (01/6/2026)</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra lộ trình áp dụng cho 1,4-Butanediol (trước 31/12/2026)</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 22px;"><iconify-icon icon="shield-outline"></iconify-icon> Đối với doanh nghiệp xuất nhập khẩu</h3>
+          <div class="checklist-grid reveal">
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Kiểm tra hàng hóa XNK có thuộc danh mục tiền chất không</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Đảm bảo đầy đủ giấy phép, chứng từ theo quy định</span>
+            </div>
+            <div class="checklist-card" data-checked="false">
+              <iconify-icon icon="square-outline"></iconify-icon>
+              <span>Cập nhật thường xuyên khi có sửa đổi, bổ sung danh mục</span>
+            </div>
+          </div>
+
+          <div class="highlight-box success" style="margin-top: 26px;">
+            <iconify-icon icon="bulb-outline"></iconify-icon>
+            <strong>Khuyến nghị:</strong> Doanh nghiệp nên thường xuyên truy cập Cổng thông tin điện tử Chính phủ
+            (<a href="https://vanban.chinhphu.vn" target="_blank" rel="noopener">vanban.chinhphu.vn</a>) và Cổng thông tin Bộ Công an
+            để cập nhật các văn bản mới, đặc biệt là các sửa đổi, bổ sung danh mục chất ma túy và tiền chất.
+          </div>
+
+          <div class="source-note">
+            <span>
+              <iconify-icon icon="link-outline"></iconify-icon>
+              Nguồn: Cổng TTĐT Chính phủ, Viện Kiểm sát nhân dân tối cao, LuatVietnam
+            </span>
+            <span>
+              <iconify-icon icon="document-text-outline"></iconify-icon>
+              Căn cứ: Nghị định 28/2026/NĐ-CP ngày 19/01/2026
+            </span>
+          </div>
+
+          <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid var(--border-light);">
+            <a href="https://luonghongquang.github.io/Tony-EXIM/" class="btn-home">
+              <iconify-icon icon="arrow-back-outline"></iconify-icon>
+              Về trang chủ Tony-EXIM
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Lên đầu trang">
+    <iconify-icon icon="arrow-up-outline"></iconify-icon>
+  </button>
+
+  <script>
+    (function() {
+      const loading = document.getElementById('loading');
+      let hidden = false;
+      function hideLoading() {
+        if (hidden) return;
+        hidden = true;
+        loading.classList.add('hidden');
+      }
+      window.addEventListener('load', () => setTimeout(hideLoading, 400));
+      setTimeout(hideLoading, 3000);
+      document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoading, 800));
+    })();
+
+    const backBtn = document.getElementById('backToTop');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 400) backBtn.classList.add('show');
+          else backBtn.classList.remove('show');
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    if ('IntersectionObserver' in window) {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+      reveals.forEach(el => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
+
+    document.querySelectorAll('.checklist-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const checked = card.getAttribute('data-checked') === 'true';
+        const icon = card.querySelector('iconify-icon');
+        if (!checked) {
+          card.setAttribute('data-checked', 'true');
+          card.classList.add('completed');
+          icon.setAttribute('icon', 'checkmark-circle');
+        } else {
+          card.setAttribute('data-checked', 'false');
+          card.classList.remove('completed');
+          icon.setAttribute('icon', 'square-outline');
+        }
+      });
+    });
+
+    document.querySelectorAll('.table-wrap').forEach(wrap => {
+      function checkScroll() {
+        const isEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+        wrap.classList.toggle('scrolled-end', isEnd);
+      }
+      wrap.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    const modalData = {
+      central: {
+        icon: 'shield-alert-outline',
+        title: 'Nghị định 28/2026/NĐ-CP',
+        body: `<p><strong>Tổng quan:</strong> Nghị định 28/2026/NĐ-CP được Chính phủ ban hành ngày 19/01/2026, có hiệu lực ngay từ ngày ký. Thay thế NĐ 57/2022/NĐ-CP và NĐ 90/2024/NĐ-CP.</p>
+        <ul>
+          <li>Danh mục I: 58 chất ma túy tuyệt đối cấm</li>
+          <li>Danh mục II: 476 chất ma túy hạn chế</li>
+          <li>Danh mục III: 81 chất ma túy y tế, thú y</li>
+          <li>Danh mục IV: 79 tiền chất</li>
+        </ul>`
+      },
+      dm1: {
+        icon: 'warning-outline',
+        title: 'Danh mục I — Cấm tuyệt đối',
+        body: `<p><strong>58 chất ma túy</strong> tuyệt đối cấm sử dụng trong y học và đời sống xã hội.</p>
+        <ul>
+          <li><strong>IA:</strong> Các chất gây nghiện và muối, đồng phân, ester, ether và muối của các đồng phân, ester, ether có thể tồn tại</li>
+          <li><strong>IB:</strong> Các chất hướng thần và muối, đồng phân, muối của đồng phân có thể tồn tại</li>
+        </ul>
+        <p>Ví dụ: Cần sa, Heroin, Diacetylmorphine, các chế phẩm từ thuốc phiện.</p>`
+      },
+      dm2: {
+        icon: 'time-outline',
+        title: 'Danh mục II — Sử dụng hạn chế',
+        body: `<p><strong>476 chất ma túy</strong> được sử dụng hạn chế trong nghiên cứu, kiểm nghiệm, giám định, vì mục đích quốc phòng, an ninh hoặc trong lĩnh vực y tế.</p>
+        <ul>
+          <li><strong>IIA:</strong> Các chất gây nghiện và muối, đồng phân, ester, ether, muối của các đồng phân, ester, ether có thể tồn tại</li>
+          <li><strong>IIB:</strong> Các chất hướng thần và muối, đồng phân, muối của đồng phân có thể tồn tại</li>
+        </ul>`
+      },
+      dm3: {
+        icon: 'medical-outline',
+        title: 'Danh mục III — Y tế, thú y',
+        body: `<p><strong>81 chất ma túy</strong> được sử dụng trong nghiên cứu, kiểm nghiệm, giám định, vì mục đích quốc phòng, an ninh hoặc trong lĩnh vực y tế, thú y theo quy định.</p>
+        <p>Bao gồm các chất hướng thần và muối, đồng phân, muối của đồng phân có thể tồn tại.</p>`
+      },
+      dm4: {
+        icon: 'flask-outline',
+        title: 'Danh mục IV — Tiền chất',
+        body: `<p><strong>79 tiền chất</strong> được chia thành 3 phân nhóm:</p>
+        <ul>
+          <li><strong>IVA (31 tiền chất):</strong> Tiền chất thiết yếu, không có ứng dụng hợp pháp trong y học và đời sống xã hội</li>
+          <li><strong>IVB (30 tiền chất):</strong> Tiền chất thiết yếu, có ứng dụng hợp pháp trong y học và đời sống xã hội</li>
+          <li><strong>IVC (18 tiền chất):</strong> Tiền chất là hóa chất, dung môi, chất xúc tác dùng trong sản xuất chất ma túy</li>
+        </ul>`
+      },
+      tamung: {
+        icon: 'calendar-outline',
+        title: 'Carisoprodol, Etomidate',
+        body: `<p>Các tổ chức, cá nhân sản xuất, kinh doanh hợp pháp Carisoprodol, Etomidate thực hiện các quy định về quản lý chất ma túy theo Nghị định này và các văn bản có liên quan <strong>kể từ ngày 01/6/2026</strong>.</p>`
+      },
+      butanediol: {
+        icon: 'flask-outline',
+        title: '1,4-Butanediol',
+        body: `<p>Các tổ chức, cá nhân sản xuất, kinh doanh hợp pháp 1,4-Butanediol thực hiện các quy định về quản lý tiền chất theo Nghị định này và các văn bản có liên quan <strong>trước ngày 31/12/2026</strong>.</p>`
+      },
+      quanly: {
+        icon: 'people-outline',
+        title: 'Trách nhiệm quản lý',
+        body: `<p><strong>Phân công trách nhiệm giữa các Bộ, ngành:</strong></p>
+        <ul>
+          <li><strong>Bộ Công an:</strong> Quản lý chất ma túy, tiền chất phục vụ nghiên cứu, giám định, quốc phòng, an ninh</li>
+          <li><strong>Bộ Công Thương:</strong> Quản lý tiền chất trong lĩnh vực công nghiệp</li>
+          <li><strong>Bộ Y tế:</strong> Ban hành danh mục và quản lý chất ma túy, tiền chất trong lĩnh vực y tế</li>
+          <li><strong>Bộ Nông nghiệp và Môi trường:</strong> Quản lý chất ma túy, tiền chất trong lĩnh vực nông nghiệp và môi trường</li>
+          <li><strong>Bộ Quốc phòng:</strong> Quản lý tiền chất trong lĩnh vực quốc phòng</li>
+        </ul>`
+      },
+      chatmoi: {
+        icon: 'sparkles-outline',
+        title: 'Phát hiện chất mới',
+        body: `<p>Khi phát hiện chất mới chưa có trong các danh mục ban hành kèm theo Nghị định này liên quan đến mục đích bất hợp pháp hoặc theo quy định tại ba Công ước của Liên hợp quốc về phòng, chống ma túy:</p>
+        <ul>
+          <li>Bộ Công an chủ trì, phối hợp với Bộ Y tế, Bộ Công Thương, Bộ Khoa học và Công nghệ, Bộ Nông nghiệp và Môi trường, Bộ Quốc phòng</li>
+          <li>Xem xét, trình Chính phủ sửa đổi, bổ sung và công bố các danh mục</li>
+        </ul>`
+      }
+    };
+
+    function openModal(key) {
+      const data = modalData[key];
+      if (!data) return;
+      modalBody.innerHTML = `
+        <h3><iconify-icon icon="${data.icon}"></iconify-icon> ${data.title}</h3>
+        ${data.body}
+      `;
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.openModal = openModal;
+
+    document.addEventListener('touchmove', (e) => {
+      if (modalOverlay.classList.contains('active') && !e.target.closest('.modal-content')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+  </script>
+</body>
+</html>
