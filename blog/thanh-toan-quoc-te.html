@@ -1,0 +1,2345 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thanh toán Quốc tế — Khóa học toàn diện 9 phần | TONY EXIM</title>
+<meta name="description" content="Khóa học Thanh toán Quốc tế toàn diện: Các phương thức TT, D/A, D/P, LC, CAD; các loại LC; UCP600 & ISBP745; bộ chứng từ xuất trình; hệ thống SWIFT; bảo lãnh URDG; rủi ro và cách phòng tránh.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --bg-alt:#F4F7FB; --surface:#FFFFFF; --surface-2:#F8FAFD;
+  --text:#0B1B2B; --text-2:#33465C; --muted:#6B7C93;
+  --border:#E3E9F1; --border-strong:#CFDAE7;
+  --primary:#0E2E4F; --primary-2:#1B4E7E; --primary-soft:rgba(27,78,126,.08);
+  --accent:#E08A2B; --accent-2:#F3B45E; --accent-soft:rgba(224,138,43,.12);
+  --cyan:#0EA5E9; --cyan-soft:rgba(14,165,233,.12);
+  --violet:#8B5CF6; --violet-soft:rgba(139,92,246,.12);
+  --emerald:#10B981; --emerald-soft:rgba(16,185,129,.12);
+  --rose:#F43F5E; --rose-soft:rgba(244,63,94,.12);
+  --amber:#F59E0B; --amber-soft:rgba(245,158,11,.12);
+  --success:#178C60; --danger:#C8443B;
+  --shadow-xs:0 1px 2px rgba(11,27,43,.05);
+  --shadow-sm:0 2px 6px rgba(11,27,43,.05), 0 1px 2px rgba(11,27,43,.04);
+  --shadow-md:0 10px 28px -10px rgba(11,27,43,.16), 0 2px 6px rgba(11,27,43,.05);
+  --shadow-lg:0 28px 70px -22px rgba(11,27,43,.28), 0 6px 18px -8px rgba(11,27,43,.10);
+  --r-xs:8px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px; --r-full:999px;
+  --nav-h:68px;
+  --font:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-bounce:cubic-bezier(.34,1.56,.64,1);
+}
+[data-theme="dark"]{
+  --bg:#04070D; --bg-alt:#080E18; --surface:#0B1424; --surface-2:#0F1B2C;
+  --text:#EAF2FC; --text-2:#B9C8DA; --muted:#7E93AB;
+  --border:#16243A; --border-strong:#243754;
+  --primary:#8CBCE8; --primary-2:#B0D2F2; --primary-soft:rgba(140,188,232,.10);
+  --accent:#F5A83E; --accent-2:#F9C57F; --accent-soft:rgba(245,168,62,.16);
+  --cyan:#38BDF8; --cyan-soft:rgba(56,189,248,.16);
+  --violet:#A78BFA; --violet-soft:rgba(167,139,250,.16);
+  --emerald:#34D399; --emerald-soft:rgba(52,211,153,.16);
+  --rose:#FB7185; --rose-soft:rgba(251,113,133,.16);
+  --amber:#FBBF24; --amber-soft:rgba(251,191,36,.16);
+  --success:#3DCB94; --danger:#F0736A;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.4);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:0 12px 30px -12px rgba(0,0,0,.7);
+  --shadow-lg:0 30px 70px -24px rgba(0,0,0,.85);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font);background:var(--bg);color:var(--text);
+  font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;position:relative;
+  transition:background .45s var(--ease), color .45s var(--ease);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent-soft);color:var(--text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1180px,100% - 44px);margin-inline:auto;position:relative;z-index:2}
+@media(max-width:640px){.wrap{width:min(1180px,100% - 32px)}}
+
+/* BACKGROUND — TỐI GIẢN */
+.bg-layer{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -10%,color-mix(in srgb,var(--violet-soft) 50%,transparent),transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 110%,color-mix(in srgb,var(--cyan-soft) 40%,transparent),transparent 60%);
+}
+.bg-stars{
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.7) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,.5) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 70%, rgba(255,255,255,.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 65% 40%, rgba(255,255,255,.4) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 10% 80%, rgba(255,255,255,.5) 50%, transparent 100%),
+    radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,.45) 50%, transparent 100%),
+    radial-gradient(1px 1px at 35% 15%, rgba(255,255,255,.35) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 75% 85%, rgba(255,255,255,.5) 50%, transparent 100%);
+  background-size:100% 100%;
+  opacity:.35;
+}
+[data-theme="dark"] .bg-stars{opacity:.7}
+.bg-vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,transparent 30%,color-mix(in srgb,var(--bg) 60%,transparent) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 100%,transparent 40%,color-mix(in srgb,var(--bg) 55%,transparent) 100%);
+}
+@media(prefers-reduced-motion:reduce){
+  .bg-layer{display:none}
+}
+
+/* PROGRESS */
+.progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;z-index:200;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:300% 100%;animation:progressFlow 6s linear infinite;
+  box-shadow:0 0 18px rgba(224,138,43,.6);transition:width .08s linear;
+}
+@keyframes progressFlow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* NAVBAR */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:150;
+  border-bottom:1px solid transparent;
+  transition:background .35s var(--ease),border-color .35s var(--ease),backdrop-filter .35s;
+}
+.nav.scrolled{
+  background:color-mix(in srgb,var(--bg) 76%,transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);
+  border-bottom-color:var(--border);
+}
+.nav-inner{height:100%;width:min(1180px,100% - 44px);margin-inline:auto;display:flex;align-items:center;gap:28px}
+@media(max-width:640px){.nav-inner{width:calc(100% - 32px)}}
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--primary-2),var(--cyan));
+  background-size:200% 200%;animation:brandShift 5s ease infinite;
+  color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.5px;
+  box-shadow:0 6px 16px -6px rgba(27,78,126,.7);
+}
+@keyframes brandShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+[data-theme="dark"] .brand-mark{color:#06111E}
+.brand-text{font-weight:800;font-size:16.5px;letter-spacing:-.3px;line-height:1}
+.brand-text em{
+  font-style:normal;margin-left:1px;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--accent));
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 4s ease infinite;
+}
+@keyframes textFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.brand-sub{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1.6px;color:var(--muted);font-weight:500;margin-top:3px}
+.nav-links{display:flex;align-items:center;gap:3px;margin-left:auto}
+.nav-links a{
+  position:relative;font-size:13.5px;font-weight:500;color:var(--muted);
+  padding:8px 13px;border-radius:var(--r-full);
+  transition:color .25s var(--ease),background .25s var(--ease);
+}
+.nav-links a:hover{color:var(--text);background:var(--surface-2)}
+.nav-links a.active{color:var(--text);font-weight:600}
+.nav-links a.active::after{
+  content:"";position:absolute;left:50%;bottom:1px;transform:translateX(-50%);
+  width:16px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  box-shadow:0 0 8px var(--accent-soft);
+}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.icon-btn{
+  width:38px;height:38px;border-radius:var(--r-sm);display:grid;place-items:center;
+  color:var(--muted);border:1px solid transparent;
+  transition:all .25s var(--ease);position:relative;overflow:hidden;
+}
+.icon-btn::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at center,var(--accent-soft),transparent 70%);
+  opacity:0;transition:opacity .3s;transform:scale(.6);
+}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.icon-btn:hover::before{opacity:1;transform:scale(1)}
+.icon-btn svg{width:18px;height:18px;stroke-width:1.9;position:relative;z-index:1}
+.menu-btn{display:none}
+@media(max-width:940px){.nav-links{display:none}.menu-btn{display:grid}}
+.mobile-menu{
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:149;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 22px 22px;display:grid;gap:2px;
+  clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease);
+  box-shadow:var(--shadow-md);
+}
+.mobile-menu.open{clip-path:inset(0 0 0 0)}
+.mobile-menu a{padding:13px 4px;font-size:15px;font-weight:500;color:var(--text-2);border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:0}
+.mobile-menu a.active{color:var(--accent);font-weight:600}
+
+/* HERO */
+.article-hero{
+  position:relative;padding:calc(var(--nav-h) + 54px) 0 44px;
+  border-bottom:1px solid var(--border);overflow:hidden;
+}
+.crumbs{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.9px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:24px;
+}
+.crumbs a{transition:color .2s}
+.crumbs a:hover{color:var(--accent)}
+.crumbs span.sep{opacity:.45}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:1.4px;
+  text-transform:uppercase;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));
+  background-size:200% 100%;animation:textFlow 5s ease infinite;
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+  padding:6px 13px;border-radius:var(--r-full);color:var(--accent);
+}
+.chip .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 0 var(--accent);animation:pulseDot 2s ease infinite;
+}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 var(--accent-soft)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.article-title{
+  font-size:clamp(30px,5.2vw,54px);line-height:1.1;letter-spacing:-1.6px;font-weight:800;
+  margin:22px 0 0;max-width:18ch;text-wrap:balance;
+}
+.article-title .accent{
+  position:relative;display:inline-block;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--violet),var(--accent));
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 6s ease infinite;
+}
+.article-lead{margin:22px 0 0;max-width:66ch;font-size:clamp(15.5px,1.5vw,18px);color:var(--text-2);line-height:1.72}
+.article-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:30px;font-size:13px;color:var(--muted)}
+.article-meta .author{display:flex;align-items:center;gap:9px;color:var(--text-2);font-weight:600}
+.avatar{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--violet),var(--cyan));
+  background-size:200% 200%;animation:brandShift 6s ease infinite;
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:.3px;
+}
+[data-theme="dark"] .avatar{color:#06111E}
+.meta-sep{width:4px;height:4px;border-radius:50%;background:var(--border-strong)}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:64px;padding:56px 0 80px;align-items:start}
+@media(max-width:1040px){.layout{grid-template-columns:1fr;gap:0;padding-top:36px}}
+.toc{position:sticky;top:calc(var(--nav-h) + 28px)}
+@media(max-width:1040px){
+  .toc{position:static;margin-bottom:36px;padding:18px 20px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg)}
+}
+.toc-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:9px;
+}
+.toc-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.toc-list{list-style:none;margin:0;padding:0;position:relative;max-height:70vh;overflow-y:auto}
+.toc-list::-webkit-scrollbar{width:4px}
+.toc-list::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:2px}
+.toc-list::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--border)}
+.toc-list a{
+  display:block;position:relative;padding:7px 0 7px 18px;
+  font-size:13px;color:var(--muted);font-weight:500;line-height:1.4;
+  transition:color .25s var(--ease);
+}
+.toc-list a::before{
+  content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%) scaleY(0);
+  width:2px;height:16px;border-radius:2px;
+  background:linear-gradient(180deg,var(--accent),var(--rose));
+  transition:transform .35s var(--ease);
+}
+.toc-list a:hover{color:var(--text-2)}
+.toc-list a.active{color:var(--text);font-weight:600}
+.toc-list a.active::before{transform:translateY(-50%) scaleY(1)}
+.toc-num{
+  font-family:var(--mono);font-size:9.5px;margin-right:7px;font-weight:600;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* CONTENT */
+.content{min-width:0;max-width:820px}
+.section{margin-bottom:76px;scroll-margin-top:100px}
+.section-head{margin-bottom:26px}
+.section-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:1.8px;
+  font-weight:600;display:inline-block;margin-bottom:8px;
+  padding:3px 10px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--muted);
+}
+.section[data-color="cyan"] .section-num{color:var(--cyan);background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.section[data-color="violet"] .section-num{color:var(--violet);background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.section[data-color="accent"] .section-num{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.section[data-color="emerald"] .section-num{color:var(--emerald);background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.section[data-color="rose"] .section-num{color:var(--rose);background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 25%,transparent)}
+.section[data-color="amber"] .section-num{color:var(--amber);background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 25%,transparent)}
+.section h2{
+  font-size:clamp(23px,3vw,31px);line-height:1.2;letter-spacing:-.8px;
+  font-weight:800;margin:0;text-wrap:balance;position:relative;display:inline-block;
+}
+.section h2::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:3px;width:44px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease);
+}
+.section.reveal.in h2::after{transform:scaleX(1)}
+.section-desc{margin:18px 0 0;color:var(--muted);font-size:14.5px;max-width:62ch}
+.content p{margin:0 0 20px;color:var(--text-2);font-size:16.5px;line-height:1.78}
+.content h3{font-size:19px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px;color:var(--text)}
+.content strong{color:var(--text);font-weight:700}
+.content ul{margin:0 0 22px;padding-left:0;list-style:none}
+.content ul li{position:relative;padding-left:26px;margin-bottom:11px;color:var(--text-2);font-size:16px;line-height:1.7}
+.content ul li::before{
+  content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:2px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));transform:rotate(45deg);
+}
+.term{
+  display:inline;font:inherit;font-weight:600;
+  padding:1px 3px;border-radius:4px;color:var(--cyan);
+  border-bottom:1.5px dotted color-mix(in srgb,var(--cyan) 60%,transparent);
+  background:linear-gradient(180deg,transparent 70%,var(--cyan-soft) 70%);
+  transition:background .25s var(--ease),color .25s var(--ease);cursor:pointer;
+}
+.term:hover{background:var(--cyan-soft);color:var(--violet)}
+.term::after{content:"↗";font-size:9px;vertical-align:super;margin-left:2px;opacity:.6;font-family:var(--mono)}
+.callout{
+  position:relative;margin:28px 0;padding:20px 22px 20px 24px;
+  border-radius:var(--r-md);border:1px solid var(--border);
+  background:var(--surface-2);overflow:hidden;
+}
+.callout::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+}
+.callout::after{
+  content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,var(--cyan-soft),transparent 70%);opacity:.6;pointer-events:none;
+}
+.callout.warn::before{background:linear-gradient(180deg,var(--accent),var(--rose))}
+.callout.warn{background:linear-gradient(120deg,var(--accent-soft),transparent 60%)}
+.callout.warn::after{background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+.callout.tip::before{background:linear-gradient(180deg,var(--emerald),var(--cyan))}
+.callout.tip{background:linear-gradient(120deg,var(--emerald-soft),transparent 60%)}
+.callout.tip::after{background:radial-gradient(circle,var(--emerald-soft),transparent 70%)}
+.callout-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px;color:var(--cyan);
+}
+.callout.warn .callout-label{color:var(--accent)}
+.callout.tip .callout-label{color:var(--emerald)}
+.callout p{margin:0;font-size:15px;line-height:1.7;color:var(--text-2);position:relative;z-index:1}
+.callout p + p{margin-top:10px}
+
+/* PAYMENT METHOD CARDS */
+.method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:26px}
+.method-card{
+  position:relative;padding:22px 20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .4s var(--ease);overflow:hidden;cursor:pointer;text-align:left;
+}
+.method-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent));
+  background-size:200% 100%;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+.method-card:hover::before{transform:scaleX(1)}
+.method-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(280px 140px at 50% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.method-card:hover{transform:translateY(-6px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.method-card:hover::after{opacity:1}
+.method-card > *{position:relative;z-index:1}
+.method-code{
+  display:inline-block;font-family:var(--mono);font-size:1.4rem;font-weight:800;
+  letter-spacing:1.5px;margin-bottom:10px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1;
+}
+.method-name{font-size:14.5px;font-weight:700;color:var(--text);margin:0 0 8px;line-height:1.35}
+.method-desc{font-size:13px;color:var(--muted);line-height:1.6;margin:0}
+.method-risk{
+  margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;
+}
+.method-risk .risk-tag{
+  font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:var(--r-full);
+  text-transform:uppercase;font-weight:600;letter-spacing:.5px;
+}
+.risk-low{background:var(--emerald-soft);color:var(--emerald);border:1px solid color-mix(in srgb,var(--emerald) 30%,transparent)}
+.risk-mid{background:var(--amber-soft);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 30%,transparent)}
+.risk-high{background:var(--rose-soft);color:var(--rose);border:1px solid color-mix(in srgb,var(--rose) 30%,transparent)}
+
+/* PART CARDS — 9 phần khóa học */
+.part-list{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+.part-card{
+  position:relative;padding:22px 24px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .4s var(--ease);overflow:hidden;cursor:pointer;text-align:left;
+}
+.part-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+  transform:scaleY(1);
+  transition:transform .5s var(--ease);
+}
+.part-card[data-color="accent"]::before{background:linear-gradient(180deg,var(--accent),var(--rose))}
+.part-card[data-color="emerald"]::before{background:linear-gradient(180deg,var(--emerald),var(--cyan))}
+.part-card[data-color="rose"]::before{background:linear-gradient(180deg,var(--rose),var(--violet))}
+.part-card[data-color="amber"]::before{background:linear-gradient(180deg,var(--amber),var(--accent))}
+.part-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(400px 160px at 0% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.part-card:hover{transform:translateY(-4px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.part-card:hover::after{opacity:1}
+.part-card > *{position:relative;z-index:1}
+.part-head{display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.part-num{
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;padding:5px 12px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--accent);
+  white-space:nowrap;
+}
+.part-title{font-size:17px;font-weight:700;color:var(--text);margin:0;line-height:1.35;flex:1;min-width:200px}
+.part-icon{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);
+  font-size:19px;flex-shrink:0;
+}
+.part-card[data-color="accent"] .part-icon{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.part-card[data-color="emerald"] .part-icon{background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 30%,transparent)}
+.part-card[data-color="rose"] .part-icon{background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 30%,transparent)}
+.part-card[data-color="amber"] .part-icon{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,transparent)}
+.part-points{margin:0;padding:0;list-style:none}
+.part-points li{
+  position:relative;padding-left:24px;margin-bottom:8px;
+  font-size:14.5px;line-height:1.65;color:var(--text-2);
+}
+.part-points li:last-child{margin-bottom:0}
+.part-points li::before{
+  content:"✓";position:absolute;left:0;top:0;
+  color:var(--emerald);font-weight:800;font-size:14px;line-height:1.7;
+}
+
+/* DATA TABLE */
+.data-table{
+  margin:22px 0;border-radius:var(--r-md);
+  border:1px solid var(--border);overflow:hidden;background:var(--surface);
+  overflow-x:auto;
+}
+.data-table table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+.data-table thead th{
+  background:linear-gradient(120deg,var(--surface-2),var(--surface));
+  padding:11px 12px;text-align:left;font-weight:600;color:var(--text);
+  font-size:12px;letter-spacing:.3px;border-bottom:1px solid var(--border);
+  font-family:var(--mono);text-transform:uppercase;
+}
+.data-table tbody td{
+  padding:10px 12px;border-bottom:1px solid var(--border);
+  color:var(--text-2);font-family:var(--mono);font-size:12.5px;
+}
+.data-table tbody tr:last-child td{border-bottom:0}
+.data-table tbody tr:hover td{background:var(--surface-2)}
+.data-table .row-total td{
+  background:var(--accent-soft);font-weight:700;color:var(--accent);
+  border-top:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+}
+
+/* CHECKLIST */
+.checklist{margin-top:26px;border-radius:var(--r-xl);border:1px solid var(--border);background:var(--surface);overflow:hidden}
+.checklist-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:linear-gradient(120deg,var(--emerald-soft),transparent 80%);flex-wrap:wrap;
+}
+.checklist-head h3{margin:0;font-size:14px;font-weight:700;letter-spacing:-.1px}
+.check-progress{display:flex;align-items:center;gap:11px}
+.check-bar{width:110px;height:5px;border-radius:3px;background:var(--border);overflow:hidden;position:relative}
+.check-bar span{
+  display:block;height:100%;width:0%;border-radius:3px;
+  background:linear-gradient(90deg,var(--emerald),var(--cyan),var(--accent));
+  background-size:200% 100%;animation:progressFlow 3s linear infinite;transition:width .5s var(--ease);
+}
+.check-count{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+.check-item{
+  display:flex;align-items:flex-start;gap:14px;padding:15px 20px;
+  border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background .3s var(--ease);position:relative;overflow:hidden;
+}
+.check-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--emerald),var(--cyan));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.check-item:has(input:checked)::before{transform:scaleY(1)}
+.check-item:last-child{border-bottom:0}
+.check-item:hover{background:var(--surface-2)}
+.check-item input{position:absolute;opacity:0;width:0;height:0}
+.checkbox{
+  flex-shrink:0;width:21px;height:21px;border-radius:7px;margin-top:2px;
+  border:1.8px solid var(--border-strong);background:var(--surface);
+  display:grid;place-items:center;transition:all .3s var(--ease);
+}
+.checkbox svg{
+  width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .35s var(--ease);
+}
+[data-theme="dark"] .checkbox svg{stroke:#06111E}
+.check-item input:checked + .checkbox{
+  background:linear-gradient(140deg,var(--emerald),var(--cyan));
+  border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-soft),0 0 16px var(--emerald-soft);
+}
+.check-item input:checked + .checkbox svg{stroke-dashoffset:0}
+.check-item input:focus-visible + .checkbox{outline:2px solid var(--accent);outline-offset:3px}
+.check-text{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.4}
+.check-sub{font-size:13px;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.5}
+.check-item input:checked ~ .check-body .check-text{
+  color:var(--muted);text-decoration:line-through;text-decoration-color:var(--border-strong);
+}
+
+/* FAQ */
+.faq{margin-top:26px;border-top:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--border);position:relative}
+.faq-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--rose),var(--violet));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.faq-item.open::before{transform:scaleY(1)}
+.faq-q{
+  width:100%;display:flex;align-items:center;gap:18px;text-align:left;
+  padding:20px 4px;font-size:16px;font-weight:600;color:var(--text);
+  letter-spacing:-.2px;transition:color .25s var(--ease);
+}
+.faq-q:hover{color:var(--rose)}
+.faq-item.open .faq-q{color:var(--rose)}
+.faq-icon{
+  margin-left:auto;flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--border);display:grid;place-items:center;
+  transition:all .35s var(--ease);position:relative;
+}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;background:var(--muted);border-radius:2px;
+  transition:all .35s var(--ease);
+}
+.faq-icon::before{width:10px;height:1.6px}
+.faq-icon::after{width:1.6px;height:10px}
+.faq-item.open .faq-icon{
+  background:linear-gradient(140deg,var(--rose),var(--violet));
+  border-color:var(--rose);transform:rotate(90deg);box-shadow:0 0 16px var(--rose-soft);
+}
+.faq-item.open .faq-icon::before,
+.faq-item.open .faq-icon::after{background:#fff}
+[data-theme="dark"] .faq-item.open .faq-icon::before,
+[data-theme="dark"] .faq-item.open .faq-icon::after{background:#06111E}
+.faq-item.open .faq-icon::after{height:0}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a-inner{overflow:hidden}
+.faq-a-inner p{margin:0;padding:0 4px 22px;font-size:15px;line-height:1.75;color:var(--muted);max-width:62ch}
+
+/* TAKEAWAYS */
+.takeaways{
+  margin:0 0 70px;padding:28px;border-radius:var(--r-xl);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent 80%);
+  background-size:200% 200%;animation:brandShift 14s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.takeaways::before{
+  content:"";position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 12s ease-in-out infinite;
+}
+@keyframes floatC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(120px,-60px) scale(1.1)}}
+.takeaways h3{
+  margin:0 0 18px;font-size:13px;font-family:var(--mono);letter-spacing:1.6px;
+  text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:10px;
+  position:relative;z-index:1;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.takeaways h3::after{content:"";flex:1;height:1px;background:var(--border)}
+.takeaways ul{margin:0;padding:0;list-style:none;display:grid;gap:13px;position:relative;z-index:1}
+.takeaways li{position:relative;padding-left:30px;font-size:15px;line-height:1.68;color:var(--text-2)}
+.takeaways li::before{
+  content:"";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:6px;
+  background:linear-gradient(140deg,var(--accent-soft),var(--violet-soft));
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+}
+.takeaways li::after{
+  content:"";position:absolute;left:5px;top:10px;width:5px;height:8px;
+  border-right:1.8px solid var(--accent);border-bottom:1.8px solid var(--accent);
+  transform:rotate(42deg);
+}
+
+/* FOOTER */
+.footer{
+  border-top:1px solid var(--border);padding:44px 0 40px;
+  background:var(--bg-alt);position:relative;z-index:2;margin-top:auto;
+}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer p{margin:0;font-size:12.5px;color:var(--muted)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:12.5px;color:var(--muted);transition:color .25s;position:relative}
+.footer-links a::after{
+  content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--rose));transition:width .3s var(--ease);
+}
+.footer-links a:hover{color:var(--accent)}
+.footer-links a:hover::after{width:100%}
+
+/* ============================================================
+   MODAL (BẮT BUỘC — nếu thiếu sẽ bị đẩy xuống dưới footer)
+   ============================================================ */
+.backdrop{
+  position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;
+  background:rgba(6,14,24,.55);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;transition:opacity .32s var(--ease),visibility .32s;
+}
+.backdrop.open{opacity:1;visibility:visible}
+.modal{
+  width:min(600px,100%);max-height:86vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);padding:30px;position:relative;
+  transform:translateY(18px) scale(.97);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);overflow-x:hidden;
+}
+.modal::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+}
+.backdrop.open .modal{transform:none;opacity:1}
+.modal-sm{width:min(500px,100%)}
+.modal::-webkit-scrollbar{width:6px}
+.modal::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:9px;
+  display:grid;place-items:center;color:var(--muted);border:1px solid var(--border);
+  transition:all .25s var(--ease);z-index:2;
+}
+.modal-close:hover{color:var(--danger);border-color:var(--danger);transform:rotate(90deg);box-shadow:0 0 16px var(--rose-soft)}
+.modal-close svg{width:15px;height:15px;stroke-width:2.2}
+.modal-tag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:600;padding:5px 11px;border-radius:var(--r-full);
+  margin-bottom:14px;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+}
+.modal h3{
+  margin:0 0 8px;font-size:21px;font-weight:800;letter-spacing:-.6px;
+  line-height:1.28;padding-right:34px;
+  background:linear-gradient(120deg,var(--text),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+[data-theme="dark"] .modal h3{
+  background:linear-gradient(120deg,var(--text),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.modal-meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;color:var(--muted);
+  margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.modal-body{font-size:14.5px;line-height:1.72;color:var(--text-2)}
+.modal-body p{margin:0 0 12px}
+.modal-body p:last-child{margin-bottom:0}
+.modal-section{margin-top:20px}
+.modal-section h5{
+  margin:0 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--muted);font-weight:600;
+}
+.modal-related{display:flex;flex-wrap:wrap;gap:7px}
+.modal-related span{
+  font-size:12px;padding:5px 11px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);
+  font-weight:500;transition:all .25s var(--ease);
+}
+.modal-related span:hover{
+  background:var(--violet-soft);border-color:var(--violet);color:var(--violet);
+  transform:translateY(-2px);
+}
+.modal-list{margin:0;padding-left:0;list-style:none}
+.modal-list li{
+  position:relative;padding-left:22px;margin-bottom:8px;
+  font-size:14px;line-height:1.65;color:var(--text-2);
+}
+.modal-list li::before{
+  content:"";position:absolute;left:4px;top:9px;width:5px;height:5px;border-radius:50%;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+}
+
+/* ============================================================
+   SEARCH OVERLAY
+   ============================================================ */
+.search-overlay{
+  position:fixed;inset:0;z-index:320;padding:78px 22px 22px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s;
+  overflow-y:auto;
+}
+.search-overlay.open{opacity:1;visibility:visible}
+.search-box{
+  width:min(720px,100%);margin-inline:auto;
+  transform:translateY(-14px);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);
+}
+.search-overlay.open .search-box{transform:none;opacity:1}
+.search-field{
+  display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-lg);box-shadow:var(--shadow-md);position:relative;overflow:hidden;
+}
+.search-field::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+}
+.search-field svg{width:19px;height:19px;color:var(--muted);flex-shrink:0;stroke-width:2}
+.search-field input{
+  flex:1;border:0;background:none;outline:none;padding:19px 0;
+  font-size:16.5px;font-family:inherit;color:var(--text);font-weight:500;
+}
+.search-field input::placeholder{color:var(--muted);font-weight:400}
+.kbd{
+  font-family:var(--mono);font-size:9.5px;padding:4px 7px;border-radius:6px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--muted);flex-shrink:0;
+}
+.search-results{margin-top:22px;display:grid;gap:8px}
+.sr-group-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:16px 0 8px;padding-left:4px;
+}
+.sr-item{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px 16px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .22s var(--ease);position:relative;overflow:hidden;
+}
+.sr-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--violet),var(--accent));
+  transform:scaleY(0);transform-origin:top;transition:transform .3s var(--ease);
+}
+.sr-item:hover,.sr-item.focused{
+  border-color:var(--violet);transform:translateX(4px);
+  box-shadow:0 10px 26px -12px var(--violet);
+}
+.sr-item:hover::before,.sr-item.focused::before{transform:scaleY(1)}
+.sr-icon{
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);font-size:13px;
+}
+.sr-body{min-width:0;flex:1}
+.sr-title{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.35}
+.sr-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:var(--mono);letter-spacing:.3px}
+.sr-title mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px}
+.empty-state{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty-state .es-icon{font-size:32px;margin-bottom:12px;opacity:.5}
+.empty-state p{margin:0;font-size:14px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.06s}
+.reveal-d2{transition-delay:.12s}
+.reveal-d3{transition-delay:.18s}
+.reveal-d4{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .bg-layer{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-stars"></div>
+  <div class="bg-vignette"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- NAVBAR -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="https://luonghongquang.github.io/Tony-EXIM/">
+      <span class="brand-mark">TE</span>
+      <span>
+        <span class="brand-text">TONY<em>EXIM</em></span>
+        <span class="brand-sub">KNOWLEDGE SYSTEM</span>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="Chính">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Tìm kiếm (Ctrl K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" id="themeBtn" aria-label="Đổi chế độ sáng tối">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu di động">
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+</nav>
+
+<!-- HERO -->
+<section class="article-hero">
+  <div class="wrap">
+    <div class="crumbs">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Finance</a><span class="sep">/</span>
+      <span style="color:var(--text-2)">Thanh toán Quốc tế</span>
+    </div>
+    <span class="chip"><span class="dot"></span>INTERNATIONAL PAYMENT · UCP600 · SWIFT</span>
+    <h1 class="article-title">
+      <span class="accent">Thanh toán Quốc tế</span> — Khóa học toàn diện 9 phần
+    </h1>
+    <p class="article-lead">
+      Tổng hợp kiến thức chuyên sâu về nghiệp vụ Thanh toán Quốc tế: các phương thức thanh toán
+      (TT, D/A, D/P, LC, CAD), các loại LC, tập quán UCP600 & ISBP745, bộ chứng từ xuất trình,
+      hệ thống SWIFT, bảo lãnh URDG, rủi ro và cách phòng tránh trong thực tiễn.
+    </p>
+    <div class="article-meta">
+      <span class="author"><span class="avatar">TQ</span> Tony EXIM</span>
+      <span class="meta-sep"></span>
+      <span>15/04/2025</span>
+      <span class="meta-sep"></span>
+      <span>30 phút đọc</span>
+      <span class="meta-sep"></span>
+      <span style="font-family:var(--mono);font-size:11px">UCP600 · ISBP745</span>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="wrap">
+  <div class="layout">
+
+    <aside class="toc">
+      <div class="toc-label">9 Phần khóa học</div>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#p1"><span class="toc-num">P1</span>Tổng quan nghiệp vụ TTQT</a></li>
+        <li><a href="#p2"><span class="toc-num">P2</span>Các loại LC &amp; cách sử dụng</a></li>
+        <li><a href="#p3"><span class="toc-num">P3</span>Chứng từ XT theo LC (I)</a></li>
+        <li><a href="#p4"><span class="toc-num">P4</span>Chứng từ XT theo LC (II)</a></li>
+        <li><a href="#p5"><span class="toc-num">P5</span>Chứng từ XT theo LC (III)</a></li>
+        <li><a href="#p6"><span class="toc-num">P6</span>SWIFT &amp; Bảo lãnh URDG</a></li>
+        <li><a href="#p7"><span class="toc-num">P7</span>Thanh toán tại ngân hàng</a></li>
+        <li><a href="#p8"><span class="toc-num">P8</span>Rủi ro &amp; phòng tránh</a></li>
+        <li><a href="#p9"><span class="toc-num">P9</span>Con đường trở thành chuyên gia</a></li>
+        <li><a href="#faq"><span class="toc-num">?</span>Câu hỏi thường gặp</a></li>
+      </ul>
+    </aside>
+
+    <main class="content">
+
+      <!-- PHẦN 1 -->
+      <section class="section reveal" id="p1" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">PHẦN 1</span>
+          <h2>Tổng quan về nghiệp vụ thanh toán quốc tế</h2>
+          <p class="section-desc">Kiến thức nền tảng về các phương thức thanh toán và hệ thống điện TTQT.</p>
+        </div>
+
+        <p>
+          Thanh toán quốc tế (TTQT) là hoạt động thanh toán giữa các chủ thể kinh tế ở các quốc gia khác nhau,
+          thường gắn với hoạt động xuất nhập khẩu hàng hóa, cung ứng dịch vụ hoặc đầu tư quốc tế.
+          Trong phần này, chúng ta sẽ tìm hiểu <strong>5 phương thức thanh toán phổ biến</strong>,
+          hệ thống điện SWIFT, và quy trình xử lý giao dịch đầy đủ.
+        </p>
+
+        <h3>5 phương thức thanh toán quốc tế</h3>
+        <div class="method-grid">
+          <div class="method-card" data-doc="m-tt">
+            <span class="method-code">T/T</span>
+            <p class="method-name">Telegraphic Transfer — Chuyển tiền điện tử</p>
+            <p class="method-desc">Ngân hàng chuyển tiền theo lệnh của người chuyển cho người thụ hưởng ở nước ngoài.</p>
+            <div class="method-risk">
+              <span class="risk-tag risk-high">Rủi ro cao cho người mua</span>
+            </div>
+          </div>
+
+          <div class="method-card" data-doc="m-da">
+            <span class="method-code">D/A</span>
+            <p class="method-name">Documents against Acceptance — Nhờ thu kèm chứng từ chấp nhận thanh toán</p>
+            <p class="method-desc">Người mua nhận chứng từ khi ký chấp nhận hối phiếu trả sau. Rủi ro cao cho người bán.</p>
+            <div class="method-risk">
+              <span class="risk-tag risk-high">Rủi ro cao cho người bán</span>
+            </div>
+          </div>
+
+          <div class="method-card" data-doc="m-dp">
+            <span class="method-code">D/P</span>
+            <p class="method-name">Documents against Payment — Nhờ thu kèm chứng từ trả ngay</p>
+            <p class="method-desc">Người mua phải thanh toán trước khi được nhận bộ chứng từ. An toàn hơn D/A.</p>
+            <div class="method-risk">
+              <span class="risk-tag risk-mid">Rủi ro trung bình</span>
+            </div>
+          </div>
+
+          <div class="method-card" data-doc="m-lc">
+            <span class="method-code">L/C</span>
+            <p class="method-name">Letter of Credit — Thư tín dụng</p>
+            <p class="method-desc">Ngân hàng phát hành cam kết thanh toán khi người bán xuất trình bộ chứng từ phù hợp.</p>
+            <div class="method-risk">
+              <span class="risk-tag risk-low">An toàn nhất cho cả 2 bên</span>
+            </div>
+          </div>
+
+          <div class="method-card" data-doc="m-cad">
+            <span class="method-code">C.A.D</span>
+            <p class="method-name">Cash Against Documents — Thanh toán đổi chứng từ</p>
+            <p class="method-desc">Người mua thanh toán khi nhận được bộ chứng từ tại ngân hàng. Phổ biến trong thương mại nội địa và cận biên.</p>
+            <div class="method-risk">
+              <span class="risk-tag risk-mid">Rủi ro trung bình</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>Hệ thống điện trong thanh toán quốc tế</h3>
+        <p>
+          Các giao dịch TTQT được truyền tải qua hệ thống điện <strong>SWIFT</strong> (Society for Worldwide
+          Interbank Financial Telecommunication) với các loại điện chuẩn hóa theo mã MT (Message Type):
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Loại điện</th>
+                <th>Mục đích</th>
+                <th>Phương thức</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>MT 103</strong></td>
+                <td>Chuyển tiền thanh toán</td>
+                <td>T/T</td>
+              </tr>
+              <tr>
+                <td><strong>MT 202</strong></td>
+                <td>Chuyển tiền giữa các ngân hàng</td>
+                <td>T/T</td>
+              </tr>
+              <tr>
+                <td><strong>MT 700</strong></td>
+                <td>Phát hành thư tín dụng</td>
+                <td>L/C</td>
+              </tr>
+              <tr>
+                <td><strong>MT 707</strong></td>
+                <td>Sửa đổi thư tín dụng</td>
+                <td>L/C</td>
+              </tr>
+              <tr>
+                <td><strong>MT 740</strong></td>
+                <td>Yêu cầu phát hành L/C</td>
+                <td>L/C</td>
+              </tr>
+              <tr>
+                <td><strong>MT 760</strong></td>
+                <td>Phát hành bảo lãnh</td>
+                <td>Bảo lãnh</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>MT 799</strong></td>
+                <td>Điện tra soát, thông báo</td>
+                <td>Tất cả</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Thực hành</div>
+          <p>
+            Sinh viên được thực hành điền các biểu mẫu ngân hàng thực tế: Lệnh chuyển tiền,
+            Đơn đề nghị nhờ thu, Đơn đề nghị mở L/C, Hợp đồng mua bán ngoại tệ. Đây là kỹ năng
+            cần thiết cho vị trí chuyên viên TTQT.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHẦN 2 -->
+      <section class="section reveal" id="p2" data-color="violet">
+        <div class="section-head">
+          <span class="section-num">PHẦN 2</span>
+          <h2>Các loại LC và cách sử dụng hiệu quả</h2>
+          <p class="section-desc">Nội dung của LC, điều khoản có lợi/bất lợi, các loại LC phổ biến.</p>
+        </div>
+
+        <p>
+          <strong>Thư tín dụng (L/C)</strong> là cam kết thanh toán của ngân hàng phát hành đối với
+          người thụ hưởng khi người này xuất trình bộ chứng từ phù hợp với các điều khoản và điều kiện
+          của L/C. Đây là phương thức thanh toán được sử dụng rộng rãi trong thương mại quốc tế.
+        </p>
+
+        <h3>Nội dung chính của một L/C</h3>
+        <ul>
+          <li><strong>Thông tin các bên</strong>: ngân hàng phát hành, ngân hàng thông báo, người xin mở, người thụ hưởng</li>
+          <li><strong>Loại L/C</strong>: không hủy ngang, có xác nhận, chuyển nhượng, tuần hoàn...</li>
+          <li><strong>Số tiền và loại tiền</strong>: số tiền tối đa, có dung sai cho phép không</li>
+          <li><strong>Thời hạn hiệu lực</strong>: ngày hết hạn xuất trình, địa điểm xuất trình</li>
+          <li><strong>Thời hạn giao hàng</strong>: ngày giao hàng muộn nhất</li>
+          <li><strong>Bộ chứng từ yêu cầu</strong>: hóa đơn, vận đơn, C/O, bảo hiểm...</li>
+          <li><strong>Điều khoản thương mại</strong>: Incoterms, mô tả hàng hóa</li>
+          <li><strong>Điều khoản ngân hàng</strong>: chỉ dẫn cho ngân hàng thông báo, cách trả tiền</li>
+        </ul>
+
+        <h3>Các loại LC phổ biến</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Loại LC</th>
+                <th>Đặc điểm</th>
+                <th>Ứng dụng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Irrevocable L/C</strong></td>
+                <td>Không hủy ngang — không thể sửa/hủy nếu không đồng ý các bên</td>
+                <td>Mặc định theo UCP600</td>
+              </tr>
+              <tr>
+                <td><strong>Confirmed L/C</strong></td>
+                <td>Có ngân hàng thứ 2 xác nhận, bảo đảm thanh toán</td>
+                <td>Khi ngân hàng phát hành có rủi ro cao</td>
+              </tr>
+              <tr>
+                <td><strong>Transferable L/C</strong></td>
+                <td>Có thể chuyển nhượng cho người thụ hưởng thứ hai</td>
+                <td>Khi người bán là trung gian</td>
+              </tr>
+              <tr>
+                <td><strong>Revolving L/C</strong></td>
+                <td>Tuần hoàn — tự động tái lập sau mỗi lần sử dụng</td>
+                <td>Hợp đồng dài hạn, giao hàng nhiều lần</td>
+              </tr>
+              <tr>
+                <td><strong>Back-to-Back L/C</strong></td>
+                <td>LC giáp lưng, dựa trên LC gốc</td>
+                <td>Giao dịch trung gian phức tạp</td>
+              </tr>
+              <tr>
+                <td><strong>Standby L/C</strong></td>
+                <td>LC dự phòng, chỉ thanh toán khi có vi phạm</td>
+                <td>Bảo đảm thực hiện hợp đồng</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>Red Clause L/C</strong></td>
+                <td>Điều khoản đỏ — cho phép ứng trước tiền</td>
+                <td>Người bán cần vốn sản xuất</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Lưu ý</div>
+          <p>
+            Khi đọc L/C cần <strong>phân tích kỹ các điều khoản</strong> để nhận biết điều khoản có lợi
+            và bất lợi. Ví dụ: L/C yêu cầu vận đơn "shipped on board" là có lợi cho người mua,
+            nhưng bất lợi cho người bán. L/C yêu cầu chứng từ do người mua chỉ định là có lợi cho
+            người mua, bất lợi cho người bán.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHẦN 3 -->
+      <section class="section reveal" id="p3" data-color="accent">
+        <div class="section-head">
+          <span class="section-num">PHẦN 3</span>
+          <h2>Chuẩn bị &amp; kiểm tra bộ chứng từ xuất trình (Phần I)</h2>
+          <p class="section-desc">Tập quán TTQT, UCP600, ISBP745 và các chứng từ cơ bản.</p>
+        </div>
+
+        <p>
+          <strong>UCP600</strong> (Uniform Customs and Practice for Documentary Credits) là tập quán
+          thống nhất về tín dụng chứng từ do Phòng Thương mại Quốc tế (ICC) ban hành.
+          <strong>ISBP745</strong> (International Standard Banking Practice) là tài liệu hướng dẫn
+          thực hành kiểm tra chứng từ theo UCP600.
+        </p>
+
+        <h3>Các điều khoản UCP600 quan trọng</h3>
+        <ul>
+          <li><strong>Điều 2</strong> — Định nghĩa các khái niệm cơ bản: L/C, người thụ hưởng, xuất trình...</li>
+          <li><strong>Điều 4</strong> — L/C độc lập với hợp đồng mua bán</li>
+          <li><strong>Điều 5</strong> — Ngân hàng xử lý chứng từ, không xử lý hàng hóa</li>
+          <li><strong>Điều 14</strong> — Tiêu chuẩn kiểm tra chứng từ (5 ngày làm việc)</li>
+          <li><strong>Điều 18</strong> — Hóa đơn thương mại (Commercial Invoice)</li>
+          <li><strong>Điều 20</strong> — Vận đơn đường biển (Bill of Lading)</li>
+          <li><strong>Điều 28</strong> — Chứng từ bảo hiểm (Insurance Certificate)</li>
+        </ul>
+
+        <h3>Chứng từ cơ bản trong bộ chứng từ xuất trình</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Chứng từ</th>
+                <th>Yêu cầu chính</th>
+                <th>UCP600</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Commercial Invoice</strong></td>
+                <td>Phát hành bởi người thụ hưởng, ghi tên người xin mở L/C, mô tả hàng khớp với L/C</td>
+                <td>Điều 18</td>
+              </tr>
+              <tr>
+                <td><strong>Packing List</strong></td>
+                <td>Chi tiết đóng gói, số kiện, trọng lượng, kích thước</td>
+                <td>Theo L/C</td>
+              </tr>
+              <tr>
+                <td><strong>Bill of Lading (B/L)</strong></td>
+                <td>Vận đơn gốc, đã xếp hàng, consignee theo L/C</td>
+                <td>Điều 20</td>
+              </tr>
+              <tr>
+                <td><strong>Airway Bill (AWB)</strong></td>
+                <td>Vận đơn hàng không, ghi rõ cảng đến</td>
+                <td>Điều 23</td>
+              </tr>
+              <tr>
+                <td><strong>Certificate of Origin (C/O)</strong></td>
+                <td>Xác nhận xuất xứ, có thể là Form D, E, AI...</td>
+                <td>Theo L/C</td>
+              </tr>
+              <tr>
+                <td><strong>Insurance Certificate</strong></td>
+                <td>Chứng từ bảo hiểm, số tiền bảo hiểm ≥ 110% trị giá CIF</td>
+                <td>Điều 28</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>Các chứng từ khác</strong></td>
+                <td>Giấy chứng nhận chất lượng, kiểm dịch, packing declaration...</td>
+                <td>Theo L/C</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Thực hành</div>
+          <p>
+            Sinh viên phân tích các bộ chứng từ thực tế, kiểm tra tính phù hợp với L/C,
+            xác định các lỗi thường gặp (discrepancies) và cách xử lý.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHẦN 4 -->
+      <section class="section reveal" id="p4" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">PHẦN 4</span>
+          <h2>Chuẩn bị &amp; kiểm tra bộ chứng từ xuất trình (Phần II)</h2>
+          <p class="section-desc">Phân tích chuyên sâu về BL, AWB, C/O theo UCP600 &amp; ISBP745.</p>
+        </div>
+
+        <p>
+          Ở phần này, chúng ta đi sâu vào <strong>3 chứng từ quan trọng nhất</strong> trong bộ chứng từ
+          xuất trình theo L/C: Vận đơn đường biển (B/L), Vận đơn hàng không (AWB), và
+          Giấy chứng nhận xuất xứ (C/O).
+        </p>
+
+        <h3>1. Vận đơn đường biển (B/L) — Điều 20 UCP600</h3>
+        <ul>
+          <li>Phải ghi rõ tên người chuyên chở (carrier) và được ký bởi carrier hoặc đại lý</li>
+          <li>Phải thể hiện hàng đã được xếp lên tàu (shipped on board) hoặc có ghi chú on board</li>
+          <li>Cảng xếp và cảng dỡ phải phù hợp với L/C</li>
+          <li>Consignee phải đúng theo yêu cầu của L/C (to order, to order of..., hoặc ghi tên)</li>
+          <li>Không được ghi "clean" nếu có ghi chú xấu về hàng hóa</li>
+        </ul>
+
+        <h3>2. Vận đơn hàng không (AWB) — Điều 23 UCP600</h3>
+        <ul>
+          <li>Phải ghi rõ tên hãng hàng không và được ký bởi hãng hoặc đại lý</li>
+          <li>Phải thể hiện ngày giao hàng cho người chuyên chở hoặc ngày phát hành</li>
+          <li>Cảng đi và cảng đến phải phù hợp với L/C</li>
+          <li>AWB không phải là chứng từ sở hữu hàng hóa (không lưu hành được)</li>
+        </ul>
+
+        <h3>3. Giấy chứng nhận xuất xứ (C/O)</h3>
+        <ul>
+          <li>Phải do cơ quan có thẩm quyền cấp (VCCI, Cục XNK, Bộ Công Thương)</li>
+          <li>Phải khớp về mô tả hàng hóa, số lượng, trị giá với Invoice</li>
+          <li>Phải còn hiệu lực tại thời điểm xuất trình</li>
+          <li>Có nhiều form khác nhau (D, E, AI, RCEP, CPTPP) tùy FTA</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Discrepancies thường gặp</div>
+          <p>
+            Các lỗi thường gặp trong bộ chứng từ: tên người thụ hưởng viết sai, mô tả hàng hóa
+            không khớp, số tiền Invoice khác L/C, B/L ghi "clean on board" thiếu chữ ký, C/O
+            hết hạn... Mỗi lỗi có thể khiến ngân hàng từ chối thanh toán, gây thiệt hại lớn.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHẦN 5 -->
+      <section class="section reveal" id="p5" data-color="rose">
+        <div class="section-head">
+          <span class="section-num">PHẦN 5</span>
+          <h2>Chuẩn bị &amp; kiểm tra bộ chứng từ xuất trình (Phần III)</h2>
+          <p class="section-desc">Chứng từ bảo hiểm và các chứng từ còn lại.</p>
+        </div>
+
+        <p>
+          Phần này tập trung vào <strong>Chứng từ bảo hiểm (Insurance Certificate)</strong> và
+          các chứng từ bổ sung khác trong bộ chứng từ xuất trình theo L/C.
+        </p>
+
+        <h3>Chứng từ bảo hiểm — Điều 28 UCP600</h3>
+        <ul>
+          <li>Phải do công ty bảo hiểm hoặc đại lý được ủy quyền phát hành và ký</li>
+          <li>Ngày phát hành không được muộn hơn ngày xếp hàng lên tàu (nếu L/C yêu cầu)</li>
+          <li>Số tiền bảo hiểm tối thiểu = 110% trị giá CIF hoặc CIP theo Incoterms</li>
+          <li>Loại tiền bảo hiểm phải cùng loại tiền của L/C</li>
+          <li>Phạm vi bảo hiểm phải phù hợp với yêu cầu của L/C</li>
+          <li>Có thể là Insurance Policy hoặc Insurance Certificate</li>
+        </ul>
+
+        <h3>Các chứng từ khác</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Chứng từ</th>
+                <th>Mục đích</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Certificate of Quality</strong></td>
+                <td>Chứng nhận chất lượng sản phẩm</td>
+              </tr>
+              <tr>
+                <td><strong>Certificate of Inspection</strong></td>
+                <td>Chứng nhận giám định hàng hóa</td>
+              </tr>
+              <tr>
+                <td><strong>Phytosanitary Certificate</strong></td>
+                <td>Giấy kiểm dịch thực vật</td>
+              </tr>
+              <tr>
+                <td><strong>Fumigation Certificate</strong></td>
+                <td>Giấy chứng nhận hun trùng</td>
+              </tr>
+              <tr>
+                <td><strong>Beneficiary's Certificate</strong></td>
+                <td>Giấy xác nhận của người thụ hưởng</td>
+              </tr>
+              <tr>
+                <td><strong>Shipping Company's Certificate</strong></td>
+                <td>Giấy xác nhận của hãng tàu</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>Packing Declaration</strong></td>
+                <td>Bản khai đóng gói (đặc biệt cho hàng gỗ)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PHẦN 6 -->
+      <section class="section reveal" id="p6" data-color="amber">
+        <div class="section-head">
+          <span class="section-num">PHẦN 6</span>
+          <h2>Hệ thống SWIFT &amp; Bảo lãnh quốc tế</h2>
+          <p class="section-desc">SWIFT, thanh toán điện tử liên ngân hàng, và bảo lãnh theo URDG.</p>
+        </div>
+
+        <h3>Hệ thống SWIFT</h3>
+        <p>
+          <strong>SWIFT</strong> (Society for Worldwide Interbank Financial Telecommunication) là
+          mạng viễn thông tài chính toàn cầu được thành lập năm 1973, cho phép các ngân hàng
+          truyền tải thông tin giao dịch an toàn và chuẩn hóa.
+        </p>
+        <ul>
+          <li>Trụ sở chính tại La Hulpe, Bỉ</li>
+          <li>Hơn 11.000 tổ chức tài chính tại hơn 200 quốc gia</li>
+          <li>Mỗi ngân hàng có mã SWIFT/BIC (8 hoặc 11 ký tự)</li>
+          <li>Sử dụng chuẩn MT (Message Type) cho từng loại giao dịch</li>
+        </ul>
+
+        <h3>Hệ thống thanh toán điện tử liên ngân hàng (IBPS)</h3>
+        <p>
+          Tại Việt Nam, hệ thống <strong>IBPS</strong> (Interbank Payment System) do Ngân hàng Nhà nước
+          vận hành, kết nối các ngân hàng thương mại trong nước. Hệ thống xử lý các giao dịch
+          VND và ngoại tệ, được kết nối với SWIFT để thực hiện thanh toán quốc tế.
+        </p>
+
+        <h3>Bảo lãnh quốc tế &amp; tập quán URDG</h3>
+        <p>
+          <strong>URDG 758</strong> (Uniform Rules for Demand Guarantees) là bộ quy tắc thống nhất
+          về bảo lãnh theo yêu cầu do ICC ban hành, được áp dụng rộng rãi trong thương mại quốc tế.
+        </p>
+
+        <h3>Các loại hình bảo lãnh phổ biến</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Loại bảo lãnh</th>
+                <th>Mục đích</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Bảo lãnh dự thầu</strong></td>
+                <td>Bid Bond — đảm bảo nhà thầu không rút lui sau khi trúng thầu</td>
+              </tr>
+              <tr>
+                <td><strong>Bảo lãnh thực hiện hợp đồng</strong></td>
+                <td>Performance Bond — đảm bảo thực hiện đúng hợp đồng</td>
+              </tr>
+              <tr>
+                <td><strong>Bảo lãnh hoàn trả tiền ứng trước</strong></td>
+                <td>Advance Payment Guarantee — hoàn trả nếu không giao hàng</td>
+              </tr>
+              <tr>
+                <td><strong>Bảo lãnh thanh toán</strong></td>
+                <td>Payment Guarantee — đảm bảo thanh toán đúng hạn</td>
+              </tr>
+              <tr>
+                <td><strong>Bảo lãnh bảo hành</strong></td>
+                <td>Warranty Guarantee — đảm bảo chất lượng sau giao hàng</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>Bảo lãnh đối ứng</strong></td>
+                <td>Counter Guarantee — ngân hàng A bảo lãnh cho ngân hàng B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Thực hành</div>
+          <p>
+            Sinh viên thực hành điền đơn mở bảo lãnh, phân tích các mẫu bảo lãnh đối ứng,
+            bảo lãnh dự thầu, bảo lãnh hoàn trả tiền ứng trước, bảo lãnh thanh toán trong thực tế.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHẦN 7 -->
+      <section class="section reveal" id="p7" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">PHẦN 7</span>
+          <h2>Thực hiện thanh toán quốc tế tại ngân hàng</h2>
+          <p class="section-desc">Mô hình ngân hàng, quy trình xử lý, sản phẩm tài trợ thương mại.</p>
+        </div>
+
+        <h3>Mô hình tổ chức ngân hàng</h3>
+        <p>
+          Các ngân hàng thương mại thường có cấu trúc tổ chức bao gồm nhiều phòng ban chức năng,
+          trong đó <strong>Phòng Thanh toán Quốc tế</strong> (International Payment Department)
+          là bộ phận trực tiếp xử lý các giao dịch TTQT.
+        </p>
+
+        <h3>Các bộ phận chính trong ngân hàng</h3>
+        <ul>
+          <li><strong>Phòng Khách hàng Doanh nghiệp (Corporate Banking)</strong> — Tiếp nhận yêu cầu, tư vấn</li>
+          <li><strong>Phòng Thanh toán Quốc tế</strong> — Xử lý giao dịch L/C, nhờ thu, chuyển tiền</li>
+          <li><strong>Phòng Kinh doanh Ngoại tệ</strong> — Mua bán ngoại tệ, quản lý rủi ro tỷ giá</li>
+          <li><strong>Phòng Tín dụng</strong> — Thẩm định, phê duyệt tài trợ thương mại</li>
+          <li><strong>Phòng Tuân thủ (Compliance)</strong> — Kiểm tra AML/CFT, tuân thủ pháp luật</li>
+        </ul>
+
+        <h3>Quy trình xử lý tại ngân hàng</h3>
+        <ol style="margin:0 0 22px 22px;color:var(--text-2);font-size:16px;line-height:1.85;">
+          <li><strong>Tiếp nhận yêu cầu</strong> từ khách hàng (doanh nghiệp XNK)</li>
+          <li><strong>Kiểm tra hồ sơ</strong>: hợp đồng, chứng từ, tính hợp lệ</li>
+          <li><strong>Thẩm định</strong>: tuân thủ pháp luật, AML/CFT, hạn mức tín dụng</li>
+          <li><strong>Phê duyệt</strong> giao dịch theo thẩm quyền</li>
+          <li><strong>Thực hiện giao dịch</strong>: truyền điện SWIFT, mở L/C, phát hành bảo lãnh</li>
+          <li><strong>Theo dõi và tất toán</strong> giao dịch</li>
+        </ol>
+
+        <h3>Các sản phẩm tài trợ thương mại</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Mục đích</th>
+                <th>Đối tượng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Chiết khấu B/L</strong></td>
+                <td>Ngân hàng mua lại B/L, cho DN vay vốn trước khi thu tiền</td>
+                <td>Nhà xuất khẩu</td>
+              </tr>
+              <tr>
+                <td><strong>Chiết khấu L/C</strong></td>
+                <td>Ngân hàng ứng trước tiền thanh toán L/C</td>
+                <td>Nhà xuất khẩu</td>
+              </tr>
+              <tr>
+                <td><strong>Cho vay thanh toán L/C</strong></td>
+                <td>Tài trợ vốn để nhà nhập khẩu thanh toán L/C</td>
+                <td>Nhà nhập khẩu</td>
+              </tr>
+              <tr>
+                <td><strong>Factoring</strong></td>
+                <td>Mua lại khoản phải thu từ hoạt động xuất khẩu</td>
+                <td>Nhà xuất khẩu</td>
+              </tr>
+              <tr>
+                <td><strong>Forfaiting</strong></td>
+                <td>Mua lại chứng từ có kỳ hạn dài</td>
+                <td>Nhà xuất khẩu</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>Bank Guarantee</strong></td>
+                <td>Phát hành bảo lãnh cho khách hàng</td>
+                <td>Cả 2 bên</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PHẦN 8 -->
+      <section class="section reveal" id="p8" data-color="violet">
+        <div class="section-head">
+          <span class="section-num">PHẦN 8</span>
+          <h2>Rủi ro trong sử dụng các phương thức TTQT &amp; BLQT</h2>
+          <p class="section-desc">Rủi ro và cách phòng tránh, tranh chấp điển hình.</p>
+        </div>
+
+        <p>
+          Mỗi phương thức thanh toán quốc tế đều có những rủi ro riêng cho người mua và người bán.
+          Việc hiểu rõ rủi ro và có biện pháp phòng tránh là yếu tố then chốt để đảm bảo
+          an toàn trong giao dịch.
+        </p>
+
+        <h3>Rủi ro theo phương thức thanh toán</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Phương thức</th>
+                <th>Rủi ro cho người mua</th>
+                <th>Rủi ro cho người bán</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>T/T trả trước</strong></td>
+                <td>Cao (mất tiền nếu người bán không giao hàng)</td>
+                <td>Thấp</td>
+              </tr>
+              <tr>
+                <td><strong>T/T trả sau</strong></td>
+                <td>Thấp</td>
+                <td>Cao (giao hàng nhưng không được thanh toán)</td>
+              </tr>
+              <tr>
+                <td><strong>D/P</strong></td>
+                <td>Trung bình (phải thanh toán để nhận chứng từ)</td>
+                <td>Trung bình (người mua có thể từ chối)</td>
+              </tr>
+              <tr>
+                <td><strong>D/A</strong></td>
+                <td>Thấp</td>
+                <td>Cao (nhận chứng từ nhưng có thể chậm trả)</td>
+              </tr>
+              <tr>
+                <td><strong>L/C</strong></td>
+                <td>Thấp (ngân hàng đảm bảo)</td>
+                <td>Thấp (nếu chứng từ phù hợp)</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>C.A.D</strong></td>
+                <td>Trung bình</td>
+                <td>Trung bình</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Cách phòng tránh rủi ro</h3>
+        <ul>
+          <li><strong>Thẩm định đối tác</strong> kỹ trước khi ký hợp đồng</li>
+          <li><strong>Lựa chọn phương thức thanh toán</strong> phù hợp với mức độ tin cậy của đối tác</li>
+          <li><strong>Kiểm tra kỹ L/C</strong> trước khi thực hiện, phát hiện điều khoản bất lợi</li>
+          <li><strong>Chuẩn bị bộ chứng từ</strong> chính xác, đầy đủ theo yêu cầu L/C</li>
+          <li><strong>Sử dụng dịch vụ xác nhận L/C</strong> khi ngân hàng phát hành có rủi ro cao</li>
+          <li><strong>Mua bảo hiểm</strong> cho hàng hóa vận chuyển</li>
+          <li><strong>Tư vấn luật sư</strong> khi có tranh chấp phức tạp</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Tranh chấp điển hình</div>
+          <p>
+            <strong>Tranh chấp về điều khoản thanh toán:</strong> Người mua và người bán không thống nhất
+            được về đồng tiền thanh toán, thời hạn thanh toán, phương thức thanh toán.<br>
+            <strong>Tranh chấp về chứng từ:</strong> Ngân hàng từ chối thanh toán vì chứng từ có lỗi,
+            người bán yêu cầu người mua chấp nhận lỗi.<br>
+            <strong>Tranh chấp về hàng hóa:</strong> Hàng hóa không đúng chất lượng, số lượng, chủng loại
+            so với hợp đồng.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHẦN 9 -->
+      <section class="section reveal" id="p9" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">PHẦN 9</span>
+          <h2>Con đường trở thành chuyên gia TTQT</h2>
+          <p class="section-desc">Kỹ năng, định hướng nghề nghiệp, và xử lý tình huống thực tế.</p>
+        </div>
+
+        <p>
+          Để trở thành một chuyên gia Thanh toán Quốc tế, bạn cần có sự kết hợp của
+          <strong>kiến thức chuyên môn</strong>, <strong>kỹ năng mềm</strong>, và <strong>kinh nghiệm thực tiễn</strong>.
+        </p>
+
+        <h3>Phẩm chất và kỹ năng cần có</h3>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Nhóm kỹ năng</th>
+                <th>Chi tiết</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Kiến thức chuyên môn</strong></td>
+                <td>UCP600, ISBP745, URDG758, Incoterms 2020, nghiệp vụ L/C, nhờ thu, bảo lãnh</td>
+              </tr>
+              <tr>
+                <td><strong>Ngoại ngữ</strong></td>
+                <td>Tiếng Anh thương mại thành thạo (đọc hiểu L/C, chứng từ, hợp đồng)</td>
+              </tr>
+              <tr>
+                <td><strong>Kỹ năng phân tích</strong></td>
+                <td>Đọc hiểu L/C, phát hiện điều khoản bất lợi, phân tích rủi ro</td>
+              </tr>
+              <tr>
+                <td><strong>Kỹ năng giao tiếp</strong></td>
+                <td>Làm việc với khách hàng, ngân hàng nước ngoài, hãng tàu, cơ quan hải quan</td>
+              </tr>
+              <tr>
+                <td><strong>Kỹ năng xử lý tình huống</strong></td>
+                <td>Giải quyết discrepancies, xử lý tranh chấp, đề xuất giải pháp</td>
+              </tr>
+              <tr class="row-total">
+                <td><strong>Cẩn thận, tỉ mỉ</strong></td>
+                <td>Kiểm tra từng chi tiết nhỏ trong chứng từ, số liệu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Cơ hội nghề nghiệp</h3>
+        <ul>
+          <li><strong>Chuyên viên TTQT tại ngân hàng thương mại</strong> — Xử lý L/C, nhờ thu, chuyển tiền</li>
+          <li><strong>Chuyên viên XNK tại doanh nghiệp</strong> — Chuẩn bị bộ chứng từ, làm việc với ngân hàng</li>
+          <li><strong>Chuyên viên tài trợ thương mại</strong> — Tư vấn sản phẩm tài trợ, thẩm định hồ sơ</li>
+          <li><strong>Chuyên gia tư vấn độc lập</strong> — Tư vấn pháp lý, giải quyết tranh chấp</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Định hướng</div>
+          <p>
+            Khóa học cung cấp kiến thức toàn diện, kỹ năng thực hành, và hướng dẫn quá trình
+            thi tuyển vào các ngân hàng (vị trí chuyên viên TTQT). Sinh viên cũng được
+            xử lý các tình huống khó về TTQT của doanh nghiệp trong thực tế.
+          </p>
+        </div>
+      </section>
+
+      <!-- CHECKLIST -->
+      <section class="section reveal" id="checklist" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">CHECKLIST</span>
+          <h2>Kiến thức cần nắm vững</h2>
+          <p class="section-desc">Tick từng mục khi bạn đã hiểu rõ.</p>
+        </div>
+
+        <div class="checklist" id="checklist-box">
+          <div class="checklist-head">
+            <h3>Tiến độ học tập</h3>
+            <div class="check-progress">
+              <div class="check-bar"><span id="checkBar"></span></div>
+              <span class="check-count" id="checkCount">0/10 hoàn thành</span>
+            </div>
+          </div>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Phân biệt 5 phương thức TTQT: T/T, D/A, D/P, L/C, C.A.D</span>
+              <span class="check-sub">Hiểu rõ ưu nhược điểm và rủi ro của từng phương thức</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Hiểu rõ các loại điện SWIFT: MT103, MT700, MT707...</span>
+              <span class="check-sub">Biết cách sử dụng đúng loại điện cho từng giao dịch</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đọc hiểu nội dung và phân tích điều khoản L/C</span>
+              <span class="check-sub">Nhận biết điều khoản có lợi/bất lợi cho các bên</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Nắm rõ các loại L/C và ứng dụng trong thực tế</span>
+              <span class="check-sub">Irrevocable, Confirmed, Transferable, Revolving, Standby...</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Hiểu rõ UCP600 và ISBP745</span>
+              <span class="check-sub">Nắm các điều khoản quan trọng về chứng từ và thanh toán</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Kiểm tra được bộ chứng từ xuất trình theo L/C</span>
+              <span class="check-sub">Phát hiện discrepancies và cách xử lý</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Hiểu về bảo lãnh quốc tế và tập quán URDG 758</span>
+              <span class="check-sub">Các loại bảo lãnh: dự thầu, thực hiện HĐ, hoàn trả ứng trước...</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Hiểu quy trình xử lý TTQT tại ngân hàng</span>
+              <span class="check-sub">Cấu trúc phòng ban, quy trình, sản phẩm tài trợ thương mại</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Nhận diện rủi ro và cách phòng tránh trong TTQT</span>
+              <span class="check-sub">Rủi ro theo phương thức, rủi ro chứng từ, rủi ro đối tác</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Thực hành điền biểu mẫu ngân hàng</span>
+              <span class="check-sub">Lệnh chuyển tiền, Đơn nhờ thu, Đơn mở L/C, Đơn mở bảo lãnh</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section reveal" id="faq" data-color="rose">
+        <div class="section-head">
+          <span class="section-num">FAQ</span>
+          <h2>Câu hỏi thường gặp về TTQT</h2>
+        </div>
+
+        <div class="faq" id="faq">
+          <div class="faq-item">
+            <button class="faq-q">Phương thức thanh toán nào an toàn nhất?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>L/C (Letter of Credit)</strong> là phương thức an toàn nhất cho cả hai bên vì có sự bảo đảm của ngân hàng. Tuy nhiên, L/C có thủ tục phức tạp và chi phí cao hơn. Nếu hai bên có độ tin cậy cao, có thể sử dụng T/T để tiết kiệm chi phí.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Sự khác biệt giữa D/P và D/A là gì?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>D/P (Documents against Payment)</strong>: Người mua phải thanh toán ngay trước khi nhận bộ chứng từ. <strong>D/A (Documents against Acceptance)</strong>: Người mua chỉ cần ký chấp nhận hối phiếu (trả sau) là được nhận chứng từ. D/A có rủi ro cao hơn cho người bán vì người mua có thể không thanh toán khi đến hạn.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">UCP600 có bắt buộc áp dụng cho mọi L/C không?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Không bắt buộc. UCP600 chỉ được áp dụng khi L/C có ghi rõ "Subject to UCP600" hoặc phiên bản UCP hiện hành. Nếu L/C không ghi, thì UCP600 không tự động áp dụng. Tuy nhiên, hầu hết các L/C trong thương mại quốc tế đều ghi áp dụng UCP600.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Discrepancy là gì và xử lý như thế nào?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Discrepancy</strong> là lỗi sai trong bộ chứng từ khiến chứng từ không phù hợp với L/C. Khi có discrepancy, ngân hàng có thể từ chối thanh toán. Cách xử lý: <strong>(1)</strong> Sửa lại chứng từ và xuất trình trong thời hạn L/C. <strong>(2)</strong> Đề nghị người mua chấp nhận discrepancy (waiver). <strong>(3)</strong> Yêu cầu thanh toán theo điều kiện "subject to uniform rules for collections".</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Bảo lãnh URDG 758 khác gì bảo lãnh thông thường?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Bảo lãnh URDG 758</strong> là bảo lãnh theo yêu cầu (Demand Guarantee), chỉ áp dụng khi có ghi rõ "Subject to URDG 758". Đặc điểm: ngân hàng phải thanh toán ngay khi có yêu cầu phù hợp, không xét đến tranh chấp giữa các bên. <strong>Bảo lãnh thông thường</strong> có thể là bảo lãnh có điều kiện, ngân hàng chỉ thanh toán khi có chứng cứ vi phạm.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Làm sao để trở thành chuyên viên TTQT?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Ba yếu tố chính: <strong>(1)</strong> Nắm vững kiến thức chuyên môn: UCP600, ISBP745, URDG758, Incoterms. <strong>(2)</strong> Thành thạo tiếng Anh thương mại. <strong>(3)</strong> Có kinh nghiệm thực tế xử lý bộ chứng từ, giao dịch với ngân hàng. Ngoài ra, cần kỹ năng phân tích, giao tiếp tốt, và tính cẩn thận, tỉ mỉ.</p>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAKEAWAYS -->
+      <div class="takeaways reveal">
+        <h3>Key takeaways</h3>
+        <ul>
+          <li>Có <strong>5 phương thức TTQT phổ biến</strong>: T/T, D/A, D/P, L/C, C.A.D với mức độ rủi ro khác nhau.</li>
+          <li><strong>L/C</strong> là phương thức an toàn nhất, dựa trên nguyên tắc độc lập với hợp đồng mua bán.</li>
+          <li><strong>UCP600</strong> và <strong>ISBP745</strong> là tập quán quốc tế điều chỉnh giao dịch L/C.</li>
+          <li>Bộ chứng từ xuất trình theo L/C cần <strong>chính xác, đầy đủ, phù hợp</strong> với các điều khoản.</li>
+          <li><strong>SWIFT</strong> với các loại điện MT103, MT700, MT760 là hệ thống truyền tin chuẩn quốc tế.</li>
+          <li><strong>URDG 758</strong> điều chỉnh bảo lãnh theo yêu cầu — cần nắm rõ khi tham gia đấu thầu, hợp đồng lớn.</li>
+          <li>Chuyên gia TTQT cần <strong>kiến thức + kinh nghiệm + tiếng Anh + cẩn thận</strong>.</li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="brand-mark">TE</span>
+      <div>
+        <div class="brand-text" style="font-size:15px">TONY<em>EXIM</em></div>
+        <p style="margin-top:2px">Import – Export Knowledge System</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </div>
+    <p>© 2025 TONY EXIM. Kiến thức thực chiến cho người làm XNK.</p>
+  </div>
+</footer>
+
+<!-- TERM MODAL -->
+<div class="backdrop" id="termModal" role="dialog" aria-modal="true" aria-labelledby="termTitle">
+  <div class="modal modal-sm">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="termTag">THUẬT NGỮ</div>
+    <h3 id="termTitle"></h3>
+    <div class="modal-meta" id="termSub"></div>
+    <div class="modal-body">
+      <p id="termDef"></p>
+      <div class="modal-section">
+        <h5>Ý nghĩa thực tế</h5>
+        <p id="termPrac"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Khái niệm liên quan</h5>
+        <div class="modal-related" id="termRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="backdrop" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="modal">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="legalTag">CHI TIẾT</div>
+    <h3 id="legalTitle"></h3>
+    <div class="modal-meta" id="legalMeta"></div>
+    <div class="modal-body">
+      <p id="legalDesc"></p>
+      <div class="modal-section">
+        <h5>Đặc điểm chính</h5>
+        <ul class="modal-list" id="legalFeatures"></ul>
+      </div>
+      <div class="modal-section">
+        <h5>Ứng dụng / Cách dùng</h5>
+        <p id="legalTax"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Ví dụ / Ghi chú</h5>
+        <p id="legalExample"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Liên quan</h5>
+        <div class="modal-related" id="legalRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+  <div class="search-box">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Tìm thuật ngữ, phương thức, chứng từ…" autocomplete="off" spellcheck="false">
+      <span class="kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  /* THEME */
+  const themeBtn = $('#themeBtn');
+  const themeIcon = $('#themeIcon');
+  const SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeIcon.innerHTML = t === 'dark' ? SUN : MOON;
+    try { localStorage.setItem('te-theme', t); } catch (e) {}
+  }
+  let saved = 'light';
+  try { saved = localStorage.getItem('te-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+  applyTheme(saved);
+  themeBtn.addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* SCROLL */
+  const nav = $('#nav');
+  const progress = $('#progress');
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 20);
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = h > 0 ? Math.min(100, (y / h) * 100) + '%' : '0%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* MOBILE MENU */
+  const menuBtn = $('#menuBtn');
+  const mobileMenu = $('#mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  $$('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* REVEAL */
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  $$('.reveal').forEach(el => revealIO.observe(el));
+
+  /* TOC */
+  const tocLinks = $$('#tocList a');
+  const sections = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const tocIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = '#' + e.target.id;
+        tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => tocIO.observe(s));
+
+  /* CHECKLIST */
+  const checkItems = $$('#checklist-box .check-item input');
+  const checkBar = $('#checkBar');
+  const checkCount = $('#checkCount');
+  function updateChecklist() {
+    const total = checkItems.length;
+    const done = checkItems.filter(i => i.checked).length;
+    checkBar.style.width = (done / total * 100) + '%';
+    checkCount.textContent = done + '/' + total + ' hoàn thành';
+  }
+  checkItems.forEach(i => i.addEventListener('change', updateChecklist));
+  updateChecklist();
+
+  /* FAQ */
+  $$('#faq .faq-item').forEach(item => {
+    const btn = $('.faq-q', item);
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      $$('#faq .faq-item').forEach(i => {
+        i.classList.remove('open');
+        $('.faq-q', i).setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  /* TERMS */
+  const TERMS = {
+    lc: {
+      name: 'L/C — Letter of Credit',
+      sub: 'Thư tín dụng',
+      def: 'L/C là cam kết thanh toán của ngân hàng phát hành đối với người thụ hưởng khi người này xuất trình bộ chứng từ phù hợp với các điều khoản và điều kiện của L/C.',
+      prac: 'L/C độc lập với hợp đồng mua bán. Ngân hàng chỉ xử lý chứng từ, không xử lý hàng hóa. L/C được điều chỉnh bởi UCP600 (nếu ghi rõ trong L/C).',
+      related: ['UCP600', 'ISBP745', 'Ngân hàng phát hành', 'Người thụ hưởng']
+    },
+    ucp600: {
+      name: 'UCP600',
+      sub: 'Uniform Customs and Practice for Documentary Credits',
+      def: 'UCP600 là tập quán thống nhất về tín dụng chứng từ do ICC ban hành, có hiệu lực từ 01/7/2007, thay thế UCP500. Gồm 39 điều, quy định về L/C, chứng từ, trách nhiệm ngân hàng.',
+      prac: 'UCP600 được áp dụng khi L/C ghi rõ "Subject to UCP600". Đây là bộ quy tắc quan trọng nhất trong thanh toán quốc tế.',
+      related: ['L/C', 'ISBP745', 'ICC', 'eUCP']
+    },
+    isbp745: {
+      name: 'ISBP745',
+      sub: 'International Standard Banking Practice',
+      def: 'ISBP745 là tài liệu hướng dẫn thực hành kiểm tra chứng từ theo UCP600, do ICC ban hành năm 2013. Gồm 200 đoạn, hướng dẫn chi tiết cách kiểm tra từng loại chứng từ.',
+      prac: 'ISBP745 giúp thống nhất cách hiểu và áp dụng UCP600 giữa các ngân hàng, giảm tranh chấp về chứng từ.',
+      related: ['UCP600', 'ICC', 'Chứng từ', 'Discrepancies']
+    },
+    urdg: {
+      name: 'URDG 758',
+      sub: 'Uniform Rules for Demand Guarantees',
+      def: 'URDG 758 là bộ quy tắc thống nhất về bảo lãnh theo yêu cầu do ICC ban hành, có hiệu lực từ 01/7/2010. Gồm 35 điều, quy định về quyền và nghĩa vụ các bên trong bảo lãnh.',
+      prac: 'URDG 758 được áp dụng khi bảo lãnh ghi rõ "Subject to URDG 758". Bảo lãnh theo URDG là bảo lãnh vô điều kiện, ngân hàng phải thanh toán khi có yêu cầu phù hợp.',
+      related: ['Bảo lãnh', 'ICC', 'Demand Guarantee', 'Counter Guarantee']
+    },
+    ttqt: {
+      name: 'TTQT — Thanh toán Quốc tế',
+      sub: 'International Payment',
+      def: 'TTQT là hoạt động thanh toán giữa các chủ thể kinh tế ở các quốc gia khác nhau, thường gắn với hoạt động xuất nhập khẩu hàng hóa, cung ứng dịch vụ hoặc đầu tư quốc tế.',
+      prac: 'TTQT bao gồm 5 phương thức phổ biến: T/T, D/A, D/P, L/C, C.A.D. Mỗi phương thức có ưu nhược điểm và rủi ro riêng.',
+      related: ['T/T', 'L/C', 'D/P', 'D/A', 'C.A.D']
+    },
+    swift: {
+      name: 'SWIFT',
+      sub: 'Society for Worldwide Interbank Financial Telecommunication',
+      def: 'SWIFT là mạng viễn thông tài chính toàn cầu, được thành lập năm 1973, cho phép các ngân hàng truyền tải thông tin giao dịch an toàn và chuẩn hóa.',
+      prac: 'SWIFT sử dụng chuẩn MT (Message Type) cho từng loại giao dịch: MT103 (chuyển tiền), MT700 (L/C), MT760 (bảo lãnh).',
+      related: ['MT103', 'MT700', 'MT760', 'BIC Code']
+    },
+    discrepancy: {
+      name: 'Discrepancy',
+      sub: 'Sự không phù hợp của chứng từ',
+      def: 'Discrepancy là lỗi sai trong bộ chứng từ khiến chứng từ không phù hợp với các điều khoản của L/C. Có thể là lỗi chính tả, sai số liệu, thiếu chứng từ...',
+      prac: 'Khi có discrepancy, ngân hàng có thể từ chối thanh toán. Cách xử lý: sửa chứng từ, đề nghị người mua waiver, hoặc chấp nhận thanh toán có bảo lưu.',
+      related: ['L/C', 'UCP600', 'ISBP745', 'Waiver']
+    }
+  };
+
+  /* DETAIL DATA */
+  const LEGAL_DOCS = {
+    'm-tt': {
+      kind: 'cyan', tag: 'PHƯƠNG THỨC 01',
+      title: 'T/T — Telegraphic Transfer',
+      meta: 'Chuyển tiền điện tử · Rủi ro cao cho người mua',
+      desc: 'T/T là phương thức thanh toán trong đó ngân hàng chuyển tiền theo lệnh của người chuyển cho người thụ hưởng ở nước ngoài, thông qua hệ thống SWIFT.',
+      features: [
+        'Ngân hàng chuyển tiền theo lệnh (MT103)',
+        'Có thể trả trước (T/T trước) hoặc trả sau (T/T sau)',
+        'Thủ tục đơn giản, nhanh chóng, chi phí thấp',
+        'Không có bảo đảm thanh toán từ ngân hàng',
+        'Phù hợp khi hai bên có độ tin cậy cao'
+      ],
+      tax: 'Rủi ro: Người mua trả trước có thể mất tiền nếu người bán không giao hàng. Người bán giao trước có thể không nhận được tiền.',
+      example: 'Doanh nghiệp Việt Nam chuyển 50.000 USD cho nhà cung cấp Trung Quốc qua T/T trước khi giao hàng.',
+      related: ['MT103', 'SWIFT', 'T/T trước', 'T/T sau']
+    },
+    'm-da': {
+      kind: 'rose', tag: 'PHƯƠNG THỨC 02',
+      title: 'D/A — Documents against Acceptance',
+      meta: 'Nhờ thu kèm chứng từ chấp nhận · Rủi ro cao cho người bán',
+      desc: 'D/A là phương thức nhờ thu trong đó người mua chỉ cần ký chấp nhận hối phiếu (trả sau) là được nhận bộ chứng từ để lấy hàng.',
+      features: [
+        'Người mua ký chấp nhận hối phiếu (Bill of Exchange)',
+        'Người mua nhận chứng từ trước khi thanh toán',
+        'Người bán có thể bị chậm thanh toán hoặc không được thanh toán',
+        'Thời hạn thanh toán do hai bên thỏa thuận',
+        'Phù hợp với bạn hàng truyền thống, tin cậy'
+      ],
+      tax: 'Rủi ro: Người mua có thể không thanh toán khi đến hạn, hoặc chậm thanh toán. Người bán khó thu hồi nợ nếu người mua ở nước khác.',
+      example: 'Nhà xuất khẩu Việt Nam giao hàng cho khách hàng châu Âu, ký D/A 60 ngày sau khi nhận chứng từ.',
+      related: ['D/P', 'Hối phiếu', 'Nhờ thu', 'Bank Collection']
+    },
+    'm-dp': {
+      kind: 'amber', tag: 'PHƯƠNG THỨC 03',
+      title: 'D/P — Documents against Payment',
+      meta: 'Nhờ thu kèm chứng từ trả ngay',
+      desc: 'D/P là phương thức nhờ thu trong đó người mua phải thanh toán ngay (hoặc chấp nhận thanh toán trả ngay) trước khi được nhận bộ chứng từ.',
+      features: [
+        'Người mua thanh toán trước khi nhận chứng từ',
+        'Ngân hàng giữ chứng từ cho đến khi người mua thanh toán',
+        'An toàn hơn D/A cho người bán',
+        'Người mua vẫn có thể từ chối thanh toán',
+        'Phổ biến trong thương mại quốc tế'
+      ],
+      tax: 'Rủi ro: Người mua có thể từ chối thanh toán nếu hàng hóa giảm giá. Người bán phải chịu chi phí vận chuyển hàng về hoặc tìm người mua mới.',
+      example: 'Nhà xuất khẩu yêu cầu ngân hàng giữ B/L gốc, chỉ giao khi người mua thanh toán đủ.',
+      related: ['D/A', 'Hối phiếu', 'Nhờ thu', 'Bank Collection']
+    },
+    'm-lc': {
+      kind: 'emerald', tag: 'PHƯƠNG THỨC 04',
+      title: 'L/C — Letter of Credit',
+      meta: 'Thư tín dụng · An toàn nhất',
+      desc: 'L/C là cam kết thanh toán của ngân hàng phát hành đối với người thụ hưởng khi người này xuất trình bộ chứng từ phù hợp với các điều khoản và điều kiện của L/C.',
+      features: [
+        'Ngân hàng đảm bảo thanh toán',
+        'Độc lập với hợp đồng mua bán',
+        'Ngân hàng xử lý chứng từ, không xử lý hàng hóa',
+        'Có nhiều loại L/C khác nhau',
+        'Điều chỉnh bởi UCP600',
+        'Chi phí cao hơn các phương thức khác'
+      ],
+      tax: 'Ưu điểm: An toàn cho cả hai bên. Nhược điểm: Thủ tục phức tạp, chi phí cao, chứng từ phải chính xác tuyệt đối.',
+      example: 'Nhà nhập khẩu mở L/C 100.000 USD qua ngân hàng, nhà xuất khẩu xuất trình bộ chứng từ phù hợp và nhận tiền.',
+      related: ['UCP600', 'ISBP745', 'Ngân hàng phát hành', 'Bộ chứng từ']
+    },
+    'm-cad': {
+      kind: 'violet', tag: 'PHƯƠNG THỨC 05',
+      title: 'C.A.D — Cash Against Documents',
+      meta: 'Thanh toán đổi chứng từ',
+      desc: 'C.A.D là phương thức thanh toán trong đó người mua thanh toán khi nhận được bộ chứng từ tại ngân hàng. Phổ biến trong thương mại nội địa và cận biên.',
+      features: [
+        'Người mua thanh toán khi nhận chứng từ',
+        'Ngân hàng giữ chứng từ cho đến khi thanh toán',
+        'Tương tự D/P nhưng đơn giản hơn',
+        'Thường áp dụng trong thương mại nội địa',
+        'Không có bảo đảm từ ngân hàng'
+      ],
+      tax: 'Rủi ro: Tương tự D/P — người mua có thể từ chối thanh toán. Phù hợp với giao dịch có giá trị nhỏ, đối tác tin cậy.',
+      example: 'Nhà nhập khẩu thanh toán cho ngân hàng để nhận bộ chứng từ, sau đó đến cảng lấy hàng.',
+      related: ['D/P', 'Nhờ thu', 'Chứng từ', 'Ngân hàng']
+    }
+  };
+
+  /* MODAL */
+  const termModal = $('#termModal');
+  const legalModal = $('#legalModal');
+  let lastFocused = null;
+
+  function openModal(el) {
+    lastFocused = document.activeElement;
+    el.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const closeBtn = $('.modal-close', el);
+    setTimeout(() => closeBtn && closeBtn.focus(), 60);
+  }
+  function closeModal(el) {
+    el.classList.remove('open');
+    if (!document.querySelector('.backdrop.open') && !$('#searchOverlay').classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  function openTerm(key) {
+    const t = TERMS[key];
+    if (!t) return;
+    $('#termTitle').textContent = t.name;
+    $('#termSub').textContent = t.sub;
+    $('#termDef').textContent = t.def;
+    $('#termPrac').textContent = t.prac;
+    const rel = $('#termRelated');
+    rel.innerHTML = '';
+    t.related.forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(termModal);
+  }
+
+  function openLegal(key) {
+    const d = LEGAL_DOCS[key];
+    if (!d) return;
+    $('#legalTag').textContent = d.tag;
+    $('#legalTitle').textContent = d.title;
+    $('#legalMeta').textContent = d.meta;
+    $('#legalDesc').textContent = d.desc;
+    const feat = $('#legalFeatures');
+    feat.innerHTML = '';
+    (d.features || []).forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = f;
+      feat.appendChild(li);
+    });
+    $('#legalTax').textContent = d.tax || '';
+    $('#legalExample').textContent = d.example || '';
+    const rel = $('#legalRelated');
+    rel.innerHTML = '';
+    (d.related || []).forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(legalModal);
+  }
+
+  /* Attach events */
+  $$('.method-card').forEach(card => {
+    card.addEventListener('click', () => openLegal(card.dataset.doc));
+  });
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.term');
+    if (t && !t.closest('.cite-popover')) {
+      e.preventDefault();
+      openTerm(t.dataset.term);
+    }
+  });
+
+  $$('.backdrop').forEach(bd => {
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd) closeModal(bd);
+    });
+    const btn = $('.modal-close', bd);
+    if (btn) btn.addEventListener('click', () => closeModal(bd));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      $$('.backdrop.open').forEach(bd => closeModal(bd));
+    }
+  });
+
+  /* SEARCH */
+  const SEARCH_DATA = [
+    { type: 'Bài viết', icon: '📄', title: 'Thanh toán Quốc tế — Khóa học toàn diện 9 phần', meta: 'FINANCE · 30 phút đọc' },
+
+    { type: 'Phương thức', icon: '💳', title: 'T/T — Telegraphic Transfer', meta: 'Phương thức 01', doc: 'm-tt' },
+    { type: 'Phương thức', icon: '💳', title: 'D/A — Documents against Acceptance', meta: 'Phương thức 02', doc: 'm-da' },
+    { type: 'Phương thức', icon: '💳', title: 'D/P — Documents against Payment', meta: 'Phương thức 03', doc: 'm-dp' },
+    { type: 'Phương thức', icon: '💳', title: 'L/C — Letter of Credit', meta: 'Phương thức 04', doc: 'm-lc' },
+    { type: 'Phương thức', icon: '💳', title: 'C.A.D — Cash Against Documents', meta: 'Phương thức 05', doc: 'm-cad' },
+
+    { type: 'Thuật ngữ', icon: '🔖', title: 'L/C — Letter of Credit', meta: 'Thư tín dụng', term: 'lc' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'UCP600', meta: 'Tập quán tín dụng chứng từ', term: 'ucp600' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'ISBP745', meta: 'Thực hành ngân hàng chuẩn', term: 'isbp745' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'URDG 758', meta: 'Quy tắc bảo lãnh theo yêu cầu', term: 'urdg' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'TTQT — Thanh toán Quốc tế', meta: 'International Payment', term: 'ttqt' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'SWIFT', meta: 'Mạng viễn thông tài chính', term: 'swift' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Discrepancy', meta: 'Sự không phù hợp chứng từ', term: 'discrepancy' }
+  ];
+
+  const searchOverlay = $('#searchOverlay');
+  const searchInput = $('#searchInput');
+  const searchResults = $('#searchResults');
+  let focusIndex = -1;
+  let currentResults = [];
+
+  function escapeHTML(s) {
+    return s.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+  function highlight(text, q) {
+    if (!q) return escapeHTML(text);
+    const safe = escapeHTML(text);
+    const qSafe = escapeHTML(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return safe.replace(new RegExp('(' + qSafe + ')', 'gi'), '<mark>$1</mark>');
+  }
+  function renderSearch(q) {
+    const query = q.trim().toLowerCase();
+    focusIndex = -1;
+    if (!query) {
+      currentResults = SEARCH_DATA.slice(0, 10);
+      searchResults.innerHTML =
+        '<div class="sr-group-label">Gợi ý nhanh</div>' +
+        currentResults.map((item, i) => itemHTML(item, '', i)).join('');
+      return;
+    }
+    const found = SEARCH_DATA.filter(item =>
+      item.title.toLowerCase().includes(query) ||
+      (item.meta && item.meta.toLowerCase().includes(query)) ||
+      item.type.toLowerCase().includes(query)
+    );
+    currentResults = found;
+    if (!found.length) {
+      searchResults.innerHTML =
+        '<div class="empty-state"><div class="es-icon">🔍</div>' +
+        '<p>Không tìm thấy kết quả cho "<strong>' + escapeHTML(q) + '</strong>"</p></div>';
+      return;
+    }
+    const groups = {};
+    found.forEach(item => { (groups[item.type] = groups[item.type] || []).push(item); });
+    let html = '';
+    let idx = 0;
+    Object.keys(groups).forEach(type => {
+      html += '<div class="sr-group-label">' + type + ' · ' + groups[type].length + '</div>';
+      groups[type].forEach(item => { html += itemHTML(item, q, idx++); });
+    });
+    searchResults.innerHTML = html;
+  }
+  function itemHTML(item, q, i) {
+    return '<button class="sr-item" data-index="' + i + '">' +
+      '<span class="sr-icon">' + item.icon + '</span>' +
+      '<span class="sr-body">' +
+        '<span class="sr-title">' + highlight(item.title, q) + '</span>' +
+        '<span class="sr-meta">' + highlight(item.meta || item.type, q) + '</span>' +
+      '</span></button>';
+  }
+  function openSearch() {
+    lastFocused = document.activeElement;
+    searchOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    searchInput.value = '';
+    renderSearch('');
+    setTimeout(() => searchInput.focus(), 80);
+  }
+  function closeSearch() {
+    searchOverlay.classList.remove('open');
+    if (!document.querySelector('.backdrop.open')) document.body.style.overflow = '';
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+  window.openSearch = openSearch;
+  $('#searchBtn').addEventListener('click', openSearch);
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) closeSearch(); });
+  searchInput.addEventListener('input', (e) => renderSearch(e.target.value));
+  searchInput.addEventListener('keydown', (e) => {
+    const items = $$('.sr-item', searchResults);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusIndex = Math.min(focusIndex + 1, items.length - 1);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusIndex = Math.max(focusIndex - 1, 0);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (items[focusIndex]) items[focusIndex].click();
+      else if (items[0]) items[0].click();
+    }
+  });
+  searchResults.addEventListener('click', (e) => {
+    const btn = e.target.closest('.sr-item');
+    if (!btn) return;
+    const item = currentResults[Number(btn.dataset.index)];
+    if (!item) return;
+    closeSearch();
+    if (item.term) setTimeout(() => openTerm(item.term), 220);
+    else if (item.doc) setTimeout(() => openLegal(item.doc), 220);
+  });
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      else openSearch();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      $$('.backdrop.open').forEach(bd => closeModal(bd));
+    }
+  });
+
+  /* SMOOTH ANCHOR */
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 92;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
