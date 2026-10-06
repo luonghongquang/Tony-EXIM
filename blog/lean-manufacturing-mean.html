@@ -1,0 +1,2980 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sản xuất tinh gọn (Lean Manufacturing): Nguyên lý &amp; Công cụ — TONY EXIM</title>
+<meta name="description" content="Sản xuất tinh gọn (Lean Manufacturing) là gì? Nguồn gốc TPS Toyota, 5 nguyên tắc cốt lõi, 7 lãng phí (Muda), và 12+ công cụ Lean phổ biến: 5S, Kaizen, Kanban, VSM, Andon, Poka-Yoke, JIT, TPM, SMED, Heijunka.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --bg-alt:#F4F7FB; --surface:#FFFFFF; --surface-2:#F8FAFD;
+  --text:#0B1B2B; --text-2:#33465C; --muted:#6B7C93;
+  --border:#E3E9F1; --border-strong:#CFDAE7;
+  --primary:#0E2E4F; --primary-2:#1B4E7E; --primary-soft:rgba(27,78,126,.08);
+  --accent:#E08A2B; --accent-2:#F3B45E; --accent-soft:rgba(224,138,43,.12);
+  --cyan:#0EA5E9; --cyan-soft:rgba(14,165,233,.12);
+  --violet:#8B5CF6; --violet-soft:rgba(139,92,246,.12);
+  --emerald:#10B981; --emerald-soft:rgba(16,185,129,.12);
+  --rose:#F43F5E; --rose-soft:rgba(244,63,94,.12);
+  --amber:#F59E0B; --amber-soft:rgba(245,158,11,.12);
+  --success:#178C60; --danger:#C8443B;
+  --shadow-xs:0 1px 2px rgba(11,27,43,.05);
+  --shadow-sm:0 2px 6px rgba(11,27,43,.05), 0 1px 2px rgba(11,27,43,.04);
+  --shadow-md:0 10px 28px -10px rgba(11,27,43,.16), 0 2px 6px rgba(11,27,43,.05);
+  --shadow-lg:0 28px 70px -22px rgba(11,27,43,.28), 0 6px 18px -8px rgba(11,27,43,.10);
+  --r-xs:8px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px; --r-full:999px;
+  --nav-h:68px;
+  --font:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-bounce:cubic-bezier(.34,1.56,.64,1);
+}
+[data-theme="dark"]{
+  --bg:#04070D; --bg-alt:#080E18; --surface:#0B1424; --surface-2:#0F1B2C;
+  --text:#EAF2FC; --text-2:#B9C8DA; --muted:#7E93AB;
+  --border:#16243A; --border-strong:#243754;
+  --primary:#8CBCE8; --primary-2:#B0D2F2; --primary-soft:rgba(140,188,232,.10);
+  --accent:#F5A83E; --accent-2:#F9C57F; --accent-soft:rgba(245,168,62,.16);
+  --cyan:#38BDF8; --cyan-soft:rgba(56,189,248,.16);
+  --violet:#A78BFA; --violet-soft:rgba(167,139,250,.16);
+  --emerald:#34D399; --emerald-soft:rgba(52,211,153,.16);
+  --rose:#FB7185; --rose-soft:rgba(251,113,133,.16);
+  --amber:#FBBF24; --amber-soft:rgba(251,191,36,.16);
+  --success:#3DCB94; --danger:#F0736A;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.4);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:0 12px 30px -12px rgba(0,0,0,.7);
+  --shadow-lg:0 30px 70px -24px rgba(0,0,0,.85);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font);background:var(--bg);color:var(--text);
+  font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;position:relative;
+  transition:background .45s var(--ease), color .45s var(--ease);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent-soft);color:var(--text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1180px,100% - 44px);margin-inline:auto;position:relative;z-index:2}
+@media(max-width:640px){.wrap{width:min(1180px,100% - 32px)}}
+
+/* BACKGROUND */
+.stars-stage{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%,color-mix(in srgb,var(--violet-soft) 70%,transparent),transparent 60%),
+    radial-gradient(ellipse 120% 70% at 50% 110%,color-mix(in srgb,var(--cyan-soft) 60%,transparent),transparent 60%);
+}
+.bg-parallax{position:absolute;inset:-15%;pointer-events:none;overflow:hidden}
+.bg-parallax-layer{
+  position:absolute;inset:0;will-change:transform;
+  opacity:.55;mix-blend-mode:soft-light;transition:transform .25s linear;
+}
+[data-theme="dark"] .bg-parallax-layer{opacity:.85;mix-blend-mode:screen}
+.bg-parallax-layer.pl-1{
+  background:
+    radial-gradient(circle at 18% 28%,var(--accent-soft) 0%,transparent 30%),
+    radial-gradient(circle at 76% 62%,var(--cyan-soft) 0%,transparent 30%),
+    radial-gradient(circle at 42% 88%,var(--violet-soft) 0%,transparent 30%);
+  background-size:150% 150%;animation:plDrift1 70s ease-in-out infinite;
+}
+.bg-parallax-layer.pl-2{
+  background:
+    radial-gradient(circle at 82% 20%,var(--emerald-soft) 0%,transparent 28%),
+    radial-gradient(circle at 12% 72%,var(--rose-soft) 0%,transparent 28%),
+    radial-gradient(circle at 56% 40%,var(--amber-soft) 0%,transparent 28%);
+  background-size:130% 130%;animation:plDrift2 90s ease-in-out infinite;
+}
+.bg-parallax-layer.pl-3{
+  background:
+    radial-gradient(circle at 30% 50%,color-mix(in srgb,var(--violet) 25%,transparent) 0%,transparent 35%),
+    radial-gradient(circle at 70% 30%,color-mix(in srgb,var(--cyan) 25%,transparent) 0%,transparent 35%);
+  background-size:180% 180%;animation:plDrift3 110s ease-in-out infinite;
+}
+@keyframes plDrift1{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-70px,50px,0) scale(1.08)}
+}
+@keyframes plDrift2{
+  0%,100%{transform:translate3d(0,0,0) scale(1.05)}
+  50%{transform:translate3d(80px,-60px,0) scale(1)}
+}
+@keyframes plDrift3{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-40px,-80px,0) scale(1.12)}
+}
+.stars-layer{
+  position:absolute;left:0;top:-50vh;width:100%;height:220vh;
+  will-change:transform;transition:transform .08s linear;
+}
+.star{
+  position:absolute;border-radius:0;image-rendering:pixelated;
+  transform:translateZ(0);animation:starTwinkle ease-in-out infinite;
+  box-shadow:0 0 8px currentColor;
+}
+.star.deep{width:2px;height:2px;animation-duration:4.5s}
+.star.mid{width:3px;height:3px;animation-duration:3.2s}
+.star.near{width:4px;height:4px;animation-duration:2.4s;box-shadow:0 0 14px currentColor,0 0 4px currentColor}
+.star.shine{width:5px;height:5px;animation-duration:2.8s;box-shadow:0 0 20px currentColor,0 0 6px #fff}
+@keyframes starTwinkle{
+  0%,100%{opacity:var(--star-op,1);transform:scale(1)}
+  50%{opacity:calc(var(--star-op,.6) * .3);transform:scale(.7)}
+}
+.star.shine::before{
+  content:"";position:absolute;inset:-3px;
+  background:
+    linear-gradient(0deg,transparent 45%,currentColor 45%,currentColor 55%,transparent 55%),
+    linear-gradient(90deg,transparent 45%,currentColor 45%,currentColor 55%,transparent 55%);
+  opacity:.5;animation:starFlash 5s ease-in-out infinite;
+}
+@keyframes starFlash{0%,86%,100%{opacity:0}90%{opacity:.7}94%{opacity:.25}}
+.shooting-stars{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.shooting-star{
+  position:absolute;width:2px;height:2px;border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 6px 1px #fff,0 0 14px 3px currentColor,0 0 22px 5px color-mix(in srgb,currentColor 40%,transparent);
+  opacity:0;will-change:transform,opacity;animation:shootStar 3.5s ease-out forwards;
+}
+.shooting-star::before{
+  content:"";position:absolute;top:50%;right:0;transform:translateY(-50%);
+  width:180px;height:2px;border-radius:2px;
+  background:linear-gradient(270deg,transparent 0%,currentColor 40%,#fff 90%);
+  opacity:.95;filter:blur(.3px);
+}
+.shooting-star::after{
+  content:"";position:absolute;top:50%;right:0;transform:translateY(-50%);
+  width:280px;height:4px;border-radius:50%;
+  background:linear-gradient(270deg,transparent,color-mix(in srgb,currentColor 50%,transparent));
+  filter:blur(2px);opacity:.5;
+}
+@keyframes shootStar{
+  0%{transform:translate3d(0,0,0) rotate(-32deg);opacity:0}
+  6%{opacity:1}
+  72%{opacity:1}
+  100%{transform:translate3d(-620px,400px,0) rotate(-32deg);opacity:0}
+}
+.shooting-star-glow{
+  position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,currentColor 0%,transparent 70%);
+  filter:blur(24px);pointer-events:none;opacity:0;
+  animation:glowFade 3.5s ease-out forwards;
+}
+@keyframes glowFade{
+  0%,100%{opacity:0;transform:scale(.6)}
+  20%{opacity:.8;transform:scale(1)}
+  80%{opacity:.35;transform:scale(1.35)}
+}
+.stars-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 20%,var(--violet-soft),transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 70%,var(--cyan-soft),transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 105%,var(--accent-soft),transparent 65%);
+  opacity:.5;
+}
+[data-theme="dark"] .stars-glow{opacity:.9}
+.pixel-grid{
+  position:absolute;inset:0;pointer-events:none;opacity:.12;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000 25%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000 25%,transparent 80%);
+  animation:gridScroll 60s linear infinite;
+}
+[data-theme="dark"] .pixel-grid{opacity:.28}
+@keyframes gridScroll{
+  0%{background-position:0 0,0 0}
+  100%{background-position:40px 40px,40px 40px}
+}
+.stars-vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,transparent 30%,color-mix(in srgb,var(--bg) 60%,transparent) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 100%,transparent 40%,color-mix(in srgb,var(--bg) 55%,transparent) 100%);
+}
+.scroll-glow{
+  position:fixed;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--violet),transparent);
+  filter:blur(2px);opacity:.35;pointer-events:none;z-index:99;
+  transition:top .1s linear;
+}
+body.idle .shooting-star,
+body.idle .shooting-star-glow {animation-play-state: paused}
+@media(prefers-reduced-motion:reduce){
+  .star,.pixel-grid,.shooting-star,.shooting-star-glow,
+  .bg-parallax-layer,.stars-layer{
+    animation:none !important;transform:none !important;
+  }
+  .shooting-star,.shooting-star-glow{display:none}
+}
+@media(max-width:640px){
+  .stars-layer{opacity:.7}
+  .bg-parallax-layer{opacity:.35}
+  .shooting-star::before{width:110px}
+  .shooting-star::after{width:170px}
+}
+
+/* PROGRESS */
+.progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;z-index:200;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:300% 100%;animation:progressFlow 6s linear infinite;
+  box-shadow:0 0 18px rgba(224,138,43,.6);transition:width .08s linear;
+}
+@keyframes progressFlow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* NAVBAR */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:150;
+  border-bottom:1px solid transparent;
+  transition:background .35s var(--ease),border-color .35s var(--ease),backdrop-filter .35s;
+}
+.nav.scrolled{
+  background:color-mix(in srgb,var(--bg) 76%,transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);
+  border-bottom-color:var(--border);
+}
+.nav-inner{height:100%;width:min(1180px,100% - 44px);margin-inline:auto;display:flex;align-items:center;gap:28px}
+@media(max-width:640px){.nav-inner{width:calc(100% - 32px)}}
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--primary-2),var(--cyan));
+  background-size:200% 200%;animation:brandShift 5s ease infinite;
+  color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.5px;
+  box-shadow:0 6px 16px -6px rgba(27,78,126,.7);
+}
+@keyframes brandShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+[data-theme="dark"] .brand-mark{color:#06111E}
+.brand-text{font-weight:800;font-size:16.5px;letter-spacing:-.3px;line-height:1}
+.brand-text em{
+  font-style:normal;margin-left:1px;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--accent));
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 4s ease infinite;
+}
+@keyframes textFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.brand-sub{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1.6px;color:var(--muted);font-weight:500;margin-top:3px}
+.nav-links{display:flex;align-items:center;gap:3px;margin-left:auto}
+.nav-links a{
+  position:relative;font-size:13.5px;font-weight:500;color:var(--muted);
+  padding:8px 13px;border-radius:var(--r-full);
+  transition:color .25s var(--ease),background .25s var(--ease);
+}
+.nav-links a:hover{color:var(--text);background:var(--surface-2)}
+.nav-links a.active{color:var(--text);font-weight:600}
+.nav-links a.active::after{
+  content:"";position:absolute;left:50%;bottom:1px;transform:translateX(-50%);
+  width:16px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  box-shadow:0 0 8px var(--accent-soft);
+}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.icon-btn{
+  width:38px;height:38px;border-radius:var(--r-sm);display:grid;place-items:center;
+  color:var(--muted);border:1px solid transparent;
+  transition:all .25s var(--ease);position:relative;overflow:hidden;
+}
+.icon-btn::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at center,var(--accent-soft),transparent 70%);
+  opacity:0;transition:opacity .3s;transform:scale(.6);
+}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.icon-btn:hover::before{opacity:1;transform:scale(1)}
+.icon-btn svg{width:18px;height:18px;stroke-width:1.9;position:relative;z-index:1}
+.menu-btn{display:none}
+@media(max-width:940px){.nav-links{display:none}.menu-btn{display:grid}}
+.mobile-menu{
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:149;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 22px 22px;display:grid;gap:2px;
+  clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease);
+  box-shadow:var(--shadow-md);
+}
+.mobile-menu.open{clip-path:inset(0 0 0 0)}
+.mobile-menu a{padding:13px 4px;font-size:15px;font-weight:500;color:var(--text-2);border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:0}
+.mobile-menu a.active{color:var(--accent);font-weight:600}
+
+/* HERO */
+.article-hero{
+  position:relative;padding:calc(var(--nav-h) + 54px) 0 44px;
+  border-bottom:1px solid var(--border);overflow:hidden;
+}
+.crumbs{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.9px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:24px;
+}
+.crumbs a{transition:color .2s}
+.crumbs a:hover{color:var(--accent)}
+.crumbs span.sep{opacity:.45}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:1.4px;
+  text-transform:uppercase;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));
+  background-size:200% 100%;animation:textFlow 5s ease infinite;
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+  padding:6px 13px;border-radius:var(--r-full);color:var(--accent);
+}
+.chip .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 0 var(--accent);animation:pulseDot 2s ease infinite;
+}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 var(--accent-soft)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.article-title{
+  font-size:clamp(30px,5.2vw,54px);line-height:1.1;letter-spacing:-1.6px;font-weight:800;
+  margin:22px 0 0;max-width:16ch;text-wrap:balance;
+}
+.article-title .accent{
+  position:relative;display:inline-block;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--violet),var(--accent));
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 6s ease infinite;
+}
+.article-lead{margin:22px 0 0;max-width:66ch;font-size:clamp(15.5px,1.5vw,18px);color:var(--text-2);line-height:1.72}
+.article-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:30px;font-size:13px;color:var(--muted)}
+.article-meta .author{display:flex;align-items:center;gap:9px;color:var(--text-2);font-weight:600}
+.avatar{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--violet),var(--cyan));
+  background-size:200% 200%;animation:brandShift 6s ease infinite;
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:.3px;
+}
+[data-theme="dark"] .avatar{color:#06111E}
+.meta-sep{width:4px;height:4px;border-radius:50%;background:var(--border-strong)}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:64px;padding:56px 0 80px;align-items:start}
+@media(max-width:1040px){.layout{grid-template-columns:1fr;gap:0;padding-top:36px}}
+.toc{position:sticky;top:calc(var(--nav-h) + 28px)}
+@media(max-width:1040px){
+  .toc{position:static;margin-bottom:36px;padding:18px 20px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg)}
+}
+.toc-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:9px;
+}
+.toc-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.toc-list{list-style:none;margin:0;padding:0;position:relative}
+.toc-list::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--border)}
+.toc-list a{
+  display:block;position:relative;padding:7px 0 7px 18px;
+  font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.4;
+  transition:color .25s var(--ease);
+}
+.toc-list a::before{
+  content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%) scaleY(0);
+  width:2px;height:16px;border-radius:2px;
+  background:linear-gradient(180deg,var(--accent),var(--rose));
+  transition:transform .35s var(--ease);
+}
+.toc-list a:hover{color:var(--text-2)}
+.toc-list a.active{color:var(--text);font-weight:600}
+.toc-list a.active::before{transform:translateY(-50%) scaleY(1)}
+.toc-num{
+  font-family:var(--mono);font-size:10px;margin-right:7px;font-weight:600;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.toc-cta{
+  margin-top:22px;padding:16px;border-radius:var(--r-md);
+  background:linear-gradient(150deg,var(--violet-soft),transparent);
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.toc-cta::before{
+  content:"";position:absolute;top:-30%;right:-30%;width:120px;height:120px;
+  border-radius:50%;background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 8s ease-in-out infinite;
+}
+.toc-cta p{margin:0 0 11px;font-size:12.5px;color:var(--muted);line-height:1.55;position:relative;z-index:1}
+.toc-cta button{
+  width:100%;padding:9px;border-radius:var(--r-sm);font-size:12.5px;font-weight:600;
+  background:linear-gradient(120deg,var(--primary),var(--violet));
+  background-size:200% 100%;color:#fff;
+  transition:all .25s var(--ease);position:relative;z-index:1;
+}
+.toc-cta button:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--violet);background-position:100% 50%}
+[data-theme="dark"] .toc-cta button{color:#06111E}
+@keyframes floatC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(120px,-60px) scale(1.1)}}
+
+/* CONTENT */
+.content{min-width:0;max-width:760px}
+.section{margin-bottom:76px;scroll-margin-top:100px}
+.section-head{margin-bottom:26px}
+.section-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:1.8px;
+  font-weight:600;display:inline-block;margin-bottom:8px;
+  padding:3px 10px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--muted);
+}
+.section[data-color="cyan"] .section-num{color:var(--cyan);background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.section[data-color="violet"] .section-num{color:var(--violet);background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.section[data-color="accent"] .section-num{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.section[data-color="emerald"] .section-num{color:var(--emerald);background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.section[data-color="rose"] .section-num{color:var(--rose);background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 25%,transparent)}
+.section[data-color="amber"] .section-num{color:var(--amber);background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 25%,transparent)}
+.section h2{
+  font-size:clamp(23px,3vw,31px);line-height:1.2;letter-spacing:-.8px;
+  font-weight:800;margin:0;text-wrap:balance;position:relative;display:inline-block;
+}
+.section h2::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:3px;width:44px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease);
+}
+.section.reveal.in h2::after{transform:scaleX(1)}
+.section-desc{margin:18px 0 0;color:var(--muted);font-size:14.5px;max-width:62ch}
+.content p{margin:0 0 20px;color:var(--text-2);font-size:16.5px;line-height:1.78}
+.content h3{font-size:19px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px;color:var(--text)}
+.content strong{color:var(--text);font-weight:700}
+.content ul{margin:0 0 22px;padding-left:0;list-style:none}
+.content ul li{position:relative;padding-left:26px;margin-bottom:11px;color:var(--text-2);font-size:16px;line-height:1.7}
+.content ul li::before{
+  content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:2px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));transform:rotate(45deg);
+}
+.content ol{margin:0 0 22px;padding-left:0;list-style:none;counter-reset:ol}
+.content ol li{position:relative;padding-left:38px;margin-bottom:14px;counter-increment:ol;color:var(--text-2);font-size:16px;line-height:1.7}
+.content ol li::before{
+  content:counter(ol,decimal-leading-zero);
+  position:absolute;left:0;top:1px;font-family:var(--mono);font-size:11px;
+  font-weight:600;color:var(--accent);
+  background:var(--accent-soft);padding:3px 6px;border-radius:6px;
+}
+.term{
+  display:inline;font:inherit;font-weight:600;
+  padding:1px 3px;border-radius:4px;color:var(--cyan);
+  border-bottom:1.5px dotted color-mix(in srgb,var(--cyan) 60%,transparent);
+  background:linear-gradient(180deg,transparent 70%,var(--cyan-soft) 70%);
+  transition:background .25s var(--ease),color .25s var(--ease);cursor:pointer;
+}
+.term:hover{background:var(--cyan-soft);color:var(--violet)}
+.term::after{content:"↗";font-size:9px;vertical-align:super;margin-left:2px;opacity:.6;font-family:var(--mono)}
+.callout{
+  position:relative;margin:28px 0;padding:20px 22px 20px 24px;
+  border-radius:var(--r-md);border:1px solid var(--border);
+  background:var(--surface-2);overflow:hidden;
+}
+.callout::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+}
+.callout::after{
+  content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,var(--cyan-soft),transparent 70%);opacity:.6;pointer-events:none;
+}
+.callout.warn::before{background:linear-gradient(180deg,var(--accent),var(--rose))}
+.callout.warn{background:linear-gradient(120deg,var(--accent-soft),transparent 60%)}
+.callout.warn::after{background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+.callout.tip::before{background:linear-gradient(180deg,var(--emerald),var(--cyan))}
+.callout.tip{background:linear-gradient(120deg,var(--emerald-soft),transparent 60%)}
+.callout.tip::after{background:radial-gradient(circle,var(--emerald-soft),transparent 70%)}
+.callout-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px;color:var(--cyan);
+}
+.callout.warn .callout-label{color:var(--accent)}
+.callout.tip .callout-label{color:var(--emerald)}
+.callout p{margin:0;font-size:15px;line-height:1.7;color:var(--text-2);position:relative;z-index:1}
+.callout p + p{margin-top:10px}
+.quote{
+  margin:30px 0;padding:26px 28px;border-radius:var(--r-lg);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent);
+  background-size:200% 200%;animation:brandShift 12s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.quote::before{
+  content:"“";position:absolute;top:-6px;left:18px;font-size:70px;
+  font-family:Georgia,serif;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:.35;line-height:1;
+}
+.quote p{margin:0;font-size:17.5px;line-height:1.68;font-weight:500;color:var(--text);position:relative;z-index:1;font-style:italic}
+.quote cite{display:block;margin-top:12px;font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.8px;color:var(--muted);text-transform:uppercase}
+
+/* OVERVIEW CARDS */
+.overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:30px}
+@media(max-width:600px){.overview-grid{grid-template-columns:1fr}}
+.ov-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);
+  overflow:hidden;
+}
+.ov-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent));
+  background-size:200% 100%;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+.ov-card:hover::before{transform:scaleX(1)}
+.ov-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px 120px at 20% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.ov-card:nth-child(1)::after{background:radial-gradient(320px 120px at 20% 0%,var(--cyan-soft),transparent 70%)}
+.ov-card:nth-child(2)::after{background:radial-gradient(320px 120px at 20% 0%,var(--amber-soft),transparent 70%)}
+.ov-card:nth-child(3)::after{background:radial-gradient(320px 120px at 20% 0%,var(--emerald-soft),transparent 70%)}
+.ov-card:nth-child(4)::after{background:radial-gradient(320px 120px at 20% 0%,var(--violet-soft),transparent 70%)}
+.ov-card:hover{transform:translateY(-5px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.ov-card:hover::after{opacity:1}
+.ov-icon{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);font-size:17px;
+  margin-bottom:13px;transition:transform .5s var(--ease-bounce);position:relative;z-index:1;
+}
+.ov-card:nth-child(1) .ov-icon{background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.ov-card:nth-child(2) .ov-icon{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 25%,transparent)}
+.ov-card:nth-child(3) .ov-icon{background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.ov-card:nth-child(4) .ov-icon{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.ov-card:hover .ov-icon{transform:scale(1.15) rotate(-8deg)}
+.ov-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin-bottom:6px;position:relative;z-index:1;
+}
+.ov-value{font-size:14.5px;line-height:1.62;color:var(--text-2);margin:0;position:relative;z-index:1}
+.ov-value b{color:var(--text);font-weight:700}
+
+/* WASTE GRID — 7 lãng phí */
+.waste-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+@media(max-width:700px){.waste-grid{grid-template-columns:1fr}}
+.waste-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  overflow:hidden;transition:all .4s var(--ease);text-align:left;cursor:pointer;
+}
+.waste-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--rose),var(--accent));
+}
+.waste-card::after{
+  content:"";position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,var(--rose-soft),transparent 70%);
+  opacity:.5;pointer-events:none;
+}
+.waste-card:hover{transform:translateY(-4px);box-shadow:0 20px 45px -22px rgba(244,63,94,.4);border-color:var(--rose)}
+.waste-card > *{position:relative;z-index:1}
+.waste-num{
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1.4px;
+  color:var(--rose);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.waste-card h4{margin:0 0 8px;font-size:15.5px;font-weight:700;letter-spacing:-.2px;color:var(--text);line-height:1.4}
+.waste-card p{margin:0;font-size:13.5px;line-height:1.62;color:var(--muted)}
+.waste-card .wc-jp{
+  font-family:var(--mono);font-size:10px;letter-spacing:.8px;color:var(--muted);
+  margin-top:8px;display:block;font-style:italic;
+}
+
+/* PRINCIPLE CARDS */
+.principle-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+@media(max-width:900px){.principle-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:540px){.principle-grid{grid-template-columns:1fr}}
+.principle-card{
+  position:relative;padding:18px 16px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .4s var(--ease);overflow:hidden;text-align:center;cursor:pointer;
+}
+.principle-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent));
+  background-size:200% 100%;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+.principle-card:hover::before{transform:scaleX(1)}
+.principle-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(280px 140px at 50% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.principle-card:hover{transform:translateY(-6px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.principle-card:hover::after{opacity:1}
+.principle-card > *{position:relative;z-index:1}
+.principle-num{
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:1.4px;
+  color:var(--muted);margin-bottom:10px;display:block;
+}
+.principle-icon{
+  width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);
+  margin:0 auto 12px;font-size:20px;
+  transition:transform .5s var(--ease-bounce);
+}
+.principle-card:hover .principle-icon{transform:scale(1.15) rotate(-8deg)}
+.principle-card[data-color="cyan"] .principle-icon{background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 30%,transparent)}
+.principle-card[data-color="violet"] .principle-icon{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 30%,transparent)}
+.principle-card[data-color="accent"] .principle-icon{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.principle-card[data-color="emerald"] .principle-icon{background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 30%,transparent)}
+.principle-card[data-color="rose"] .principle-icon{background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 30%,transparent)}
+.principle-card h4{
+  margin:0 0 6px;font-size:14.5px;font-weight:700;letter-spacing:-.2px;
+  color:var(--text);line-height:1.3;
+}
+.principle-card p{
+  margin:0;font-size:11.5px;color:var(--muted);line-height:1.45;
+}
+
+/* TOOLS GRID */
+.tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+@media(max-width:700px){.tools-grid{grid-template-columns:1fr}}
+.tool-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .4s var(--ease);overflow:hidden;text-align:left;cursor:pointer;
+}
+.tool-card::before{
+  content:"";position:absolute;top:0;left:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+  transform:scaleY(0);transform-origin:top;transition:transform .5s var(--ease);
+}
+.tool-card:hover::before{transform:scaleY(1)}
+.tool-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px 140px at 20% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.tool-card:hover{transform:translateY(-5px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.tool-card:hover::after{opacity:1}
+.tool-card > *{position:relative;z-index:1}
+.tool-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.tool-icon{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);font-size:17px;
+  flex-shrink:0;transition:transform .5s var(--ease-bounce);
+}
+.tool-card:hover .tool-icon{transform:scale(1.12) rotate(-6deg)}
+.tool-card[data-color="cyan"] .tool-icon{background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 30%,transparent)}
+.tool-card[data-color="violet"] .tool-icon{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 30%,transparent)}
+.tool-card[data-color="accent"] .tool-icon{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.tool-card[data-color="emerald"] .tool-icon{background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 30%,transparent)}
+.tool-card[data-color="rose"] .tool-icon{background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 30%,transparent)}
+.tool-card[data-color="amber"] .tool-icon{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,transparent)}
+.tool-num{
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;
+  color:var(--muted);margin-left:auto;
+}
+.tool-card h4{margin:0 0 8px;font-size:15.5px;font-weight:700;letter-spacing:-.2px;color:var(--text);line-height:1.35}
+.tool-card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.6}
+.tool-arrow{
+  margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.8px;
+  color:var(--muted);display:flex;align-items:center;gap:6px;transition:color .3s var(--ease);
+}
+.tool-card:hover .tool-arrow{color:var(--accent)}
+.tool-arrow svg{width:12px;height:12px;stroke-width:2.2;transition:transform .3s var(--ease)}
+.tool-card:hover .tool-arrow svg{transform:translateX(3px)}
+
+/* BENEFIT GRID */
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+@media(max-width:700px){.benefit-grid{grid-template-columns:1fr}}
+.benefit-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .4s var(--ease);overflow:hidden;text-align:center;
+}
+.benefit-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--emerald),var(--cyan));
+  background-size:200% 100%;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+.benefit-card:hover::before{transform:scaleX(1)}
+.benefit-card:hover{transform:translateY(-5px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.benefit-card > *{position:relative;z-index:1}
+.benefit-icon{
+  width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+  background:var(--emerald-soft);border:1px solid color-mix(in srgb,var(--emerald) 30%,transparent);
+  margin:0 auto 12px;font-size:20px;transition:transform .5s var(--ease-bounce);
+}
+.benefit-card:hover .benefit-icon{transform:scale(1.15) rotate(-8deg)}
+.benefit-card h4{margin:0 0 6px;font-size:14.5px;font-weight:700;color:var(--text);line-height:1.3}
+.benefit-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.6}
+
+/* CASE STUDY */
+.case-study{
+  position:relative;margin:26px 0;padding:24px;border-radius:var(--r-xl);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent);
+  background-size:200% 200%;animation:brandShift 14s ease infinite;
+  border:1px solid var(--border);overflow:hidden;
+}
+.case-study::before{
+  content:"";position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 12s ease-in-out infinite;
+}
+.case-study h3{
+  margin:0 0 14px;font-size:17px;font-weight:700;
+  display:flex;align-items:center;gap:10px;position:relative;z-index:1;
+  color:var(--text);
+}
+.case-study p{margin:0 0 10px;font-size:15px;line-height:1.68;color:var(--text-2);position:relative;z-index:1}
+.case-study .cs-metric{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;position:relative;z-index:1;
+}
+@media(max-width:600px){.case-study .cs-metric{grid-template-columns:1fr}}
+.cs-metric-item{
+  background:var(--surface);border-radius:var(--r-md);padding:14px;text-align:center;
+  border:1px solid var(--border);
+}
+.cs-metric-item .cm-value{
+  font-family:var(--mono);font-size:22px;font-weight:700;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1.2;
+}
+.cs-metric-item .cm-label{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+
+/* CHECKLIST */
+.checklist{margin-top:26px;border-radius:var(--r-xl);border:1px solid var(--border);background:var(--surface);overflow:hidden}
+.checklist-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:linear-gradient(120deg,var(--emerald-soft),transparent 80%);flex-wrap:wrap;
+}
+.checklist-head h3{margin:0;font-size:14px;font-weight:700;letter-spacing:-.1px}
+.check-progress{display:flex;align-items:center;gap:11px}
+.check-bar{width:110px;height:5px;border-radius:3px;background:var(--border);overflow:hidden;position:relative}
+.check-bar span{
+  display:block;height:100%;width:0%;border-radius:3px;
+  background:linear-gradient(90deg,var(--emerald),var(--cyan),var(--accent));
+  background-size:200% 100%;animation:progressFlow 3s linear infinite;transition:width .5s var(--ease);
+}
+.check-count{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+.check-item{
+  display:flex;align-items:flex-start;gap:14px;padding:15px 20px;
+  border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background .3s var(--ease);position:relative;overflow:hidden;
+}
+.check-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--emerald),var(--cyan));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.check-item:has(input:checked)::before{transform:scaleY(1)}
+.check-item:last-child{border-bottom:0}
+.check-item:hover{background:var(--surface-2)}
+.check-item input{position:absolute;opacity:0;width:0;height:0}
+.checkbox{
+  flex-shrink:0;width:21px;height:21px;border-radius:7px;margin-top:2px;
+  border:1.8px solid var(--border-strong);background:var(--surface);
+  display:grid;place-items:center;transition:all .3s var(--ease);
+}
+.checkbox svg{
+  width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .35s var(--ease);
+}
+[data-theme="dark"] .checkbox svg{stroke:#06111E}
+.check-item input:checked + .checkbox{
+  background:linear-gradient(140deg,var(--emerald),var(--cyan));
+  border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-soft),0 0 16px var(--emerald-soft);
+}
+.check-item input:checked + .checkbox svg{stroke-dashoffset:0}
+.check-item input:focus-visible + .checkbox{outline:2px solid var(--accent);outline-offset:3px}
+.check-text{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.4}
+.check-sub{font-size:13px;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.5}
+.check-item input:checked ~ .check-body .check-text{
+  color:var(--muted);text-decoration:line-through;text-decoration-color:var(--border-strong);
+}
+
+/* FAQ */
+.faq{margin-top:26px;border-top:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--border);position:relative}
+.faq-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--rose),var(--violet));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.faq-item.open::before{transform:scaleY(1)}
+.faq-q{
+  width:100%;display:flex;align-items:center;gap:18px;text-align:left;
+  padding:20px 4px;font-size:16px;font-weight:600;color:var(--text);
+  letter-spacing:-.2px;transition:color .25s var(--ease);
+}
+.faq-q:hover{color:var(--rose)}
+.faq-item.open .faq-q{color:var(--rose)}
+.faq-icon{
+  margin-left:auto;flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--border);display:grid;place-items:center;
+  transition:all .35s var(--ease);position:relative;
+}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;background:var(--muted);border-radius:2px;
+  transition:all .35s var(--ease);
+}
+.faq-icon::before{width:10px;height:1.6px}
+.faq-icon::after{width:1.6px;height:10px}
+.faq-item.open .faq-icon{
+  background:linear-gradient(140deg,var(--rose),var(--violet));
+  border-color:var(--rose);transform:rotate(90deg);box-shadow:0 0 16px var(--rose-soft);
+}
+.faq-item.open .faq-icon::before,
+.faq-item.open .faq-icon::after{background:#fff}
+[data-theme="dark"] .faq-item.open .faq-icon::before,
+[data-theme="dark"] .faq-item.open .faq-icon::after{background:#06111E}
+.faq-item.open .faq-icon::after{height:0}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a-inner{overflow:hidden}
+.faq-a-inner p{margin:0;padding:0 4px 22px;font-size:15px;line-height:1.75;color:var(--muted);max-width:62ch}
+
+/* RELATED PILLS */
+.related-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.pill{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:10px 16px;border-radius:var(--r-full);
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13.5px;font-weight:600;color:var(--text-2);
+  transition:all .3s var(--ease);position:relative;overflow:hidden;
+}
+.pill::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,var(--cyan-soft),var(--violet-soft));
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.pill:hover{transform:translateY(-3px);border-color:var(--violet);color:var(--violet);box-shadow:0 12px 28px -14px var(--violet)}
+.pill:hover::before{opacity:1}
+.pill > *{position:relative;z-index:1}
+.pill svg{width:13px;height:13px;stroke-width:2.2;opacity:.6;transition:transform .3s var(--ease)}
+.pill:hover svg{transform:translate(2px,-2px);opacity:1}
+
+/* TAKEAWAYS */
+.takeaways{
+  margin:0 0 70px;padding:28px;border-radius:var(--r-xl);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent 80%);
+  background-size:200% 200%;animation:brandShift 14s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.takeaways::before{
+  content:"";position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 12s ease-in-out infinite;
+}
+.takeaways h3{
+  margin:0 0 18px;font-size:13px;font-family:var(--mono);letter-spacing:1.6px;
+  text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:10px;
+  position:relative;z-index:1;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.takeaways h3::after{content:"";flex:1;height:1px;background:var(--border)}
+.takeaways ul{margin:0;padding:0;list-style:none;display:grid;gap:13px;position:relative;z-index:1}
+.takeaways li{position:relative;padding-left:30px;font-size:15px;line-height:1.68;color:var(--text-2)}
+.takeaways li::before{
+  content:"";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:6px;
+  background:linear-gradient(140deg,var(--accent-soft),var(--violet-soft));
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+}
+.takeaways li::after{
+  content:"";position:absolute;left:5px;top:10px;width:5px;height:8px;
+  border-right:1.8px solid var(--accent);border-bottom:1.8px solid var(--accent);
+  transform:rotate(42deg);
+}
+
+/* BENTO */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:26px}
+.bento > *{min-width:0}
+.bento > :nth-child(1){grid-column:span 4;grid-row:span 2}
+.bento > :nth-child(2){grid-column:span 2}
+.bento > :nth-child(3){grid-column:span 2}
+.bento > :nth-child(4){grid-column:span 3}
+.bento > :nth-child(5){grid-column:span 3}
+@media(max-width:820px){
+  .bento{grid-template-columns:1fr}
+  .bento > *{grid-column:span 1 !important;grid-row:auto !important}
+}
+.acard{
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:190px;padding:22px;border-radius:var(--r-lg);
+  border:1px solid var(--border);background:var(--surface);
+  overflow:hidden;transition:all .45s var(--ease);text-align:left;
+}
+.acard::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .45s var(--ease);
+  background:radial-gradient(420px 220px at 15% 0%,var(--violet-soft),transparent 68%);
+}
+.acard::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+  transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease);
+}
+.acard:hover::after{transform:scaleX(1)}
+.acard:hover{transform:translateY(-6px);box-shadow:0 28px 60px -26px rgba(139,92,246,.45);border-color:var(--violet)}
+.acard:hover::before{opacity:1}
+.acard > *{position:relative;z-index:1}
+.bento > :nth-child(1).acard{min-height:396px;justify-content:flex-end}
+.bento > :nth-child(1).acard::before{background:radial-gradient(520px 300px at 20% 0%,var(--accent-soft),transparent 68%)}
+@media(max-width:820px){.bento > :nth-child(1).acard{min-height:260px}}
+.acard-cat{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  font-weight:600;margin-bottom:11px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.acard h4{margin:0;font-size:17px;font-weight:700;line-height:1.35;letter-spacing:-.4px;color:var(--text);text-wrap:balance}
+.bento > :nth-child(1).acard h4{font-size:clamp(20px,2.6vw,27px);line-height:1.22}
+.acard p{margin:10px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6}
+.acard-meta{
+  margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:.7px;
+  color:var(--muted);display:flex;align-items:center;gap:9px;
+}
+.acard-meta i{width:3px;height:3px;border-radius:50%;background:var(--border-strong)}
+
+/* FOOTER */
+.footer{
+  border-top:1px solid var(--border);padding:44px 0 40px;
+  background:var(--bg-alt);position:relative;z-index:2;margin-top:auto;
+}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer p{margin:0;font-size:12.5px;color:var(--muted)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:12.5px;color:var(--muted);transition:color .25s;position:relative}
+.footer-links a::after{
+  content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--rose));transition:width .3s var(--ease);
+}
+.footer-links a:hover{color:var(--accent)}
+.footer-links a:hover::after{width:100%}
+
+/* MODALS */
+.backdrop{
+  position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;
+  background:rgba(6,14,24,.55);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;transition:opacity .32s var(--ease),visibility .32s;
+}
+.backdrop.open{opacity:1;visibility:visible}
+.modal{
+  width:min(560px,100%);max-height:86vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);padding:30px;position:relative;
+  transform:translateY(18px) scale(.97);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);overflow-x:hidden;
+}
+.modal::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+}
+.backdrop.open .modal{transform:none;opacity:1}
+.modal-sm{width:min(480px,100%)}
+.modal::-webkit-scrollbar{width:6px}
+.modal::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+.modal-close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:9px;
+  display:grid;place-items:center;color:var(--muted);border:1px solid var(--border);
+  transition:all .25s var(--ease);z-index:2;
+}
+.modal-close:hover{color:var(--danger);border-color:var(--danger);transform:rotate(90deg);box-shadow:0 0 16px var(--rose-soft)}
+.modal-close svg{width:15px;height:15px;stroke-width:2.2}
+.modal-tag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:600;padding:5px 11px;border-radius:var(--r-full);
+  margin-bottom:14px;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+}
+.modal h3{
+  margin:0 0 8px;font-size:21px;font-weight:800;letter-spacing:-.6px;
+  line-height:1.28;padding-right:34px;
+  background:linear-gradient(120deg,var(--text),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.modal-meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;color:var(--muted);
+  margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.modal-body{font-size:14.5px;line-height:1.72;color:var(--text-2)}
+.modal-body p{margin:0 0 12px}
+.modal-body p:last-child{margin-bottom:0}
+.modal-section{margin-top:20px}
+.modal-section h5{margin:0 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.modal-related{display:flex;flex-wrap:wrap;gap:7px}
+.modal-related span{
+  font-size:12px;padding:5px 11px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);
+  font-weight:500;transition:all .25s var(--ease);
+}
+.modal-related span:hover{background:var(--violet-soft);border-color:var(--violet);color:var(--violet);transform:translateY(-2px)}
+.modal-list{margin:0;padding-left:0;list-style:none}
+.modal-list li{
+  position:relative;padding-left:22px;margin-bottom:8px;
+  font-size:14px;line-height:1.65;color:var(--text-2);
+}
+.modal-list li::before{
+  content:"";position:absolute;left:4px;top:9px;width:5px;height:5px;border-radius:50%;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+}
+
+/* SEARCH */
+.search-overlay{
+  position:fixed;inset:0;z-index:320;padding:78px 22px 22px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s;overflow-y:auto;
+}
+.search-overlay.open{opacity:1;visibility:visible}
+.search-box{
+  width:min(720px,100%);margin-inline:auto;
+  transform:translateY(-14px);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);
+}
+.search-overlay.open .search-box{transform:none;opacity:1}
+.search-field{
+  display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-lg);box-shadow:var(--shadow-md);position:relative;overflow:hidden;
+}
+.search-field::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+}
+.search-field svg{width:19px;height:19px;color:var(--muted);flex-shrink:0;stroke-width:2}
+.search-field input{
+  flex:1;border:0;background:none;outline:none;padding:19px 0;
+  font-size:16.5px;font-family:inherit;color:var(--text);font-weight:500;
+}
+.search-field input::placeholder{color:var(--muted);font-weight:400}
+.kbd{font-family:var(--mono);font-size:9.5px;padding:4px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);flex-shrink:0}
+.search-results{margin-top:22px;display:grid;gap:8px}
+.sr-group-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:16px 0 8px;padding-left:4px;
+}
+.sr-item{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px 16px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .22s var(--ease);position:relative;overflow:hidden;
+}
+.sr-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--violet),var(--accent));
+  transform:scaleY(0);transform-origin:top;transition:transform .3s var(--ease);
+}
+.sr-item:hover,.sr-item.focused{border-color:var(--violet);transform:translateX(4px);box-shadow:0 10px 26px -12px var(--violet)}
+.sr-item:hover::before,.sr-item.focused::before{transform:scaleY(1)}
+.sr-icon{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--border);font-size:13px}
+.sr-body{min-width:0;flex:1}
+.sr-title{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.35}
+.sr-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:var(--mono);letter-spacing:.3px}
+.sr-title mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px}
+.empty-state{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty-state .es-icon{font-size:32px;margin-bottom:12px;opacity:.5}
+.empty-state p{margin:0;font-size:14px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.06s}
+.reveal-d2{transition-delay:.12s}
+.reveal-d3{transition-delay:.18s}
+.reveal-d4{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .stars-stage{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ BACKGROUND STAGE ══════════════ -->
+<div class="stars-stage" aria-hidden="true">
+  <div class="bg-parallax">
+    <div class="bg-parallax-layer pl-1"></div>
+    <div class="bg-parallax-layer pl-2"></div>
+    <div class="bg-parallax-layer pl-3"></div>
+  </div>
+  <div class="stars-glow"></div>
+  <div class="pixel-grid"></div>
+  <div class="stars-layer" data-speed="0.06" id="starsDeep"></div>
+  <div class="stars-layer" data-speed="0.15" id="starsMid"></div>
+  <div class="stars-layer" data-speed="0.28" id="starsNear"></div>
+  <div class="stars-layer" data-speed="0.45" id="starsShine"></div>
+  <div class="shooting-stars" id="shootingStars"></div>
+  <div class="stars-vignette"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="scroll-glow" id="scrollGlow" aria-hidden="true"></div>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="https://luonghongquang.github.io/Tony-EXIM/">
+      <span class="brand-mark">TE</span>
+      <span>
+        <span class="brand-text">TONY<em>EXIM</em></span>
+        <span class="brand-sub">KNOWLEDGE SYSTEM</span>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="Chính">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Tìm kiếm (Ctrl K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" id="themeBtn" aria-label="Đổi chế độ sáng tối">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu di động">
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+</nav>
+
+<!-- ══════════════ ARTICLE HERO ══════════════ -->
+<section class="article-hero">
+  <div class="wrap">
+    <div class="crumbs">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Manufacturing</a><span class="sep">/</span>
+      <span style="color:var(--text-2)">Sản xuất tinh gọn</span>
+    </div>
+
+    <span class="chip"><span class="dot"></span>LEAN · TPS · CONTINUOUS IMPROVEMENT</span>
+
+    <h1 class="article-title">
+      <span class="accent">Sản xuất tinh gọn</span> — Nguyên lý &amp; Công cụ cho doanh nghiệp
+    </h1>
+
+    <p class="article-lead">
+      Sản xuất tinh gọn (Lean Manufacturing) không chỉ là một phương pháp — đó là một triết lý quản trị
+      bắt nguồn từ Toyota Nhật Bản. Bài viết này giới thiệu toàn diện về Lean: nguồn gốc, 5 nguyên tắc cốt lõi,
+      7 lãng phí (Muda), và 12+ công cụ Lean phổ biến được áp dụng trong doanh nghiệp sản xuất hiện đại.
+    </p>
+
+    <div class="article-meta">
+      <span class="author"><span class="avatar">TQ</span> Tony EXIM</span>
+      <span class="meta-sep"></span>
+      <span>20/03/2025</span>
+      <span class="meta-sep"></span>
+      <span>25 phút đọc</span>
+      <span class="meta-sep"></span>
+      <span style="font-family:var(--mono);font-size:11px">CẬP NHẬT 08/2025</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="wrap">
+  <div class="layout">
+
+    <aside class="toc">
+      <div class="toc-label">Nội dung bài</div>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#overview"><span class="toc-num">01</span>Tổng quan Lean</a></li>
+        <li><a href="#principles"><span class="toc-num">02</span>5 nguyên tắc cốt lõi</a></li>
+        <li><a href="#wastes"><span class="toc-num">03</span>7 lãng phí (Muda)</a></li>
+        <li><a href="#tools"><span class="toc-num">04</span>Công cụ Lean</a></li>
+        <li><a href="#benefits"><span class="toc-num">05</span>Lợi ích doanh nghiệp</a></li>
+        <li><a href="#cases"><span class="toc-num">06</span>Case study Việt Nam</a></li>
+        <li><a href="#checklist"><span class="toc-num">07</span>Checklist triển khai</a></li>
+        <li><a href="#faq"><span class="toc-num">08</span>Câu hỏi thường gặp</a></li>
+        <li><a href="#related"><span class="toc-num">09</span>Bài viết liên quan</a></li>
+      </ul>
+
+      <div class="toc-cta">
+        <p>Tra cứu nhanh thuật ngữ &amp; công cụ Lean.</p>
+        <button type="button" onclick="openSearch()">Mở tìm kiếm ⌘K</button>
+      </div>
+    </aside>
+
+    <main class="content">
+
+      <!-- SECTION 01 -->
+      <section class="section reveal" id="overview" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 01</span>
+          <h2>Sản xuất tinh gọn (Lean) là gì?</h2>
+          <p class="section-desc">Định nghĩa, nguồn gốc và bản chất của Lean Manufacturing.</p>
+        </div>
+
+        <p>
+          <strong>Sản xuất tinh gọn</strong> (tiếng Anh: <em>Lean Manufacturing</em>, viết tắt: <strong>Lean</strong>)
+          là một hệ thống các nguyên tắc và công cụ cải tiến có hệ thống, tập trung vào việc
+          <strong>tạo giá trị từ góc nhìn của khách hàng</strong> và <strong>loại bỏ lãng phí</strong>
+          trong quá trình sản xuất hoặc cung cấp dịch vụ [reference:0].
+        </p>
+
+        <p>
+          Lean bắt nguồn từ <strong>Hệ thống sản xuất Toyota (TPS - Toyota Production System)</strong>
+          do hãng Toyota Nhật Bản khởi xướng áp dụng từ những năm 1950–1960, với mục tiêu
+          loại bỏ hoàn toàn lãng phí để đạt được phương pháp sản xuất hiệu quả nhất [reference:1].
+          Ngày nay, Lean đã được áp dụng rộng rãi tại nhiều tập đoàn hàng đầu thế giới
+          như GE, Samsung, LG, Ford và nhiều doanh nghiệp Việt Nam.
+        </p>
+
+        <p>
+          Bản chất của Lean là <strong>tập trung loại bỏ những lãng phí</strong>, đồng thời tạo ra
+          giá trị về sản phẩm, dịch vụ đáp ứng yêu cầu của khách hàng [reference:2].
+          Trong sản xuất Lean, <strong>giá trị của sản phẩm do khách hàng quyết định</strong> —
+          sản phẩm phải đáp ứng nhu cầu của khách hàng cả về chất lượng, thời gian và giá cả [reference:3].
+        </p>
+
+        <div class="overview-grid">
+          <div class="ov-card reveal reveal-d1">
+            <div class="ov-icon">🏭</div>
+            <div class="ov-label">Nguồn gốc</div>
+            <p class="ov-value">
+              <b>Toyota Production System (TPS)</b> — Nhật Bản, thập niên 1950–1960
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d2">
+            <div class="ov-icon">🎯</div>
+            <div class="ov-label">Mục tiêu</div>
+            <p class="ov-value">
+              <b>Loại bỏ lãng phí</b> — Tạo giá trị tối đa cho khách hàng với chi phí tối thiểu
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d3">
+            <div class="ov-icon">🔄</div>
+            <div class="ov-label">Cách tiếp cận</div>
+            <p class="ov-value">
+              <b>Cải tiến liên tục</b> — Không ngừng tối ưu hóa quy trình từ góc nhìn khách hàng
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d4">
+            <div class="ov-icon">📊</div>
+            <div class="ov-label">Ứng dụng</div>
+            <p class="ov-value">
+              <b>Sản xuất &amp; Dịch vụ</b> — Từ nhà máy đến bệnh viện, ngân hàng, logistics
+            </p>
+          </div>
+        </div>
+
+        <div class="callout note">
+          <div class="callout-label">💡 Phân biệt Lean và Six Sigma</div>
+          <p>
+            <strong>Lean</strong> tập trung vào <em>loại bỏ lãng phí</em> và <em>tăng tốc độ dòng chảy</em>.
+            <strong>Six Sigma</strong> tập trung vào <em>giảm biến động</em> và <em>loại bỏ lỗi</em>.
+            Kết hợp cả hai tạo thành <strong>Lean Six Sigma</strong> — phương pháp mạnh mẽ được nhiều tập đoàn lớn áp dụng.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 02 -->
+      <section class="section reveal" id="principles" data-color="violet">
+        <div class="section-head">
+          <span class="section-num">SECTION 02</span>
+          <h2>5 nguyên tắc cốt lõi của Lean</h2>
+          <p class="section-desc">Click từng thẻ để xem chi tiết nguyên tắc.</p>
+        </div>
+
+        <p>
+          Lean được xây dựng trên <strong>5 nguyên tắc cốt lõi</strong> do Womack và Jones
+          (Viện Công nghệ Lean - Lean Enterprise Institute) hệ thống hóa. Đây là kim chỉ nam
+          cho mọi hoạt động cải tiến trong doanh nghiệp.
+        </p>
+
+        <div class="principle-grid">
+          <button class="principle-card reveal reveal-d1" data-color="cyan" data-doc="pr-value">
+            <span class="principle-num">01</span>
+            <span class="principle-icon">💎</span>
+            <h4>Xác định giá trị</h4>
+            <p>Từ góc nhìn khách hàng</p>
+          </button>
+
+          <button class="principle-card reveal reveal-d2" data-color="violet" data-doc="pr-vsm">
+            <span class="principle-num">02</span>
+            <span class="principle-icon">🗺️</span>
+            <h4>Bản đồ dòng giá trị</h4>
+            <p>Nhận diện lãng phí</p>
+          </button>
+
+          <button class="principle-card reveal reveal-d3" data-color="accent" data-doc="pr-flow">
+            <span class="principle-num">03</span>
+            <span class="principle-icon">🌊</span>
+            <h4>Tạo dòng chảy</h4>
+            <p>Liên tục, không ngắt</p>
+          </button>
+
+          <button class="principle-card reveal reveal-d1" data-color="emerald" data-doc="pr-pull">
+            <span class="principle-num">04</span>
+            <span class="principle-icon">⬅️</span>
+            <h4>Kéo (Pull)</h4>
+            <p>Chỉ sản xuất khi cần</p>
+          </button>
+
+          <button class="principle-card reveal reveal-d2" data-color="rose" data-doc="pr-perfect">
+            <span class="principle-num">05</span>
+            <span class="principle-icon">♾️</span>
+            <h4>Hoàn hảo</h4>
+            <p>Cải tiến liên tục</p>
+          </button>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Thứ tự quan trọng</div>
+          <p>
+            5 nguyên tắc này phải được thực hiện <strong>theo trình tự</strong>. Không thể tạo dòng chảy
+            (Flow) nếu chưa xác định đúng giá trị (Value) và lập bản đồ dòng giá trị (VSM).
+            Không thể Pull nếu chưa có Flow.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 03 -->
+      <section class="section reveal" id="wastes" data-color="rose">
+        <div class="section-head">
+          <span class="section-num">SECTION 03</span>
+          <h2>7 lãng phí (Muda) — Kẻ thù của Lean</h2>
+          <p class="section-desc">Click từng loại lãng phí để xem chi tiết và cách loại bỏ.</p>
+        </div>
+
+        <p>
+          Trong Lean, <strong>lãng phí</strong> (tiếng Nhật: <em>Muda</em>) được định nghĩa là
+          <strong>bất kỳ hoạt động nào tiêu tốn tài nguyên nhưng không tạo ra giá trị cho khách hàng</strong> [reference:4].
+          Taiichi Ohno (cha đẻ của TPS) đã phân loại lãng phí thành <strong>7 loại</strong> [reference:5].
+        </p>
+
+        <div class="waste-grid">
+          <button class="waste-card reveal reveal-d1" data-doc="w-over">
+            <div class="waste-num">MUDA 01</div>
+            <h4>Sản xuất dư thừa</h4>
+            <p>Sản xuất nhiều hơn hoặc sớm hơn nhu cầu thực tế. Đây là dạng lãng phí nguy hiểm nhất vì kéo theo các dạng lãng phí khác.</p>
+            <span class="wc-jp">Overproduction</span>
+          </button>
+
+          <button class="waste-card reveal reveal-d2" data-doc="w-wait">
+            <div class="waste-num">MUDA 02</div>
+            <h4>Chờ đợi</h4>
+            <p>Thời gian chờ đợi giữa các công đoạn: chờ nguyên liệu, chờ máy, chờ thông tin, chờ phê duyệt. Thời gian chết không tạo ra giá trị.</p>
+            <span class="wc-jp">Waiting</span>
+          </button>
+
+          <button class="waste-card reveal reveal-d3" data-doc="w-transport">
+            <div class="waste-num">MUDA 03</div>
+            <h4>Vận chuyển</h4>
+            <p>Di chuyển nguyên liệu, bán thành phẩm, thành phẩm không cần thiết giữa các công đoạn, kho bãi. Tốn thời gian và có thể gây hư hỏng.</p>
+            <span class="wc-jp">Transportation</span>
+          </button>
+
+          <button class="waste-card reveal reveal-d1" data-doc="w-overprocess">
+            <div class="waste-num">MUDA 04</div>
+            <h4>Gia công thừa</h4>
+            <p>Thực hiện các bước gia công vượt quá yêu cầu của khách hàng, hoặc sử dụng thiết bị/phương pháp đắt tiền hơn mức cần thiết.</p>
+            <span class="wc-jp">Over-processing</span>
+          </button>
+
+          <button class="waste-card reveal reveal-d2" data-doc="w-inventory">
+            <div class="waste-num">MUDA 05</div>
+            <h4>Tồn kho</h4>
+            <p>Nguyên liệu, bán thành phẩm, thành phẩm tồn đọng quá mức. Tồn kho che giấu các vấn đề và phát sinh chi phí lưu trữ, bảo quản.</p>
+            <span class="wc-jp">Inventory</span>
+          </button>
+
+          <button class="waste-card reveal reveal-d3" data-doc="w-motion">
+            <div class="waste-num">MUDA 06</div>
+            <h4>Thao tác</h4>
+            <p>Di chuyển của con người (đi lại, cúi, với, xoay) không cần thiết. Ảnh hưởng đến năng suất và gây mệt mỏi cho người lao động.</p>
+            <span class="wc-jp">Motion</span>
+          </button>
+
+          <button class="waste-card reveal reveal-d1" data-doc="w-defect">
+            <div class="waste-num">MUDA 07</div>
+            <h4>Lỗi / Khuyết tật</h4>
+            <p>Sản phẩm lỗi, hàng phải sửa chữa, làm lại, hoặc bị trả về. Tốn nguyên liệu, thời gian và ảnh hưởng uy tín.</p>
+            <span class="wc-jp">Defects</span>
+          </button>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Lãng phí thứ 8</div>
+          <p>
+            Nhiều chuyên gia Lean bổ sung <strong>lãng phí thứ 8: Lãng phí tài năng</strong>
+            (Non-utilized talent) — không sử dụng hết kỹ năng, kiến thức và sáng kiến của nhân viên.
+            Đây là dạng lãng phí vô hình nhưng có tác động lớn đến tổ chức.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 04 -->
+      <section class="section reveal" id="tools" data-color="accent">
+        <div class="section-head">
+          <span class="section-num">SECTION 04</span>
+          <h2>Công cụ Lean phổ biến trong doanh nghiệp</h2>
+          <p class="section-desc">12 công cụ cốt lõi — click để xem chi tiết cách áp dụng.</p>
+        </div>
+
+        <p>
+          Lean cung cấp một <strong>bộ công cụ đa dạng</strong> để loại bỏ lãng phí và tối ưu hóa quy trình.
+          Dưới đây là <strong>12 công cụ phổ biến nhất</strong> được các doanh nghiệp sản xuất
+          trên toàn thế giới áp dụng [reference:6].
+        </p>
+
+        <div class="tools-grid">
+          <button class="tool-card" data-color="cyan" data-doc="t-5s">
+            <div class="tool-head">
+              <span class="tool-icon">🧹</span>
+              <span class="tool-num">TOOL 01</span>
+            </div>
+            <h4>5S — Sắp xếp nơi làm việc</h4>
+            <p>Phương pháp tổ chức nơi làm việc gồm: Sàng lọc, Sắp xếp, Sạch sẽ, Săn sóc, Sẵn sàng. Nền tảng của mọi hoạt động Lean.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="violet" data-doc="t-kaizen">
+            <div class="tool-head">
+              <span class="tool-icon">📈</span>
+              <span class="tool-num">TOOL 02</span>
+            </div>
+            <h4>Kaizen — Cải tiến liên tục</h4>
+            <p>Triết lý cải tiến từng bước nhỏ, liên tục, với sự tham gia của toàn bộ nhân viên. Không có đích đến cuối cùng.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="accent" data-doc="t-kanban">
+            <div class="tool-head">
+              <span class="tool-icon">📋</span>
+              <span class="tool-num">TOOL 03</span>
+            </div>
+            <h4>Kanban — Hệ thống kéo</h4>
+            <p>Hệ thống thẻ tín hiệu trực quan để kiểm soát dòng chảy vật tư theo cơ chế Pull — chỉ sản xuất khi có nhu cầu thực tế.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="emerald" data-doc="t-vsm">
+            <div class="tool-head">
+              <span class="tool-icon">🗺️</span>
+              <span class="tool-num">TOOL 04</span>
+            </div>
+            <h4>VSM — Bản đồ dòng giá trị</h4>
+            <p>Công cụ trực quan hóa toàn bộ dòng chảy vật tư và thông tin, phân biệt hoạt động tạo giá trị và không tạo giá trị.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="rose" data-doc="t-jit">
+            <div class="tool-head">
+              <span class="tool-icon">⏱️</span>
+              <span class="tool-num">TOOL 05</span>
+            </div>
+            <h4>JIT — Just-in-Time</h4>
+            <p>Sản xuất đúng thứ cần thiết, đúng số lượng, đúng thời điểm. Giảm tồn kho và chi phí lưu trữ xuống mức tối thiểu.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="cyan" data-doc="t-andon">
+            <div class="tool-head">
+              <span class="tool-icon">🚨</span>
+              <span class="tool-num">TOOL 06</span>
+            </div>
+            <h4>Andon — Tín hiệu sự cố</h4>
+            <p>Hệ thống đèn/bảng tín hiệu trực quan để báo hiệu bất thường, cho phép dừng dây chuyền ngay khi phát hiện vấn đề.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="violet" data-doc="t-poka">
+            <div class="tool-head">
+              <span class="tool-icon">🛡️</span>
+              <span class="tool-num">TOOL 07</span>
+            </div>
+            <h4>Poka-Yoke — Chống lỗi</h4>
+            <p>Thiết kế quy trình/thiết bị sao cho lỗi không thể xảy ra hoặc bị phát hiện ngay lập tức. Còn gọi là Error-Proofing.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="accent" data-doc="t-tpm">
+            <div class="tool-head">
+              <span class="tool-icon">🔧</span>
+              <span class="tool-num">TOOL 08</span>
+            </div>
+            <h4>TPM — Bảo trì sản xuất toàn diện</h4>
+            <p>Bảo trì phòng ngừa với sự tham gia của toàn bộ nhân viên, nhằm đạt hiệu suất thiết bị tối đa và giảm dừng máy đột xuất.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="emerald" data-doc="t-smed">
+            <div class="tool-head">
+              <span class="tool-icon">⚡</span>
+              <span class="tool-num">TOOL 09</span>
+            </div>
+            <h4>SMED — Chuyển đổi nhanh</h4>
+            <p>Single-Minute Exchange of Die — giảm thời gian chuyển đổi máy từ hàng giờ xuống dưới 10 phút, cho phép sản xuất lô nhỏ hơn.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="rose" data-doc="t-heijunka">
+            <div class="tool-head">
+              <span class="tool-icon">⚖️</span>
+              <span class="tool-num">TOOL 10</span>
+            </div>
+            <h4>Heijunka — San bằng sản xuất</h4>
+            <p>Phân bổ sản xuất đều đặn theo thời gian, tránh dao động lớn về khối lượng và chủng loại sản phẩm.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="cyan" data-doc="t-gemba">
+            <div class="tool-head">
+              <span class="tool-icon">👣</span>
+              <span class="tool-num">TOOL 11</span>
+            </div>
+            <h4>Gemba Walk — Đi đến hiện trường</h4>
+            <p>Lãnh đạo trực tiếp đến nơi làm việc để quan sát, lắng nghe và hiểu vấn đề thực tế. Không quản lý qua báo cáo.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="tool-card" data-color="violet" data-doc="t-jidoka">
+            <div class="tool-head">
+              <span class="tool-icon">🛑</span>
+              <span class="tool-num">TOOL 12</span>
+            </div>
+            <h4>Jidoka — Tự động hóa thông minh</h4>
+            <p>Máy móc tự phát hiện bất thường và dừng lại, trao quyền cho con người xử lý vấn đề thay vì chỉ giám sát máy.</p>
+            <div class="tool-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Thứ tự triển khai khuyến nghị</div>
+          <p>
+            <strong>Giai đoạn 1:</strong> 5S + Gemba Walk — tạo nền tảng và văn hóa.<br>
+            <strong>Giai đoạn 2:</strong> VSM + Kaizen — phân tích và cải tiến quy trình.<br>
+            <strong>Giai đoạn 3:</strong> Kanban + JIT + Heijunka — tối ưu dòng chảy.<br>
+            <strong>Giai đoạn 4:</strong> TPM + SMED + Poka-Yoke + Jidoka — nâng cao ổn định và chất lượng.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 05 -->
+      <section class="section reveal" id="benefits" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">SECTION 05</span>
+          <h2>Lợi ích khi áp dụng Lean</h2>
+          <p class="section-desc">Những cải thiện đo lường được mà doanh nghiệp đạt được.</p>
+        </div>
+
+        <p>
+          Doanh nghiệp sẽ có được <strong>rất nhiều lợi ích</strong> khi áp dụng Lean:
+          nâng cao năng suất lao động, cải thiện chất lượng sản phẩm hoặc dịch vụ,
+          giảm bớt thủ tục hành chính, giảm áp lực cho người lao động và
+          gắn kết người lao động nhiều hơn với công việc [reference:7].
+        </p>
+
+        <div class="benefit-grid">
+          <div class="benefit-card reveal reveal-d1">
+            <div class="benefit-icon">📈</div>
+            <h4>Tăng năng suất</h4>
+            <p>Năng suất lao động tăng 20–30% nhờ loại bỏ thao tác và chờ đợi thừa.</p>
+          </div>
+
+          <div class="benefit-card reveal reveal-d2">
+            <div class="benefit-icon">💰</div>
+            <h4>Giảm chi phí</h4>
+            <p>Giảm tồn kho, giảm phế phẩm, giảm chi phí vận hành và bảo quản.</p>
+          </div>
+
+          <div class="benefit-card reveal reveal-d3">
+            <div class="benefit-icon">⏱️</div>
+            <h4>Rút ngắn lead time</h4>
+            <p>Thời gian từ đặt hàng đến giao hàng giảm đáng kể nhờ dòng chảy liên tục.</p>
+          </div>
+
+          <div class="benefit-card reveal reveal-d1">
+            <div class="benefit-icon">✅</div>
+            <h4>Nâng cao chất lượng</h4>
+            <p>Giảm lỗi, giảm hàng phải làm lại, tăng độ ổn định của quy trình.</p>
+          </div>
+
+          <div class="benefit-card reveal reveal-d2">
+            <div class="benefit-icon">😊</div>
+            <h4>Gắn kết nhân viên</h4>
+            <p>Nhân viên tham gia cải tiến, được trao quyền, giảm áp lực công việc.</p>
+          </div>
+
+          <div class="benefit-card reveal reveal-d3">
+            <div class="benefit-icon">🌱</div>
+            <h4>Phát triển bền vững</h4>
+            <p>Giảm tiêu thụ tài nguyên, giảm phát thải, hướng đến sản xuất xanh.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 06 -->
+      <section class="section reveal" id="cases" data-color="amber">
+        <div class="section-head">
+          <span class="section-num">SECTION 06</span>
+          <h2>Case study tại Việt Nam</h2>
+          <p class="section-desc">Những doanh nghiệp Việt đã áp dụng Lean thành công.</p>
+        </div>
+
+        <div class="case-study reveal">
+          <h3>🏭 Công ty TNHH Thắng Lợi (Vico) — Cơ khí chế tạo</h3>
+          <p>
+            Sau 5 năm áp dụng hệ thống quản lý LEAN, năng suất lao động của công ty
+            đã tăng từ 20–25% [reference:8]. Doanh nghiệp tập trung vào 5S, Kaizen và
+            cân bằng chuyền để tối ưu hóa quy trình sản xuất cơ khí.
+          </p>
+          <div class="cs-metric">
+            <div class="cs-metric-item">
+              <div class="cm-value">+25%</div>
+              <div class="cm-label">Năng suất lao động</div>
+            </div>
+            <div class="cs-metric-item">
+              <div class="cm-value">5 năm</div>
+              <div class="cm-label">Thời gian áp dụng</div>
+            </div>
+            <div class="cs-metric-item">
+              <div class="cm-value">Cơ khí</div>
+              <div class="cm-label">Ngành áp dụng</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-study reveal">
+          <h3>👕 Xí nghiệp may Nhật Hồng — Dệt may</h3>
+          <p>
+            Nhóm nghiên cứu đã triển khai ứng dụng <strong>5S</strong> và
+            <strong>cân bằng chuyền</strong> để cải tiến bố trí mặt bằng và tổ chức lại
+            dây chuyền sản xuất [reference:9]. Kết quả cho thấy năng suất tăng rõ rệt
+            và thời gian sản xuất được rút ngắn.
+          </p>
+          <div class="cs-metric">
+            <div class="cs-metric-item">
+              <div class="cm-value">5S</div>
+              <div class="cm-label">Công cụ chính</div>
+            </div>
+            <div class="cs-metric-item">
+              <div class="cm-value">Cân bằng chuyền</div>
+              <div class="cm-label">Phương pháp</div>
+            </div>
+            <div class="cs-metric-item">
+              <div class="cm-value">Dệt may</div>
+              <div class="cm-label">Ngành áp dụng</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p>Lean không phải là đích đến — đó là hành trình cải tiến không ngừng. Doanh nghiệp thành công nhất là doanh nghiệp kiên trì nhất.</p>
+          <cite>Tony EXIM</cite>
+        </div>
+      </section>
+
+      <!-- SECTION 07 -->
+      <section class="section reveal" id="checklist" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">SECTION 07</span>
+          <h2>Checklist triển khai Lean</h2>
+          <p class="section-desc">Các bước chuẩn bị và triển khai Lean cho doanh nghiệp.</p>
+        </div>
+
+        <div class="checklist" id="checklist-box">
+          <div class="checklist-head">
+            <h3>Tiến độ triển khai Lean</h3>
+            <div class="check-progress">
+              <div class="check-bar"><span id="checkBar"></span></div>
+              <span class="check-count" id="checkCount">0/10 hoàn thành</span>
+            </div>
+          </div>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã có cam kết từ lãnh đạo cấp cao</span>
+              <span class="check-sub">Lean là chương trình dài hạn, cần sự kiên trì từ ban lãnh đạo</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã đào tạo nhân viên về Lean</span>
+              <span class="check-sub">Đội ngũ hiểu rõ khái niệm, công cụ và mục tiêu Lean</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã chọn khu vực/đối tượng thí điểm</span>
+              <span class="check-sub">Bắt đầu với một quy trình cụ thể, không triển khai toàn bộ ngay lập tức</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã triển khai 5S — Nền tảng của Lean</span>
+              <span class="check-sub">Sàng lọc, Sắp xếp, Sạch sẽ, Săn sóc, Sẵn sàng</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã vẽ VSM — Bản đồ dòng giá trị hiện tại</span>
+              <span class="check-sub">Xác định hoạt động tạo giá trị và không tạo giá trị</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã phân tích 7 lãng phí tại hiện trường</span>
+              <span class="check-sub">Sử dụng Gemba Walk và dữ liệu thực tế</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã thiết lập hệ thống Kaizen</span>
+              <span class="check-sub">Đề xuất cải tiến từ nhân viên, họp định kỳ, theo dõi kết quả</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã áp dụng Kanban cho dòng vật tư</span>
+              <span class="check-sub">Hệ thống kéo (Pull) thay thế đẩy (Push)</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã thiết lập chỉ số đo lường (KPI) Lean</span>
+              <span class="check-sub">Lead time, năng suất, tỷ lệ lỗi, mức tồn kho, OEE</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã mở rộng Lean sang các khu vực khác</span>
+              <span class="check-sub">Nhân rộng thành công từ thí điểm sang toàn nhà máy</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- SECTION 08 -->
+      <section class="section reveal" id="faq" data-color="violet">
+        <div class="section-head">
+          <span class="section-num">SECTION 08</span>
+          <h2>Câu hỏi thường gặp về Lean</h2>
+        </div>
+
+        <div class="faq" id="faq">
+          <div class="faq-item">
+            <button class="faq-q">Lean có phù hợp với doanh nghiệp nhỏ và vừa không?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Có</strong>. Lean đặc biệt phù hợp với doanh nghiệp nhỏ và vừa vì ít tốn kém, dễ bắt đầu và mang lại kết quả nhanh. Bắt đầu với 5S và Kaizen — hai công cụ đơn giản nhất nhưng hiệu quả nhất. Doanh nghiệp lớn có thể triển khai phức tạp hơn, nhưng nguyên lý cốt lõi là như nhau.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Lean và Six Sigma khác nhau thế nào?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Lean</strong> tập trung vào <em>loại bỏ lãng phí</em> và <em>tăng tốc độ dòng chảy</em>. <strong>Six Sigma</strong> tập trung vào <em>giảm biến động</em> và <em>loại bỏ lỗi</em>. Lean dùng công cụ trực quan, đơn giản; Six Sigma dùng phân tích thống kê. Kết hợp cả hai thành <strong>Lean Six Sigma</strong> — vừa nhanh vừa chính xác.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Mất bao lâu để thấy kết quả từ Lean?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>5S</strong> có kết quả trong 2–4 tuần. <strong>Kaizen</strong> có kết quả trong 1–3 tháng. <strong>VSM + Kanban</strong> cần 3–6 tháng. <strong>Chuyển đổi toàn diện</strong> cần 1–3 năm. Tuy nhiên, kết quả ban đầu từ 5S và Kaizen có thể xuất hiện chỉ trong vài tuần [reference:10].</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Làm sao để nhân viên tham gia Lean?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Ba yếu tố: <strong>(1)</strong> Đào tạo và giải thích lợi ích cụ thể cho từng vị trí. <strong>(2)</strong> Trao quyền cho nhân viên đề xuất cải tiến và thấy kết quả. <strong>(3)</strong> Lãnh đạo trực tiếp tham gia Gemba Walk, lắng nghe và ghi nhận đóng góp. Đừng triển khai Lean như một "dự án của lãnh đạo" — hãy để nó trở thành văn hóa.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Có nên thuê tư vấn Lean bên ngoài?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Tùy giai đoạn</strong>. Giai đoạn đầu nên thuê tư vấn để đào tạo và thiết lập phương pháp. Giai đoạn sau nên tự triển khai để xây dựng năng lực nội bộ. Nhiều doanh nghiệp Việt Nam đã thành công bằng cách tự đào tạo qua các chương trình của Tổng cục Tiêu chuẩn Đo lường Chất lượng (TCĐLCL) và các trung tâm đào tạo Lean.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Lean có áp dụng được cho ngành dịch vụ không?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Có</strong>. Lean đã được áp dụng thành công trong ngân hàng, bệnh viện, logistics, hành chính công và nhiều ngành dịch vụ khác. Các lãng phí trong dịch vụ thường là: chờ đợi, thủ tục thừa, di chuyển không cần thiết, xử lý lỗi. Phương pháp luận và công cụ tương tự như trong sản xuất.</p>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 09 -->
+      <section class="section reveal" id="related" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 09</span>
+          <h2>Kiến thức liên quan</h2>
+          <p class="section-desc">Những chủ đề bạn nên đọc tiếp để hoàn thiện bức tranh.</p>
+        </div>
+
+        <div class="related-pills">
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Quy trình xuất khẩu một lô hàng
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Quy trình nhập khẩu 9 bước
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Báo cáo quyết toán hải quan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Định mức nguyên liệu
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">HS Code &amp; Phân loại
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Incoterms 2020
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+        </div>
+      </section>
+
+      <!-- KEY TAKEAWAYS -->
+      <div class="takeaways reveal">
+        <h3>Key takeaways</h3>
+        <ul>
+          <li>Lean là <strong>hệ thống nguyên tắc và công cụ</strong> loại bỏ lãng phí, tạo giá trị từ góc nhìn khách hàng.</li>
+          <li>Bắt nguồn từ <strong>Toyota Production System (TPS)</strong> — Nhật Bản, thập niên 1950–1960.</li>
+          <li><strong>5 nguyên tắc cốt lõi:</strong> Xác định giá trị → VSM → Tạo dòng chảy → Pull → Hoàn hảo.</li>
+          <li><strong>7 lãng phí (Muda):</strong> Sản xuất thừa, Chờ đợi, Vận chuyển, Gia công thừa, Tồn kho, Thao tác, Lỗi.</li>
+          <li><strong>12 công cụ Lean phổ biến:</strong> 5S, Kaizen, Kanban, VSM, JIT, Andon, Poka-Yoke, TPM, SMED, Heijunka, Gemba Walk, Jidoka.</li>
+          <li>Bắt đầu với <strong>5S và Kaizen</strong> — đơn giản nhưng hiệu quả nhất.</li>
+        </ul>
+      </div>
+
+      <!-- BENTO -->
+      <div class="section reveal" style="margin-bottom:40px">
+        <div class="section-head">
+          <span class="section-num">ĐỌC TIẾP</span>
+          <h2>Bài viết liên quan</h2>
+        </div>
+
+        <div class="bento">
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Manufacturing · Featured</div>
+            <h4>Sản xuất tinh gọn (Lean Manufacturing): Nguyên lý &amp; Công cụ</h4>
+            <p>Từ Toyota Production System đến 12 công cụ Lean được áp dụng rộng rãi trong doanh nghiệp.</p>
+            <div class="acard-meta">25 phút đọc <i></i> 20/03/2025</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Export</div>
+            <h4>Quy trình xuất khẩu một lô hàng: 6 giai đoạn</h4>
+            <div class="acard-meta">18 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Import</div>
+            <h4>Quy trình nhập khẩu 9 bước cho doanh nghiệp XNK</h4>
+            <div class="acard-meta">22 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Customs</div>
+            <h4>Báo cáo quyết toán: Hướng dẫn toàn diện từ A đến Z</h4>
+            <div class="acard-meta">25 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Supply Chain</div>
+            <h4>Định mức nguyên liệu: Nền tảng của mọi kỳ quyết toán</h4>
+            <div class="acard-meta">20 phút đọc</div>
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="brand-mark">TE</span>
+      <div>
+        <div class="brand-text" style="font-size:15px">TONY<em>EXIM</em></div>
+        <p style="margin-top:2px">Import – Export Knowledge System</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </div>
+    <p>© 2025 TONY EXIM. Kiến thức thực chiến cho người làm XNK.</p>
+  </div>
+</footer>
+
+<!-- ══════════════ TERM MODAL ══════════════ -->
+<div class="backdrop" id="termModal" role="dialog" aria-modal="true" aria-labelledby="termTitle">
+  <div class="modal modal-sm">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="termTag">THUẬT NGỮ</div>
+    <h3 id="termTitle"></h3>
+    <div class="modal-meta" id="termSub"></div>
+    <div class="modal-body">
+      <p id="termDef"></p>
+      <div class="modal-section">
+        <h5>Ý nghĩa thực tế</h5>
+        <p id="termPrac"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Khái niệm liên quan</h5>
+        <div class="modal-related" id="termRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DETAIL MODAL ══════════════ -->
+<div class="backdrop" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="modal">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="legalTag">CHI TIẾT</div>
+    <h3 id="legalTitle"></h3>
+    <div class="modal-meta" id="legalMeta"></div>
+    <div class="modal-body">
+      <p id="legalDesc"></p>
+      <div class="modal-section">
+        <h5>Đặc điểm chính</h5>
+        <ul class="modal-list" id="legalFeatures"></ul>
+      </div>
+      <div class="modal-section">
+        <h5>Hướng dẫn / Cách áp dụng</h5>
+        <p id="legalTax"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Ví dụ / Ghi chú</h5>
+        <p id="legalExample"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Liên quan</h5>
+        <div class="modal-related" id="legalRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SEARCH OVERLAY ══════════════ -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+  <div class="search-box">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Tìm công cụ, thuật ngữ Lean…" autocomplete="off" spellcheck="false">
+      <span class="kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const IS_MOBILE = window.innerWidth < 640;
+
+  /* BACKGROUND — PIXEL STARS */
+  (function makeStars() {
+    if (REDUCED) return;
+    const configs = [
+      { id: 'starsDeep',  count: IS_MOBILE ? 45 : 110, cls: 'deep',  colors: ['#FFFFFF', '#E0E7FF', '#C7D2FE'], opRange: [.35, .6] },
+      { id: 'starsMid',   count: IS_MOBILE ? 30 : 70,  cls: 'mid',   colors: ['#FFFFFF', '#A5B4FC', '#FBBF24', '#93C5FD'], opRange: [.5, .8] },
+      { id: 'starsNear',  count: IS_MOBILE ? 18 : 38,  cls: 'near',  colors: ['#FFFFFF', '#FBBF24', '#A78BFA', '#38BDF8'], opRange: [.7, 1] },
+      { id: 'starsShine', count: IS_MOBILE ? 6 : 14,   cls: 'shine', colors: ['#FFFFFF', '#FBBF24', '#F472B6', '#22D3EE'], opRange: [.85, 1] }
+    ];
+    configs.forEach(cfg => {
+      const layer = document.getElementById(cfg.id);
+      if (!layer) return;
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < cfg.count; i++) {
+        const s = document.createElement('div');
+        s.className = 'star ' + cfg.cls;
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top  = Math.random() * 100 + '%';
+        const c = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
+        s.style.background = c;
+        s.style.color = c;
+        const op = cfg.opRange[0] + Math.random() * (cfg.opRange[1] - cfg.opRange[0]);
+        s.style.setProperty('--star-op', op.toFixed(2));
+        s.style.opacity = op.toFixed(2);
+        s.style.animationDelay = (-Math.random() * 5) + 's';
+        s.style.animationDuration = (1.8 + Math.random() * 3.4) + 's';
+        frag.appendChild(s);
+      }
+      layer.appendChild(frag);
+    });
+  })();
+
+  /* BACKGROUND — SHOOTING STARS */
+  (function makeShootingStars() {
+    if (REDUCED) return;
+    const container = document.getElementById('shootingStars');
+    if (!container) return;
+    const COLORS = ['#FFFFFF', '#FBBF24', '#A78BFA', '#38BDF8', '#F472B6'];
+
+    function spawnStar() {
+      if (IS_MOBILE && Math.random() < 0.5) { scheduleNext(); return; }
+      const star = document.createElement('span');
+      star.className = 'shooting-star';
+      const c = COLORS[Math.floor(Math.random() * COLORS.length)];
+      star.style.color = c;
+      const startX = 30 + Math.random() * 65;
+      const startY = 5 + Math.random() * 42;
+      star.style.left = startX + '%';
+      star.style.top  = startY + '%';
+      const glow = document.createElement('span');
+      glow.className = 'shooting-star-glow';
+      glow.style.color = c;
+      glow.style.left = `calc(${startX}% - 100px)`;
+      glow.style.top  = `calc(${startY}% - 100px)`;
+      container.appendChild(star);
+      container.appendChild(glow);
+      const cleanup = () => { star.remove(); glow.remove(); };
+      star.addEventListener('animationend', cleanup, { once: true });
+      setTimeout(cleanup, 4500);
+      scheduleNext();
+    }
+    function scheduleNext() {
+      const base = 3500 + Math.random() * 4500;
+      const burst = Math.random() < 0.2;
+      setTimeout(() => {
+        spawnStar();
+        if (burst) setTimeout(spawnStar, 200 + Math.random() * 350);
+      }, base);
+    }
+    setTimeout(scheduleNext, 1200);
+  })();
+
+  /* BACKGROUND — UNIFIED PARALLAX */
+  (function unifiedParallax() {
+    if (REDUCED) return;
+    const starLayers = $$('.stars-layer');
+    const bgLayers = $$('.bg-parallax-layer');
+    let targetX = 0, targetY = 0, curX = 0, curY = 0, raf = null;
+
+    function loop() {
+      const y = window.scrollY;
+      curX += (targetX - curX) * 0.06;
+      curY += (targetY - curY) * 0.06;
+      starLayers.forEach((layer, i) => {
+        const speed = parseFloat(layer.dataset.speed || '0.15');
+        const depth = 4 + i * 6;
+        layer.style.transform =
+          `translate3d(${curX * depth}px, ${-y * speed + curY * depth}px, 0)`;
+      });
+      bgLayers.forEach((layer, i) => {
+        const speed = 0.015 * (i + 1);
+        layer.style.transform = `translate3d(0, ${y * speed}px, 0)`;
+      });
+      if (Math.abs(targetX - curX) > 0.001 || Math.abs(targetY - curY) > 0.001) {
+        raf = requestAnimationFrame(loop);
+      } else { raf = null; }
+    }
+
+    window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(loop); }, { passive: true });
+    if (!IS_MOBILE) {
+      window.addEventListener('mousemove', (e) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        targetX = (e.clientX - cx) / cx;
+        targetY = (e.clientY - cy) / cy;
+        if (!raf) raf = requestAnimationFrame(loop);
+      }, { passive: true });
+    }
+    loop();
+  })();
+
+  /* BACKGROUND — SCROLL GLOW */
+  (function scrollGlow() {
+    if (REDUCED) return;
+    const glow = document.getElementById('scrollGlow');
+    if (!glow) return;
+    let raf = null;
+    window.addEventListener('scroll', () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const h = window.innerHeight;
+        glow.style.top = ((y * 0.15) % h) + 'px';
+        raf = null;
+      });
+    }, { passive: true });
+  })();
+
+  /* BACKGROUND — IDLE DETECTION */
+  (function idleDetection() {
+    let timer;
+    function reset() {
+      document.body.classList.remove('idle');
+      clearTimeout(timer);
+      timer = setTimeout(() => document.body.classList.add('idle'), 30000);
+    }
+    ['mousemove','keydown','touchstart','scroll'].forEach(ev =>
+      window.addEventListener(ev, reset, { passive: true })
+    );
+    reset();
+  })();
+
+  /* THEME */
+  const themeBtn = $('#themeBtn');
+  const themeIcon = $('#themeIcon');
+  const SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeIcon.innerHTML = t === 'dark' ? SUN : MOON;
+    try { localStorage.setItem('te-theme', t); } catch (e) {}
+  }
+  let saved = 'light';
+  try { saved = localStorage.getItem('te-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+  applyTheme(saved);
+  themeBtn.addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* SCROLL PROGRESS */
+  const nav = $('#nav');
+  const progress = $('#progress');
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 20);
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = h > 0 ? Math.min(100, (y / h) * 100) + '%' : '0%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* MOBILE MENU */
+  const menuBtn = $('#menuBtn');
+  const mobileMenu = $('#mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  $$('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* REVEAL ON SCROLL */
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  $$('.reveal').forEach(el => revealIO.observe(el));
+
+  /* TOC ACTIVE */
+  const tocLinks = $$('#tocList a');
+  const sections = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const tocIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = '#' + e.target.id;
+        tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => tocIO.observe(s));
+
+  /* CHECKLIST */
+  const checkItems = $$('#checklist-box .check-item input');
+  const checkBar = $('#checkBar');
+  const checkCount = $('#checkCount');
+  function updateChecklist() {
+    const total = checkItems.length;
+    const done = checkItems.filter(i => i.checked).length;
+    checkBar.style.width = (done / total * 100) + '%';
+    checkCount.textContent = done + '/' + total + ' hoàn thành';
+  }
+  checkItems.forEach(i => i.addEventListener('change', updateChecklist));
+  updateChecklist();
+
+  /* FAQ */
+  $$('#faq .faq-item').forEach(item => {
+    const btn = $('.faq-q', item);
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      $$('#faq .faq-item').forEach(i => {
+        i.classList.remove('open');
+        $('.faq-q', i).setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  /* TERMS DATA */
+  const TERMS = {
+    muda: {
+      name: 'Muda',
+      sub: 'Lãng phí — tiếng Nhật',
+      def: 'Muda là thuật ngữ tiếng Nhật chỉ bất kỳ hoạt động nào tiêu tốn tài nguyên (thời gian, tiền bạc, nguyên liệu, nhân lực) nhưng không tạo ra giá trị cho khách hàng.',
+      prac: 'Có 7 loại Muda cơ bản: sản xuất dư thừa, chờ đợi, vận chuyển, gia công thừa, tồn kho, thao tác, lỗi. Loại bỏ Muda là mục tiêu cốt lõi của Lean.',
+      related: ['7 lãng phí', 'Lean', 'TPS', 'Kaizen']
+    },
+    tps: {
+      name: 'TPS — Toyota Production System',
+      sub: 'Hệ thống sản xuất Toyota',
+      def: 'TPS là hệ thống sản xuất do Toyota phát triển, dựa trên hai trụ cột chính: Just-in-Time (JIT) và Jidoka (tự động hóa thông minh).',
+      prac: 'TPS là nền tảng của Lean Manufacturing. Mục tiêu của TPS là loại bỏ hoàn toàn lãng phí, rút ngắn lead time và giao hàng nhanh với chi phí thấp nhất.',
+      related: ['Lean', 'JIT', 'Jidoka', 'Kaizen']
+    },
+    vSM: {
+      name: 'VSM — Value Stream Mapping',
+      sub: 'Bản đồ dòng giá trị',
+      def: 'VSM là công cụ trực quan hóa toàn bộ dòng chảy vật tư và thông tin trong quá trình sản xuất, từ nguyên liệu đầu vào đến sản phẩm cuối cùng.',
+      prac: 'VSM giúp phân biệt hoạt động tạo giá trị, không tạo giá trị nhưng cần thiết, và không tạo giá trị cần loại bỏ. Là bước đầu tiên của mọi dự án Lean.',
+      related: ['Dòng giá trị', '7 lãng phí', 'Kaizen', 'Lead time']
+    },
+    gemba: {
+      name: 'Gemba',
+      sub: 'Hiện trường — nơi tạo ra giá trị',
+      def: 'Gemba trong tiếng Nhật nghĩa là "nơi thực tế" — nơi công việc thực sự diễn ra (nhà máy, xưởng, dây chuyền sản xuất).',
+      prac: 'Gemba Walk là hoạt động lãnh đạo trực tiếp đến nơi làm việc để quan sát, lắng nghe và hiểu vấn đề. Nguyên tắc: "Đi đến nơi, nhìn tận mắt, hiểu tận tường".',
+      related: ['Gemba Walk', 'Genchi Genbutsu', 'Kaizen', 'Hiện trường']
+    },
+    poka: {
+      name: 'Poka-Yoke',
+      sub: 'Chống lỗi',
+      def: 'Poka-Yoke là kỹ thuật thiết kế quy trình hoặc thiết bị sao cho lỗi không thể xảy ra, hoặc nếu xảy ra thì bị phát hiện ngay lập tức.',
+      prac: 'Ví dụ: phích cắm chỉ cắm được một chiều, cảm biến tự dừng máy khi phát hiện sản phẩm lỗi. Poka-Yoke giảm phụ thuộc vào sự tập trung của con người.',
+      related: ['Jidoka', 'Chất lượng', 'Lỗi', 'Andon']
+    }
+  };
+
+  /* DETAIL DATA */
+  const LEGAL_DOCS = {
+    /* PRINCIPLES */
+    'pr-value': {
+      kind: 'cyan', tag: 'NGUYÊN TẮC 01',
+      title: 'Xác định giá trị từ góc nhìn khách hàng',
+      meta: 'Value · Bước đầu tiên của Lean',
+      desc: 'Giá trị của sản phẩm/dịch vụ do khách hàng quyết định, không phải do doanh nghiệp. Khách hàng sẵn sàng trả tiền cho những gì họ cho là có giá trị.',
+      features: [
+        'Hiểu rõ nhu cầu thực sự của khách hàng',
+        'Phân biệt giá trị (Value) và lãng phí (Muda)',
+        'Khách hàng định nghĩa: chất lượng, thời gian, giá cả',
+        'Loại bỏ mọi hoạt động không tạo giá trị',
+        'Liên tục cập nhật theo thay đổi của khách hàng'
+      ],
+      tax: 'Câu hỏi cốt lõi: "Khách hàng có sẵn sàng trả tiền cho hoạt động này không?" Nếu không → đó là lãng phí cần loại bỏ.',
+      example: 'Khách hàng mua áo sơ mi: giá trị là chất vải, form dáng, đường may. Hoạt động đóng gói thừa, lưu kho quá lâu là lãng phí.',
+      related: ['Giá trị', 'Muda', 'Khách hàng', 'VSM']
+    },
+    'pr-vsm': {
+      kind: 'violet', tag: 'NGUYÊN TẮC 02',
+      title: 'Lập bản đồ dòng giá trị (VSM)',
+      meta: 'Value Stream Mapping · Nhận diện lãng phí',
+      desc: 'Vẽ bản đồ toàn bộ dòng chảy vật tư và thông tin để nhận diện hoạt động tạo giá trị, không tạo giá trị nhưng cần thiết, và không tạo giá trị cần loại bỏ.',
+      features: [
+        'Vẽ dòng chảy vật tư từ nguyên liệu đến sản phẩm',
+        'Vẽ dòng chảy thông tin (đơn hàng, kế hoạch)',
+        'Ghi nhận thời gian từng công đoạn',
+        'Phân biệt Value-Added và Non-Value-Added',
+        'Xác định điểm nghẽn và lãng phí lớn nhất'
+      ],
+      tax: 'Công cụ: Bút chì, giấy A3, ký hiệu VSM chuẩn. Bắt đầu từ "Current State Map" (hiện tại) và kết thúc bằng "Future State Map" (tương lai).',
+      example: 'VSM của dây chuyền may: cắt (2 phút) → may (8 phút) → ủi (3 phút) → đóng gói (1 phút). Thời gian chờ giữa các công đoạn là 15 phút → lãng phí chờ đợi.',
+      related: ['VSM', 'Dòng giá trị', 'Lead time', 'Kaizen']
+    },
+    'pr-flow': {
+      kind: 'accent', tag: 'NGUYÊN TẮC 03',
+      title: 'Tạo dòng chảy liên tục (Flow)',
+      meta: 'Flow · Loại bỏ điểm nghẽn',
+      desc: 'Sau khi xác định giá trị và vẽ VSM, bước tiếp theo là làm cho dòng chảy sản phẩm di chuyển liên tục, không bị ngắt quãng, không có điểm nghẽn.',
+      features: [
+        'Sắp xếp công đoạn theo trình tự hợp lý',
+        'Loại bỏ chờ đợi giữa các công đoạn',
+        'Giảm kích thước lô sản xuất',
+        'Cân bằng chuyền (Line Balancing)',
+        'One-piece flow — sản xuất từng chiếc một'
+      ],
+      tax: 'Mục tiêu: Sản phẩm di chuyển liên tục từ công đoạn này sang công đoạn khác mà không dừng lại. Thời gian chờ giữa các công đoạn = 0.',
+      example: 'Dây chuyền lắp ráp Toyota: mỗi xe di chuyển liên tục qua các trạm, mỗi trạm hoàn thành công việc trong takt time. Không có tồn kho giữa các trạm.',
+      related: ['Flow', 'Cân bằng chuyền', 'Takt time', 'One-piece flow']
+    },
+    'pr-pull': {
+      kind: 'emerald', tag: 'NGUYÊN TẮC 04',
+      title: 'Hệ thống kéo (Pull)',
+      meta: 'Pull · Chỉ sản xuất khi có nhu cầu',
+      desc: 'Thay vì đẩy (Push) sản phẩm ra thị trường theo kế hoạch dự báo, Lean sử dụng cơ chế kéo (Pull): chỉ sản xuất khi khách hàng hoặc công đoạn sau yêu cầu.',
+      features: [
+        'Sản xuất theo đơn hàng thực tế, không theo dự báo',
+        'Công đoạn sau kéo công đoạn trước',
+        'Kanban là công cụ chính để thực hiện Pull',
+        'Giảm tồn kho và lãng phí',
+        'Tăng khả năng đáp ứng linh hoạt'
+      ],
+      tax: 'So sánh: Push (đẩy) = sản xuất theo kế hoạch → tồn kho cao. Pull (kéo) = sản xuất theo nhu cầu → tồn kho thấp.',
+      example: 'Siêu thị Toyota: hàng hóa chỉ được bổ sung khi quầy hết hàng (tín hiệu Kanban), không phải theo lịch cố định.',
+      related: ['Pull', 'Kanban', 'JIT', 'Tồn kho']
+    },
+    'pr-perfect': {
+      kind: 'rose', tag: 'NGUYÊN TẮC 05',
+      title: 'Hướng đến sự hoàn hảo',
+      meta: 'Perfection · Cải tiến liên tục',
+      desc: 'Sau khi đã tạo dòng chảy và hệ thống Pull, doanh nghiệp tiếp tục cải tiến không ngừng để tiến gần hơn đến sự hoàn hảo: không lãng phí, không lỗi, giao hàng đúng hạn.',
+      features: [
+        'Kaizen — cải tiến liên tục từng bước nhỏ',
+        'Không có đích đến cuối cùng trong Lean',
+        'Học hỏi từ sai sót và biến thành cơ hội',
+        'Chuẩn hóa quy trình tốt nhất hiện có',
+        'Liên tục đặt mục tiêu cao hơn'
+      ],
+      tax: 'Chu trình PDCA (Plan-Do-Check-Act) là công cụ để cải tiến liên tục. Mỗi vòng PDCA đưa quy trình tiến gần hơn đến trạng thái lý tưởng.',
+      example: 'Toyota: sau hơn 60 năm, vẫn tiếp tục cải tiến. Không có nhà máy nào là "hoàn hảo" — luôn có cơ hội tốt hơn.',
+      related: ['Kaizen', 'PDCA', 'Cải tiến liên tục', 'Hoàn hảo']
+    },
+
+    /* WASTES */
+    'w-over': {
+      kind: 'rose', tag: 'LÃNG PHÍ 01',
+      title: 'Sản xuất dư thừa (Overproduction)',
+      meta: 'Muda 01 · Nguy hiểm nhất',
+      desc: 'Sản xuất nhiều hơn hoặc sớm hơn nhu cầu thực tế của khách hàng. Đây là dạng lãng phí nguy hiểm nhất vì nó kéo theo các dạng lãng phí khác.',
+      features: [
+        'Sản xuất vượt quá đơn hàng',
+        'Sản xuất sớm hơn thời điểm cần thiết',
+        'Tạo ra tồn kho không cần thiết',
+        'Tiêu tốn nguyên liệu, nhân công, năng lượng',
+        'Che giấu các vấn đề khác trong hệ thống'
+      ],
+      tax: 'Cách loại bỏ: Sản xuất theo đơn hàng thực tế (Pull). Sử dụng Kanban để kiểm soát số lượng. Áp dụng JIT để sản xuất đúng thời điểm.',
+      example: 'Nhà máy sản xuất 1.500 sản phẩm khi đơn hàng chỉ cần 1.000 → 500 sản phẩm thừa phải lưu kho, tốn chi phí và có thể không bán được.',
+      related: ['Tồn kho', 'Pull', 'Kanban', 'JIT']
+    },
+    'w-wait': {
+      kind: 'amber', tag: 'LÃNG PHÍ 02',
+      title: 'Chờ đợi (Waiting)',
+      meta: 'Muda 02 · Thời gian chết',
+      desc: 'Thời gian chờ đợi giữa các công đoạn sản xuất, chờ nguyên liệu, chờ máy, chờ thông tin, chờ phê duyệt. Thời gian chết không tạo ra giá trị.',
+      features: [
+        'Chờ nguyên liệu từ công đoạn trước',
+        'Chờ máy hoàn thành chu kỳ',
+        'Chờ thông tin, chờ phê duyệt',
+        'Chờ bảo trì, sửa chữa',
+        'Chờ kiểm tra chất lượng'
+      ],
+      tax: 'Cách loại bỏ: Cân bằng chuyền để giảm chờ đợi. TPM để giảm dừng máy. Cải thiện luồng thông tin. Sử dụng Andon để báo hiệu vấn đề ngay lập tức.',
+      example: 'Công nhân đứng chờ 5 phút vì công đoạn trước chưa xong → 8 giờ làm việc có thể mất 40 phút chờ đợi.',
+      related: ['Cân bằng chuyền', 'Andon', 'TPM', 'Flow']
+    },
+    'w-transport': {
+      kind: 'violet', tag: 'LÃNG PHÍ 03',
+      title: 'Vận chuyển (Transportation)',
+      meta: 'Muda 03 · Di chuyển không cần thiết',
+      desc: 'Di chuyển nguyên liệu, bán thành phẩm hoặc thành phẩm giữa các công đoạn, kho bãi không cần thiết. Tốn thời gian, chi phí và có thể gây hư hỏng.',
+      features: [
+        'Di chuyển nguyên liệu giữa các kho',
+        'Di chuyển bán thành phẩm giữa các công đoạn xa nhau',
+        'Bố trí mặt bằng không hợp lý',
+        'Sử dụng nhiều phương tiện trung chuyển',
+        'Nguy cơ hư hỏng trong quá trình vận chuyển'
+      ],
+      tax: 'Cách loại bỏ: Bố trí mặt bằng theo dòng chảy (Layout). Giảm khoảng cách giữa các công đoạn. Sử dụng băng tải hoặc hệ thống tự động.',
+      example: 'Kho nguyên liệu cách xa dây chuyền 200m → mỗi lần lấy nguyên liệu mất 5 phút đi lại, 10 lần/ngày = 50 phút lãng phí.',
+      related: ['Layout', 'Dòng chảy', 'Bố trí mặt bằng', 'Flow']
+    },
+    'w-overprocess': {
+      kind: 'accent', tag: 'LÃNG PHÍ 04',
+      title: 'Gia công thừa (Over-processing)',
+      meta: 'Muda 04 · Làm nhiều hơn cần thiết',
+      desc: 'Thực hiện các bước gia công vượt quá yêu cầu của khách hàng, hoặc sử dụng thiết bị/phương pháp đắt tiền hơn mức cần thiết.',
+      features: [
+        'Gia công chi tiết quá mức cần thiết',
+        'Sử dụng thiết bị đắt tiền khi không cần',
+        'Kiểm tra chất lượng thừa',
+        'Thêm tính năng không ai dùng',
+        'Xử lý hồ sơ, thủ tục nhiều bước'
+      ],
+      tax: 'Cách loại bỏ: Hiểu rõ yêu cầu thực sự của khách hàng. Đơn giản hóa quy trình. Loại bỏ các bước không tạo giá trị. Chuẩn hóa công việc.',
+      example: 'Khách hàng chỉ cần bề mặt nhẵn nhưng nhà máy đánh bóng 3 lần thay vì 1 lần → lãng phí thời gian và vật tư.',
+      related: ['Chuẩn hóa', 'Đơn giản hóa', 'Yêu cầu khách hàng', 'Value']
+    },
+    'w-inventory': {
+      kind: 'cyan', tag: 'LÃNG PHÍ 05',
+      title: 'Tồn kho (Inventory)',
+      meta: 'Muda 05 · Che giấu vấn đề',
+      desc: 'Nguyên liệu, bán thành phẩm và thành phẩm tồn đọng quá mức cần thiết. Tồn kho che giấu các vấn đề và phát sinh chi phí lưu trữ, bảo quản.',
+      features: [
+        'Nguyên liệu tồn kho quá nhiều',
+        'Bán thành phẩm chờ công đoạn sau',
+        'Thành phẩm chưa bán được',
+        'Chi phí kho bãi, bảo quản',
+        'Nguy cơ hết hạn, lỗi thời'
+      ],
+      tax: 'Cách loại bỏ: Áp dụng JIT để giảm tồn kho. Sử dụng Kanban để kiểm soát. Cải thiện dự báo nhu cầu. Giảm kích thước lô sản xuất.',
+      example: 'Nhà máy dự trữ 3 tháng nguyên liệu → chiếm diện tích kho, tốn chi phí bảo quản, có thể hư hỏng nếu để lâu.',
+      related: ['JIT', 'Kanban', 'Tồn kho', 'Pull']
+    },
+    'w-motion': {
+      kind: 'emerald', tag: 'LÃNG PHÍ 06',
+      title: 'Thao tác (Motion)',
+      meta: 'Muda 06 · Di chuyển của con người',
+      desc: 'Di chuyển của con người (đi lại, cúi, với, xoay) không cần thiết trong quá trình làm việc. Ảnh hưởng đến năng suất và gây mệt mỏi.',
+      features: [
+        'Đi lại nhiều trong ca làm việc',
+        'Cúi, với, xoay người không cần thiết',
+        'Bố trí dụng cụ không hợp lý',
+        'Thiếu công cụ hỗ trợ',
+        'Ảnh hưởng sức khỏe người lao động'
+      ],
+      tax: 'Cách loại bỏ: Bố trí nơi làm việc hợp lý (5S). Sử dụng công cụ hỗ trợ. Thiết kế ergonomic. Đặt dụng cụ trong tầm tay.',
+      example: 'Công nhân phải đi 10m để lấy dụng cụ mỗi lần → 20 lần/ngày = 200m đi lại lãng phí.',
+      related: ['5S', 'Ergonomic', 'Bố trí nơi làm việc', 'Thao tác']
+    },
+    'w-defect': {
+      kind: 'rose', tag: 'LÃNG PHÍ 07',
+      title: 'Lỗi / Khuyết tật (Defects)',
+      meta: 'Muda 07 · Tốn kém nhất',
+      desc: 'Sản phẩm lỗi, hàng phải sửa chữa, làm lại, hoặc bị trả về. Tốn nguyên liệu, thời gian, chi phí và ảnh hưởng uy tín doanh nghiệp.',
+      features: [
+        'Sản phẩm lỗi phải sửa chữa',
+        'Hàng bị trả về từ khách hàng',
+        'Chi phí làm lại, kiểm tra lại',
+        'Mất uy tín với khách hàng',
+        'Nguy cơ mất đơn hàng'
+      ],
+      tax: 'Cách loại bỏ: Poka-Yoke (chống lỗi). Jidoka (dừng ngay khi phát hiện lỗi). Kiểm tra chất lượng tại nguồn. Phân tích nguyên nhân gốc (5 Whys, Fishbone).',
+      example: 'Lô hàng 1.000 sản phẩm có 50 sản phẩm lỗi → phải làm lại 50 sản phẩm, tốn 5% nguyên liệu và thời gian.',
+      related: ['Poka-Yoke', 'Jidoka', 'Chất lượng', '5 Whys']
+    },
+
+    /* TOOLS */
+    't-5s': {
+      kind: 'cyan', tag: 'CÔNG CỤ 01',
+      title: '5S — Sắp xếp nơi làm việc',
+      meta: 'Seiri · Seiton · Seiso · Seiketsu · Shitsuke',
+      desc: '5S là phương pháp tổ chức nơi làm việc gọn gàng, sạch sẽ, khoa học, tạo nền tảng cho mọi hoạt động Lean. 5S gồm 5 bước: Sàng lọc, Sắp xếp, Sạch sẽ, Săn sóc, Sẵn sàng.',
+      features: [
+        'Sàng lọc (Seiri) — Loại bỏ vật dụng không cần thiết',
+        'Sắp xếp (Seiton) — Đặt mọi thứ đúng vị trí',
+        'Sạch sẽ (Seiso) — Vệ sinh nơi làm việc',
+        'Săn sóc (Seiketsu) — Duy trì 3S đầu',
+        'Sẵn sàng (Shitsuke) — Tạo thói quen tuân thủ'
+      ],
+      tax: '5S không chỉ là dọn dẹp — đó là tư duy. 5S tốt giúp giảm thời gian tìm kiếm dụng cụ, giảm tai nạn lao động, tăng năng suất và tạo môi trường làm việc tích cực.',
+      example: 'Công cụ được đánh dấu vị trí trên bảng treo. Sau khi dùng xong, công nhân trả về đúng vị trí. Không mất thời gian tìm kiếm.',
+      related: ['Gemba Walk', 'Kaizen', 'Ergonomic', 'Nơi làm việc']
+    },
+    't-kaizen': {
+      kind: 'violet', tag: 'CÔNG CỤ 02',
+      title: 'Kaizen — Cải tiến liên tục',
+      meta: '改善 · Thay đổi để tốt hơn',
+      desc: 'Kaizen là triết lý cải tiến liên tục, từng bước nhỏ, với sự tham gia của toàn bộ nhân viên từ lãnh đạo đến công nhân. Không có đích đến cuối cùng.',
+      features: [
+        'Cải tiến từng bước nhỏ, liên tục',
+        'Toàn bộ nhân viên tham gia',
+        'Tập trung vào quy trình, không chỉ kết quả',
+        'Sử dụng PDCA (Plan-Do-Check-Act)',
+        'Khuyến khích đề xuất từ nhân viên'
+      ],
+      tax: 'Kaizen khác với "đổi mới" (innovation) — Kaizen là cải tiến nhỏ, liên tục, ít rủi ro. Đổi mới là thay đổi lớn, đột phá. Lean cần cả hai.',
+      example: 'Mỗi tuần, nhóm họp 30 phút để đề xuất cải tiến. Một đề xuất nhỏ như "đặt dụng cụ gần hơn" có thể tiết kiệm 10 phút/ngày.',
+      related: ['PDCA', 'Cải tiến liên tục', 'Gemba', 'Đề xuất']
+    },
+    't-kanban': {
+      kind: 'accent', tag: 'CÔNG CỤ 03',
+      title: 'Kanban — Hệ thống kéo',
+      meta: '看板 · Thẻ tín hiệu',
+      desc: 'Kanban là hệ thống thẻ tín hiệu trực quan để kiểm soát dòng chảy vật tư theo cơ chế Pull. Công đoạn sau "kéo" công đoạn trước bằng tín hiệu Kanban.',
+      features: [
+        'Thẻ Kanban ghi rõ: mã hàng, số lượng, vị trí',
+        'Công đoạn sau gửi thẻ khi cần nguyên liệu',
+        'Công đoạn trước chỉ sản xuất khi nhận thẻ',
+        'Giới hạn WIP (Work In Progress)',
+        'Trực quan, dễ hiểu, dễ triển khai'
+      ],
+      tax: 'Kanban khác với lịch sản xuất truyền thống: không đẩy hàng theo kế hoạch, mà kéo hàng theo nhu cầu thực tế. Giúp giảm tồn kho và tăng khả năng đáp ứng.',
+      example: 'Thẻ Kanban màu vàng cho nguyên liệu A, màu xanh cho nguyên liệu B. Khi kho hết A, thẻ vàng được gửi về công đoạn cung cấp.',
+      related: ['Pull', 'JIT', 'Tồn kho', 'Heijunka']
+    },
+    't-vsm': {
+      kind: 'emerald', tag: 'CÔNG CỤ 04',
+      title: 'VSM — Bản đồ dòng giá trị',
+      meta: 'Value Stream Mapping · Nhìn thấy toàn bộ',
+      desc: 'VSM là công cụ trực quan hóa toàn bộ dòng chảy vật tư và thông tin, từ nguyên liệu đầu vào đến sản phẩm cuối cùng. Giúp nhận diện lãng phí và cơ hội cải tiến.',
+      features: [
+        'Vẽ dòng chảy vật tư và thông tin',
+        'Ghi nhận thời gian từng công đoạn',
+        'Phân biệt Value-Added và Non-Value-Added',
+        'Xác định điểm nghẽn (Bottleneck)',
+        'Xây dựng Future State Map'
+      ],
+      tax: 'VSM là bước đầu tiên của mọi dự án Lean. Không có VSM, doanh nghiệp không biết lãng phí nằm ở đâu, không biết ưu tiên cải tiến chỗ nào.',
+      example: 'VSM cho thấy thời gian gia công thực tế (VA) là 2 giờ nhưng lead time tổng là 15 ngày → 14 ngày 22 giờ là lãng phí.',
+      related: ['Dòng giá trị', 'Lead time', 'Kaizen', '7 lãng phí']
+    },
+    't-jit': {
+      kind: 'rose', tag: 'CÔNG CỤ 05',
+      title: 'JIT — Just-in-Time',
+      meta: 'Đúng thứ — Đúng số lượng — Đúng thời điểm',
+      desc: 'JIT là phương pháp sản xuất đúng sản phẩm, đúng số lượng, đúng thời điểm cần thiết. Giảm tồn kho và chi phí lưu trữ xuống mức tối thiểu.',
+      features: [
+        'Sản xuất theo nhu cầu thực tế',
+        'Giảm tồn kho nguyên liệu và thành phẩm',
+        'Rút ngắn lead time',
+        'Tăng khả năng phát hiện vấn đề',
+        'Yêu cầu cao về chất lượng và ổn định'
+      ],
+      tax: 'JIT chỉ hoạt động khi có: quy trình ổn định, chất lượng cao, nhà cung cấp đáng tin cậy. JIT là "hệ thống mong manh" — một lỗi nhỏ có thể gây dừng cả dây chuyền.',
+      example: 'Toyota chỉ giữ 2 giờ tồn kho tại mỗi công đoạn. Nguyên liệu đến đúng lúc cần, không sớm, không muộn.',
+      related: ['Kanban', 'Pull', 'Tồn kho', 'Heijunka']
+    },
+    't-andon': {
+      kind: 'cyan', tag: 'CÔNG CỤ 06',
+      title: 'Andon — Tín hiệu sự cố',
+      meta: '行灯 · Đèn báo hiệu',
+      desc: 'Andon là hệ thống đèn hoặc bảng tín hiệu trực quan để báo hiệu bất thường trên dây chuyền sản xuất, cho phép dừng ngay khi phát hiện vấn đề.',
+      features: [
+        'Đèn xanh: bình thường',
+        'Đèn vàng: cần hỗ trợ',
+        'Đèn đỏ: dừng dây chuyền',
+        'Bảng hiển thị trạng thái từng trạm',
+        'Trao quyền dừng chuyền cho công nhân'
+      ],
+      tax: 'Andon là công cụ quan trọng của Jidoka — máy móc và con người đều có quyền dừng khi phát hiện bất thường. Không có Andon, lỗi sẽ lan truyền và gây hậu quả lớn hơn.',
+      example: 'Công nhân phát hiện chi tiết lỗi → kéo dây Andon → trưởng ca đến hỗ trợ trong 30 giây. Nếu không giải quyết được trong takt time, dây chuyền dừng.',
+      related: ['Jidoka', 'Poka-Yoke', 'Chất lượng', 'Dừng chuyền']
+    },
+    't-poka': {
+      kind: 'violet', tag: 'CÔNG CỤ 07',
+      title: 'Poka-Yoke — Chống lỗi',
+      meta: 'ポカヨケ · Error-Proofing',
+      desc: 'Poka-Yoke là kỹ thuật thiết kế quy trình hoặc thiết bị sao cho lỗi không thể xảy ra, hoặc nếu xảy ra thì bị phát hiện ngay lập tức. Còn gọi là Error-Proofing.',
+      features: [
+        'Thiết kế để lỗi không thể xảy ra',
+        'Cảm biến phát hiện lỗi tự động',
+        'Màu sắc, hình dạng phân biệt',
+        'Giảm phụ thuộc vào sự tập trung',
+        'Áp dụng cho cả thao tác và máy móc'
+      ],
+      tax: 'Poka-Yoke có hai loại: Prevention (ngăn lỗi xảy ra) và Detection (phát hiện lỗi ngay khi xảy ra). Prevention tốt hơn Detection.',
+      example: 'Phích cắm điện chỉ cắm được một chiều — không thể cắm sai. Cảm biến tự dừng máy nếu phát hiện sản phẩm lỗi.',
+      related: ['Jidoka', 'Chất lượng', 'Andon', 'Lỗi']
+    },
+    't-tpm': {
+      kind: 'accent', tag: 'CÔNG CỤ 08',
+      title: 'TPM — Bảo trì sản xuất toàn diện',
+      meta: 'Total Productive Maintenance',
+      desc: 'TPM là phương pháp bảo trì phòng ngừa với sự tham gia của toàn bộ nhân viên, nhằm đạt hiệu suất thiết bị tối đa và giảm dừng máy đột xuất.',
+      features: [
+        'Bảo trì phòng ngừa (Preventive)',
+        'Bảo trì dự đoán (Predictive)',
+        'Toàn bộ nhân viên tham gia',
+        'Đo lường OEE (Overall Equipment Effectiveness)',
+        'Giảm dừng máy, tăng tuổi thọ thiết bị'
+      ],
+      tax: 'TPM không chỉ là bảo trì — đó là thay đổi tư duy: công nhân vận hành cũng chịu trách nhiệm bảo trì cơ bản (vệ sinh, kiểm tra). Kỹ thuật viên tập trung vào bảo trì chuyên sâu.',
+      example: 'Công nhân vệ sinh máy mỗi đầu ca, kiểm tra dầu, tiếng ồn. Kỹ thuật viên bảo trì định kỳ hàng tuần. Máy ít hỏng hơn, OEE tăng.',
+      related: ['OEE', 'Bảo trì', 'Thiết bị', 'Ổn định']
+    },
+    't-smed': {
+      kind: 'emerald', tag: 'CÔNG CỤ 09',
+      title: 'SMED — Chuyển đổi nhanh',
+      meta: 'Single-Minute Exchange of Die',
+      desc: 'SMED là phương pháp giảm thời gian chuyển đổi máy từ sản phẩm này sang sản phẩm khác xuống dưới 10 phút (single-minute). Cho phép sản xuất lô nhỏ hơn.',
+      features: [
+        'Phân biệt Internal và External Setup',
+        'Chuyển Internal thành External',
+        'Sử dụng kẹp nhanh, khuôn chuẩn',
+        'Đào tạo công nhân đa kỹ năng',
+        'Giảm thời gian chuyển đổi xuống dưới 10 phút'
+      ],
+      tax: 'SMED giúp doanh nghiệp sản xuất lô nhỏ hơn → giảm tồn kho → tăng khả năng đáp ứng. Không có SMED, doanh nghiệp buộc phải sản xuất lô lớn để bù chi phí chuyển đổi.',
+      example: 'Thời gian chuyển đổi máy ép từ 2 giờ xuống 8 phút nhờ sử dụng kẹp nhanh, khuôn chuẩn và chuẩn bị trước dụng cụ.',
+      related: ['Lô nhỏ', 'JIT', 'Chuyển đổi', 'Setup']
+    },
+    't-heijunka': {
+      kind: 'rose', tag: 'CÔNG CỤ 10',
+      title: 'Heijunka — San bằng sản xuất',
+      meta: '平準化 · Leveling',
+      desc: 'Heijunka là phương pháp phân bổ sản xuất đều đặn theo thời gian, tránh dao động lớn về khối lượng và chủng loại sản phẩm. Giúp ổn định dòng chảy.',
+      features: [
+        'San bằng khối lượng sản xuất theo ngày',
+        'San bằng chủng loại sản phẩm',
+        'Giảm dao động (Mura)',
+        'Ổn định dòng chảy sản xuất',
+        'Giảm tồn kho và chờ đợi'
+      ],
+      tax: 'Heijunka giải quyết hai vấn đề: Mura (dao động) và Muri (quá tải). Sản xuất đều đặn giúp ổn định chất lượng, giảm stress cho công nhân, và dễ dàng phát hiện vấn đề.',
+      example: 'Thay vì sản xuất 1000 sản phẩm trong 1 ngày rồi 0 sản phẩm ngày tiếp theo, Heijunka phân bổ 500 sản phẩm mỗi ngày đều đặn.',
+      related: ['Mura', 'Muri', 'San bằng', 'Ổn định']
+    },
+    't-gemba': {
+      kind: 'cyan', tag: 'CÔNG CỤ 11',
+      title: 'Gemba Walk — Đi đến hiện trường',
+      meta: '現場 · Nơi thực tế',
+      desc: 'Gemba Walk là hoạt động lãnh đạo trực tiếp đến nơi làm việc để quan sát, lắng nghe và hiểu vấn đề thực tế. Nguyên tắc: "Đi đến nơi, nhìn tận mắt, hiểu tận tường".',
+      features: [
+        'Lãnh đạo đến nơi làm việc thực tế',
+        'Quan sát quy trình, không quản lý qua báo cáo',
+        'Lắng nghe ý kiến công nhân',
+        'Phát hiện lãng phí tại hiện trường',
+        'Thể hiện sự tôn trọng và cam kết'
+      ],
+      tax: 'Gemba Walk không phải là "kiểm tra" mà là "học hỏi". Lãnh đạo đặt câu hỏi, lắng nghe, và cùng nhân viên tìm giải pháp. Không phán xét, không chỉ trích.',
+      example: 'Giám đốc nhà máy dành 30 phút mỗi sáng đi bộ qua dây chuyền, hỏi công nhân về khó khăn, ghi nhận đề xuất. Tuần sau, 5 đề xuất được triển khai.',
+      related: ['Genchi Genbutsu', 'Kaizen', 'Hiện trường', 'Lãnh đạo']
+    },
+    't-jidoka': {
+      kind: 'violet', tag: 'CÔNG CỤ 12',
+      title: 'Jidoka — Tự động hóa thông minh',
+      meta: '自働化 · Autonomation',
+      desc: 'Jidoka là nguyên tắc máy móc tự phát hiện bất thường và dừng lại, trao quyền cho con người xử lý vấn đề thay vì chỉ giám sát máy. Là một trong hai trụ cột của TPS.',
+      features: [
+        'Máy tự dừng khi phát hiện lỗi',
+        'Con người xử lý vấn đề, không giám sát máy',
+        'Ngăn lỗi lan truyền',
+        'Tăng năng suất và chất lượng',
+        'Kết hợp tự động hóa và trí tuệ con người'
+      ],
+      tax: 'Jidoka khác với tự động hóa thông thường: tự động hóa chỉ thay thế con người, Jidoka trao cho máy khả năng "phán đoán" và dừng khi có vấn đề. Giúp một công nhân vận hành nhiều máy.',
+      example: 'Máy dệt tự dừng khi đứt sợi (phát minh của Sakichi Toyoda). Công nhân không cần đứng canh máy, có thể làm việc khác.',
+      related: ['Andon', 'Poka-Yoke', 'TPS', 'Tự động hóa']
+    }
+  };
+
+  /* MODAL */
+  const termModal = $('#termModal');
+  const legalModal = $('#legalModal');
+  let lastFocused = null;
+
+  function openModal(el) {
+    lastFocused = document.activeElement;
+    el.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const closeBtn = $('.modal-close', el);
+    setTimeout(() => closeBtn && closeBtn.focus(), 60);
+  }
+  function closeModal(el) {
+    el.classList.remove('open');
+    if (!document.querySelector('.backdrop.open') && !$('#searchOverlay').classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  function openTerm(key) {
+    const t = TERMS[key];
+    if (!t) return;
+    $('#termTitle').textContent = t.name;
+    $('#termSub').textContent = t.sub;
+    $('#termDef').textContent = t.def;
+    $('#termPrac').textContent = t.prac;
+    const rel = $('#termRelated');
+    rel.innerHTML = '';
+    t.related.forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(termModal);
+  }
+
+  function openLegal(key) {
+    const d = LEGAL_DOCS[key];
+    if (!d) return;
+    $('#legalTag').textContent = d.tag;
+    $('#legalTitle').textContent = d.title;
+    $('#legalMeta').textContent = d.meta;
+    $('#legalDesc').textContent = d.desc;
+    const feat = $('#legalFeatures');
+    feat.innerHTML = '';
+    (d.features || []).forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = f;
+      feat.appendChild(li);
+    });
+    $('#legalTax').textContent = d.tax || '';
+    $('#legalExample').textContent = d.example || '';
+    const rel = $('#legalRelated');
+    rel.innerHTML = '';
+    (d.related || []).forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(legalModal);
+  }
+
+  $$('.principle-card').forEach(card => {
+    card.addEventListener('click', () => openLegal(card.dataset.doc));
+  });
+  $$('.waste-card').forEach(card => {
+    card.addEventListener('click', () => openLegal(card.dataset.doc));
+  });
+  $$('.tool-card').forEach(card => {
+    card.addEventListener('click', () => openLegal(card.dataset.doc));
+  });
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.term');
+    if (t && !t.closest('.cite-popover')) {
+      e.preventDefault();
+      openTerm(t.dataset.term);
+    }
+  });
+
+  $$('.backdrop').forEach(bd => {
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd) closeModal(bd);
+    });
+    const btn = $('.modal-close', bd);
+    if (btn) btn.addEventListener('click', () => closeModal(bd));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      $$('.backdrop.open').forEach(bd => closeModal(bd));
+    }
+  });
+
+  /* SEARCH */
+  const SEARCH_DATA = [
+    { type: 'Bài viết', icon: '📄', title: 'Sản xuất tinh gọn (Lean Manufacturing)', meta: 'MANUFACTURING · 25 phút đọc' },
+    { type: 'Bài viết', icon: '📄', title: 'Quy trình xuất khẩu một lô hàng', meta: 'EXPORT · 18 phút đọc' },
+    { type: 'Bài viết', icon: '📄', title: 'Quy trình nhập khẩu 9 bước', meta: 'IMPORT · 22 phút đọc' },
+
+    { type: 'Nguyên tắc', icon: '💎', title: 'Xác định giá trị từ góc nhìn khách hàng', meta: 'Nguyên tắc 01', doc: 'pr-value' },
+    { type: 'Nguyên tắc', icon: '🗺️', title: 'Lập bản đồ dòng giá trị (VSM)', meta: 'Nguyên tắc 02', doc: 'pr-vsm' },
+    { type: 'Nguyên tắc', icon: '🌊', title: 'Tạo dòng chảy liên tục (Flow)', meta: 'Nguyên tắc 03', doc: 'pr-flow' },
+    { type: 'Nguyên tắc', icon: '⬅️', title: 'Hệ thống kéo (Pull)', meta: 'Nguyên tắc 04', doc: 'pr-pull' },
+    { type: 'Nguyên tắc', icon: '♾️', title: 'Hướng đến sự hoàn hảo', meta: 'Nguyên tắc 05', doc: 'pr-perfect' },
+
+    { type: 'Lãng phí', icon: '📦', title: 'Sản xuất dư thừa', meta: 'Muda 01', doc: 'w-over' },
+    { type: 'Lãng phí', icon: '⏳', title: 'Chờ đợi', meta: 'Muda 02', doc: 'w-wait' },
+    { type: 'Lãng phí', icon: '🚚', title: 'Vận chuyển', meta: 'Muda 03', doc: 'w-transport' },
+    { type: 'Lãng phí', icon: '🔧', title: 'Gia công thừa', meta: 'Muda 04', doc: 'w-overprocess' },
+    { type: 'Lãng phí', icon: '📊', title: 'Tồn kho', meta: 'Muda 05', doc: 'w-inventory' },
+    { type: 'Lãng phí', icon: '🏃', title: 'Thao tác', meta: 'Muda 06', doc: 'w-motion' },
+    { type: 'Lãng phí', icon: '❌', title: 'Lỗi / Khuyết tật', meta: 'Muda 07', doc: 'w-defect' },
+
+    { type: 'Công cụ', icon: '🧹', title: '5S — Sắp xếp nơi làm việc', meta: 'Tool 01', doc: 't-5s' },
+    { type: 'Công cụ', icon: '📈', title: 'Kaizen — Cải tiến liên tục', meta: 'Tool 02', doc: 't-kaizen' },
+    { type: 'Công cụ', icon: '📋', title: 'Kanban — Hệ thống kéo', meta: 'Tool 03', doc: 't-kanban' },
+    { type: 'Công cụ', icon: '🗺️', title: 'VSM — Bản đồ dòng giá trị', meta: 'Tool 04', doc: 't-vsm' },
+    { type: 'Công cụ', icon: '⏱️', title: 'JIT — Just-in-Time', meta: 'Tool 05', doc: 't-jit' },
+    { type: 'Công cụ', icon: '🚨', title: 'Andon — Tín hiệu sự cố', meta: 'Tool 06', doc: 't-andon' },
+    { type: 'Công cụ', icon: '🛡️', title: 'Poka-Yoke — Chống lỗi', meta: 'Tool 07', doc: 't-poka' },
+    { type: 'Công cụ', icon: '🔧', title: 'TPM — Bảo trì sản xuất toàn diện', meta: 'Tool 08', doc: 't-tpm' },
+    { type: 'Công cụ', icon: '⚡', title: 'SMED — Chuyển đổi nhanh', meta: 'Tool 09', doc: 't-smed' },
+    { type: 'Công cụ', icon: '⚖️', title: 'Heijunka — San bằng sản xuất', meta: 'Tool 10', doc: 't-heijunka' },
+    { type: 'Công cụ', icon: '👣', title: 'Gemba Walk — Đi đến hiện trường', meta: 'Tool 11', doc: 't-gemba' },
+    { type: 'Công cụ', icon: '🛑', title: 'Jidoka — Tự động hóa thông minh', meta: 'Tool 12', doc: 't-jidoka' },
+
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Muda', meta: 'Lãng phí', term: 'muda' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'TPS — Toyota Production System', meta: 'Hệ thống sản xuất Toyota', term: 'tps' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'VSM', meta: 'Bản đồ dòng giá trị', term: 'vSM' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Gemba', meta: 'Hiện trường', term: 'gemba' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Poka-Yoke', meta: 'Chống lỗi', term: 'poka' }
+  ];
+
+  const searchOverlay = $('#searchOverlay');
+  const searchInput = $('#searchInput');
+  const searchResults = $('#searchResults');
+  let focusIndex = -1;
+  let currentResults = [];
+
+  function escapeHTML(s) {
+    return s.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+  function highlight(text, q) {
+    if (!q) return escapeHTML(text);
+    const safe = escapeHTML(text);
+    const qSafe = escapeHTML(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return safe.replace(new RegExp('(' + qSafe + ')', 'gi'), '<mark>$1</mark>');
+  }
+  function renderSearch(q) {
+    const query = q.trim().toLowerCase();
+    focusIndex = -1;
+    if (!query) {
+      currentResults = SEARCH_DATA.slice(0, 10);
+      searchResults.innerHTML =
+        '<div class="sr-group-label">Gợi ý nhanh</div>' +
+        currentResults.map((item, i) => itemHTML(item, '', i)).join('');
+      return;
+    }
+    const found = SEARCH_DATA.filter(item =>
+      item.title.toLowerCase().includes(query) ||
+      (item.meta && item.meta.toLowerCase().includes(query)) ||
+      item.type.toLowerCase().includes(query)
+    );
+    currentResults = found;
+    if (!found.length) {
+      searchResults.innerHTML =
+        '<div class="empty-state"><div class="es-icon">🔍</div>' +
+        '<p>Không tìm thấy kết quả cho "<strong>' + escapeHTML(q) + '</strong>"</p></div>';
+      return;
+    }
+    const groups = {};
+    found.forEach(item => { (groups[item.type] = groups[item.type] || []).push(item); });
+    let html = '';
+    let idx = 0;
+    Object.keys(groups).forEach(type => {
+      html += '<div class="sr-group-label">' + type + ' · ' + groups[type].length + '</div>';
+      groups[type].forEach(item => { html += itemHTML(item, q, idx++); });
+    });
+    searchResults.innerHTML = html;
+  }
+  function itemHTML(item, q, i) {
+    return '<button class="sr-item" data-index="' + i + '">' +
+      '<span class="sr-icon">' + item.icon + '</span>' +
+      '<span class="sr-body">' +
+        '<span class="sr-title">' + highlight(item.title, q) + '</span>' +
+        '<span class="sr-meta">' + highlight(item.meta || item.type, q) + '</span>' +
+      '</span></button>';
+  }
+  function openSearch() {
+    lastFocused = document.activeElement;
+    searchOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    searchInput.value = '';
+    renderSearch('');
+    setTimeout(() => searchInput.focus(), 80);
+  }
+  function closeSearch() {
+    searchOverlay.classList.remove('open');
+    if (!document.querySelector('.backdrop.open')) document.body.style.overflow = '';
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+  window.openSearch = openSearch;
+  $('#searchBtn').addEventListener('click', openSearch);
+  searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) closeSearch(); });
+  searchInput.addEventListener('input', (e) => renderSearch(e.target.value));
+  searchInput.addEventListener('keydown', (e) => {
+    const items = $$('.sr-item', searchResults);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusIndex = Math.min(focusIndex + 1, items.length - 1);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusIndex = Math.max(focusIndex - 1, 0);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (items[focusIndex]) items[focusIndex].click();
+      else if (items[0]) items[0].click();
+    }
+  });
+  searchResults.addEventListener('click', (e) => {
+    const btn = e.target.closest('.sr-item');
+    if (!btn) return;
+    const item = currentResults[Number(btn.dataset.index)];
+    if (!item) return;
+    closeSearch();
+    if (item.term) setTimeout(() => openTerm(item.term), 220);
+    else if (item.doc) setTimeout(() => openLegal(item.doc), 220);
+  });
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      else openSearch();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      $$('.backdrop.open').forEach(bd => closeModal(bd));
+    }
+  });
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 92;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
