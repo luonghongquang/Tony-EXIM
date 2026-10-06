@@ -1,0 +1,3148 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Định mức nguyên liệu: Nền tảng của mọi kỳ quyết toán — TONY EXIM</title>
+<meta name="description" content="Định mức nguyên liệu là gì, ba loại định mức, công thức Excel tính định mức, cách xây dựng định mức từ đầu và mối liên hệ chặt chẽ với báo cáo quyết toán hải quan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TONY EXIM — DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#FFFFFF; --bg-alt:#F4F7FB; --surface:#FFFFFF; --surface-2:#F8FAFD;
+  --text:#0B1B2B; --text-2:#33465C; --muted:#6B7C93;
+  --border:#E3E9F1; --border-strong:#CFDAE7;
+  --primary:#0E2E4F; --primary-2:#1B4E7E; --primary-soft:rgba(27,78,126,.08);
+  --accent:#E08A2B; --accent-2:#F3B45E; --accent-soft:rgba(224,138,43,.12);
+  --cyan:#0EA5E9; --cyan-soft:rgba(14,165,233,.12);
+  --violet:#8B5CF6; --violet-soft:rgba(139,92,246,.12);
+  --emerald:#10B981; --emerald-soft:rgba(16,185,129,.12);
+  --rose:#F43F5E; --rose-soft:rgba(244,63,94,.12);
+  --amber:#F59E0B; --amber-soft:rgba(245,158,11,.12);
+  --success:#178C60; --danger:#C8443B;
+  --shadow-xs:0 1px 2px rgba(11,27,43,.05);
+  --shadow-sm:0 2px 6px rgba(11,27,43,.05), 0 1px 2px rgba(11,27,43,.04);
+  --shadow-md:0 10px 28px -10px rgba(11,27,43,.16), 0 2px 6px rgba(11,27,43,.05);
+  --shadow-lg:0 28px 70px -22px rgba(11,27,43,.28), 0 6px 18px -8px rgba(11,27,43,.10);
+  --r-xs:8px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px; --r-full:999px;
+  --nav-h:68px;
+  --font:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-bounce:cubic-bezier(.34,1.56,.64,1);
+}
+[data-theme="dark"]{
+  --bg:#05090F; --bg-alt:#080E18; --surface:#0B1424; --surface-2:#0F1B2C;
+  --text:#EAF2FC; --text-2:#B9C8DA; --muted:#7E93AB;
+  --border:#16243A; --border-strong:#243754;
+  --primary:#8CBCE8; --primary-2:#B0D2F2; --primary-soft:rgba(140,188,232,.10);
+  --accent:#F5A83E; --accent-2:#F9C57F; --accent-soft:rgba(245,168,62,.16);
+  --cyan:#38BDF8; --cyan-soft:rgba(56,189,248,.16);
+  --violet:#A78BFA; --violet-soft:rgba(167,139,250,.16);
+  --emerald:#34D399; --emerald-soft:rgba(52,211,153,.16);
+  --rose:#FB7185; --rose-soft:rgba(251,113,133,.16);
+  --amber:#FBBF24; --amber-soft:rgba(251,191,36,.16);
+  --success:#3DCB94; --danger:#F0736A;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.4);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:0 12px 30px -12px rgba(0,0,0,.7);
+  --shadow-lg:0 30px 70px -24px rgba(0,0,0,.85);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font);background:var(--bg);color:var(--text);
+  font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;position:relative;
+  transition:background .45s var(--ease), color .45s var(--ease);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent-soft);color:var(--text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+.wrap{width:min(1180px,100% - 44px);margin-inline:auto;position:relative;z-index:2}
+@media(max-width:640px){.wrap{width:min(1180px,100% - 32px)}}
+
+/* ============================================================
+   ENHANCED BACKGROUND EFFECTS — CẬP NHẬT
+   ============================================================ */
+.bg-layer{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+
+/* 1. Animated grid */
+.bg-grid{
+  position:absolute;inset:-2px;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:56px 56px;
+  opacity:.35;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 20%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 20%,transparent 80%);
+  animation:gridDrift 90s linear infinite;
+}
+[data-theme="dark"] .bg-grid{opacity:.5}
+@keyframes gridDrift{
+  0%{background-position:0 0,0 0}
+  100%{background-position:56px 56px,56px 56px}
+}
+
+/* 2. Aurora blobs (5 màu) */
+.aurora{position:absolute;inset:0;overflow:hidden;opacity:.85}
+.aurora-blob{
+  position:absolute;border-radius:50%;filter:blur(90px);
+  will-change:transform;opacity:.75;
+}
+.aurora-blob.b1{
+  width:680px;height:680px;top:-220px;left:-160px;
+  background:radial-gradient(circle,var(--cyan-soft),transparent 62%);
+  animation:floatA 24s ease-in-out infinite;
+}
+.aurora-blob.b2{
+  width:760px;height:760px;top:8%;right:-220px;
+  background:radial-gradient(circle,var(--violet-soft),transparent 62%);
+  animation:floatB 28s ease-in-out infinite;
+}
+.aurora-blob.b3{
+  width:560px;height:560px;bottom:-180px;left:22%;
+  background:radial-gradient(circle,var(--accent-soft),transparent 62%);
+  animation:floatC 32s ease-in-out infinite;
+}
+.aurora-blob.b4{
+  width:520px;height:520px;top:42%;left:42%;
+  background:radial-gradient(circle,var(--emerald-soft),transparent 62%);
+  animation:floatD 36s ease-in-out infinite;
+}
+.aurora-blob.b5{
+  width:480px;height:480px;top:22%;left:12%;
+  background:radial-gradient(circle,var(--rose-soft),transparent 62%);
+  animation:floatE 30s ease-in-out infinite;
+}
+@keyframes floatA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(90px,70px) scale(1.18)}66%{transform:translate(-50px,140px) scale(.92)}}
+@keyframes floatB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-120px,90px) scale(1.14)}}
+@keyframes floatC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(140px,-70px) scale(1.12)}}
+@keyframes floatD{0%,100%{transform:translate(0,0) scale(1);opacity:.5}50%{transform:translate(-90px,-110px) scale(1.22);opacity:.85}}
+@keyframes floatE{0%,100%{transform:translate(0,0) scale(1);opacity:.4}50%{transform:translate(80px,60px) scale(1.15);opacity:.7}}
+
+/* 3. Light streaks */
+.bg-streaks{position:absolute;inset:0;overflow:hidden}
+.streak{
+  position:absolute;width:180px;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;
+  filter:blur(.5px);
+  box-shadow:0 0 12px var(--accent-soft);
+  animation:streakMove 12s linear infinite;
+}
+.streak:nth-child(1){top:12%;left:-200px;animation-delay:0s;animation-duration:14s}
+.streak:nth-child(2){top:34%;left:-200px;animation-delay:3s;animation-duration:17s;background:linear-gradient(90deg,transparent,var(--violet),transparent)}
+.streak:nth-child(3){top:56%;left:-200px;animation-delay:6.5s;animation-duration:15s;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.streak:nth-child(4){top:78%;left:-200px;animation-delay:9s;animation-duration:19s;background:linear-gradient(90deg,transparent,var(--emerald),transparent)}
+.streak:nth-child(5){top:22%;left:-200px;animation-delay:12s;animation-duration:16s;background:linear-gradient(90deg,transparent,var(--rose),transparent)}
+@keyframes streakMove{
+  0%{transform:translateX(0);opacity:0}
+  10%{opacity:.65}
+  90%{opacity:.65}
+  100%{transform:translateX(calc(100vw + 400px));opacity:0}
+}
+
+/* 4. Floating geometric shapes */
+.bg-shapes{position:absolute;inset:0;overflow:hidden;opacity:.5}
+.shape{
+  position:absolute;border:1px solid var(--border-strong);
+  animation:shapeFloat linear infinite;
+}
+.shape.circle{border-radius:50%}
+.shape.triangle{
+  width:0 !important;height:0 !important;border-style:solid;
+  background:transparent !important;
+}
+.shape.square{transform:rotate(45deg)}
+@keyframes shapeFloat{
+  0%,100%{transform:translate(0,0) rotate(0deg);opacity:.35}
+  50%{transform:translate(40px,-60px) rotate(180deg);opacity:.7}
+}
+
+/* 5. Particles with varying sizes */
+.particles{position:absolute;inset:0;overflow:hidden}
+.particle{
+  position:absolute;border-radius:50%;
+  animation:rise linear infinite;
+  will-change:transform;
+}
+@keyframes rise{
+  0%{transform:translateY(0) scale(0);opacity:0}
+  8%{opacity:.7}
+  92%{opacity:.35}
+  100%{transform:translateY(-105vh) scale(1.5);opacity:0}
+}
+
+/* 6. Vignette overlay for depth */
+.bg-vignette{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,transparent 30%,color-mix(in srgb,var(--bg) 70%,transparent) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 100%,transparent 40%,color-mix(in srgb,var(--bg) 60%,transparent) 100%);
+  pointer-events:none;
+}
+
+/* 7. Noise texture (subtle) */
+.bg-noise{
+  position:absolute;inset:0;opacity:.025;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  pointer-events:none;mix-blend-mode:overlay;
+}
+[data-theme="dark"] .bg-noise{opacity:.05}
+
+/* 8. Conic shimmer ring behind hero */
+.bg-shimmer{
+  position:absolute;width:900px;height:900px;
+  top:-380px;left:50%;transform:translateX(-50%);
+  border-radius:50%;
+  background:conic-gradient(from 0deg,transparent,var(--accent-soft),transparent 30%,var(--violet-soft),transparent 60%,var(--cyan-soft),transparent);
+  filter:blur(50px);opacity:.35;
+  animation:shimmerRotate 40s linear infinite;
+  pointer-events:none;
+}
+@keyframes shimmerRotate{
+  0%{transform:translateX(-50%) rotate(0deg)}
+  100%{transform:translateX(-50%) rotate(360deg)}
+}
+[data-theme="dark"] .bg-shimmer{opacity:.5}
+
+@media(prefers-reduced-motion:reduce){
+  .bg-grid,.aurora-blob,.streak,.shape,.particle,.bg-shimmer{animation:none !important}
+}
+
+/* PROGRESS */
+.progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;z-index:200;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:300% 100%;animation:progressFlow 6s linear infinite;
+  box-shadow:0 0 18px rgba(224,138,43,.6);transition:width .08s linear;
+}
+@keyframes progressFlow{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* NAVBAR */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:150;
+  border-bottom:1px solid transparent;
+  transition:background .35s var(--ease),border-color .35s var(--ease),backdrop-filter .35s;
+}
+.nav.scrolled{
+  background:color-mix(in srgb,var(--bg) 76%,transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);
+  border-bottom-color:var(--border);
+}
+.nav-inner{height:100%;width:min(1180px,100% - 44px);margin-inline:auto;display:flex;align-items:center;gap:28px}
+@media(max-width:640px){.nav-inner{width:calc(100% - 32px)}}
+
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--primary-2),var(--cyan));
+  background-size:200% 200%;animation:brandShift 5s ease infinite;
+  color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.5px;
+  box-shadow:0 6px 16px -6px rgba(27,78,126,.7);
+}
+@keyframes brandShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+[data-theme="dark"] .brand-mark{color:#06111E}
+.brand-text{font-weight:800;font-size:16.5px;letter-spacing:-.3px;line-height:1}
+.brand-text em{
+  font-style:normal;margin-left:1px;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--accent));
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 4s ease infinite;
+}
+@keyframes textFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.brand-sub{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1.6px;color:var(--muted);font-weight:500;margin-top:3px}
+
+.nav-links{display:flex;align-items:center;gap:3px;margin-left:auto}
+.nav-links a{
+  position:relative;font-size:13.5px;font-weight:500;color:var(--muted);
+  padding:8px 13px;border-radius:var(--r-full);
+  transition:color .25s var(--ease),background .25s var(--ease);
+}
+.nav-links a:hover{color:var(--text);background:var(--surface-2)}
+.nav-links a.active{color:var(--text);font-weight:600}
+.nav-links a.active::after{
+  content:"";position:absolute;left:50%;bottom:1px;transform:translateX(-50%);
+  width:16px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  box-shadow:0 0 8px var(--accent-soft);
+}
+
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.icon-btn{
+  width:38px;height:38px;border-radius:var(--r-sm);display:grid;place-items:center;
+  color:var(--muted);border:1px solid transparent;
+  transition:all .25s var(--ease);position:relative;overflow:hidden;
+}
+.icon-btn::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at center,var(--accent-soft),transparent 70%);
+  opacity:0;transition:opacity .3s;transform:scale(.6);
+}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.icon-btn:hover::before{opacity:1;transform:scale(1)}
+.icon-btn svg{width:18px;height:18px;stroke-width:1.9;position:relative;z-index:1}
+.menu-btn{display:none}
+@media(max-width:940px){.nav-links{display:none}.menu-btn{display:grid}}
+
+.mobile-menu{
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:149;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 22px 22px;display:grid;gap:2px;
+  clip-path:inset(0 0 100% 0);transition:clip-path .45s var(--ease);
+  box-shadow:var(--shadow-md);
+}
+.mobile-menu.open{clip-path:inset(0 0 0 0)}
+.mobile-menu a{padding:13px 4px;font-size:15px;font-weight:500;color:var(--text-2);border-bottom:1px solid var(--border)}
+.mobile-menu a:last-child{border-bottom:0}
+.mobile-menu a.active{color:var(--accent);font-weight:600}
+
+/* HERO */
+.article-hero{
+  position:relative;padding:calc(var(--nav-h) + 54px) 0 44px;
+  border-bottom:1px solid var(--border);overflow:hidden;
+}
+.crumbs{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.9px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:24px;
+}
+.crumbs a{transition:color .2s}
+.crumbs a:hover{color:var(--accent)}
+.crumbs span.sep{opacity:.45}
+
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:1.4px;
+  text-transform:uppercase;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));
+  background-size:200% 100%;animation:textFlow 5s ease infinite;
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+  padding:6px 13px;border-radius:var(--r-full);color:var(--accent);
+}
+.chip .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 0 var(--accent);animation:pulseDot 2s ease infinite;
+}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 var(--accent-soft)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+.article-title{
+  font-size:clamp(30px,5.2vw,54px);line-height:1.1;letter-spacing:-1.6px;font-weight:800;
+  margin:22px 0 0;max-width:16ch;text-wrap:balance;
+}
+.article-title .accent{
+  position:relative;display:inline-block;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--violet),var(--accent));
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 6s ease infinite;
+}
+.article-lead{margin:22px 0 0;max-width:66ch;font-size:clamp(15.5px,1.5vw,18px);color:var(--text-2);line-height:1.72}
+.article-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:30px;font-size:13px;color:var(--muted)}
+.article-meta .author{display:flex;align-items:center;gap:9px;color:var(--text-2);font-weight:600}
+.avatar{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--violet),var(--cyan));
+  background-size:200% 200%;animation:brandShift 6s ease infinite;
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:.3px;
+}
+[data-theme="dark"] .avatar{color:#06111E}
+.meta-sep{width:4px;height:4px;border-radius:50%;background:var(--border-strong)}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:64px;padding:56px 0 80px;align-items:start}
+@media(max-width:1040px){.layout{grid-template-columns:1fr;gap:0;padding-top:36px}}
+
+.toc{position:sticky;top:calc(var(--nav-h) + 28px)}
+@media(max-width:1040px){
+  .toc{position:static;margin-bottom:36px;padding:18px 20px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg)}
+}
+.toc-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:9px;
+}
+.toc-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.toc-list{list-style:none;margin:0;padding:0;position:relative}
+.toc-list::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--border)}
+.toc-list a{
+  display:block;position:relative;padding:7px 0 7px 18px;
+  font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.4;
+  transition:color .25s var(--ease);
+}
+.toc-list a::before{
+  content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%) scaleY(0);
+  width:2px;height:16px;border-radius:2px;
+  background:linear-gradient(180deg,var(--accent),var(--rose));
+  transition:transform .35s var(--ease);
+}
+.toc-list a:hover{color:var(--text-2)}
+.toc-list a.active{color:var(--text);font-weight:600}
+.toc-list a.active::before{transform:translateY(-50%) scaleY(1)}
+.toc-num{
+  font-family:var(--mono);font-size:10px;margin-right:7px;font-weight:600;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+.toc-cta{
+  margin-top:22px;padding:16px;border-radius:var(--r-md);
+  background:linear-gradient(150deg,var(--violet-soft),transparent);
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.toc-cta::before{
+  content:"";position:absolute;top:-30%;right:-30%;width:120px;height:120px;
+  border-radius:50%;background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 8s ease-in-out infinite;
+}
+.toc-cta p{margin:0 0 11px;font-size:12.5px;color:var(--muted);line-height:1.55;position:relative;z-index:1}
+.toc-cta button{
+  width:100%;padding:9px;border-radius:var(--r-sm);font-size:12.5px;font-weight:600;
+  background:linear-gradient(120deg,var(--primary),var(--violet));
+  background-size:200% 100%;color:#fff;
+  transition:all .25s var(--ease);position:relative;z-index:1;
+}
+.toc-cta button:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--violet);background-position:100% 50%}
+[data-theme="dark"] .toc-cta button{color:#06111E}
+
+/* CONTENT */
+.content{min-width:0;max-width:760px}
+.section{margin-bottom:76px;scroll-margin-top:100px}
+.section-head{margin-bottom:26px}
+.section-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:1.8px;
+  font-weight:600;display:inline-block;margin-bottom:8px;
+  padding:3px 10px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--muted);
+}
+.section[data-color="cyan"] .section-num{color:var(--cyan);background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.section[data-color="violet"] .section-num{color:var(--violet);background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.section[data-color="accent"] .section-num{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.section[data-color="emerald"] .section-num{color:var(--emerald);background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.section[data-color="rose"] .section-num{color:var(--rose);background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 25%,transparent)}
+.section[data-color="amber"] .section-num{color:var(--amber);background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 25%,transparent)}
+
+.section h2{
+  font-size:clamp(23px,3vw,31px);line-height:1.2;letter-spacing:-.8px;
+  font-weight:800;margin:0;text-wrap:balance;position:relative;display:inline-block;
+}
+.section h2::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:3px;width:44px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease);
+}
+.section.reveal.in h2::after{transform:scaleX(1)}
+.section-desc{margin:18px 0 0;color:var(--muted);font-size:14.5px;max-width:62ch}
+
+.content p{margin:0 0 20px;color:var(--text-2);font-size:16.5px;line-height:1.78}
+.content h3{font-size:19px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px;color:var(--text)}
+.content strong{color:var(--text);font-weight:700}
+.content ul{margin:0 0 22px;padding-left:0;list-style:none}
+.content ul li{position:relative;padding-left:26px;margin-bottom:11px;color:var(--text-2);font-size:16px;line-height:1.7}
+.content ul li::before{
+  content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:2px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));transform:rotate(45deg);
+}
+.content ol{margin:0 0 22px;padding-left:0;list-style:none;counter-reset:ol}
+.content ol li{position:relative;padding-left:38px;margin-bottom:14px;counter-increment:ol;color:var(--text-2);font-size:16px;line-height:1.7}
+.content ol li::before{
+  content:counter(ol,decimal-leading-zero);
+  position:absolute;left:0;top:1px;font-family:var(--mono);font-size:11px;
+  font-weight:600;color:var(--accent);
+  background:var(--accent-soft);padding:3px 6px;border-radius:6px;
+}
+
+.term{
+  display:inline;font:inherit;font-weight:600;
+  padding:1px 3px;border-radius:4px;color:var(--cyan);
+  border-bottom:1.5px dotted color-mix(in srgb,var(--cyan) 60%,transparent);
+  background:linear-gradient(180deg,transparent 70%,var(--cyan-soft) 70%);
+  transition:background .25s var(--ease),color .25s var(--ease);cursor:pointer;
+}
+.term:hover{background:var(--cyan-soft);color:var(--violet)}
+.term::after{content:"↗";font-size:9px;vertical-align:super;margin-left:2px;opacity:.6;font-family:var(--mono)}
+
+.legal-cite{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:.88em;font-weight:600;
+  padding:2px 9px 2px 8px;margin:0 2px;border-radius:var(--r-full);
+  color:var(--violet);background:linear-gradient(120deg,var(--violet-soft),transparent 90%);
+  border:1px solid color-mix(in srgb,var(--violet) 30%,transparent);
+  transition:all .3s var(--ease);cursor:pointer;position:relative;overflow:hidden;white-space:nowrap;
+}
+.legal-cite::before{
+  content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--violet) 25%,transparent),transparent);
+  transition:left .6s var(--ease);
+}
+.legal-cite:hover{
+  transform:translateY(-1px);color:var(--violet);background:var(--violet-soft);
+  border-color:var(--violet);box-shadow:0 6px 18px -6px var(--violet-soft);
+}
+.legal-cite:hover::before{left:100%}
+.legal-cite svg{width:12px;height:12px;flex-shrink:0}
+.legal-cite[data-kind="decree"]{
+  color:var(--accent);background:linear-gradient(120deg,var(--accent-soft),transparent 90%);
+  border-color:color-mix(in srgb,var(--accent) 30%,transparent);
+}
+.legal-cite[data-kind="decree"]:hover{background:var(--accent-soft);border-color:var(--accent);box-shadow:0 6px 18px -6px var(--accent-soft)}
+.legal-cite[data-kind="law"]{
+  color:var(--cyan);background:linear-gradient(120deg,var(--cyan-soft),transparent 90%);
+  border-color:color-mix(in srgb,var(--cyan) 30%,transparent);
+}
+.legal-cite[data-kind="law"]:hover{background:var(--cyan-soft);border-color:var(--cyan);box-shadow:0 6px 18px -6px var(--cyan-soft)}
+
+.callout{
+  position:relative;margin:28px 0;padding:20px 22px 20px 24px;
+  border-radius:var(--r-md);border:1px solid var(--border);
+  background:var(--surface-2);overflow:hidden;
+}
+.callout::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+}
+.callout::after{
+  content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,var(--cyan-soft),transparent 70%);opacity:.6;pointer-events:none;
+}
+.callout.warn::before{background:linear-gradient(180deg,var(--accent),var(--rose))}
+.callout.warn{background:linear-gradient(120deg,var(--accent-soft),transparent 60%)}
+.callout.warn::after{background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+.callout.tip::before{background:linear-gradient(180deg,var(--emerald),var(--cyan))}
+.callout.tip{background:linear-gradient(120deg,var(--emerald-soft),transparent 60%)}
+.callout.tip::after{background:radial-gradient(circle,var(--emerald-soft),transparent 70%)}
+.callout-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px;color:var(--cyan);
+}
+.callout.warn .callout-label{color:var(--accent)}
+.callout.tip .callout-label{color:var(--emerald)}
+.callout p{margin:0;font-size:15px;line-height:1.7;color:var(--text-2);position:relative;z-index:1}
+.callout p + p{margin-top:10px}
+
+.quote{
+  margin:30px 0;padding:26px 28px;border-radius:var(--r-lg);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent);
+  background-size:200% 200%;animation:brandShift 12s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.quote::before{
+  content:"“";position:absolute;top:-6px;left:18px;font-size:70px;
+  font-family:Georgia,serif;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:.35;line-height:1;
+}
+.quote p{margin:0;font-size:17.5px;line-height:1.68;font-weight:500;color:var(--text);position:relative;z-index:1;font-style:italic}
+.quote cite{display:block;margin-top:12px;font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.8px;color:var(--muted);text-transform:uppercase}
+
+/* OVERVIEW CARDS */
+.overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:30px}
+@media(max-width:600px){.overview-grid{grid-template-columns:1fr}}
+.ov-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);
+  overflow:hidden;
+}
+.ov-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent));
+  background-size:200% 100%;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+.ov-card:hover::before{transform:scaleX(1)}
+.ov-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px 120px at 20% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.ov-card:nth-child(1)::after{background:radial-gradient(320px 120px at 20% 0%,var(--cyan-soft),transparent 70%)}
+.ov-card:nth-child(2)::after{background:radial-gradient(320px 120px at 20% 0%,var(--amber-soft),transparent 70%)}
+.ov-card:nth-child(3)::after{background:radial-gradient(320px 120px at 20% 0%,var(--emerald-soft),transparent 70%)}
+.ov-card:nth-child(4)::after{background:radial-gradient(320px 120px at 20% 0%,var(--violet-soft),transparent 70%)}
+.ov-card:hover{transform:translateY(-5px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.ov-card:hover::after{opacity:1}
+.ov-icon{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);font-size:17px;
+  margin-bottom:13px;transition:transform .5s var(--ease-bounce);position:relative;z-index:1;
+}
+.ov-card:nth-child(1) .ov-icon{background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.ov-card:nth-child(2) .ov-icon{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 25%,transparent)}
+.ov-card:nth-child(3) .ov-icon{background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.ov-card:nth-child(4) .ov-icon{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.ov-card:hover .ov-icon{transform:scale(1.15) rotate(-8deg)}
+.ov-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin-bottom:6px;position:relative;z-index:1;
+}
+.ov-value{font-size:14.5px;line-height:1.62;color:var(--text-2);margin:0;position:relative;z-index:1}
+.ov-value b{color:var(--text);font-weight:700}
+
+/* TYPE CARDS (3 loại định mức) */
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+@media(max-width:900px){.type-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.type-grid{grid-template-columns:1fr}}
+.type-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  cursor:pointer;transition:all .4s var(--ease);overflow:hidden;text-align:left;
+}
+.type-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent));
+  background-size:200% 100%;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+.type-card:hover::before{transform:scaleX(1)}
+.type-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px 140px at 20% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.type-card:hover{transform:translateY(-5px);box-shadow:0 24px 50px -22px rgba(11,27,43,.35);border-color:var(--border-strong)}
+.type-card:hover::after{opacity:1}
+.type-card > *{position:relative;z-index:1}
+.type-card .tc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.type-card .tc-num{
+  font-family:var(--mono);font-size:20px;font-weight:700;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;
+}
+.type-card .tc-group{
+  font-family:var(--mono);font-size:8.5px;letter-spacing:1.2px;
+  text-transform:uppercase;font-weight:600;padding:3px 8px;
+  border-radius:var(--r-full);display:inline-block;
+}
+.type-card[data-group="vat-tu"] .tc-group{color:var(--cyan);background:var(--cyan-soft);border:1px solid color-mix(in srgb,var(--cyan) 30%,transparent)}
+.type-card[data-group="tieu-hao"] .tc-group{color:var(--accent);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent)}
+.type-card[data-group="thu-hoi"] .tc-group{color:var(--emerald);background:var(--emerald-soft);border:1px solid color-mix(in srgb,var(--emerald) 30%,transparent)}
+
+.type-card h4{margin:0 0 8px;font-size:16px;font-weight:700;letter-spacing:-.3px;line-height:1.35;color:var(--text)}
+.type-card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.6}
+.type-card .tc-arrow{
+  margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.8px;
+  color:var(--muted);display:flex;align-items:center;gap:6px;
+  transition:color .3s var(--ease);
+}
+.type-card:hover .tc-arrow{color:var(--accent)}
+.type-card .tc-arrow svg{width:12px;height:12px;stroke-width:2.2;transition:transform .3s var(--ease)}
+.type-card:hover .tc-arrow svg{transform:translateX(3px)}
+
+/* MAP */
+.map-shell{
+  margin-top:26px;border-radius:var(--r-xl);border:1px solid var(--border);
+  background:
+    radial-gradient(600px 300px at 20% 0%,var(--violet-soft),transparent 70%),
+    radial-gradient(600px 300px at 80% 100%,var(--cyan-soft),transparent 70%),
+    var(--surface-2);
+  overflow:hidden;position:relative;
+}
+.map-toolbar{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
+  background:color-mix(in srgb,var(--surface) 60%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.map-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-right:auto}
+.legend-item{
+  display:flex;align-items:center;gap:7px;font-family:var(--mono);
+  font-size:10px;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;
+}
+.legend-swatch{width:9px;height:9px;border-radius:3px}
+.legend-swatch.law{background:var(--cyan);box-shadow:0 0 8px var(--cyan-soft)}
+.legend-swatch.decree{background:var(--accent);box-shadow:0 0 8px var(--accent-soft)}
+.legend-swatch.circ{background:var(--emerald);box-shadow:0 0 8px var(--emerald-soft)}
+.legend-swatch.proc{background:var(--violet);box-shadow:0 0 8px var(--violet-soft)}
+
+.map-controls{display:flex;gap:6px}
+.map-btn{
+  width:32px;height:32px;border-radius:9px;display:grid;place-items:center;
+  background:var(--surface);border:1px solid var(--border);color:var(--muted);
+  transition:all .22s var(--ease);font-size:15px;line-height:1;
+}
+.map-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 16px -8px var(--accent-soft)}
+.map-btn svg{width:15px;height:15px;stroke-width:2}
+
+.map-viewport{position:relative;height:600px;overflow:hidden;cursor:grab;touch-action:none}
+.map-viewport.grabbing{cursor:grabbing}
+@media(max-width:760px){.map-viewport{height:520px}}
+
+.map-canvas{
+  position:absolute;left:50%;top:50%;width:900px;height:680px;
+  margin-left:-450px;margin-top:-340px;transform-origin:center center;transition:transform .12s linear;
+}
+.map-canvas.smooth{transition:transform .5s var(--ease)}
+
+.medges{position:absolute;inset:0;width:900px;height:680px;pointer-events:none}
+.medge{
+  fill:none;stroke:var(--border-strong);stroke-width:1.6;
+  transition:stroke .3s var(--ease),stroke-width .3s var(--ease),opacity .3s var(--ease);
+}
+.medge.hl{stroke:url(#edgeGradient);stroke-width:2.6;filter:drop-shadow(0 0 8px var(--accent-soft))}
+.medge.dim{opacity:.15}
+
+.mnode{
+  position:absolute;transform:translate(-50%,-50%);
+  padding:11px 15px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);text-align:left;
+  transition:all .3s var(--ease);max-width:190px;min-width:120px;
+}
+.mnode::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:linear-gradient(135deg,var(--accent),var(--violet),var(--cyan));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.mnode:hover::before,.mnode:focus-visible::before{opacity:1}
+.mnode:hover,.mnode:focus-visible{
+  transform:translate(-50%,-50%) translateY(-4px);
+  box-shadow:0 16px 40px -14px rgba(224,138,43,.5);z-index:5;
+}
+.mnode.dim{opacity:.28;filter:grayscale(.7)}
+.mnode-type{
+  display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1.3px;
+  text-transform:uppercase;font-weight:600;margin-bottom:5px;
+}
+.mnode[data-kind="law"] .mnode-type{color:var(--cyan)}
+.mnode[data-kind="decree"] .mnode-type{color:var(--accent)}
+.mnode[data-kind="circ"] .mnode-type{color:var(--emerald)}
+.mnode[data-kind="proc"] .mnode-type{color:var(--violet)}
+.mnode-title{display:block;font-size:13px;font-weight:600;line-height:1.35;color:var(--text)}
+.mnode[data-level="root"]{
+  background:linear-gradient(140deg,var(--primary),var(--violet),var(--cyan));
+  background-size:200% 200%;animation:brandShift 8s ease infinite;border-color:transparent;
+}
+.mnode[data-level="root"] .mnode-title{color:#fff}
+.mnode[data-level="root"] .mnode-type{color:var(--accent-2)}
+
+.map-hint{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;letter-spacing:.8px;color:var(--muted);
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  padding:7px 14px;border-radius:var(--r-full);border:1px solid var(--border);
+  white-space:nowrap;pointer-events:none;
+}
+@media(max-width:600px){.map-hint{font-size:9px;padding:6px 10px}}
+
+/* STEPPER */
+.stepper{position:relative;margin-top:34px;padding-left:38px}
+.stepper::before{
+  content:"";position:absolute;left:11px;top:10px;bottom:10px;width:2px;
+  background:linear-gradient(180deg,var(--accent),var(--violet),var(--cyan),var(--border) 90%);
+  border-radius:2px;opacity:.55;
+}
+.step{
+  position:relative;padding:20px 22px;margin-bottom:14px;
+  border-radius:var(--r-lg);border:1px solid var(--border);
+  background:var(--surface);transition:all .45s var(--ease);overflow:hidden;
+}
+.step::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--accent),var(--rose));
+  transform:scaleY(0);transform-origin:top;transition:transform .5s var(--ease);
+}
+.step::before{
+  content:"";position:absolute;left:-33px;top:26px;width:12px;height:12px;
+  border-radius:50%;background:var(--surface);border:2px solid var(--border-strong);
+  transition:all .45s var(--ease);z-index:2;
+}
+.step.active{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:0 20px 50px -24px rgba(224,138,43,.55);transform:translateX(5px)}
+.step.active::after{transform:scaleY(1)}
+.step.active::before{
+  border-color:var(--accent);background:var(--accent);
+  box-shadow:0 0 0 5px var(--accent-soft),0 0 20px var(--accent);
+}
+.step-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;position:relative;z-index:1}
+.step-num{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;color:var(--muted);transition:color .4s var(--ease)}
+.step.active .step-num{
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.step-title{font-size:16.5px;font-weight:700;letter-spacing:-.2px;margin:0;color:var(--text)}
+.step p{margin:0;font-size:14.5px;line-height:1.68;color:var(--muted);position:relative;z-index:1}
+.step-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
+.step-tag{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.7px;text-transform:uppercase;
+  padding:4px 9px;border-radius:var(--r-full);background:var(--surface-2);
+  border:1px solid var(--border);color:var(--muted);font-weight:500;
+  transition:all .3s var(--ease);
+}
+.step.active .step-tag{
+  background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent);color:var(--accent);
+}
+
+/* FORMULA BLOCK */
+.formula-block{
+  margin:22px 0;border-radius:var(--r-md);
+  background:linear-gradient(140deg,var(--surface-2),var(--surface));
+  border:1px solid var(--border);overflow:hidden;position:relative;
+}
+.formula-block::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--emerald),var(--cyan),var(--violet));
+  background-size:200% 100%;animation:progressFlow 5s linear infinite;
+}
+.formula-head{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  background:color-mix(in srgb,var(--surface) 70%,transparent);
+}
+.formula-fn{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:6px;
+  background:linear-gradient(120deg,var(--emerald-soft),var(--cyan-soft));
+  color:var(--emerald);
+  border:1px solid color-mix(in srgb,var(--emerald) 30%,transparent);
+}
+.formula-desc{font-size:12.5px;color:var(--muted);font-weight:500}
+.formula-body{padding:16px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.7;color:var(--text);overflow-x:auto}
+.formula-body .fn{color:var(--violet);font-weight:600}
+.formula-body .str{color:var(--emerald)}
+.formula-body .num{color:var(--accent)}
+.formula-body .cmt{color:var(--muted);font-style:italic}
+.formula-note{
+  padding:12px 18px 16px;font-size:13px;color:var(--muted);line-height:1.65;
+  font-family:var(--font);border-top:1px dashed var(--border);
+}
+
+/* DATA TABLE */
+.data-table{
+  margin:22px 0;border-radius:var(--r-md);
+  border:1px solid var(--border);overflow:hidden;background:var(--surface);
+  overflow-x:auto;
+}
+.data-table table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+.data-table thead th{
+  background:linear-gradient(120deg,var(--surface-2),var(--surface));
+  padding:11px 12px;text-align:left;font-weight:600;color:var(--text);
+  font-size:12px;letter-spacing:.3px;border-bottom:1px solid var(--border);
+  font-family:var(--mono);text-transform:uppercase;
+}
+.data-table tbody td{
+  padding:10px 12px;border-bottom:1px solid var(--border);
+  color:var(--text-2);font-family:var(--mono);font-size:12.5px;
+}
+.data-table tbody tr:last-child td{border-bottom:0}
+.data-table tbody tr:hover td{background:var(--surface-2)}
+.data-table .row-total td{
+  background:var(--accent-soft);font-weight:700;color:var(--accent);
+  border-top:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+}
+.data-table .col-yes{color:var(--emerald);font-weight:600}
+.data-table .col-no{color:var(--muted)}
+.data-table .col-high{color:var(--rose);font-weight:600}
+
+/* CHECKLIST */
+.checklist{margin-top:26px;border-radius:var(--r-xl);border:1px solid var(--border);background:var(--surface);overflow:hidden}
+.checklist-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:linear-gradient(120deg,var(--emerald-soft),transparent 80%);flex-wrap:wrap;
+}
+.checklist-head h3{margin:0;font-size:14px;font-weight:700;letter-spacing:-.1px}
+.check-progress{display:flex;align-items:center;gap:11px}
+.check-bar{width:110px;height:5px;border-radius:3px;background:var(--border);overflow:hidden;position:relative}
+.check-bar span{
+  display:block;height:100%;width:0%;border-radius:3px;
+  background:linear-gradient(90deg,var(--emerald),var(--cyan),var(--accent));
+  background-size:200% 100%;animation:progressFlow 3s linear infinite;transition:width .5s var(--ease);
+}
+.check-count{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+
+.check-item{
+  display:flex;align-items:flex-start;gap:14px;padding:15px 20px;
+  border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background .3s var(--ease);position:relative;overflow:hidden;
+}
+.check-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--emerald),var(--cyan));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.check-item:has(input:checked)::before{transform:scaleY(1)}
+.check-item:last-child{border-bottom:0}
+.check-item:hover{background:var(--surface-2)}
+.check-item input{position:absolute;opacity:0;width:0;height:0}
+.checkbox{
+  flex-shrink:0;width:21px;height:21px;border-radius:7px;margin-top:2px;
+  border:1.8px solid var(--border-strong);background:var(--surface);
+  display:grid;place-items:center;transition:all .3s var(--ease);
+}
+.checkbox svg{
+  width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .35s var(--ease);
+}
+[data-theme="dark"] .checkbox svg{stroke:#06111E}
+.check-item input:checked + .checkbox{
+  background:linear-gradient(140deg,var(--emerald),var(--cyan));
+  border-color:var(--emerald);box-shadow:0 0 0 4px var(--emerald-soft),0 0 16px var(--emerald-soft);
+}
+.check-item input:checked + .checkbox svg{stroke-dashoffset:0}
+.check-item input:focus-visible + .checkbox{outline:2px solid var(--accent);outline-offset:3px}
+.check-text{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.4}
+.check-sub{font-size:13px;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.5}
+.check-item input:checked ~ .check-body .check-text{
+  color:var(--muted);text-decoration:line-through;text-decoration-color:var(--border-strong);
+}
+
+/* FAQ */
+.faq{margin-top:26px;border-top:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--border);position:relative}
+.faq-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--rose),var(--violet));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.faq-item.open::before{transform:scaleY(1)}
+.faq-q{
+  width:100%;display:flex;align-items:center;gap:18px;text-align:left;
+  padding:20px 4px;font-size:16px;font-weight:600;color:var(--text);
+  letter-spacing:-.2px;transition:color .25s var(--ease);
+}
+.faq-q:hover{color:var(--rose)}
+.faq-item.open .faq-q{color:var(--rose)}
+.faq-icon{
+  margin-left:auto;flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--border);display:grid;place-items:center;
+  transition:all .35s var(--ease);position:relative;
+}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;background:var(--muted);border-radius:2px;
+  transition:all .35s var(--ease);
+}
+.faq-icon::before{width:10px;height:1.6px}
+.faq-icon::after{width:1.6px;height:10px}
+.faq-item.open .faq-icon{
+  background:linear-gradient(140deg,var(--rose),var(--violet));
+  border-color:var(--rose);transform:rotate(90deg);box-shadow:0 0 16px var(--rose-soft);
+}
+.faq-item.open .faq-icon::before,
+.faq-item.open .faq-icon::after{background:#fff}
+[data-theme="dark"] .faq-item.open .faq-icon::before,
+[data-theme="dark"] .faq-item.open .faq-icon::after{background:#06111E}
+.faq-item.open .faq-icon::after{height:0}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a-inner{overflow:hidden}
+.faq-a-inner p{margin:0;padding:0 4px 22px;font-size:15px;line-height:1.75;color:var(--muted);max-width:62ch}
+
+/* RELATED PILLS */
+.related-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.pill{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:10px 16px;border-radius:var(--r-full);
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13.5px;font-weight:600;color:var(--text-2);
+  transition:all .3s var(--ease);position:relative;overflow:hidden;
+}
+.pill::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,var(--cyan-soft),var(--violet-soft));
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.pill:hover{transform:translateY(-3px);border-color:var(--violet);color:var(--violet);box-shadow:0 12px 28px -14px var(--violet)}
+.pill:hover::before{opacity:1}
+.pill > *{position:relative;z-index:1}
+.pill svg{width:13px;height:13px;stroke-width:2.2;opacity:.6;transition:transform .3s var(--ease)}
+.pill:hover svg{transform:translate(2px,-2px);opacity:1}
+
+/* TAKEAWAYS */
+.takeaways{
+  margin:0 0 70px;padding:28px;border-radius:var(--r-xl);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent 80%);
+  background-size:200% 200%;animation:brandShift 14s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.takeaways::before{
+  content:"";position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 12s ease-in-out infinite;
+}
+.takeaways h3{
+  margin:0 0 18px;font-size:13px;font-family:var(--mono);letter-spacing:1.6px;
+  text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:10px;
+  position:relative;z-index:1;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.takeaways h3::after{content:"";flex:1;height:1px;background:var(--border)}
+.takeaways ul{margin:0;padding:0;list-style:none;display:grid;gap:13px;position:relative;z-index:1}
+.takeaways li{position:relative;padding-left:30px;font-size:15px;line-height:1.68;color:var(--text-2)}
+.takeaways li::before{
+  content:"";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:6px;
+  background:linear-gradient(140deg,var(--accent-soft),var(--violet-soft));
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+}
+.takeaways li::after{
+  content:"";position:absolute;left:5px;top:10px;width:5px;height:8px;
+  border-right:1.8px solid var(--accent);border-bottom:1.8px solid var(--accent);
+  transform:rotate(42deg);
+}
+
+/* BENTO */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:26px}
+.bento > *{min-width:0}
+.bento > :nth-child(1){grid-column:span 4;grid-row:span 2}
+.bento > :nth-child(2){grid-column:span 2}
+.bento > :nth-child(3){grid-column:span 2}
+.bento > :nth-child(4){grid-column:span 3}
+.bento > :nth-child(5){grid-column:span 3}
+@media(max-width:820px){
+  .bento{grid-template-columns:1fr}
+  .bento > *{grid-column:span 1 !important;grid-row:auto !important}
+}
+.acard{
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:190px;padding:22px;border-radius:var(--r-lg);
+  border:1px solid var(--border);background:var(--surface);
+  overflow:hidden;transition:all .45s var(--ease);text-align:left;
+}
+.acard::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .45s var(--ease);
+  background:radial-gradient(420px 220px at 15% 0%,var(--violet-soft),transparent 68%);
+}
+.acard::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+  transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease);
+}
+.acard:hover::after{transform:scaleX(1)}
+.acard:hover{transform:translateY(-6px);box-shadow:0 28px 60px -26px rgba(139,92,246,.45);border-color:var(--violet)}
+.acard:hover::before{opacity:1}
+.acard > *{position:relative;z-index:1}
+.bento > :nth-child(1).acard{min-height:396px;justify-content:flex-end}
+.bento > :nth-child(1).acard::before{background:radial-gradient(520px 300px at 20% 0%,var(--accent-soft),transparent 68%)}
+@media(max-width:820px){.bento > :nth-child(1).acard{min-height:260px}}
+.acard-cat{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  font-weight:600;margin-bottom:11px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.acard h4{margin:0;font-size:17px;font-weight:700;line-height:1.35;letter-spacing:-.4px;color:var(--text);text-wrap:balance}
+.bento > :nth-child(1).acard h4{font-size:clamp(20px,2.6vw,27px);line-height:1.22}
+.acard p{margin:10px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6}
+.acard-meta{
+  margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:.7px;
+  color:var(--muted);display:flex;align-items:center;gap:9px;
+}
+.acard-meta i{width:3px;height:3px;border-radius:50%;background:var(--border-strong)}
+
+/* FOOTER */
+.footer{
+  border-top:1px solid var(--border);padding:44px 0 40px;
+  background:var(--bg-alt);position:relative;z-index:2;margin-top:auto;
+}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer p{margin:0;font-size:12.5px;color:var(--muted)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:12.5px;color:var(--muted);transition:color .25s;position:relative}
+.footer-links a::after{
+  content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--rose));transition:width .3s var(--ease);
+}
+.footer-links a:hover{color:var(--accent)}
+.footer-links a:hover::after{width:100%}
+
+/* MODALS */
+.backdrop{
+  position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;
+  background:rgba(6,14,24,.55);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;transition:opacity .32s var(--ease),visibility .32s;
+}
+.backdrop.open{opacity:1;visibility:visible}
+.modal{
+  width:min(560px,100%);max-height:86vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);padding:30px;position:relative;
+  transform:translateY(18px) scale(.97);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);overflow-x:hidden;
+}
+.modal::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+}
+.backdrop.open .modal{transform:none;opacity:1}
+.modal-sm{width:min(480px,100%)}
+.modal::-webkit-scrollbar{width:6px}
+.modal::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+
+.modal-close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:9px;
+  display:grid;place-items:center;color:var(--muted);border:1px solid var(--border);
+  transition:all .25s var(--ease);z-index:2;
+}
+.modal-close:hover{color:var(--danger);border-color:var(--danger);transform:rotate(90deg);box-shadow:0 0 16px var(--rose-soft)}
+.modal-close svg{width:15px;height:15px;stroke-width:2.2}
+
+.modal-tag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:600;padding:5px 11px;border-radius:var(--r-full);
+  margin-bottom:14px;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+}
+.modal h3{
+  margin:0 0 8px;font-size:21px;font-weight:800;letter-spacing:-.6px;
+  line-height:1.28;padding-right:34px;
+  background:linear-gradient(120deg,var(--text),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+[data-theme="dark"] .modal h3{background:linear-gradient(120deg,var(--text),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.modal-meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;color:var(--muted);
+  margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.modal-body{font-size:14.5px;line-height:1.72;color:var(--text-2)}
+.modal-body p{margin:0 0 12px}
+.modal-body p:last-child{margin-bottom:0}
+.modal-section{margin-top:20px}
+.modal-section h5{margin:0 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.modal-related{display:flex;flex-wrap:wrap;gap:7px}
+.modal-related span{
+  font-size:12px;padding:5px 11px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);
+  font-weight:500;transition:all .25s var(--ease);
+}
+.modal-related span:hover{background:var(--violet-soft);border-color:var(--violet);color:var(--violet);transform:translateY(-2px)}
+.modal-list{margin:0;padding-left:0;list-style:none}
+.modal-list li{
+  position:relative;padding-left:22px;margin-bottom:8px;
+  font-size:14px;line-height:1.65;color:var(--text-2);
+}
+.modal-list li::before{
+  content:"";position:absolute;left:4px;top:9px;width:5px;height:5px;border-radius:50%;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+}
+
+/* CITE POPOVER */
+.cite-popover{
+  position:absolute;z-index:280;width:380px;max-width:calc(100vw - 32px);
+  padding:22px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:0 30px 70px -22px rgba(11,27,43,.45),0 0 0 1px color-mix(in srgb,var(--violet) 12%,transparent);
+  opacity:0;visibility:hidden;transform:translateY(-6px) scale(.96);
+  transform-origin:top center;
+  transition:opacity .3s var(--ease),transform .3s var(--ease),visibility .3s;
+  pointer-events:none;
+}
+.cite-popover.open{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.cite-popover::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r-lg) var(--r-lg) 0 0;
+  background:linear-gradient(90deg,var(--violet),var(--accent),var(--cyan));
+  background-size:200% 100%;animation:progressFlow 5s linear infinite;
+}
+.cite-popover::after{
+  content:"";position:absolute;bottom:-8px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:14px;height:14px;background:var(--surface);
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.cite-popover[data-pos="top"]::after{
+  bottom:auto;top:-8px;transform:translateX(-50%) rotate(-135deg);
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.cite-close{
+  position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:7px;
+  display:grid;place-items:center;color:var(--muted);border:1px solid var(--border);
+  transition:all .22s var(--ease);
+}
+.cite-close:hover{color:var(--danger);border-color:var(--danger);transform:rotate(90deg)}
+.cite-close svg{width:12px;height:12px;stroke-width:2.2}
+.cite-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:600;padding:4px 10px;border-radius:var(--r-full);
+  margin-bottom:11px;background:var(--violet-soft);color:var(--violet);
+  border:1px solid color-mix(in srgb,var(--violet) 30%,transparent);
+}
+.cite-tag.decree{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.cite-tag.law{background:var(--cyan-soft);color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 30%,transparent)}
+.cite-tag.circ{background:var(--emerald-soft);color:var(--emerald);border-color:color-mix(in srgb,var(--emerald) 30%,transparent)}
+.cite-tag .dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulseDot 2s ease infinite}
+.cite-title{margin:0 0 6px;font-size:16px;font-weight:800;letter-spacing:-.3px;line-height:1.3;color:var(--text);padding-right:26px}
+.cite-meta{font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--muted);margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border)}
+.cite-body{font-size:13.5px;line-height:1.68;color:var(--text-2);margin:0 0 14px}
+.cite-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cite-btn{
+  font-size:12px;font-weight:600;padding:8px 14px;border-radius:var(--r-full);
+  display:inline-flex;align-items:center;gap:6px;transition:all .25s var(--ease);
+}
+.cite-btn.primary{
+  background:linear-gradient(120deg,var(--violet),var(--accent));
+  background-size:200% 100%;color:#fff;box-shadow:0 8px 20px -10px var(--violet);
+}
+.cite-btn.primary:hover{transform:translateY(-2px);background-position:100% 50%;box-shadow:0 12px 28px -10px var(--violet)}
+.cite-btn.ghost{background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+.cite-btn.ghost:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-2px)}
+.cite-btn svg{width:12px;height:12px;stroke-width:2.2}
+
+/* SEARCH */
+.search-overlay{
+  position:fixed;inset:0;z-index:320;padding:78px 22px 22px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s;overflow-y:auto;
+}
+.search-overlay.open{opacity:1;visibility:visible}
+.search-box{
+  width:min(720px,100%);margin-inline:auto;
+  transform:translateY(-14px);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);
+}
+.search-overlay.open .search-box{transform:none;opacity:1}
+.search-field{
+  display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-lg);box-shadow:var(--shadow-md);position:relative;overflow:hidden;
+}
+.search-field::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;animation:progressFlow 4s linear infinite;
+}
+.search-field svg{width:19px;height:19px;color:var(--muted);flex-shrink:0;stroke-width:2}
+.search-field input{
+  flex:1;border:0;background:none;outline:none;padding:19px 0;
+  font-size:16.5px;font-family:inherit;color:var(--text);font-weight:500;
+}
+.search-field input::placeholder{color:var(--muted);font-weight:400}
+.kbd{font-family:var(--mono);font-size:9.5px;padding:4px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);flex-shrink:0}
+.search-results{margin-top:22px;display:grid;gap:8px}
+.sr-group-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:16px 0 8px;padding-left:4px;
+}
+.sr-item{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px 16px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .22s var(--ease);position:relative;overflow:hidden;
+}
+.sr-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--violet),var(--accent));
+  transform:scaleY(0);transform-origin:top;transition:transform .3s var(--ease);
+}
+.sr-item:hover,.sr-item.focused{border-color:var(--violet);transform:translateX(4px);box-shadow:0 10px 26px -12px var(--violet)}
+.sr-item:hover::before,.sr-item.focused::before{transform:scaleY(1)}
+.sr-icon{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--border);font-size:13px}
+.sr-body{min-width:0;flex:1}
+.sr-title{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.35}
+.sr-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:var(--mono);letter-spacing:.3px}
+.sr-title mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px}
+.empty-state{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty-state .es-icon{font-size:32px;margin-bottom:12px;opacity:.5}
+.empty-state p{margin:0;font-size:14px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.06s}
+.reveal-d2{transition-delay:.12s}
+.reveal-d3{transition-delay:.18s}
+.reveal-d4{transition-delay:.24s}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .bg-layer,.particles{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ ENHANCED BACKGROUND ══════════════ -->
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="aurora">
+    <div class="aurora-blob b1"></div>
+    <div class="aurora-blob b2"></div>
+    <div class="aurora-blob b3"></div>
+    <div class="aurora-blob b4"></div>
+    <div class="aurora-blob b5"></div>
+  </div>
+  <div class="bg-shimmer"></div>
+  <div class="bg-streaks">
+    <div class="streak"></div>
+    <div class="streak"></div>
+    <div class="streak"></div>
+    <div class="streak"></div>
+    <div class="streak"></div>
+  </div>
+  <div class="bg-shapes" id="bgShapes"></div>
+  <div class="particles" id="particles"></div>
+  <div class="bg-vignette"></div>
+  <div class="bg-noise"></div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="https://luonghongquang.github.io/Tony-EXIM/">
+      <span class="brand-mark">TE</span>
+      <span>
+        <span class="brand-text">TONY<em>EXIM</em></span>
+        <span class="brand-sub">KNOWLEDGE SYSTEM</span>
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Chính">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Tìm kiếm (Ctrl K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" id="themeBtn" aria-label="Đổi chế độ sáng tối">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu di động">
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+</nav>
+
+<!-- ══════════════ ARTICLE HERO ══════════════ -->
+<section class="article-hero">
+  <div class="wrap">
+    <div class="crumbs">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Supply Chain</a><span class="sep">/</span>
+      <span style="color:var(--text-2)">Định mức nguyên liệu</span>
+    </div>
+
+    <span class="chip"><span class="dot"></span>SUPPLY CHAIN · CUSTOMS · EXCEL</span>
+
+    <h1 class="article-title">
+      <span class="accent">Định mức nguyên liệu</span> — Nền tảng của mọi kỳ quyết toán
+    </h1>
+
+    <p class="article-lead">
+      Không có định mức nguyên liệu, báo cáo quyết toán chỉ là con số vô nghĩa. Định mức là cầu nối giữa
+      lượng nguyên liệu đã nhập khẩu và lượng sản phẩm đã xuất khẩu — nó chứng minh doanh nghiệp đã sử dụng
+      nguyên liệu đúng mục đích để được miễn thuế. Bài viết này hướng dẫn bạn hiểu, xây dựng và quản lý định mức từ con số 0.
+    </p>
+
+    <div class="article-meta">
+      <span class="author"><span class="avatar">TQ</span> Tony EXIM</span>
+      <span class="meta-sep"></span>
+      <span>11/02/2025</span>
+      <span class="meta-sep"></span>
+      <span>20 phút đọc</span>
+      <span class="meta-sep"></span>
+      <span style="font-family:var(--mono);font-size:11px">CẬP NHẬT 08/2025</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="wrap">
+  <div class="layout">
+
+    <aside class="toc">
+      <div class="toc-label">Nội dung bài</div>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#overview"><span class="toc-num">01</span>Tổng quan định mức</a></li>
+        <li><a href="#map"><span class="toc-num">02</span>Sơ đồ kết nối</a></li>
+        <li><a href="#types"><span class="toc-num">03</span>Ba loại định mức</a></li>
+        <li><a href="#formulas"><span class="toc-num">04</span>Công thức tính</a></li>
+        <li><a href="#from-scratch"><span class="toc-num">05</span>Xây dựng từ đầu</a></li>
+        <li><a href="#examples"><span class="toc-num">06</span>Ví dụ thực tế</a></li>
+        <li><a href="#checklist"><span class="toc-num">07</span>Checklist</a></li>
+        <li><a href="#faq"><span class="toc-num">08</span>Câu hỏi thường gặp</a></li>
+        <li><a href="#related"><span class="toc-num">09</span>Bài viết liên quan</a></li>
+      </ul>
+
+      <div class="toc-cta">
+        <p>Tra cứu nhanh thuật ngữ &amp; công thức trong bài viết.</p>
+        <button type="button" onclick="openSearch()">Mở tìm kiếm ⌘K</button>
+      </div>
+    </aside>
+
+    <main class="content">
+
+      <!-- SECTION 01 -->
+      <section class="section reveal" id="overview" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 01</span>
+          <h2>Tổng quan về định mức nguyên liệu</h2>
+          <p class="section-desc">Bốn câu hỏi cốt lõi trước khi bắt tay vào xây dựng định mức.</p>
+        </div>
+
+        <p>
+          <strong>Định mức nguyên liệu</strong> (còn gọi là định mức tiêu hao, định mức vật tư) là lượng nguyên liệu,
+          vật tư cần thiết để sản xuất ra một đơn vị sản phẩm. Nó trả lời câu hỏi: <em>Để làm ra 1 sản phẩm,
+          cần bao nhiêu nguyên liệu mỗi loại?</em>
+        </p>
+
+        <p>
+          Với doanh nghiệp <button class="term" data-term="sxxk">SXXK</button>, định mức là căn cứ để cơ quan hải quan
+          xác nhận rằng nguyên liệu đã nhập khẩu (được miễn thuế) đã được sử dụng đúng mục đích sản xuất hàng xuất khẩu.
+          Không có định mức, doanh nghiệp không thể chứng minh điều này.
+        </p>
+
+        <div class="overview-grid">
+          <div class="ov-card reveal reveal-d1">
+            <div class="ov-icon">🎯</div>
+            <div class="ov-label">Bản chất</div>
+            <p class="ov-value">
+              Lượng <b>nguyên liệu tiêu hao</b> để sản xuất 1 đơn vị sản phẩm.
+              Đơn vị tính: kg/sp, m/sp, lít/sp…
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d2">
+            <div class="ov-icon">⚖️</div>
+            <div class="ov-label">Căn cứ pháp lý</div>
+            <p class="ov-value">
+              Định mức phải đăng ký với hải quan theo
+              <button class="legal-cite" data-doc="tt39">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+                TT 39/2018/TT-BTC
+              </button>
+              và dùng làm căn cứ quyết toán.
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d3">
+            <div class="ov-icon">📊</div>
+            <div class="ov-label">Vai trò</div>
+            <p class="ov-value">
+              Là <b>cầu nối</b> giữa lượng nguyên liệu đã nhập và lượng sản phẩm đã xuất.
+              Không có định mức, không thể quyết toán.
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d4">
+            <div class="ov-icon">🔍</div>
+            <div class="ov-label">Kiểm tra sau thông quan</div>
+            <p class="ov-value">
+              Đây là <b>điểm kiểm tra đầu tiên</b> khi hải quan kiểm tra sau thông quan doanh nghiệp SXXK.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout note">
+          <div class="callout-label">💡 Quick note</div>
+          <p>
+            Định mức có thể <strong>thay đổi theo thời gian</strong> do thay đổi công nghệ, nguyên liệu, hoặc quy trình sản xuất.
+            Doanh nghiệp phải <strong>đăng ký lại định mức</strong> khi có thay đổi, và dùng đúng định mức của kỳ tương ứng khi quyết toán.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 02 -->
+      <section class="section reveal" id="map" data-color="violet">
+        <div class="section-head">
+          <span class="section-num">SECTION 02</span>
+          <h2>Sơ đồ kết nối định mức với các nghiệp vụ</h2>
+          <p class="section-desc">Hover để xem quan hệ, click vào node để xem chi tiết.</p>
+        </div>
+
+        <p>
+          Định mức nguyên liệu không tồn tại độc lập — nó kết nối với toàn bộ chuỗi nghiệp vụ XNK.
+          Sơ đồ dưới đây thể hiện mối liên hệ giữa định mức với các nghiệp vụ khác.
+        </p>
+
+        <div class="map-shell">
+          <div class="map-toolbar">
+            <div class="map-legend">
+              <span class="legend-item"><i class="legend-swatch law"></i>Đầu vào</span>
+              <span class="legend-item"><i class="legend-swatch circ"></i>Trung tâm</span>
+              <span class="legend-item"><i class="legend-swatch decree"></i>Đầu ra</span>
+            </div>
+            <div class="map-controls">
+              <button class="map-btn" id="zoomIn" aria-label="Phóng to">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <button class="map-btn" id="zoomOut" aria-label="Thu nhỏ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M5 12h14"/></svg>
+              </button>
+              <button class="map-btn" id="zoomReset" aria-label="Đặt lại">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="map-viewport" id="mapViewport">
+            <div class="map-canvas" id="mapCanvas">
+              <svg class="medges" viewBox="0 0 900 680" aria-hidden="true">
+                <defs>
+                  <linearGradient id="edgeGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#8B5CF6"/>
+                    <stop offset="50%" stop-color="#E08A2B"/>
+                    <stop offset="100%" stop-color="#0EA5E9"/>
+                  </linearGradient>
+                </defs>
+                <path class="medge" data-from="bom" data-to="dm" d="M150 100 Q150 220, 450 340"/>
+                <path class="medge" data-from="quy-trinh" data-to="dm" d="M350 100 Q350 220, 450 340"/>
+                <path class="medge" data-from="nvl-thuc-te" data-to="dm" d="M550 100 Q550 220, 450 340"/>
+                <path class="medge" data-from="dm" data-to="san-xuat" d="M450 340 Q250 440, 200 560"/>
+                <path class="medge" data-from="dm" data-to="quyet-toan" d="M450 340 L450 560"/>
+                <path class="medge" data-from="dm" data-to="kiem-tra" d="M450 340 Q650 440, 700 560"/>
+              </svg>
+
+              <button class="mnode" data-kind="law" data-doc="bom" style="left:150px;top:100px">
+                <span class="mnode-type">Đầu vào</span>
+                <span class="mnode-title">BOM / Định mức kỹ thuật</span>
+              </button>
+
+              <button class="mnode" data-kind="law" data-doc="quy-trinh" style="left:350px;top:100px">
+                <span class="mnode-type">Đầu vào</span>
+                <span class="mnode-title">Quy trình sản xuất</span>
+              </button>
+
+              <button class="mnode" data-kind="law" data-doc="nvl-thuc-te" style="left:550px;top:100px">
+                <span class="mnode-type">Đầu vào</span>
+                <span class="mnode-title">Dữ liệu tiêu hao thực tế</span>
+              </button>
+
+              <button class="mnode" data-kind="proc" data-level="root" data-doc="dm" style="left:450px;top:340px">
+                <span class="mnode-type">Trung tâm</span>
+                <span class="mnode-title">ĐỊNH MỨC NGUYÊN LIỆU</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="san-xuat" style="left:200px;top:560px">
+                <span class="mnode-type">Đầu ra</span>
+                <span class="mnode-title">Kế hoạch sản xuất</span>
+              </button>
+
+              <button class="mnode" data-kind="decree" data-doc="quyet-toan" style="left:450px;top:560px">
+                <span class="mnode-type">Đầu ra</span>
+                <span class="mnode-title">Báo cáo quyết toán</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="kiem-tra" style="left:700px;top:560px">
+                <span class="mnode-type">Đầu ra</span>
+                <span class="mnode-title">Kiểm tra sau thông quan</span>
+              </button>
+            </div>
+
+            <div class="map-hint">Kéo để di chuyển · Ctrl + cuộn để zoom · Click node để xem chi tiết</div>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Cách đọc sơ đồ</div>
+          <p>
+            Ba nguồn đầu vào hình thành nên <strong>định mức nguyên liệu</strong>:
+            BOM kỹ thuật, quy trình sản xuất và dữ liệu tiêu hao thực tế.
+            Từ định mức, doanh nghiệp tạo ra ba đầu ra: kế hoạch sản xuất, báo cáo quyết toán,
+            và hồ sơ phục vụ kiểm tra sau thông quan.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 03 -->
+      <section class="section reveal" id="types" data-color="accent">
+        <div class="section-head">
+          <span class="section-num">SECTION 03</span>
+          <h2>Ba loại định mức cần phân biệt</h2>
+          <p class="section-desc">Click vào từng thẻ để xem định nghĩa, công thức và ví dụ.</p>
+        </div>
+
+        <p>
+          Trong thực tế, người làm XNK thường dùng lẫn lộn ba khái niệm định mức. Mỗi loại có công thức riêng
+          và mục đích sử dụng riêng trong quyết toán.
+        </p>
+
+        <div class="type-grid">
+          <button class="type-card" data-group="vat-tu" data-doc="dm-vat-tu">
+            <div class="tc-top">
+              <span class="tc-num">01</span>
+              <span class="tc-group">Vật tư</span>
+            </div>
+            <h4>Định mức vật tư</h4>
+            <p>Lượng nguyên liệu cần cho 1 sản phẩm, tính theo lý thuyết thiết kế.</p>
+            <div class="tc-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="type-card" data-group="tieu-hao" data-doc="dm-tieu-hao">
+            <div class="tc-top">
+              <span class="tc-num">02</span>
+              <span class="tc-group">Tiêu hao</span>
+            </div>
+            <h4>Định mức tiêu hao</h4>
+            <p>Lượng nguyên liệu thực tế tiêu hao, bao gồm hao hụt cho phép.</p>
+            <div class="tc-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="type-card" data-group="thu-hoi" data-doc="dm-thu-hoi">
+            <div class="tc-top">
+              <span class="tc-num">03</span>
+              <span class="tc-group">Thu hồi</span>
+            </div>
+            <h4>Định mức tỷ lệ thu hồi</h4>
+            <p>Tỷ lệ sản phẩm thu được từ 1 đơn vị nguyên liệu đầu vào.</p>
+            <div class="tc-arrow">Xem chi tiết
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Lưu ý quan trọng</div>
+          <p>
+            Khi đăng ký với hải quan, doanh nghiệp cần khai báo <strong>định mức tiêu hao</strong> (bao gồm hao hụt cho phép),
+            không phải định mức vật tư lý thuyết. Đây là điểm nhiều doanh nghiệp mới làm SXXK hay nhầm.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 04 -->
+      <section class="section reveal" id="formulas" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">SECTION 04</span>
+          <h2>Công thức tính định mức</h2>
+          <p class="section-desc">Năm công thức cốt lõi, kèm ví dụ số cụ thể.</p>
+        </div>
+
+        <h3>1. Công thức định mức tiêu hao cơ bản</h3>
+        <p>
+          Đây là công thức đơn giản nhất để tính định mức tiêu hao cho một nguyên liệu.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">CÔNG THỨC</span>
+            <span class="formula-desc">Định mức tiêu hao cho 1 sản phẩm</span>
+          </div>
+          <div class="formula-body">
+Định mức = Tổng NVL sử dụng / Tổng sản phẩm sản xuất
+          </div>
+          <p class="formula-note">
+            <strong>Ví dụ:</strong> Dùng 5.500 mét vải để sản xuất 1.000 áo → định mức = 5.500 / 1.000 = <strong>5,5 mét/áo</strong>.
+          </p>
+        </div>
+
+        <h3>2. Công thức trong Excel với SUMIFS</h3>
+        <p>
+          Trong thực tế, dữ liệu không nằm trên một dòng mà trải dài qua nhiều lô sản xuất. Dùng SUMIFS để tổng hợp.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">SUMIFS</span>
+            <span class="formula-desc">Tính tổng nguyên liệu sử dụng theo mã sản phẩm</span>
+          </div>
+          <div class="formula-body">
+<span class="fn">=SUMIFS</span>(<span class="str">'NVL_SU_DUNG'!$D$2:$D$1000</span>, <span class="str">'NVL_SU_DUNG'!$B$2:$B$1000</span>, <span class="str">$A2</span>) / <span class="fn">SUMIFS</span>(<span class="str">'SAN_PHAM'!$D$2:$D$1000</span>, <span class="str">'SAN_PHAM'!$B$2:$B$1000</span>, <span class="str">$A2</span>)
+          </div>
+          <p class="formula-note">
+            <strong>Ý nghĩa:</strong> Lấy tổng lượng NVL đã dùng (theo mã sản phẩm) chia cho tổng số sản phẩm đã sản xuất (theo mã sản phẩm).
+          </p>
+        </div>
+
+        <h3>3. Công thức tính hao hụt cho phép</h3>
+        <p>
+          Trong sản xuất, luôn có hao hụt tự nhiên (bay hơi, rơi vãi, hư hỏng nhỏ). Định mức tiêu hao phải bao gồm phần hao hụt này.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">HAO HỤT</span>
+            <span class="formula-desc">Định mức bao gồm hao hụt</span>
+          </div>
+          <div class="formula-body">
+Định mức tiêu hao = Định mức vật tư × (1 + Tỷ lệ hao hụt)
+          </div>
+          <p class="formula-note">
+            <strong>Ví dụ:</strong> Định mức vật tư = 5,5 m/áo, tỷ lệ hao hụt cho phép = 3% → định mức tiêu hao = 5,5 × 1,03 = <strong>5,665 m/áo</strong>.
+          </p>
+        </div>
+
+        <h3>4. Công thức tính tỷ lệ thu hồi</h3>
+        <p>
+          Với ngành chế biến (thực phẩm, gỗ, cao su…), định mức thường được biểu diễn dưới dạng <strong>tỷ lệ thu hồi</strong> —
+          tức là từ 1 kg nguyên liệu thu được bao nhiêu kg sản phẩm.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">THU HỒI</span>
+            <span class="formula-desc">Tỷ lệ thu hồi sản phẩm</span>
+          </div>
+          <div class="formula-body">
+Tỷ lệ thu hồi = Sản phẩm thu được / Nguyên liệu đầu vào × 100%
+          </div>
+          <p class="formula-note">
+            <strong>Ví dụ:</strong> Từ 1.000 kg gỗ tròn thu được 650 kg gỗ thành phẩm → tỷ lệ thu hồi = 650 / 1.000 × 100% = <strong>65%</strong>.
+          </p>
+        </div>
+
+        <h3>5. Công thức tra định mức với XLOOKUP</h3>
+        <p>
+          Khi cần tra cứu định mức của một sản phẩm cụ thể từ bảng định mức đã đăng ký.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">XLOOKUP</span>
+            <span class="formula-desc">Tra định mức theo mã sản phẩm</span>
+          </div>
+          <div class="formula-body">
+<span class="fn">=XLOOKUP</span>(<span class="str">A2</span>, <span class="str">'DINH_MUC'!$A$2:$A$100</span>, <span class="str">'DINH_MUC'!$D$2:$D$100</span>, <span class="str">"Chưa có định mức"</span>)
+          </div>
+          <p class="formula-note">
+            <strong>Ý nghĩa:</strong> Tìm mã sản phẩm ở ô A2 trong bảng định mức, trả về giá trị định mức ở cột D.
+            Nếu không tìm thấy, hiển thị "Chưa có định mức".
+          </p>
+        </div>
+
+        <h3>6. Bảng tính định mức mẫu</h3>
+        <p>
+          Bảng dưới đây là ví dụ về cách tổ chức bảng định mức cho một công ty may mặc.
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Mã SP</th>
+                <th>Tên sản phẩm</th>
+                <th>Nguyên liệu</th>
+                <th>ĐVT</th>
+                <th>Định mức</th>
+                <th>Hao hụt</th>
+                <th>ĐM tiêu hao</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>SP-001</td><td>Áo sơ mi nam</td><td>Vải cotton</td><td>mét</td><td>5,50</td><td>3%</td><td>5,665</td></tr>
+              <tr><td>SP-001</td><td>Áo sơ mi nam</td><td>Nút áo</td><td>cái</td><td>8</td><td>2%</td><td>8,16</td></tr>
+              <tr><td>SP-001</td><td>Áo sơ mi nam</td><td>Chỉ may</td><td>mét</td><td>12</td><td>5%</td><td>12,60</td></tr>
+              <tr><td>SP-002</td><td>Áo thun nữ</td><td>Vải cotton</td><td>mét</td><td>2,20</td><td>3%</td><td>2,266</td></tr>
+              <tr><td>SP-002</td><td>Áo thun nữ</td><td>Chỉ may</td><td>mét</td><td>8</td><td>5%</td><td>8,40</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Mẹo tổ chức</div>
+          <p>
+            Mỗi dòng trong bảng định mức là một cặp <strong>(sản phẩm, nguyên liệu)</strong>. Một sản phẩm có
+            thể cần nhiều nguyên liệu → nhiều dòng. Đây là cấu trúc chuẩn để đăng ký với hải quan.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 05 -->
+      <section class="section reveal" id="from-scratch" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 05</span>
+          <h2>Xây dựng định mức từ đầu</h2>
+          <p class="section-desc">Quy trình 6 bước khi doanh nghiệp chưa có định mức.</p>
+        </div>
+
+        <p>
+          Nhiều doanh nghiệp mới bắt đầu SXXK chưa có định mức chính thức. Dưới đây là quy trình xây dựng
+          từ con số 0 mà bạn có thể áp dụng trong 1–2 tuần.
+        </p>
+
+        <div class="stepper" id="stepper">
+          <div class="step">
+            <div class="step-top"><span class="step-num">01</span><h3 class="step-title">Thu thập dữ liệu sản xuất</h3></div>
+            <p>Lấy dữ liệu 5–10 lô sản xuất gần nhất: lượng nguyên liệu đã xuất kho, số sản phẩm đã hoàn thành, và sản phẩm lỗi/hỏng.</p>
+            <div class="step-tags"><span class="step-tag">Dữ liệu</span><span class="step-tag">Lô sản xuất</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">02</span><h3 class="step-title">Xác định BOM kỹ thuật</h3></div>
+            <p>Làm việc với bộ phận kỹ thuật để có BOM lý thuyết: 1 sản phẩm cần bao nhiêu nguyên liệu mỗi loại.</p>
+            <div class="step-tags"><span class="step-tag">BOM</span><span class="step-tag">Kỹ thuật</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">03</span><h3 class="step-title">Tính định mức thực tế trung bình</h3></div>
+            <p>Dùng công thức: Tổng NVL / Tổng sản phẩm cho 5–10 lô, sau đó lấy trung bình. So sánh với BOM để phát hiện chênh lệch.</p>
+            <div class="step-tags"><span class="step-tag">Trung bình</span><span class="step-tag">So sánh BOM</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">04</span><h3 class="step-title">Xác định tỷ lệ hao hụt cho phép</h3></div>
+            <p>Phân tích hao hụt thực tế: bay hơi, rơi vãi, hư hỏng nhỏ. Tỷ lệ thường từ 1–5% tùy ngành.</p>
+            <div class="step-tags"><span class="step-tag">Hao hụt</span><span class="step-tag">1-5%</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">05</span><h3 class="step-title">Lập bảng định mức chính thức</h3></div>
+            <p>Tổ chức thành bảng: Mã SP, mã NVL, định mức, hao hụt, định mức tiêu hao. Đây là bảng sẽ đăng ký với hải quan.</p>
+            <div class="step-tags"><span class="step-tag">Bảng định mức</span><span class="step-tag">Đăng ký</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">06</span><h3 class="step-title">Đăng ký với hải quan</h3></div>
+            <p>Nộp bảng định mức cho cơ quan hải quan quản lý. Sau khi được chấp nhận, đây là định mức chính thức dùng cho quyết toán.</p>
+            <div class="step-tags"><span class="step-tag">Đăng ký</span><span class="step-tag">Hải quan</span></div>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Lưu ý quan trọng</div>
+          <p>
+            Khi đăng ký định mức lần đầu, doanh nghiệp nên <strong>đăng ký cao hơn thực tế một chút</strong>
+            (khoảng 2–3%) để có buffer cho hao hụt không lường trước. Nếu định mức quá thấp, doanh nghiệp
+            sẽ thường xuyên phải giải trình chênh lệch khi quyết toán.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 06 -->
+      <section class="section reveal" id="examples" data-color="rose">
+        <div class="section-head">
+          <span class="section-num">SECTION 06</span>
+          <h2>Ví dụ thực tế</h2>
+          <p class="section-desc">Ba tình huống điển hình theo ngành.</p>
+        </div>
+
+        <h3>Ví dụ 1: Công ty may mặc — định mức vải</h3>
+        <p>
+          Công ty ABC sản xuất áo sơ mi nam. Trong tháng 1/2025:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Lô</th>
+                <th>Vải xuất kho (m)</th>
+                <th>Sản phẩm hoàn thành</th>
+                <th>Định mức thực tế</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Lô 01</td><td>5.520</td><td>1.000</td><td>5,520</td></tr>
+              <tr><td>Lô 02</td><td>5.480</td><td>1.000</td><td>5,480</td></tr>
+              <tr><td>Lô 03</td><td>5.510</td><td>1.000</td><td>5,510</td></tr>
+              <tr><td>Lô 04</td><td>5.490</td><td>1.000</td><td>5,490</td></tr>
+              <tr class="row-total"><td>Tổng/ĐM</td><td>22.000</td><td>4.000</td><td>5,500</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Định mức trung bình = 22.000 / 4.000 = <strong>5,5 m/áo</strong>. Đây là định mức cơ bản để đăng ký với hải quan.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">CÔNG THỨC</span>
+            <span class="formula-desc">Định mức tiêu hao kèm hao hụt</span>
+          </div>
+          <div class="formula-body">
+ĐM tiêu hao = 5,5 × (1 + 0,03) = <span class="num">5,665 m/áo</span>
+          </div>
+          <p class="formula-note">
+            Với 4.000 áo, tổng vải tiêu hao theo định mức = 4.000 × 5,665 = <strong>22.660 mét</strong>.
+          </p>
+        </div>
+
+        <h3>Ví dụ 2: Công ty chế biến gỗ — tỷ lệ thu hồi</h3>
+        <p>
+          Công ty XYZ nhập 10.000 kg gỗ tròn, sản xuất được 6.500 kg gỗ thành phẩm.
+        </p>
+
+        <div class="formula-block">
+          <div class="formula-head">
+            <span class="formula-fn">TỶ LỆ THU HỒI</span>
+            <span class="formula-desc">Tính tỷ lệ thu hồi sản phẩm</span>
+          </div>
+          <div class="formula-body">
+Tỷ lệ thu hồi = 6.500 / 10.000 × 100% = <span class="num">65%</span>
+          </div>
+          <p class="formula-note">
+            Nghĩa là từ 100 kg gỗ tròn thu được 65 kg gỗ thành phẩm. 35% còn lại là hao hụt (mùn cưa, gỗ vụn, phế phẩm).
+          </p>
+        </div>
+
+        <p>
+          Khi đăng ký với hải quan, doanh nghiệp khai báo <strong>tỷ lệ thu hồi 65%</strong>.
+          Khi quyết toán, hải quan sẽ dùng con số này để tính ngược: nếu xuất khẩu 6.500 kg gỗ thành phẩm,
+          thì cần 10.000 kg gỗ tròn đầu vào.
+        </p>
+
+        <h3>Ví dụ 3: Công ty thực phẩm — định mức nhiều nguyên liệu</h3>
+        <p>
+          Công ty DEF sản xuất bánh quy xuất khẩu. Một sản phẩm cần nhiều nguyên liệu:
+        </p>
+
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Nguyên liệu</th>
+                <th>ĐVT</th>
+                <th>Định mức/1 bánh</th>
+                <th>Hao hụt</th>
+                <th>ĐM tiêu hao</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Bột mì</td><td>gram</td><td>50,0</td><td>2%</td><td>51,00</td></tr>
+              <tr><td>Đường</td><td>gram</td><td>20,0</td><td>3%</td><td>20,60</td></tr>
+              <tr><td>Bơ</td><td>gram</td><td>15,0</td><td>1%</td><td>15,15</td></tr>
+              <tr><td>Trứng</td><td>gram</td><td>10,0</td><td>2%</td><td>10,20</td></tr>
+              <tr><td>Hương liệu</td><td>ml</td><td>2,0</td><td>5%</td><td>2,10</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Cách tính ngược</div>
+          <p>
+            Khi xuất khẩu 100.000 bánh, hải quan có thể tính ngược lượng nguyên liệu cần thiết:<br>
+            <strong>Bột mì cần</strong> = 100.000 × 51,00 = 5.100.000 gram = 5.100 kg.<br>
+            Nếu doanh nghiệp đã nhập 5.500 kg bột mì mà chỉ xuất khẩu được 100.000 bánh,
+            phần chênh lệch 400 kg phải được giải trình (tồn kho, hao hụt, hoặc bán nội địa).
+          </p>
+        </div>
+
+        <div class="quote">
+          <p>Định mức chính xác không chỉ giúp bạn quyết toán dễ dàng — nó còn giúp bạn phát hiện thất thoát nguyên liệu trong sản xuất.</p>
+          <cite>Tony EXIM</cite>
+        </div>
+      </section>
+
+      <!-- SECTION 07 -->
+      <section class="section reveal" id="checklist" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">SECTION 07</span>
+          <h2>Checklist xây dựng định mức</h2>
+          <p class="section-desc">Tick từng mục khi bạn đã hoàn thành.</p>
+        </div>
+
+        <div class="checklist" id="checklist-box">
+          <div class="checklist-head">
+            <h3>Tiến độ xây dựng định mức</h3>
+            <div class="check-progress">
+              <div class="check-bar"><span id="checkBar"></span></div>
+              <span class="check-count" id="checkCount">0/8 hoàn thành</span>
+            </div>
+          </div>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã thu thập dữ liệu 5–10 lô sản xuất</span>
+              <span class="check-sub">Lượng NVL xuất kho và số sản phẩm hoàn thành</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã có BOM kỹ thuật từ phòng kỹ thuật</span>
+              <span class="check-sub">Định mức lý thuyết cho 1 sản phẩm</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã tính định mức thực tế trung bình</span>
+              <span class="check-sub">Tổng NVL / Tổng sản phẩm</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã so sánh thực tế với BOM</span>
+              <span class="check-sub">Phát hiện chênh lệch và nguyên nhân</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã xác định tỷ lệ hao hụt cho phép</span>
+              <span class="check-sub">Thường 1–5% tùy ngành</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã lập bảng định mức chính thức</span>
+              <span class="check-sub">Bao gồm mã SP, mã NVL, ĐM, hao hụt, ĐM tiêu hao</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã đăng ký định mức với hải quan</span>
+              <span class="check-sub">Nộp bảng định mức cho cơ quan hải quan quản lý</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Đã đối chiếu định mức với tờ khai hải quan</span>
+              <span class="check-sub">Đảm bảo khớp trước khi quyết toán</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- SECTION 08 -->
+      <section class="section reveal" id="faq" data-color="rose">
+        <div class="section-head">
+          <span class="section-num">SECTION 08</span>
+          <h2>Câu hỏi thường gặp</h2>
+        </div>
+
+        <div class="faq" id="faq">
+          <div class="faq-item">
+            <button class="faq-q">Định mức nguyên liệu khác gì BOM kỹ thuật?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>BOM</strong> là định mức lý thuyết do phòng kỹ thuật lập, chỉ tính lượng nguyên liệu tối thiểu cần cho 1 sản phẩm. <strong>Định mức tiêu hao</strong> là định mức thực tế bao gồm cả hao hụt cho phép. Khi đăng ký với hải quan, doanh nghiệp dùng <em>định mức tiêu hao</em>, không dùng BOM.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Định mức có được thay đổi trong năm không?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Có</strong>. Khi có thay đổi công nghệ, nguyên liệu, hoặc quy trình sản xuất, doanh nghiệp phải <strong>đăng ký lại định mức</strong> với hải quan. Định mức mới chỉ áp dụng cho các lô sản xuất sau ngày đăng ký. Khi quyết toán, mỗi lô dùng định mức của kỳ tương ứng.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Nếu định mức thực tế cao hơn định mức đã đăng ký thì sao?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Doanh nghiệp phải <strong>giải trình chênh lệch</strong> bằng chứng từ: biên bản hao hụt, biên bản hủy hàng, biên bản xử lý phế phẩm. Nếu chênh lệch trong mức cho phép, không sao. Nếu vượt mức nhiều, cơ quan hải quan có thể yêu cầu truy thu thuế đối với phần nguyên liệu chênh lệch.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Có được dùng nhiều định mức cho cùng một sản phẩm không?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Có</strong>, nếu sản phẩm có nhiều biến thể (kích cỡ, màu sắc, chất liệu khác nhau). Mỗi biến thể có thể có định mức riêng. Tuy nhiên, khi đăng ký với hải quan, cần ghi rõ mã sản phẩm để phân biệt.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Định mức có bắt buộc phải đăng ký với hải quan không?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p><strong>Có</strong>, đối với doanh nghiệp SXXK, gia công, chế xuất. Định mức là cơ sở để cơ quan hải quan xác nhận việc sử dụng nguyên liệu đúng mục đích miễn thuế. Doanh nghiệp không đăng ký định mức sẽ gặp khó khăn lớn khi quyết toán và có thể bị truy thu thuế.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Làm sao để xác định tỷ lệ hao hụt cho phép?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Phân tích dữ liệu hao hụt từ 5–10 lô sản xuất gần nhất: so sánh lượng NVL xuất kho và lượng NVL thực tế tạo thành sản phẩm. Tỷ lệ hao hụt thường dao động 1–5% tùy ngành: may mặc 2–3%, gỗ 25–35% (do mùn cưa, phế phẩm), thực phẩm 2–5%. Đăng ký tỷ lệ cao hơn thực tế một chút để có buffer.</p>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 09 -->
+      <section class="section reveal" id="related" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 09</span>
+          <h2>Kiến thức liên quan</h2>
+          <p class="section-desc">Những chủ đề bạn nên đọc tiếp để hoàn thiện bức tranh.</p>
+        </div>
+
+        <div class="related-pills">
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Báo cáo quyết toán hải quan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">File Xuất Nhập Tồn &amp; Excel
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Phân loại 9 loại hình XNK
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">HS Code &amp; Phân loại
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Kiểm tra sau thông quan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Pivot Table cho dân XNK
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+        </div>
+      </section>
+
+      <!-- KEY TAKEAWAYS -->
+      <div class="takeaways reveal">
+        <h3>Key takeaways</h3>
+        <ul>
+          <li>Định mức nguyên liệu là <strong>cầu nối</strong> giữa nguyên liệu đã nhập và sản phẩm đã xuất.</li>
+          <li>Cần phân biệt rõ <strong>định mức vật tư</strong> (lý thuyết) và <strong>định mức tiêu hao</strong> (thực tế, gồm hao hụt).</li>
+          <li>Công thức cơ bản: <strong>Định mức = Tổng NVL / Tổng sản phẩm</strong>.</li>
+          <li>Khi chưa có định mức, xây dựng từ dữ liệu <strong>5–10 lô sản xuất gần nhất</strong>, sau đó đăng ký với hải quan.</li>
+          <li>Sai lệch định mức không được bỏ qua — phải <strong>giải trình bằng chứng từ</strong>.</li>
+        </ul>
+      </div>
+
+      <!-- BENTO -->
+      <div class="section reveal" style="margin-bottom:40px">
+        <div class="section-head">
+          <span class="section-num">ĐỌC TIẾP</span>
+          <h2>Bài viết liên quan</h2>
+        </div>
+
+        <div class="bento">
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Customs · Featured</div>
+            <h4>Hướng dẫn chi tiết Quy trình Báo cáo Quyết toán Hải quan</h4>
+            <p>Đối tượng, thời hạn, hồ sơ và bản đồ pháp lý tương tác cho kỳ quyết toán.</p>
+            <div class="acard-meta">12 phút đọc <i></i> 21/01/2025</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Tools</div>
+            <h4>File Xuất Nhập Tồn &amp; Các hàm Excel hữu dụng</h4>
+            <div class="acard-meta">18 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Knowledge</div>
+            <h4>Phân loại 9 loại hình Xuất Nhập Khẩu &amp; Chính sách thuế</h4>
+            <div class="acard-meta">22 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Customs</div>
+            <h4>Kiểm tra sau thông quan: Doanh nghiệp cần chuẩn bị gì?</h4>
+            <div class="acard-meta">14 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Legal</div>
+            <h4>Thông tư 39/2018/TT-BTC — những thay đổi cốt lõi</h4>
+            <div class="acard-meta">9 phút đọc</div>
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="brand-mark">TE</span>
+      <div>
+        <div class="brand-text" style="font-size:15px">TONY<em>EXIM</em></div>
+        <p style="margin-top:2px">Import – Export Knowledge System</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </div>
+    <p>© 2025 TONY EXIM. Kiến thức thực chiến cho người làm XNK.</p>
+  </div>
+</footer>
+
+<!-- ══════════════ CITE POPOVER ══════════════ -->
+<div class="cite-popover" id="citePopover" role="dialog" aria-label="Chi tiết">
+  <button class="cite-close" id="citeClose" aria-label="Đóng">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <span class="cite-tag" id="citeTag"><span class="dot"></span>VĂN BẢN</span>
+  <h4 class="cite-title" id="citeTitle"></h4>
+  <div class="cite-meta" id="citeMeta"></div>
+  <p class="cite-body" id="citeBody"></p>
+  <div class="cite-actions">
+    <button class="cite-btn primary" id="citeOpen">
+      Xem toàn bộ
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    </button>
+    <button class="cite-btn ghost" id="citeSearch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Tìm liên quan
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ TERM MODAL ══════════════ -->
+<div class="backdrop" id="termModal" role="dialog" aria-modal="true" aria-labelledby="termTitle">
+  <div class="modal modal-sm">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="termTag">THUẬT NGỮ</div>
+    <h3 id="termTitle">SXXK</h3>
+    <div class="modal-meta" id="termSub">Sản xuất xuất khẩu</div>
+    <div class="modal-body">
+      <p id="termDef"></p>
+      <div class="modal-section">
+        <h5>Ý nghĩa thực tế</h5>
+        <p id="termPrac"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Khái niệm liên quan</h5>
+        <div class="modal-related" id="termRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DETAIL MODAL ══════════════ -->
+<div class="backdrop" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="modal">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="legalTag">CHI TIẾT</div>
+    <h3 id="legalTitle"></h3>
+    <div class="modal-meta" id="legalMeta"></div>
+    <div class="modal-body">
+      <p id="legalDesc"></p>
+      <div class="modal-section">
+        <h5>Đặc điểm chính</h5>
+        <ul class="modal-list" id="legalFeatures"></ul>
+      </div>
+      <div class="modal-section">
+        <h5>Công thức / Cách tính</h5>
+        <p id="legalTax"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Ví dụ thực tế</h5>
+        <p id="legalExample"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Liên quan</h5>
+        <div class="modal-related" id="legalRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SEARCH OVERLAY ══════════════ -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+  <div class="search-box">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Tìm công thức, thuật ngữ, văn bản pháp lý…" autocomplete="off" spellcheck="false">
+      <span class="kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  /* ============================================================
+     ENHANCED BACKGROUND GENERATION
+     ============================================================ */
+  /* Particles with varying sizes */
+  (function makeParticles() {
+    const container = $('#particles');
+    if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colors = ['#0EA5E9','#8B5CF6','#E08A2B','#10B981','#F43F5E','#F59E0B'];
+    const count = window.innerWidth < 640 ? 20 : 40;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = 1.5 + Math.random() * 4.5;
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = (100 + Math.random() * 30) + '%';
+      p.style.width = p.style.height = size + 'px';
+      const c = colors[i % colors.length];
+      p.style.background = c;
+      p.style.color = c;
+      p.style.boxShadow = `0 0 ${6 + size * 3}px currentColor`;
+      p.style.animationDuration = (12 + Math.random() * 24) + 's';
+      p.style.animationDelay = (-Math.random() * 25) + 's';
+      container.appendChild(p);
+    }
+  })();
+
+  /* Floating geometric shapes */
+  (function makeShapes() {
+    const container = $('#bgShapes');
+    if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const shapes = [
+      { type: 'circle', size: 80, top: '18%', left: '8%', dur: 26, delay: 0 },
+      { type: 'circle', size: 120, top: '62%', left: '88%', dur: 32, delay: -6 },
+      { type: 'square', size: 60, top: '32%', left: '92%', dur: 28, delay: -12 },
+      { type: 'square', size: 48, top: '78%', left: '12%', dur: 24, delay: -3 },
+      { type: 'circle', size: 56, top: '8%', left: '55%', dur: 30, delay: -18 },
+      { type: 'square', size: 72, top: '88%', left: '68%', dur: 34, delay: -22 },
+      { type: 'circle', size: 100, top: '48%', left: '45%', dur: 40, delay: -8 },
+      { type: 'triangle', size: 44, top: '25%', left: '30%', dur: 30, delay: -14 }
+    ];
+    shapes.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'shape ' + s.type;
+      if (s.type === 'triangle') {
+        el.style.borderWidth = `${s.size / 2}px`;
+        el.style.borderColor = 'transparent transparent var(--border-strong) transparent';
+        el.style.opacity = '.25';
+      } else {
+        el.style.width = s.size + 'px';
+        el.style.height = s.size + 'px';
+      }
+      el.style.top = s.top;
+      el.style.left = s.left;
+      el.style.animationDuration = s.dur + 's';
+      el.style.animationDelay = s.delay + 's';
+      container.appendChild(el);
+    });
+  })();
+
+  /* THEME */
+  const themeBtn = $('#themeBtn');
+  const themeIcon = $('#themeIcon');
+  const SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeIcon.innerHTML = t === 'dark' ? SUN : MOON;
+    try { localStorage.setItem('te-theme', t); } catch (e) {}
+  }
+  let saved = 'light';
+  try { saved = localStorage.getItem('te-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+  applyTheme(saved);
+  themeBtn.addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* SCROLL + PROGRESS */
+  const nav = $('#nav');
+  const progress = $('#progress');
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 20);
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = h > 0 ? Math.min(100, (y / h) * 100) + '%' : '0%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* MOBILE MENU */
+  const menuBtn = $('#menuBtn');
+  const mobileMenu = $('#mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  $$('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* REVEAL */
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  $$('.reveal').forEach(el => revealIO.observe(el));
+
+  /* TOC */
+  const tocLinks = $$('#tocList a');
+  const sections = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const tocIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = '#' + e.target.id;
+        tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => tocIO.observe(s));
+
+  /* STEPPER */
+  const steps = $$('#stepper .step');
+  const stepIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => { e.target.classList.toggle('active', e.isIntersecting); });
+  }, { rootMargin: '-32% 0px -42% 0px', threshold: 0 });
+  steps.forEach(s => stepIO.observe(s));
+
+  /* CHECKLIST */
+  const checkItems = $$('#checklist-box .check-item input');
+  const checkBar = $('#checkBar');
+  const checkCount = $('#checkCount');
+  function updateChecklist() {
+    const total = checkItems.length;
+    const done = checkItems.filter(i => i.checked).length;
+    checkBar.style.width = (done / total * 100) + '%';
+    checkCount.textContent = done + '/' + total + ' hoàn thành';
+  }
+  checkItems.forEach(i => i.addEventListener('change', updateChecklist));
+  updateChecklist();
+
+  /* FAQ */
+  $$('#faq .faq-item').forEach(item => {
+    const btn = $('.faq-q', item);
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      $$('#faq .faq-item').forEach(i => {
+        i.classList.remove('open');
+        $('.faq-q', i).setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* TERMS */
+  const TERMS = {
+    sxxk: {
+      name: 'SXXK — Sản xuất xuất khẩu',
+      sub: 'Production for Export',
+      def: 'SXXK là loại hình doanh nghiệp tự nhập khẩu nguyên liệu, vật tư để sản xuất hàng hóa xuất khẩu. Được miễn thuế nhập khẩu đối với nguyên liệu đầu vào.',
+      prac: 'Doanh nghiệp SXXK phải có định mức sản xuất, báo cáo quyết toán theo TT39, và sản phẩm cuối cùng phải được xuất khẩu. Định mức nguyên liệu là công cụ để chứng minh nguyên liệu đã dùng đúng mục đích.',
+      related: ['Định mức nguyên liệu', 'Báo cáo quyết toán', 'Gia công']
+    },
+    bom: {
+      name: 'BOM — Bill of Materials',
+      sub: 'Định mức kỹ thuật',
+      def: 'BOM là bảng liệt kê tất cả nguyên liệu, vật tư cần thiết để sản xuất một sản phẩm, do phòng kỹ thuật lập dựa trên thiết kế.',
+      prac: 'BOM là cơ sở ban đầu để xây dựng định mức tiêu hao. Tuy nhiên BOM chỉ là lý thuyết, chưa bao gồm hao hụt cho phép trong sản xuất thực tế.',
+      related: ['Định mức vật tư', 'Định mức tiêu hao', 'Quy trình sản xuất']
+    },
+    dmTieuHao: {
+      name: 'Định mức tiêu hao',
+      sub: 'Consumption norm',
+      def: 'Định mức tiêu hao là lượng nguyên liệu thực tế cần để sản xuất 1 sản phẩm, bao gồm cả hao hụt cho phép. Đây là định mức được đăng ký với hải quan.',
+      prac: 'Công thức: Định mức tiêu hao = Định mức vật tư × (1 + Tỷ lệ hao hụt). Ví dụ: 5,5 m vải/áo × 1,03 = 5,665 m/áo.',
+      related: ['Định mức vật tư', 'Tỷ lệ hao hụt', 'BOM']
+    },
+    tyLeThuHoi: {
+      name: 'Tỷ lệ thu hồi',
+      sub: 'Recovery rate',
+      def: 'Tỷ lệ thu hồi là tỷ lệ sản phẩm thu được từ 1 đơn vị nguyên liệu đầu vào. Thường dùng cho ngành chế biến (gỗ, thực phẩm, cao su).',
+      prac: 'Công thức: Tỷ lệ thu hồi = Sản phẩm / Nguyên liệu × 100%. Ví dụ: từ 1.000 kg gỗ tròn thu được 650 kg gỗ thành phẩm → 65%.',
+      related: ['Định mức tiêu hao', 'Hao hụt', 'Chế biến']
+    }
+  };
+
+  const termModal = $('#termModal');
+  const legalModal = $('#legalModal');
+  let lastFocused = null;
+
+  function openModal(el) {
+    lastFocused = document.activeElement;
+    el.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const closeBtn = $('.modal-close', el);
+    setTimeout(() => closeBtn && closeBtn.focus(), 60);
+  }
+  function closeModal(el) {
+    el.classList.remove('open');
+    if (!document.querySelector('.backdrop.open') &&
+        !$('#searchOverlay').classList.contains('open') &&
+        !$('#citePopover').classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  function openTerm(key) {
+    const t = TERMS[key];
+    if (!t) return;
+    $('#termTitle').textContent = t.name;
+    $('#termSub').textContent = t.sub;
+    $('#termDef').textContent = t.def;
+    $('#termPrac').textContent = t.prac;
+    const rel = $('#termRelated');
+    rel.innerHTML = '';
+    t.related.forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(termModal);
+  }
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.term');
+    if (t && !t.closest('.cite-popover')) {
+      e.preventDefault();
+      openTerm(t.dataset.term);
+    }
+  });
+
+  /* DETAIL DATA */
+  const LEGAL_DOCS = {
+    'dm-vat-tu': {
+      kind: 'law', tag: 'LOẠI ĐỊNH MỨC 01',
+      title: 'Định mức vật tư',
+      meta: 'Định mức lý thuyết · Dùng nội bộ',
+      desc: 'Định mức vật tư là lượng nguyên liệu tối thiểu cần thiết để sản xuất 1 sản phẩm, tính theo thiết kế kỹ thuật. Đây là định mức lý thuyết, chưa bao gồm hao hụt.',
+      features: [
+        'Do phòng kỹ thuật lập dựa trên BOM',
+        'Chưa bao gồm hao hụt cho phép',
+        'Dùng để lập kế hoạch sản xuất',
+        'Không dùng trực tiếp để đăng ký hải quan',
+        'Là cơ sở ban đầu để tính định mức tiêu hao'
+      ],
+      tax: 'Công thức: Định mức vật tư = Tổng NVL lý thuyết / Số sản phẩm. Ví dụ: 1 áo sơ mi cần 5,5 m vải theo thiết kế.',
+      example: 'Công ty may mặc: 1 áo sơ mi nam cần 5,5 m vải, 8 nút, 12 m chỉ may (theo BOM kỹ thuật).',
+      related: ['BOM', 'Định mức tiêu hao', 'Hao hụt']
+    },
+    'dm-tieu-hao': {
+      kind: 'circ', tag: 'LOẠI ĐỊNH MỨC 02',
+      title: 'Định mức tiêu hao',
+      meta: 'Định mức thực tế · Đăng ký với hải quan',
+      desc: 'Định mức tiêu hao là lượng nguyên liệu thực tế cần để sản xuất 1 sản phẩm, đã bao gồm cả hao hụt cho phép. Đây là định mức được đăng ký với cơ quan hải quan.',
+      features: [
+        'Bao gồm định mức vật tư + hao hụt cho phép',
+        'Được đăng ký với cơ quan hải quan',
+        'Dùng làm căn cứ quyết toán',
+        'Có thể thay đổi khi thay đổi công nghệ',
+        'Phải có chứng từ giải trình khi vượt mức'
+      ],
+      tax: 'Công thức: ĐM tiêu hao = ĐM vật tư × (1 + Tỷ lệ hao hụt). Ví dụ: 5,5 m/áo × 1,03 = 5,665 m/áo.',
+      example: 'Công ty gỗ: 1 m³ gỗ tròn sản xuất được 0,65 m³ gỗ thành phẩm. Tỷ lệ thu hồi 65%, hao hụt 35%.',
+      related: ['Định mức vật tư', 'Tỷ lệ hao hụt', 'Báo cáo quyết toán']
+    },
+    'dm-thu-hoi': {
+      kind: 'circ', tag: 'LOẠI ĐỊNH MỨC 03',
+      title: 'Định mức tỷ lệ thu hồi',
+      meta: 'Định mức chế biến · Ngành gỗ, thực phẩm',
+      desc: 'Định mức tỷ lệ thu hồi là tỷ lệ sản phẩm thu được từ 1 đơn vị nguyên liệu đầu vào. Thường dùng cho ngành chế biến như gỗ, thực phẩm, cao su, thủy sản.',
+      features: [
+        'Biểu diễn dưới dạng phần trăm (%)',
+        'Dùng cho ngành chế biến',
+        'Tỷ lệ thu hồi + Tỷ lệ hao hụt = 100%',
+        'Được đăng ký với hải quan',
+        'Có thể tính ngược từ sản phẩm ra nguyên liệu'
+      ],
+      tax: 'Công thức: Tỷ lệ thu hồi = Sản phẩm / Nguyên liệu × 100%. Ví dụ: 650 kg gỗ thành phẩm / 1.000 kg gỗ tròn = 65%.',
+      example: 'Công ty thủy sản: 1.000 kg cá nguyên liệu → 400 kg fillet cá thành phẩm → tỷ lệ thu hồi 40%.',
+      related: ['Định mức tiêu hao', 'Chế biến', 'Hao hụt']
+    },
+    'bom': {
+      kind: 'law', tag: 'ĐẦU VÀO',
+      title: 'BOM / Định mức kỹ thuật',
+      meta: 'Bill of Materials · Phòng kỹ thuật lập',
+      desc: 'BOM là bảng liệt kê tất cả nguyên liệu, vật tư cần thiết để sản xuất một sản phẩm, do phòng kỹ thuật lập dựa trên thiết kế.',
+      features: [
+        'Do phòng kỹ thuật lập',
+        'Liệt kê đầy đủ nguyên liệu, vật tư',
+        'Chưa bao gồm hao hụt thực tế',
+        'Là cơ sở để xây dựng định mức tiêu hao',
+        'Cần được cập nhật khi thay đổi thiết kế'
+      ],
+      tax: 'Không áp dụng thuế trực tiếp. BOM là đầu vào để tính định mức tiêu hao.',
+      example: 'BOM của một áo sơ mi: 5,5 m vải cotton, 8 nút nhựa, 12 m chỉ may, 1 nhãn mác.',
+      related: ['Định mức vật tư', 'Định mức tiêu hao', 'Quy trình sản xuất']
+    },
+    'quy-trinh': {
+      kind: 'law', tag: 'ĐẦU VÀO',
+      title: 'Quy trình sản xuất',
+      meta: 'Production process',
+      desc: 'Quy trình sản xuất mô tả các bước từ nguyên liệu đầu vào đến sản phẩm cuối cùng. Quy trình càng phức tạp, hao hụt càng cao.',
+      features: [
+        'Mô tả các bước sản xuất',
+        'Ảnh hưởng đến tỷ lệ hao hụt',
+        'Cần được chuẩn hóa và ghi chép',
+        'Là cơ sở để tính định mức thực tế'
+      ],
+      tax: 'Không áp dụng thuế. Quy trình sản xuất ảnh hưởng đến tỷ lệ hao hụt và định mức tiêu hao.',
+      example: 'Quy trình may áo sơ mi: cắt vải → may thân → may tay → gắn nút → ủi → đóng gói. Mỗi bước có hao hụt nhỏ.',
+      related: ['BOM', 'Định mức tiêu hao', 'Hao hụt']
+    },
+    'nvl-thuc-te': {
+      kind: 'law', tag: 'ĐẦU VÀO',
+      title: 'Dữ liệu tiêu hao thực tế',
+      meta: 'Actual consumption data',
+      desc: 'Dữ liệu tiêu hao thực tế là số liệu ghi nhận lượng nguyên liệu thực tế đã sử dụng trong các lô sản xuất. Đây là dữ liệu quan trọng nhất để xác định định mức thực tế.',
+      features: [
+        'Ghi nhận từ phiếu xuất kho và sản phẩm hoàn thành',
+        'Cần lấy từ nhiều lô sản xuất',
+        'Phản ánh hao hụt thực tế',
+        'Dùng để tính định mức trung bình',
+        'Là cơ sở đăng ký với hải quan'
+      ],
+      tax: 'Không áp dụng thuế. Đây là dữ liệu đầu vào để xây dựng định mức.',
+      example: 'Dữ liệu 10 lô sản xuất: lượng vải xuất kho và số áo hoàn thành. Tính trung bình → định mức thực tế.',
+      related: ['Định mức tiêu hao', 'Hao hụt', 'Báo cáo quyết toán']
+    },
+    'dm': {
+      kind: 'proc', tag: 'TRUNG TÂM',
+      title: 'Định mức nguyên liệu',
+      meta: 'Material norms · Cầu nối quyết toán',
+      desc: 'Định mức nguyên liệu là cầu nối giữa nguyên liệu đã nhập khẩu và sản phẩm đã xuất khẩu. Không có định mức, doanh nghiệp không thể chứng minh việc sử dụng nguyên liệu đúng mục đích miễn thuế.',
+      features: [
+        'Ba nguồn đầu vào: BOM, quy trình, dữ liệu thực tế',
+        'Ba đầu ra: kế hoạch SX, quyết toán, kiểm tra',
+        'Phải đăng ký với hải quan',
+        'Có thể thay đổi khi cần thiết',
+        'Là căn cứ để tính ngược NVL cần thiết'
+      ],
+      tax: 'Định mức quyết định số thuế được miễn/hoàn. Định mức sai có thể dẫn đến truy thu thuế và xử phạt hành chính.',
+      example: 'Doanh nghiệp SXXK nhập 10.000 m vải, với định mức 5,665 m/áo → xuất khẩu được 1.765 áo (làm tròn).',
+      related: ['Báo cáo quyết toán', 'Kiểm tra sau thông quan', 'Kế hoạch sản xuất']
+    },
+    'san-xuat': {
+      kind: 'circ', tag: 'ĐẦU RA',
+      title: 'Kế hoạch sản xuất',
+      meta: 'Production planning',
+      desc: 'Kế hoạch sản xuất dùng định mức để tính lượng nguyên liệu cần thiết cho từng đơn hàng. Định mức càng chính xác, kế hoạch càng hiệu quả.',
+      features: [
+        'Tính NVL cần thiết cho đơn hàng',
+        'Dựa trên định mức nguyên liệu',
+        'Giúp đặt hàng chính xác',
+        'Tránh thừa/thiếu nguyên liệu'
+      ],
+      tax: 'Không áp dụng thuế trực tiếp. Nhưng kế hoạch chính xác giúp tránh nhập thừa nguyên liệu (phải giải trình khi quyết toán).',
+      example: 'Đơn hàng 5.000 áo → cần 5.000 × 5,665 = 28.325 m vải. Đặt mua 29.000 m để có buffer.',
+      related: ['Định mức nguyên liệu', 'BOM', 'SXXK']
+    },
+    'quyet-toan': {
+      kind: 'decree', tag: 'ĐẦU RA',
+      title: 'Báo cáo quyết toán',
+      meta: 'Nộp hải quan · Thời hạn 90 ngày',
+      desc: 'Báo cáo quyết toán dùng định mức để tính ngược: từ lượng sản phẩm đã xuất khẩu, tính ra lượng nguyên liệu cần thiết. Sau đó so sánh với lượng đã nhập khẩu.',
+      features: [
+        'Sử dụng định mức để tính ngược',
+        'So sánh NVL nhập với NVL cần thiết',
+        'Giải trình chênh lệch (tồn kho, hao hụt)',
+        'Thời hạn nộp 90 ngày sau năm tài chính',
+        'Không có định mức → không quyết toán được'
+      ],
+      tax: 'Định mức quyết định số thuế được miễn/hoàn. Nếu chênh lệch không giải trình được, phải nộp thuế bổ sung.',
+      example: 'Nhập 30.000 m vải, xuất khẩu 5.000 áo (cần 28.325 m). Chênh lệch 1.675 m phải giải trình: tồn kho hay bán nội địa.',
+      related: ['Định mức nguyên liệu', 'TT 39/2018/TT-BTC', 'Kiểm tra sau thông quan']
+    },
+    'kiem-tra': {
+      kind: 'circ', tag: 'ĐẦU RA',
+      title: 'Kiểm tra sau thông quan',
+      meta: 'Post-clearance audit',
+      desc: 'Khi kiểm tra sau thông quan doanh nghiệp SXXK, cơ quan hải quan sẽ kiểm tra định mức đầu tiên. Định mức phải khớp với thực tế sản xuất và có chứng từ giải trình.',
+      features: [
+        'Định mức là điểm kiểm tra đầu tiên',
+        'Kiểm tra tính hợp lý của định mức',
+        'Kiểm tra chứng từ hao hụt, hủy hàng',
+        'Có thể truy thu thuế nếu định mức sai',
+        'Có thể xử phạt hành chính'
+      ],
+      tax: 'Nếu định mức không hợp lý hoặc không có chứng từ giải trình, cơ quan hải quan có thể truy thu thuế đối với phần nguyên liệu chênh lệch.',
+      example: 'Kiểm tra định mức may mặc: 5,665 m/áo. Nếu doanh nghiệp thực tế dùng 6,5 m/áo mà không giải trình → truy thu thuế phần 0,835 m/áo.',
+      related: ['Định mức nguyên liệu', 'Báo cáo quyết toán', 'TT 39/2018/TT-BTC']
+    },
+    'tt39': {
+      kind: 'circ', tag: 'THÔNG TƯ',
+      title: 'Thông tư 39/2018/TT-BTC',
+      meta: 'Bộ Tài chính · Ban hành 20/04/2018 · Hiệu lực 05/06/2018',
+      desc: 'Sửa đổi, bổ sung một số điều của Thông tư 38/2015/TT-BTC, trong đó có nhiều nội dung quan trọng về báo cáo quyết toán và định mức nguyên liệu.',
+      content: 'Đây là văn bản hợp nhất quan trọng nhất hiện hành về quyết toán và định mức.',
+      short: 'Văn bản quan trọng nhất về báo cáo quyết toán và định mức nguyên liệu.',
+      related: ['Thông tư 38/2015/TT-BTC', 'Báo cáo quyết toán', 'Mẫu 15/BCQT']
+    }
+  };
+
+  /* MAP */
+  const viewport = $('#mapViewport');
+  const canvas = $('#mapCanvas');
+  const nodes = $$('.mnode', canvas);
+  const edges = $$('.medge', canvas);
+
+  let scale = 1, tx = 0, ty = 0;
+
+  function applyTransform(smooth) {
+    canvas.classList.toggle('smooth', !!smooth);
+    canvas.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    if (smooth) setTimeout(() => canvas.classList.remove('smooth'), 520);
+  }
+
+  function fitMap(animate) {
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    if (window.innerWidth < 760) {
+      scale = 0.72; tx = 0; ty = 40;
+    } else {
+      const s = Math.min(vw / 900, vh / 680) * 0.94;
+      scale = Math.min(Math.max(s, 0.5), 1);
+      tx = 0; ty = 0;
+    }
+    applyTransform(animate);
+  }
+
+  fitMap(false);
+  window.addEventListener('resize', () => fitMap(false));
+
+  $('#zoomIn').addEventListener('click', () => { scale = Math.min(scale * 1.2, 2.4); applyTransform(true); });
+  $('#zoomOut').addEventListener('click', () => { scale = Math.max(scale / 1.2, 0.35); applyTransform(true); });
+  $('#zoomReset').addEventListener('click', () => fitMap(true));
+
+  viewport.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+    scale = Math.min(Math.max(scale * factor, 0.35), 2.4);
+    applyTransform(false);
+  }, { passive: false });
+
+  let dragging = false, startX = 0, startY = 0, originX = 0, originY = 0, moved = false;
+
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.map-btn')) return;
+    dragging = true; moved = false;
+    startX = e.clientX; startY = e.clientY;
+    originX = tx; originY = ty;
+    viewport.classList.add('grabbing');
+    viewport.setPointerCapture(e.pointerId);
+  });
+
+  viewport.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+    tx = originX + dx; ty = originY + dy;
+    applyTransform(false);
+  });
+
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    viewport.classList.remove('grabbing');
+    try { viewport.releasePointerCapture(e.pointerId); } catch (err) {}
+  }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+
+  nodes.forEach(node => {
+    const id = node.dataset.doc;
+    node.addEventListener('mouseenter', () => {
+      const connected = new Set([id]);
+      edges.forEach(edge => {
+        const { from, to } = edge.dataset;
+        if (from === id || to === id) {
+          edge.classList.add('hl'); edge.classList.remove('dim');
+          connected.add(from); connected.add(to);
+        } else {
+          edge.classList.add('dim'); edge.classList.remove('hl');
+        }
+      });
+      nodes.forEach(n => n.classList.toggle('dim', !connected.has(n.dataset.doc)));
+    });
+    node.addEventListener('mouseleave', () => {
+      edges.forEach(edge => edge.classList.remove('hl', 'dim'));
+      nodes.forEach(n => n.classList.remove('dim'));
+    });
+    node.addEventListener('click', () => {
+      if (moved) return;
+      openLegal(id);
+    });
+  });
+
+  function openLegal(key) {
+    const d = LEGAL_DOCS[key];
+    if (!d) return;
+    $('#legalTag').textContent = d.tag;
+    $('#legalTitle').textContent = d.title;
+    $('#legalMeta').textContent = d.meta;
+    $('#legalDesc').textContent = d.desc;
+    const feat = $('#legalFeatures');
+    feat.innerHTML = '';
+    (d.features || []).forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = f;
+      feat.appendChild(li);
+    });
+    $('#legalTax').textContent = d.tax || d.content || '';
+    $('#legalExample').textContent = d.example || '';
+    const rel = $('#legalRelated');
+    rel.innerHTML = '';
+    (d.related || []).forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(legalModal);
+  }
+
+  /* Type cards → open detail modal */
+  $$('.type-card').forEach(card => {
+    card.addEventListener('click', () => openLegal(card.dataset.doc));
+  });
+
+  /* CITE POPOVER */
+  const popover = $('#citePopover');
+  let popoverCurrentDoc = null;
+  let popoverAnchor = null;
+
+  function positionPopover(anchor) {
+    const rect = anchor.getBoundingClientRect();
+    const popW = 380;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let left = rect.left + rect.width / 2 - popW / 2;
+    left = Math.max(16, Math.min(left, vw - popW - 16));
+
+    popover.style.visibility = 'hidden';
+    popover.style.opacity = '0';
+    popover.style.transform = 'none';
+    popover.style.display = 'block';
+    popover.style.width = popW + 'px';
+    const popH = popover.offsetHeight;
+
+    const spaceBelow = vh - rect.bottom;
+    const spaceAbove = rect.top;
+    let top, pos;
+
+    if (spaceBelow >= popH + 20 || spaceBelow >= spaceAbove) {
+      top = rect.bottom + window.scrollY + 14;
+      pos = 'bottom';
+    } else {
+      top = rect.top + window.scrollY - popH - 14;
+      pos = 'top';
+    }
+
+    popover.style.left = left + window.scrollX + 'px';
+    popover.style.top = top + 'px';
+    popover.dataset.pos = pos;
+
+    popover.style.visibility = '';
+    popover.style.opacity = '';
+    popover.style.transform = '';
+    popover.style.display = '';
+  }
+
+  function openCitePopover(anchor, docKey) {
+    const d = LEGAL_DOCS[docKey];
+    if (!d) return;
+    popoverCurrentDoc = docKey;
+    popoverAnchor = anchor;
+
+    const tag = $('#citeTag');
+    tag.className = 'cite-tag ' + (d.kind || '');
+    tag.innerHTML = '<span class="dot"></span>' + d.tag;
+
+    $('#citeTitle').textContent = d.title;
+    $('#citeMeta').textContent = d.meta;
+    $('#citeBody').textContent = d.short || d.desc;
+
+    positionPopover(anchor);
+    popover.classList.add('open');
+  }
+
+  function closeCitePopover() {
+    popover.classList.remove('open');
+    popoverCurrentDoc = null;
+    popoverAnchor = null;
+    if (!document.querySelector('.backdrop.open') && !$('#searchOverlay').classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const cite = e.target.closest('.legal-cite');
+    if (cite && !cite.closest('.cite-popover')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (popoverCurrentDoc === cite.dataset.doc && popover.classList.contains('open')) {
+        closeCitePopover();
+      } else {
+        openCitePopover(cite, cite.dataset.doc);
+      }
+      return;
+    }
+    if (popover.classList.contains('open') && !e.target.closest('#citePopover')) {
+      closeCitePopover();
+    }
+  });
+
+  $('#citeClose').addEventListener('click', closeCitePopover);
+
+  $('#citeOpen').addEventListener('click', () => {
+    if (!popoverCurrentDoc) return;
+    const key = popoverCurrentDoc;
+    closeCitePopover();
+    setTimeout(() => openLegal(key), 180);
+  });
+
+  $('#citeSearch').addEventListener('click', () => {
+    if (!popoverCurrentDoc) return;
+    const d = LEGAL_DOCS[popoverCurrentDoc];
+    closeCitePopover();
+    setTimeout(() => {
+      openSearch();
+      searchInput.value = d.title;
+      renderSearch(d.title);
+    }, 180);
+  });
+
+  let scrollRAF = null;
+  window.addEventListener('scroll', () => {
+    if (!popover.classList.contains('open') || !popoverAnchor) return;
+    if (scrollRAF) cancelAnimationFrame(scrollRAF);
+    scrollRAF = requestAnimationFrame(() => {
+      const rect = popoverAnchor.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+        closeCitePopover();
+      } else {
+        positionPopover(popoverAnchor);
+      }
+    });
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (popover.classList.contains('open') && popoverAnchor) {
+      positionPopover(popoverAnchor);
+    }
+  });
+
+  /* MODAL CLOSE */
+  $$('.backdrop').forEach(bd => {
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd) closeModal(bd);
+    });
+    const btn = $('.modal-close', bd);
+    if (btn) btn.addEventListener('click', () => closeModal(bd));
+  });
+
+  /* SEARCH */
+  const SEARCH_DATA = [
+    { type: 'Bài viết', icon: '📄', title: 'Định mức nguyên liệu: Nền tảng của mọi kỳ quyết toán', meta: 'SUPPLY CHAIN · 20 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'Hướng dẫn chi tiết Quy trình Báo cáo Quyết toán Hải quan', meta: 'CUSTOMS · 12 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'File Xuất Nhập Tồn & Các hàm Excel hữu dụng', meta: 'TOOLS · 18 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'Phân loại 9 loại hình Xuất Nhập Khẩu', meta: 'KNOWLEDGE · 22 phút đọc', url: '#' },
+
+    { type: 'Định mức', icon: '📐', title: 'Định mức vật tư', meta: 'Định mức lý thuyết', doc: 'dm-vat-tu' },
+    { type: 'Định mức', icon: '📐', title: 'Định mức tiêu hao', meta: 'Định mức thực tế', doc: 'dm-tieu-hao' },
+    { type: 'Định mức', icon: '📐', title: 'Định mức tỷ lệ thu hồi', meta: 'Ngành chế biến', doc: 'dm-thu-hoi' },
+
+    { type: 'Thuật ngữ', icon: '🔖', title: 'BOM — Bill of Materials', meta: 'Định mức kỹ thuật', term: 'bom' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Định mức tiêu hao', meta: 'Consumption norm', term: 'dmTieuHao' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Tỷ lệ thu hồi', meta: 'Recovery rate', term: 'tyLeThuHoi' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'SXXK — Sản xuất xuất khẩu', meta: 'Loại hình sản xuất', term: 'sxxk' },
+
+    { type: 'Đầu vào', icon: '📥', title: 'BOM / Định mức kỹ thuật', meta: 'Dữ liệu đầu vào', doc: 'bom' },
+    { type: 'Đầu vào', icon: '📥', title: 'Quy trình sản xuất', meta: 'Dữ liệu đầu vào', doc: 'quy-trinh' },
+    { type: 'Đầu vào', icon: '📥', title: 'Dữ liệu tiêu hao thực tế', meta: 'Dữ liệu đầu vào', doc: 'nvl-thuc-te' },
+    { type: 'Đầu ra', icon: '📤', title: 'Báo cáo quyết toán', meta: 'Nộp hải quan', doc: 'quyet-toan' },
+    { type: 'Đầu ra', icon: '📤', title: 'Kiểm tra sau thông quan', meta: 'Post-clearance audit', doc: 'kiem-tra' },
+    { type: 'Văn bản', icon: '⚖️', title: 'Thông tư 39/2018/TT-BTC', meta: 'Thông tư · 2018', doc: 'tt39' }
+  ];
+
+  const searchOverlay = $('#searchOverlay');
+  const searchInput = $('#searchInput');
+  const searchResults = $('#searchResults');
+  let focusIndex = -1;
+  let currentResults = [];
+
+  function escapeHTML(s) {
+    return s.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  function highlight(text, q) {
+    if (!q) return escapeHTML(text);
+    const safe = escapeHTML(text);
+    const qSafe = escapeHTML(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return safe.replace(new RegExp('(' + qSafe + ')', 'gi'), '<mark>$1</mark>');
+  }
+
+  function renderSearch(q) {
+    const query = q.trim().toLowerCase();
+    focusIndex = -1;
+
+    if (!query) {
+      currentResults = SEARCH_DATA.slice(0, 8);
+      searchResults.innerHTML =
+        '<div class="sr-group-label">Gợi ý nhanh</div>' +
+        currentResults.map((item, i) => itemHTML(item, '', i)).join('');
+      return;
+    }
+
+    const found = SEARCH_DATA.filter(item =>
+      item.title.toLowerCase().includes(query) ||
+      (item.meta && item.meta.toLowerCase().includes(query)) ||
+      item.type.toLowerCase().includes(query)
+    );
+
+    currentResults = found;
+
+    if (!found.length) {
+      searchResults.innerHTML =
+        '<div class="empty-state">' +
+        '<div class="es-icon">🔍</div>' +
+        '<p>Không tìm thấy kết quả cho "<strong>' + escapeHTML(q) + '</strong>"</p>' +
+        '</div>';
+      return;
+    }
+
+    const groups = {};
+    found.forEach(item => {
+      (groups[item.type] = groups[item.type] || []).push(item);
+    });
+
+    let html = '';
+    let idx = 0;
+    Object.keys(groups).forEach(type => {
+      html += '<div class="sr-group-label">' + type + ' · ' + groups[type].length + '</div>';
+      groups[type].forEach(item => {
+        html += itemHTML(item, q, idx++);
+      });
+    });
+    searchResults.innerHTML = html;
+  }
+
+  function itemHTML(item, q, i) {
+    return '<button class="sr-item" data-index="' + i + '">' +
+      '<span class="sr-icon">' + item.icon + '</span>' +
+      '<span class="sr-body">' +
+        '<span class="sr-title">' + highlight(item.title, q) + '</span>' +
+        '<span class="sr-meta">' + highlight(item.meta || item.type, q) + '</span>' +
+      '</span>' +
+    '</button>';
+  }
+
+  function openSearch() {
+    lastFocused = document.activeElement;
+    searchOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    searchInput.value = '';
+    renderSearch('');
+    setTimeout(() => searchInput.focus(), 80);
+  }
+
+  function closeSearch() {
+    searchOverlay.classList.remove('open');
+    if (!document.querySelector('.backdrop.open') && !popover.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  window.openSearch = openSearch;
+
+  $('#searchBtn').addEventListener('click', openSearch);
+
+  searchOverlay.addEventListener('click', (e) => {
+    if (e.target === searchOverlay) closeSearch();
+  });
+
+  searchInput.addEventListener('input', (e) => renderSearch(e.target.value));
+
+  searchInput.addEventListener('keydown', (e) => {
+    const items = $$('.sr-item', searchResults);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusIndex = Math.min(focusIndex + 1, items.length - 1);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusIndex = Math.max(focusIndex - 1, 0);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (items[focusIndex]) items[focusIndex].click();
+      else if (items[0]) items[0].click();
+    }
+  });
+
+  searchResults.addEventListener('click', (e) => {
+    const btn = e.target.closest('.sr-item');
+    if (!btn) return;
+    const item = currentResults[Number(btn.dataset.index)];
+    if (!item) return;
+    closeSearch();
+    if (item.term) setTimeout(() => openTerm(item.term), 220);
+    else if (item.doc) setTimeout(() => openLegal(item.doc), 220);
+  });
+
+  /* GLOBAL KEYBOARD */
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      else openSearch();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      if (popover.classList.contains('open')) closeCitePopover();
+      $$('.backdrop.open').forEach(bd => closeModal(bd));
+    }
+  });
+
+  /* SMOOTH ANCHOR */
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 92;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
