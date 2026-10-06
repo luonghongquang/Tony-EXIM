@@ -1,0 +1,2775 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn chi tiết Quy trình Báo cáo Quyết toán Hải quan — TONY EXIM</title>
+<meta name="description" content="Quy trình báo cáo quyết toán hải quan: đối tượng, thời hạn, hồ sơ, căn cứ pháp lý và bản đồ pháp lý tương tác.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TONY EXIM — DESIGN TOKENS
+   ============================================================ */
+:root{
+  --bg:#FFFFFF;
+  --bg-alt:#F4F7FB;
+  --surface:#FFFFFF;
+  --surface-2:#F8FAFD;
+  --text:#0B1B2B;
+  --text-2:#33465C;
+  --muted:#6B7C93;
+  --border:#E3E9F1;
+  --border-strong:#CFDAE7;
+
+  --primary:#0E2E4F;
+  --primary-2:#1B4E7E;
+  --primary-soft:rgba(27,78,126,.08);
+
+  --accent:#E08A2B;
+  --accent-2:#F3B45E;
+  --accent-soft:rgba(224,138,43,.12);
+
+  --cyan:#0EA5E9;
+  --cyan-soft:rgba(14,165,233,.12);
+  --violet:#8B5CF6;
+  --violet-soft:rgba(139,92,246,.12);
+  --emerald:#10B981;
+  --emerald-soft:rgba(16,185,129,.12);
+  --rose:#F43F5E;
+  --rose-soft:rgba(244,63,94,.12);
+  --amber:#F59E0B;
+  --amber-soft:rgba(245,158,11,.12);
+
+  --success:#178C60;
+  --danger:#C8443B;
+
+  --shadow-xs:0 1px 2px rgba(11,27,43,.05);
+  --shadow-sm:0 2px 6px rgba(11,27,43,.05), 0 1px 2px rgba(11,27,43,.04);
+  --shadow-md:0 10px 28px -10px rgba(11,27,43,.16), 0 2px 6px rgba(11,27,43,.05);
+  --shadow-lg:0 28px 70px -22px rgba(11,27,43,.28), 0 6px 18px -8px rgba(11,27,43,.10);
+
+  --r-xs:8px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px; --r-full:999px;
+  --nav-h:68px;
+  --font:'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-bounce:cubic-bezier(.34,1.56,.64,1);
+}
+[data-theme="dark"]{
+  --bg:#060B14;
+  --bg-alt:#080F1C;
+  --surface:#0C1626;
+  --surface-2:#101C30;
+  --text:#EAF2FC;
+  --text-2:#B9C8DA;
+  --muted:#7E93AB;
+  --border:#182840;
+  --border-strong:#263A56;
+
+  --primary:#8CBCE8;
+  --primary-2:#B0D2F2;
+  --primary-soft:rgba(140,188,232,.10);
+
+  --accent:#F5A83E;
+  --accent-2:#F9C57F;
+  --accent-soft:rgba(245,168,62,.16);
+
+  --cyan:#38BDF8;
+  --cyan-soft:rgba(56,189,248,.16);
+  --violet:#A78BFA;
+  --violet-soft:rgba(167,139,250,.16);
+  --emerald:#34D399;
+  --emerald-soft:rgba(52,211,153,.16);
+  --rose:#FB7185;
+  --rose-soft:rgba(251,113,133,.16);
+  --amber:#FBBF24;
+  --amber-soft:rgba(251,191,36,.16);
+
+  --success:#3DCB94;
+  --danger:#F0736A;
+
+  --shadow-xs:0 1px 2px rgba(0,0,0,.4);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:0 12px 30px -12px rgba(0,0,0,.7);
+  --shadow-lg:0 30px 70px -24px rgba(0,0,0,.85);
+}
+
+/* ============================================================
+   BASE — STICKY FOOTER LAYOUT
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font);background:var(--bg);color:var(--text);
+  font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;position:relative;
+  transition:background .45s var(--ease), color .45s var(--ease);
+
+  /* Sticky footer setup */
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent-soft);color:var(--text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+.wrap{width:min(1180px,100% - 44px);margin-inline:auto;position:relative;z-index:2}
+@media(max-width:640px){.wrap{width:min(1180px,100% - 32px)}}
+
+/* ============================================================
+   ANIMATED BACKGROUND
+   ============================================================ */
+.aurora{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  opacity:.75;
+}
+.aurora::before,.aurora::after{
+  content:"";position:absolute;border-radius:50%;filter:blur(90px);
+  will-change:transform;
+}
+.aurora::before{
+  width:640px;height:640px;top:-180px;left:-120px;
+  background:radial-gradient(circle,var(--cyan-soft),transparent 62%);
+  animation:floatA 22s ease-in-out infinite;
+}
+.aurora::after{
+  width:720px;height:720px;top:12%;right:-180px;
+  background:radial-gradient(circle,var(--violet-soft),transparent 62%);
+  animation:floatB 26s ease-in-out infinite;
+}
+.aurora-blob{
+  position:absolute;width:520px;height:520px;border-radius:50%;
+  filter:blur(100px);opacity:.8;
+}
+.aurora-blob.b1{
+  bottom:-160px;left:20%;
+  background:radial-gradient(circle,var(--accent-soft),transparent 62%);
+  animation:floatC 30s ease-in-out infinite;
+}
+.aurora-blob.b2{
+  top:45%;left:35%;
+  background:radial-gradient(circle,var(--emerald-soft),transparent 62%);
+  animation:floatD 34s ease-in-out infinite;
+}
+@keyframes floatA{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(80px,60px) scale(1.15)}
+  66%{transform:translate(-40px,120px) scale(.95)}
+}
+@keyframes floatB{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-100px,80px) scale(1.12)}
+}
+@keyframes floatC{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(120px,-60px) scale(1.1)}
+}
+@keyframes floatD{
+  0%,100%{transform:translate(0,0) scale(1);opacity:.5}
+  50%{transform:translate(-80px,-100px) scale(1.2);opacity:.8}
+}
+[data-theme="dark"] .aurora{opacity:.9}
+
+.particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.particle{
+  position:absolute;width:4px;height:4px;border-radius:50%;
+  background:var(--accent);opacity:.35;
+  animation:rise linear infinite;
+}
+@keyframes rise{
+  0%{transform:translateY(0) scale(0);opacity:0}
+  10%{opacity:.5}
+  90%{opacity:.3}
+  100%{transform:translateY(-100vh) scale(1.4);opacity:0}
+}
+
+/* ============================================================
+   READING PROGRESS
+   ============================================================ */
+.progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;z-index:200;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:300% 100%;
+  animation:progressFlow 6s linear infinite;
+  box-shadow:0 0 18px rgba(224,138,43,.6);
+  transition:width .08s linear;
+}
+@keyframes progressFlow{
+  0%{background-position:0% 50%}
+  100%{background-position:300% 50%}
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:150;
+  border-bottom:1px solid transparent;
+  transition:background .35s var(--ease),border-color .35s var(--ease),backdrop-filter .35s;
+}
+.nav.scrolled{
+  background:color-mix(in srgb,var(--bg) 78%,transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+  border-bottom-color:var(--border);
+}
+.nav-inner{
+  height:100%;width:min(1180px,100% - 44px);margin-inline:auto;
+  display:flex;align-items:center;gap:28px;
+}
+@media(max-width:640px){.nav-inner{width:calc(100% - 32px)}}
+
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--primary-2),var(--cyan));
+  background-size:200% 200%;
+  animation:brandShift 5s ease infinite;
+  color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.5px;
+  box-shadow:0 6px 16px -6px rgba(27,78,126,.7);
+}
+@keyframes brandShift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+[data-theme="dark"] .brand-mark{color:#06111E}
+.brand-text{font-weight:800;font-size:16.5px;letter-spacing:-.3px;line-height:1}
+.brand-text em{
+  font-style:normal;margin-left:1px;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--accent));
+  background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 4s ease infinite;
+}
+@keyframes textFlow{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+.brand-sub{
+  display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1.6px;
+  color:var(--muted);font-weight:500;margin-top:3px;
+}
+
+.nav-links{display:flex;align-items:center;gap:3px;margin-left:auto}
+.nav-links a{
+  position:relative;font-size:13.5px;font-weight:500;color:var(--muted);
+  padding:8px 13px;border-radius:var(--r-full);
+  transition:color .25s var(--ease),background .25s var(--ease);
+}
+.nav-links a:hover{color:var(--text);background:var(--surface-2)}
+.nav-links a.active{color:var(--text);font-weight:600}
+.nav-links a.active::after{
+  content:"";position:absolute;left:50%;bottom:1px;transform:translateX(-50%);
+  width:16px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  box-shadow:0 0 8px var(--accent-soft);
+}
+
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.icon-btn{
+  width:38px;height:38px;border-radius:var(--r-sm);display:grid;place-items:center;
+  color:var(--muted);border:1px solid transparent;
+  transition:all .25s var(--ease);position:relative;overflow:hidden;
+}
+.icon-btn::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at center,var(--accent-soft),transparent 70%);
+  opacity:0;transition:opacity .3s;transform:scale(.6);
+}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.icon-btn:hover::before{opacity:1;transform:scale(1)}
+.icon-btn svg{width:18px;height:18px;stroke-width:1.9;position:relative;z-index:1}
+.menu-btn{display:none}
+
+@media(max-width:940px){
+  .nav-links{display:none}
+  .menu-btn{display:grid}
+}
+
+.mobile-menu{
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:149;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:10px 22px 22px;
+  display:grid;gap:2px;
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path .45s var(--ease);
+  box-shadow:var(--shadow-md);
+}
+.mobile-menu.open{clip-path:inset(0 0 0 0)}
+.mobile-menu a{
+  padding:13px 4px;font-size:15px;font-weight:500;color:var(--text-2);
+  border-bottom:1px solid var(--border);
+}
+.mobile-menu a:last-child{border-bottom:0}
+.mobile-menu a.active{color:var(--accent);font-weight:600}
+
+/* ============================================================
+   ARTICLE HERO
+   ============================================================ */
+.article-hero{
+  position:relative;padding:calc(var(--nav-h) + 54px) 0 44px;
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.article-hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(720px 340px at 50% 0%,#000,transparent 78%);
+  -webkit-mask-image:radial-gradient(720px 340px at 50% 0%,#000,transparent 78%);
+}
+
+.crumbs{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.9px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:24px;
+}
+.crumbs a{transition:color .2s}
+.crumbs a:hover{color:var(--accent)}
+.crumbs span.sep{opacity:.45}
+
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:1.4px;
+  text-transform:uppercase;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));
+  background-size:200% 100%;
+  animation:textFlow 5s ease infinite;
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+  padding:6px 13px;border-radius:var(--r-full);
+  color:var(--accent);
+}
+.chip .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 0 var(--accent);
+  animation:pulseDot 2s ease infinite;
+}
+@keyframes pulseDot{
+  0%{box-shadow:0 0 0 0 var(--accent-soft)}
+  70%{box-shadow:0 0 0 8px transparent}
+  100%{box-shadow:0 0 0 0 transparent}
+}
+
+.article-title{
+  font-size:clamp(30px,5.2vw,54px);
+  line-height:1.1;letter-spacing:-1.6px;font-weight:800;
+  margin:22px 0 0;max-width:15ch;text-wrap:balance;
+}
+.article-title .accent{
+  position:relative;display:inline-block;
+  background:linear-gradient(120deg,var(--accent),var(--rose),var(--violet),var(--accent));
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 6s ease infinite;
+}
+.article-lead{
+  margin:22px 0 0;max-width:66ch;font-size:clamp(15.5px,1.5vw,18px);
+  color:var(--text-2);line-height:1.72;
+}
+.article-meta{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  margin-top:30px;font-size:13px;color:var(--muted);
+}
+.article-meta .author{display:flex;align-items:center;gap:9px;color:var(--text-2);font-weight:600}
+.avatar{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--primary),var(--violet),var(--cyan));
+  background-size:200% 200%;
+  animation:brandShift 6s ease infinite;
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:.3px;
+}
+[data-theme="dark"] .avatar{color:#06111E}
+.meta-sep{width:4px;height:4px;border-radius:50%;background:var(--border-strong)}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.layout{
+  display:grid;grid-template-columns:236px minmax(0,1fr);
+  gap:64px;padding:56px 0 80px;align-items:start;
+}
+@media(max-width:1040px){
+  .layout{grid-template-columns:1fr;gap:0;padding-top:36px}
+}
+
+.toc{position:sticky;top:calc(var(--nav-h) + 28px)}
+@media(max-width:1040px){
+  .toc{
+    position:static;margin-bottom:36px;padding:18px 20px;
+    background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);
+  }
+}
+.toc-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:9px;
+}
+.toc-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.toc-list{list-style:none;margin:0;padding:0;position:relative}
+.toc-list::before{
+  content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--border);
+}
+.toc-list a{
+  display:block;position:relative;padding:7px 0 7px 18px;
+  font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.4;
+  transition:color .25s var(--ease);
+}
+.toc-list a::before{
+  content:"";position:absolute;left:-1px;top:50%;transform:translateY(-50%) scaleY(0);
+  width:2px;height:16px;border-radius:2px;
+  background:linear-gradient(180deg,var(--accent),var(--rose));
+  transition:transform .35s var(--ease);
+}
+.toc-list a:hover{color:var(--text-2)}
+.toc-list a.active{color:var(--text);font-weight:600}
+.toc-list a.active::before{transform:translateY(-50%) scaleY(1)}
+.toc-num{
+  font-family:var(--mono);font-size:10px;margin-right:7px;font-weight:600;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+.toc-cta{
+  margin-top:22px;padding:16px;border-radius:var(--r-md);
+  background:linear-gradient(150deg,var(--violet-soft),transparent);
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.toc-cta::before{
+  content:"";position:absolute;top:-30%;right:-30%;width:120px;height:120px;
+  border-radius:50%;background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 8s ease-in-out infinite;
+}
+.toc-cta p{margin:0 0 11px;font-size:12.5px;color:var(--muted);line-height:1.55;position:relative;z-index:1}
+.toc-cta button{
+  width:100%;padding:9px;border-radius:var(--r-sm);font-size:12.5px;font-weight:600;
+  background:linear-gradient(120deg,var(--primary),var(--violet));
+  background-size:200% 100%;
+  color:#fff;transition:all .25s var(--ease);position:relative;z-index:1;
+}
+.toc-cta button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px -8px var(--violet);
+  background-position:100% 50%;
+}
+[data-theme="dark"] .toc-cta button{color:#06111E}
+
+/* ============================================================
+   ARTICLE CONTENT
+   ============================================================ */
+.content{min-width:0;max-width:760px}
+.section{margin-bottom:76px;scroll-margin-top:100px}
+.section-head{margin-bottom:26px}
+.section-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:1.8px;
+  font-weight:600;display:inline-block;margin-bottom:8px;
+  padding:3px 10px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);
+  color:var(--muted);
+}
+.section[data-color="cyan"] .section-num{color:var(--cyan);background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.section[data-color="violet"] .section-num{color:var(--violet);background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.section[data-color="accent"] .section-num{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.section[data-color="emerald"] .section-num{color:var(--emerald);background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.section[data-color="rose"] .section-num{color:var(--rose);background:var(--rose-soft);border-color:color-mix(in srgb,var(--rose) 25%,transparent)}
+
+.section h2{
+  font-size:clamp(23px,3vw,31px);line-height:1.2;letter-spacing:-.8px;
+  font-weight:800;margin:0;text-wrap:balance;
+  position:relative;display:inline-block;
+}
+.section h2::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:3px;width:44px;
+  border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .8s var(--ease);
+}
+.section.reveal.in h2::after{transform:scaleX(1)}
+.section-desc{margin:18px 0 0;color:var(--muted);font-size:14.5px;max-width:62ch}
+
+.content p{margin:0 0 20px;color:var(--text-2);font-size:16.5px;line-height:1.78}
+.content h3{
+  font-size:19px;font-weight:700;letter-spacing:-.3px;
+  margin:36px 0 14px;color:var(--text);
+}
+.content strong{color:var(--text);font-weight:700}
+.content ul{margin:0 0 22px;padding-left:0;list-style:none}
+.content ul li{
+  position:relative;padding-left:26px;margin-bottom:11px;
+  color:var(--text-2);font-size:16px;line-height:1.7;
+}
+.content ul li::before{
+  content:"";position:absolute;left:6px;top:11px;width:6px;height:6px;border-radius:2px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  transform:rotate(45deg);
+}
+.content ol{margin:0 0 22px;padding-left:0;list-style:none;counter-reset:ol}
+.content ol li{
+  position:relative;padding-left:38px;margin-bottom:14px;counter-increment:ol;
+  color:var(--text-2);font-size:16px;line-height:1.7;
+}
+.content ol li::before{
+  content:counter(ol,decimal-leading-zero);
+  position:absolute;left:0;top:1px;font-family:var(--mono);font-size:11px;
+  font-weight:600;color:var(--accent);
+  background:var(--accent-soft);padding:3px 6px;border-radius:6px;
+}
+
+.term{
+  display:inline;font:inherit;font-weight:600;
+  padding:1px 3px;border-radius:4px;
+  color:var(--cyan);
+  border-bottom:1.5px dotted color-mix(in srgb,var(--cyan) 60%,transparent);
+  background:linear-gradient(180deg,transparent 70%,var(--cyan-soft) 70%);
+  transition:background .25s var(--ease),color .25s var(--ease);
+  cursor:pointer;
+}
+.term:hover{background:var(--cyan-soft);color:var(--violet)}
+.term::after{
+  content:"↗";font-size:9px;vertical-align:super;margin-left:2px;
+  opacity:.6;font-family:var(--mono);
+}
+
+.legal-cite{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:.88em;font-weight:600;
+  padding:2px 9px 2px 8px;margin:0 2px;border-radius:var(--r-full);
+  color:var(--violet);
+  background:linear-gradient(120deg,var(--violet-soft),transparent 90%);
+  border:1px solid color-mix(in srgb,var(--violet) 30%,transparent);
+  transition:all .3s var(--ease);
+  cursor:pointer;position:relative;overflow:hidden;
+  white-space:nowrap;
+}
+.legal-cite::before{
+  content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--violet) 25%,transparent),transparent);
+  transition:left .6s var(--ease);
+}
+.legal-cite:hover{
+  transform:translateY(-1px);
+  color:var(--violet);
+  background:var(--violet-soft);
+  border-color:var(--violet);
+  box-shadow:0 6px 18px -6px var(--violet-soft);
+}
+.legal-cite:hover::before{left:100%}
+.legal-cite svg{width:12px;height:12px;flex-shrink:0}
+.legal-cite[data-kind="decree"]{
+  color:var(--accent);
+  background:linear-gradient(120deg,var(--accent-soft),transparent 90%);
+  border-color:color-mix(in srgb,var(--accent) 30%,transparent);
+}
+.legal-cite[data-kind="decree"]:hover{background:var(--accent-soft);border-color:var(--accent);box-shadow:0 6px 18px -6px var(--accent-soft)}
+.legal-cite[data-kind="law"]{
+  color:var(--cyan);
+  background:linear-gradient(120deg,var(--cyan-soft),transparent 90%);
+  border-color:color-mix(in srgb,var(--cyan) 30%,transparent);
+}
+.legal-cite[data-kind="law"]:hover{background:var(--cyan-soft);border-color:var(--cyan);box-shadow:0 6px 18px -6px var(--cyan-soft)}
+
+.callout{
+  position:relative;margin:28px 0;padding:20px 22px 20px 24px;
+  border-radius:var(--r-md);border:1px solid var(--border);
+  background:var(--surface-2);overflow:hidden;
+}
+.callout::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+}
+.callout::after{
+  content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;
+  border-radius:50%;background:radial-gradient(circle,var(--cyan-soft),transparent 70%);
+  opacity:.6;pointer-events:none;
+}
+.callout.note::before{background:linear-gradient(180deg,var(--cyan),var(--violet))}
+.callout.warn::before{background:linear-gradient(180deg,var(--accent),var(--rose))}
+.callout.warn{background:linear-gradient(120deg,var(--accent-soft),transparent 60%)}
+.callout.warn::after{background:radial-gradient(circle,var(--accent-soft),transparent 70%)}
+.callout.tip::before{background:linear-gradient(180deg,var(--emerald),var(--cyan))}
+.callout.tip{background:linear-gradient(120deg,var(--emerald-soft),transparent 60%)}
+.callout.tip::after{background:radial-gradient(circle,var(--emerald-soft),transparent 70%)}
+.callout-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:7px;
+  color:var(--cyan);
+}
+.callout.warn .callout-label{color:var(--accent)}
+.callout.tip .callout-label{color:var(--emerald)}
+.callout p{margin:0;font-size:15px;line-height:1.7;color:var(--text-2);position:relative;z-index:1}
+.callout p + p{margin-top:10px}
+
+.quote{
+  margin:30px 0;padding:26px 28px;border-radius:var(--r-lg);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent);
+  background-size:200% 200%;
+  animation:brandShift 12s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.quote::before{
+  content:"“";position:absolute;top:-6px;left:18px;font-size:70px;
+  font-family:Georgia,serif;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:.35;line-height:1;
+}
+.quote p{
+  margin:0;font-size:17.5px;line-height:1.68;font-weight:500;color:var(--text);
+  position:relative;z-index:1;font-style:italic;
+}
+.quote cite{
+  display:block;margin-top:12px;font-style:normal;font-family:var(--mono);
+  font-size:11px;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;
+}
+
+/* OVERVIEW CARDS */
+.overview-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:30px;
+}
+@media(max-width:600px){.overview-grid{grid-template-columns:1fr}}
+.ov-card{
+  position:relative;padding:20px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);
+  overflow:hidden;
+}
+.ov-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent));
+  background-size:200% 100%;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s var(--ease);
+}
+.ov-card:hover::before{transform:scaleX(1)}
+.ov-card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px 120px at 20% 0%,var(--violet-soft),transparent 70%);
+  opacity:0;transition:opacity .4s var(--ease);
+}
+.ov-card:nth-child(1)::after{background:radial-gradient(320px 120px at 20% 0%,var(--cyan-soft),transparent 70%)}
+.ov-card:nth-child(2)::after{background:radial-gradient(320px 120px at 20% 0%,var(--amber-soft),transparent 70%)}
+.ov-card:nth-child(3)::after{background:radial-gradient(320px 120px at 20% 0%,var(--emerald-soft),transparent 70%)}
+.ov-card:nth-child(4)::after{background:radial-gradient(320px 120px at 20% 0%,var(--violet-soft),transparent 70%)}
+.ov-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 24px 50px -22px rgba(11,27,43,.35);
+  border-color:var(--border-strong);
+}
+.ov-card:hover::after{opacity:1}
+.ov-icon{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);font-size:17px;
+  margin-bottom:13px;transition:transform .5s var(--ease-bounce);
+  position:relative;z-index:1;
+}
+.ov-card:nth-child(1) .ov-icon{background:var(--cyan-soft);border-color:color-mix(in srgb,var(--cyan) 25%,transparent)}
+.ov-card:nth-child(2) .ov-icon{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 25%,transparent)}
+.ov-card:nth-child(3) .ov-icon{background:var(--emerald-soft);border-color:color-mix(in srgb,var(--emerald) 25%,transparent)}
+.ov-card:nth-child(4) .ov-icon{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 25%,transparent)}
+.ov-card:hover .ov-icon{transform:scale(1.15) rotate(-8deg)}
+.ov-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin-bottom:6px;position:relative;z-index:1;
+}
+.ov-value{font-size:14.5px;line-height:1.62;color:var(--text-2);margin:0;position:relative;z-index:1}
+.ov-value b{color:var(--text);font-weight:700}
+
+/* LEGAL MAP */
+.map-shell{
+  margin-top:26px;border-radius:var(--r-xl);border:1px solid var(--border);
+  background:
+    radial-gradient(600px 300px at 20% 0%,var(--violet-soft),transparent 70%),
+    radial-gradient(600px 300px at 80% 100%,var(--cyan-soft),transparent 70%),
+    var(--surface-2);
+  overflow:hidden;position:relative;
+}
+.map-toolbar{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
+  background:color-mix(in srgb,var(--surface) 60%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.map-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-right:auto}
+.legend-item{
+  display:flex;align-items:center;gap:7px;font-family:var(--mono);
+  font-size:10px;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;
+}
+.legend-swatch{width:9px;height:9px;border-radius:3px}
+.legend-swatch.law{background:var(--cyan);box-shadow:0 0 8px var(--cyan-soft)}
+.legend-swatch.decree{background:var(--accent);box-shadow:0 0 8px var(--accent-soft)}
+.legend-swatch.circ{background:var(--emerald);box-shadow:0 0 8px var(--emerald-soft)}
+
+.map-controls{display:flex;gap:6px}
+.map-btn{
+  width:32px;height:32px;border-radius:9px;display:grid;place-items:center;
+  background:var(--surface);border:1px solid var(--border);color:var(--muted);
+  transition:all .22s var(--ease);font-size:15px;line-height:1;
+}
+.map-btn:hover{
+  color:var(--accent);border-color:var(--accent);transform:translateY(-2px);
+  box-shadow:0 8px 16px -8px var(--accent-soft);
+}
+.map-btn svg{width:15px;height:15px;stroke-width:2}
+
+.map-viewport{
+  position:relative;height:560px;overflow:hidden;cursor:grab;
+  touch-action:none;
+}
+.map-viewport.grabbing{cursor:grabbing}
+@media(max-width:760px){.map-viewport{height:470px}}
+
+.map-canvas{
+  position:absolute;left:50%;top:50%;width:900px;height:680px;
+  margin-left:-450px;margin-top:-340px;
+  transform-origin:center center;
+  transition:transform .12s linear;
+}
+.map-canvas.smooth{transition:transform .5s var(--ease)}
+
+.medges{position:absolute;inset:0;width:900px;height:680px;pointer-events:none}
+.medge{
+  fill:none;stroke:var(--border-strong);stroke-width:1.6;
+  transition:stroke .3s var(--ease),stroke-width .3s var(--ease),opacity .3s var(--ease);
+}
+.medge.hl{
+  stroke:url(#edgeGradient);stroke-width:2.6;
+  filter:drop-shadow(0 0 8px var(--accent-soft));
+}
+.medge.dim{opacity:.15}
+
+.mnode{
+  position:absolute;transform:translate(-50%,-50%);
+  padding:11px 15px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);text-align:left;
+  transition:all .3s var(--ease);max-width:190px;min-width:120px;
+}
+.mnode::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+  background:linear-gradient(135deg,var(--accent),var(--violet),var(--cyan));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.mnode:hover::before,.mnode:focus-visible::before{opacity:1}
+.mnode:hover,.mnode:focus-visible{
+  transform:translate(-50%,-50%) translateY(-4px);
+  box-shadow:0 16px 40px -14px rgba(224,138,43,.5);
+  z-index:5;
+}
+.mnode.dim{opacity:.28;filter:grayscale(.7)}
+.mnode-type{
+  display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1.3px;
+  text-transform:uppercase;font-weight:600;margin-bottom:5px;
+}
+.mnode[data-kind="law"] .mnode-type{color:var(--cyan)}
+.mnode[data-kind="decree"] .mnode-type{color:var(--accent)}
+.mnode[data-kind="circ"] .mnode-type{color:var(--emerald)}
+.mnode-title{display:block;font-size:13px;font-weight:600;line-height:1.35;color:var(--text)}
+.mnode[data-level="root"]{
+  background:linear-gradient(140deg,var(--primary),var(--violet),var(--cyan));
+  background-size:200% 200%;
+  animation:brandShift 8s ease infinite;
+  border-color:transparent;
+}
+.mnode[data-level="root"] .mnode-title{color:#fff}
+.mnode[data-level="root"] .mnode-type{color:var(--accent-2)}
+
+.map-hint{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;letter-spacing:.8px;color:var(--muted);
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  padding:7px 14px;border-radius:var(--r-full);border:1px solid var(--border);
+  white-space:nowrap;pointer-events:none;
+}
+@media(max-width:600px){.map-hint{font-size:9px;padding:6px 10px}}
+
+/* STEPPER */
+.stepper{position:relative;margin-top:34px;padding-left:38px}
+.stepper::before{
+  content:"";position:absolute;left:11px;top:10px;bottom:10px;width:2px;
+  background:linear-gradient(180deg,var(--accent),var(--violet),var(--cyan),var(--border) 90%);
+  border-radius:2px;opacity:.55;
+}
+.step{
+  position:relative;padding:20px 22px;margin-bottom:14px;
+  border-radius:var(--r-lg);border:1px solid var(--border);
+  background:var(--surface);
+  transition:all .45s var(--ease);overflow:hidden;
+}
+.step::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--accent),var(--rose));
+  transform:scaleY(0);transform-origin:top;
+  transition:transform .5s var(--ease);
+}
+.step::before{
+  content:"";position:absolute;left:-33px;top:26px;width:12px;height:12px;
+  border-radius:50%;background:var(--surface);border:2px solid var(--border-strong);
+  transition:all .45s var(--ease);z-index:2;
+}
+.step.active{
+  border-color:color-mix(in srgb,var(--accent) 45%,transparent);
+  box-shadow:0 20px 50px -24px rgba(224,138,43,.55);
+  transform:translateX(5px);
+}
+.step.active::after{transform:scaleY(1)}
+.step.active::before{
+  border-color:var(--accent);background:var(--accent);
+  box-shadow:0 0 0 5px var(--accent-soft),0 0 20px var(--accent);
+}
+.step-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;position:relative;z-index:1}
+.step-num{
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;
+  color:var(--muted);transition:color .4s var(--ease);
+}
+.step.active .step-num{
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.step-title{font-size:16.5px;font-weight:700;letter-spacing:-.2px;margin:0;color:var(--text)}
+.step p{margin:0;font-size:14.5px;line-height:1.68;color:var(--muted);position:relative;z-index:1}
+.step-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
+.step-tag{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.7px;text-transform:uppercase;
+  padding:4px 9px;border-radius:var(--r-full);background:var(--surface-2);
+  border:1px solid var(--border);color:var(--muted);font-weight:500;
+  transition:all .3s var(--ease);
+}
+.step.active .step-tag{
+  background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,transparent);
+  color:var(--accent);
+}
+
+/* CHECKLIST */
+.checklist{
+  margin-top:26px;border-radius:var(--r-xl);border:1px solid var(--border);
+  background:var(--surface);overflow:hidden;
+}
+.checklist-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:linear-gradient(120deg,var(--emerald-soft),transparent 80%);
+  flex-wrap:wrap;
+}
+.checklist-head h3{margin:0;font-size:14px;font-weight:700;letter-spacing:-.1px}
+.check-progress{display:flex;align-items:center;gap:11px}
+.check-bar{width:110px;height:5px;border-radius:3px;background:var(--border);overflow:hidden;position:relative}
+.check-bar span{
+  display:block;height:100%;width:0%;border-radius:3px;
+  background:linear-gradient(90deg,var(--emerald),var(--cyan),var(--accent));
+  background-size:200% 100%;
+  animation:progressFlow 3s linear infinite;
+  transition:width .5s var(--ease);
+}
+.check-count{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+
+.check-item{
+  display:flex;align-items:flex-start;gap:14px;padding:15px 20px;
+  border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background .3s var(--ease);position:relative;overflow:hidden;
+}
+.check-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--emerald),var(--cyan));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.check-item:has(input:checked)::before{transform:scaleY(1)}
+.check-item:last-child{border-bottom:0}
+.check-item:hover{background:var(--surface-2)}
+.check-item input{position:absolute;opacity:0;width:0;height:0}
+.checkbox{
+  flex-shrink:0;width:21px;height:21px;border-radius:7px;margin-top:2px;
+  border:1.8px solid var(--border-strong);background:var(--surface);
+  display:grid;place-items:center;transition:all .3s var(--ease);
+}
+.checkbox svg{
+  width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .35s var(--ease);
+}
+[data-theme="dark"] .checkbox svg{stroke:#06111E}
+.check-item input:checked + .checkbox{
+  background:linear-gradient(140deg,var(--emerald),var(--cyan));
+  border-color:var(--emerald);
+  box-shadow:0 0 0 4px var(--emerald-soft),0 0 16px var(--emerald-soft);
+}
+.check-item input:checked + .checkbox svg{stroke-dashoffset:0}
+.check-item input:focus-visible + .checkbox{outline:2px solid var(--accent);outline-offset:3px}
+.check-text{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.4}
+.check-sub{font-size:13px;color:var(--muted);font-weight:400;margin-top:3px;line-height:1.5}
+.check-item input:checked ~ .check-body .check-text{
+  color:var(--muted);text-decoration:line-through;text-decoration-color:var(--border-strong);
+}
+
+/* FAQ */
+.faq{margin-top:26px;border-top:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--border);position:relative}
+.faq-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--rose),var(--violet));
+  transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);
+}
+.faq-item.open::before{transform:scaleY(1)}
+.faq-q{
+  width:100%;display:flex;align-items:center;gap:18px;text-align:left;
+  padding:20px 4px;font-size:16px;font-weight:600;color:var(--text);
+  letter-spacing:-.2px;transition:color .25s var(--ease);
+}
+.faq-q:hover{color:var(--rose)}
+.faq-item.open .faq-q{color:var(--rose)}
+.faq-icon{
+  margin-left:auto;flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:1px solid var(--border);display:grid;place-items:center;
+  transition:all .35s var(--ease);position:relative;
+}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;background:var(--muted);border-radius:2px;
+  transition:all .35s var(--ease);
+}
+.faq-icon::before{width:10px;height:1.6px}
+.faq-icon::after{width:1.6px;height:10px}
+.faq-item.open .faq-icon{
+  background:linear-gradient(140deg,var(--rose),var(--violet));
+  border-color:var(--rose);transform:rotate(90deg);
+  box-shadow:0 0 16px var(--rose-soft);
+}
+.faq-item.open .faq-icon::before,
+.faq-item.open .faq-icon::after{background:#fff}
+[data-theme="dark"] .faq-item.open .faq-icon::before,
+[data-theme="dark"] .faq-item.open .faq-icon::after{background:#06111E}
+.faq-item.open .faq-icon::after{height:0}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a-inner{overflow:hidden}
+.faq-a-inner p{
+  margin:0;padding:0 4px 22px;font-size:15px;line-height:1.75;color:var(--muted);max-width:62ch;
+}
+
+/* RELATED PILLS */
+.related-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.pill{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:10px 16px;border-radius:var(--r-full);
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13.5px;font-weight:600;color:var(--text-2);
+  transition:all .3s var(--ease);position:relative;overflow:hidden;
+}
+.pill::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,var(--cyan-soft),var(--violet-soft));
+  opacity:0;transition:opacity .3s var(--ease);
+}
+.pill:hover{
+  transform:translateY(-3px);border-color:var(--violet);color:var(--violet);
+  box-shadow:0 12px 28px -14px var(--violet);
+}
+.pill:hover::before{opacity:1}
+.pill > *{position:relative;z-index:1}
+.pill svg{width:13px;height:13px;stroke-width:2.2;opacity:.6;transition:transform .3s var(--ease)}
+.pill:hover svg{transform:translate(2px,-2px);opacity:1}
+
+/* TAKEAWAYS */
+.takeaways{
+  margin:0 0 70px;padding:28px;border-radius:var(--r-xl);
+  background:linear-gradient(150deg,var(--violet-soft),var(--accent-soft),transparent 80%);
+  background-size:200% 200%;
+  animation:brandShift 14s ease infinite;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.takeaways::before{
+  content:"";position:absolute;top:-80px;right:-80px;width:220px;height:220px;
+  border-radius:50%;background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+  animation:floatC 12s ease-in-out infinite;
+}
+.takeaways h3{
+  margin:0 0 18px;font-size:13px;font-family:var(--mono);letter-spacing:1.6px;
+  text-transform:uppercase;font-weight:600;
+  display:flex;align-items:center;gap:10px;position:relative;z-index:1;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.takeaways h3::after{content:"";flex:1;height:1px;background:var(--border)}
+.takeaways ul{margin:0;padding:0;list-style:none;display:grid;gap:13px;position:relative;z-index:1}
+.takeaways li{
+  position:relative;padding-left:30px;font-size:15px;line-height:1.68;color:var(--text-2);
+}
+.takeaways li::before{
+  content:"";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:6px;
+  background:linear-gradient(140deg,var(--accent-soft),var(--violet-soft));
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+}
+.takeaways li::after{
+  content:"";position:absolute;left:5px;top:10px;width:5px;height:8px;
+  border-right:1.8px solid var(--accent);border-bottom:1.8px solid var(--accent);
+  transform:rotate(42deg);
+}
+
+/* BENTO */
+.bento{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:26px;
+}
+.bento > *{min-width:0}
+.bento > :nth-child(1){grid-column:span 4;grid-row:span 2}
+.bento > :nth-child(2){grid-column:span 2}
+.bento > :nth-child(3){grid-column:span 2}
+.bento > :nth-child(4){grid-column:span 3}
+.bento > :nth-child(5){grid-column:span 3}
+@media(max-width:820px){
+  .bento{grid-template-columns:1fr}
+  .bento > *{grid-column:span 1 !important;grid-row:auto !important}
+}
+
+.acard{
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:190px;padding:22px;border-radius:var(--r-lg);
+  border:1px solid var(--border);background:var(--surface);
+  overflow:hidden;transition:all .45s var(--ease);text-align:left;
+}
+.acard::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .45s var(--ease);
+  background:radial-gradient(420px 220px at 15% 0%,var(--violet-soft),transparent 68%);
+}
+.acard::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;
+  animation:progressFlow 4s linear infinite;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .55s var(--ease);
+}
+.acard:hover::after{transform:scaleX(1)}
+.acard:hover{
+  transform:translateY(-6px);
+  box-shadow:0 28px 60px -26px rgba(139,92,246,.45);
+  border-color:var(--violet);
+}
+.acard:hover::before{opacity:1}
+.acard > *{position:relative;z-index:1}
+.bento > :nth-child(1).acard{min-height:396px;justify-content:flex-end}
+.bento > :nth-child(1).acard::before{background:radial-gradient(520px 300px at 20% 0%,var(--accent-soft),transparent 68%)}
+@media(max-width:820px){.bento > :nth-child(1).acard{min-height:260px}}
+.acard-cat{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  font-weight:600;margin-bottom:11px;
+  background:linear-gradient(120deg,var(--accent),var(--rose));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.acard h4{
+  margin:0;font-size:17px;font-weight:700;line-height:1.35;letter-spacing:-.4px;
+  color:var(--text);text-wrap:balance;
+}
+.bento > :nth-child(1).acard h4{font-size:clamp(20px,2.6vw,27px);line-height:1.22}
+.acard p{margin:10px 0 0;font-size:13.5px;color:var(--muted);line-height:1.6}
+.acard-meta{
+  margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:.7px;
+  color:var(--muted);display:flex;align-items:center;gap:9px;
+}
+.acard-meta i{width:3px;height:3px;border-radius:50%;background:var(--border-strong)}
+
+/* ============================================================
+   FOOTER — STICKY BOTTOM
+   ============================================================ */
+.footer{
+  border-top:1px solid var(--border);
+  padding:44px 0 40px;
+  background:var(--bg-alt);
+  position:relative;
+  z-index:2;
+  margin-top:auto; /* pushes footer to bottom when content is short */
+}
+.footer-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+}
+.footer p{margin:0;font-size:12.5px;color:var(--muted)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:12.5px;color:var(--muted);transition:color .25s;position:relative}
+.footer-links a::after{
+  content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--rose));
+  transition:width .3s var(--ease);
+}
+.footer-links a:hover{color:var(--accent)}
+.footer-links a:hover::after{width:100%}
+
+/* MODALS */
+.backdrop{
+  position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;
+  background:rgba(6,14,24,.55);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;
+  transition:opacity .32s var(--ease),visibility .32s;
+}
+.backdrop.open{opacity:1;visibility:visible}
+.modal{
+  width:min(560px,100%);max-height:86vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);padding:30px;position:relative;
+  transform:translateY(18px) scale(.97);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);
+  overflow-x:hidden;
+}
+.modal::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;
+  animation:progressFlow 4s linear infinite;
+}
+.backdrop.open .modal{transform:none;opacity:1}
+.modal-sm{width:min(480px,100%)}
+.modal::-webkit-scrollbar{width:6px}
+.modal::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+
+.modal-close{
+  position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:9px;
+  display:grid;place-items:center;color:var(--muted);border:1px solid var(--border);
+  transition:all .25s var(--ease);z-index:2;
+}
+.modal-close:hover{
+  color:var(--danger);border-color:var(--danger);transform:rotate(90deg);
+  box-shadow:0 0 16px var(--rose-soft);
+}
+.modal-close svg{width:15px;height:15px;stroke-width:2.2}
+
+.modal-tag{
+  display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:600;
+  padding:5px 11px;border-radius:var(--r-full);margin-bottom:14px;
+  background:linear-gradient(120deg,var(--accent-soft),var(--rose-soft));
+  color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+}
+.modal h3{
+  margin:0 0 8px;font-size:21px;font-weight:800;letter-spacing:-.6px;
+  line-height:1.28;padding-right:34px;
+  background:linear-gradient(120deg,var(--text),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+[data-theme="dark"] .modal h3{background:linear-gradient(120deg,var(--text),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.modal-meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;color:var(--muted);
+  margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.modal-body{font-size:14.5px;line-height:1.72;color:var(--text-2)}
+.modal-body p{margin:0 0 12px}
+.modal-body p:last-child{margin-bottom:0}
+.modal-section{margin-top:20px}
+.modal-section h5{
+  margin:0 0 8px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--muted);font-weight:600;
+}
+.modal-related{display:flex;flex-wrap:wrap;gap:7px}
+.modal-related span{
+  font-size:12px;padding:5px 11px;border-radius:var(--r-full);
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);
+  font-weight:500;transition:all .25s var(--ease);
+}
+.modal-related span:hover{
+  background:var(--violet-soft);border-color:var(--violet);color:var(--violet);
+  transform:translateY(-2px);
+}
+
+/* CITE POPOVER */
+.cite-popover{
+  position:absolute;z-index:280;width:380px;max-width:calc(100vw - 32px);
+  padding:22px;border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:0 30px 70px -22px rgba(11,27,43,.45),0 0 0 1px color-mix(in srgb,var(--violet) 12%,transparent);
+  opacity:0;visibility:hidden;
+  transform:translateY(-6px) scale(.96);
+  transform-origin:top center;
+  transition:opacity .3s var(--ease),transform .3s var(--ease),visibility .3s;
+  pointer-events:none;
+}
+.cite-popover.open{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.cite-popover::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r-lg) var(--r-lg) 0 0;
+  background:linear-gradient(90deg,var(--violet),var(--accent),var(--cyan));
+  background-size:200% 100%;
+  animation:progressFlow 5s linear infinite;
+}
+.cite-popover::after{
+  content:"";position:absolute;bottom:-8px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:14px;height:14px;background:var(--surface);
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.cite-popover[data-pos="top"]::after{
+  bottom:auto;top:-8px;transform:translateX(-50%) rotate(-135deg);
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.cite-close{
+  position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:7px;
+  display:grid;place-items:center;color:var(--muted);border:1px solid var(--border);
+  transition:all .22s var(--ease);
+}
+.cite-close:hover{color:var(--danger);border-color:var(--danger);transform:rotate(90deg)}
+.cite-close svg{width:12px;height:12px;stroke-width:2.2}
+.cite-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:600;
+  padding:4px 10px;border-radius:var(--r-full);margin-bottom:11px;
+  background:var(--violet-soft);color:var(--violet);
+  border:1px solid color-mix(in srgb,var(--violet) 30%,transparent);
+}
+.cite-tag.decree{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.cite-tag.law{background:var(--cyan-soft);color:var(--cyan);border-color:color-mix(in srgb,var(--cyan) 30%,transparent)}
+.cite-tag .dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulseDot 2s ease infinite}
+.cite-title{
+  margin:0 0 6px;font-size:16px;font-weight:800;letter-spacing:-.3px;line-height:1.3;
+  color:var(--text);padding-right:26px;
+}
+.cite-meta{
+  font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--muted);
+  margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border);
+}
+.cite-body{font-size:13.5px;line-height:1.68;color:var(--text-2);margin:0 0 14px}
+.cite-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cite-btn{
+  font-size:12px;font-weight:600;padding:8px 14px;border-radius:var(--r-full);
+  display:inline-flex;align-items:center;gap:6px;
+  transition:all .25s var(--ease);
+}
+.cite-btn.primary{
+  background:linear-gradient(120deg,var(--violet),var(--accent));
+  background-size:200% 100%;
+  color:#fff;box-shadow:0 8px 20px -10px var(--violet);
+}
+.cite-btn.primary:hover{transform:translateY(-2px);background-position:100% 50%;box-shadow:0 12px 28px -10px var(--violet)}
+.cite-btn.ghost{
+  background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);
+}
+.cite-btn.ghost:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-2px)}
+.cite-btn svg{width:12px;height:12px;stroke-width:2.2}
+
+/* SEARCH */
+.search-overlay{
+  position:fixed;inset:0;z-index:320;padding:78px 22px 22px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s;
+  overflow-y:auto;
+}
+.search-overlay.open{opacity:1;visibility:visible}
+.search-box{
+  width:min(720px,100%);margin-inline:auto;
+  transform:translateY(-14px);opacity:0;
+  transition:transform .42s var(--ease),opacity .42s var(--ease);
+}
+.search-overlay.open .search-box{transform:none;opacity:1}
+.search-field{
+  display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-lg);box-shadow:var(--shadow-md);
+  position:relative;overflow:hidden;
+}
+.search-field::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--accent),var(--rose));
+  background-size:200% 100%;
+  animation:progressFlow 4s linear infinite;
+}
+.search-field svg{width:19px;height:19px;color:var(--muted);flex-shrink:0;stroke-width:2}
+.search-field input{
+  flex:1;border:0;background:none;outline:none;padding:19px 0;
+  font-size:16.5px;font-family:inherit;color:var(--text);font-weight:500;
+}
+.search-field input::placeholder{color:var(--muted);font-weight:400}
+.kbd{
+  font-family:var(--mono);font-size:9.5px;padding:4px 7px;border-radius:6px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--muted);
+  flex-shrink:0;
+}
+.search-results{margin-top:22px;display:grid;gap:8px}
+.sr-group-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin:16px 0 8px;padding-left:4px;
+}
+.sr-item{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px 16px;border-radius:var(--r-md);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .22s var(--ease);position:relative;overflow:hidden;
+}
+.sr-item::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--violet),var(--accent));
+  transform:scaleY(0);transform-origin:top;transition:transform .3s var(--ease);
+}
+.sr-item:hover,.sr-item.focused{
+  border-color:var(--violet);transform:translateX(4px);
+  box-shadow:0 10px 26px -12px var(--violet);
+}
+.sr-item:hover::before,.sr-item.focused::before{transform:scaleY(1)}
+.sr-icon{
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);font-size:13px;
+}
+.sr-body{min-width:0;flex:1}
+.sr-title{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.35}
+.sr-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:var(--mono);letter-spacing:.3px}
+.sr-title mark{background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px}
+.empty-state{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty-state .es-icon{font-size:32px;margin-bottom:12px;opacity:.5}
+.empty-state p{margin:0;font-size:14px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(26px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.06s}
+.reveal-d2{transition-delay:.12s}
+.reveal-d3{transition-delay:.18s}
+.reveal-d4{transition-delay:.24s}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .aurora,.particles{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ ANIMATED BACKGROUND ══════════════ -->
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-blob b1"></div>
+  <div class="aurora-blob b2"></div>
+</div>
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<div class="progress" id="progress"></div>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="https://luonghongquang.github.io/Tony-EXIM/">
+      <span class="brand-mark">TE</span>
+      <span>
+        <span class="brand-text">TONY<em>EXIM</em></span>
+        <span class="brand-sub">KNOWLEDGE SYSTEM</span>
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Chính">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Tìm kiếm (Ctrl K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" id="themeBtn" aria-label="Đổi chế độ sáng tối">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu di động">
+  <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#blog" class="active">Blog</a>
+  <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+</nav>
+
+<!-- ══════════════ ARTICLE HERO ══════════════ -->
+<section class="article-hero">
+  <div class="wrap">
+    <div class="crumbs">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a><span class="sep">/</span>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Customs</a><span class="sep">/</span>
+      <span style="color:var(--text-2)">Báo cáo quyết toán</span>
+    </div>
+
+    <span class="chip"><span class="dot"></span>CUSTOMS · LEGAL</span>
+
+    <h1 class="article-title">
+      Hướng dẫn chi tiết Quy trình <span class="accent">Báo cáo Quyết toán</span> Hải quan
+    </h1>
+
+    <p class="article-lead">
+      Báo cáo quyết toán là nghĩa vụ quan trọng nhất — và cũng dễ bị bỏ sót nhất — đối với doanh nghiệp
+      nhập khẩu nguyên liệu để sản xuất hàng xuất khẩu. Một sai lệch nhỏ trong khâu đối chiếu số liệu
+      có thể kéo theo việc giải trình, nộp bổ sung thuế hoặc xử lý vi phạm hành chính.
+    </p>
+
+    <div class="article-meta">
+      <span class="author"><span class="avatar">TQ</span> Tony EXIM</span>
+      <span class="meta-sep"></span>
+      <span>21/01/2025</span>
+      <span class="meta-sep"></span>
+      <span>12 phút đọc</span>
+      <span class="meta-sep"></span>
+      <span style="font-family:var(--mono);font-size:11px">CẬP NHẬT 08/2025</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="wrap">
+  <div class="layout">
+
+    <aside class="toc">
+      <div class="toc-label">Nội dung bài</div>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#overview"><span class="toc-num">01</span>Tổng quan nghĩa vụ</a></li>
+        <li><a href="#legal-map"><span class="toc-num">02</span>Bản đồ pháp lý</a></li>
+        <li><a href="#quy-trinh"><span class="toc-num">03</span>Quy trình 6 bước</a></li>
+        <li><a href="#checklist"><span class="toc-num">04</span>Checklist thực tế</a></li>
+        <li><a href="#faq"><span class="toc-num">05</span>Câu hỏi thường gặp</a></li>
+        <li><a href="#related"><span class="toc-num">06</span>Kiến thức liên quan</a></li>
+      </ul>
+
+      <div class="toc-cta">
+        <p>Tra cứu nhanh thuật ngữ &amp; văn bản pháp lý trong bài viết.</p>
+        <button type="button" onclick="openSearch()">Mở tìm kiếm ⌘K</button>
+      </div>
+    </aside>
+
+    <main class="content">
+
+      <section class="section reveal" id="overview" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 01</span>
+          <h2>Tổng quan nghĩa vụ báo cáo quyết toán</h2>
+          <p class="section-desc">Bốn thông tin bạn cần xác định trước khi bắt tay vào bất kỳ kỳ quyết toán nào.</p>
+        </div>
+
+        <p>
+          Báo cáo quyết toán là việc doanh nghiệp tự đối chiếu, tổng hợp toàn bộ lượng nguyên liệu,
+          vật tư đã nhập khẩu so với lượng đã đưa vào sản xuất, đã xuất khẩu và lượng còn tồn,
+          sau đó báo cáo với cơ quan hải quan. Đây là cơ chế để cơ quan hải quan kiểm soát việc
+          <strong>miễn thuế / hoàn thuế</strong> đối với hàng hóa phục vụ sản xuất xuất khẩu.
+        </p>
+
+        <div class="overview-grid">
+          <div class="ov-card reveal reveal-d1">
+            <div class="ov-icon">📦</div>
+            <div class="ov-label">Đối tượng</div>
+            <p class="ov-value">
+              Doanh nghiệp <b>nhập khẩu nguyên liệu, vật tư để sản xuất hàng xuất khẩu</b>;
+              doanh nghiệp gia công; doanh nghiệp hoạt động trong khu chế xuất.
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d2">
+            <div class="ov-icon">⏱</div>
+            <div class="ov-label">Thời điểm</div>
+            <p class="ov-value">
+              Chậm nhất là <b>ngày thứ 90</b> kể từ ngày kết thúc năm tài chính.
+              Riêng trường hợp chấm dứt hoạt động, thời hạn là <b>45 ngày</b>.
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d3">
+            <div class="ov-icon">📄</div>
+            <div class="ov-label">Hồ sơ</div>
+            <p class="ov-value">
+              Báo cáo quyết toán theo mẫu quy định, bảng tổng hợp số liệu nhập – xuất – tồn,
+              và <b>chứng từ, sổ sách liên quan</b> để đối chiếu khi cần.
+            </p>
+          </div>
+
+          <div class="ov-card reveal reveal-d4">
+            <div class="ov-icon">⚖️</div>
+            <div class="ov-label">Căn cứ pháp lý</div>
+            <p class="ov-value">
+              <button class="legal-cite" data-kind="law" data-doc="lhc">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+                Luật Hải quan 2014
+              </button>,
+              <button class="legal-cite" data-kind="decree" data-doc="nd08">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+                NĐ 08/2015/NĐ-CP
+              </button>,
+              <button class="legal-cite" data-doc="tt38">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+                TT 38/2015/TT-BTC
+              </button> và
+              <button class="legal-cite" data-doc="tt39">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+                TT 39/2018/TT-BTC
+              </button>.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout note">
+          <div class="callout-label">💡 Quick note</div>
+          <p>
+            Một lỗi nhỏ trong <button class="term" data-term="invoice">Invoice</button> hoặc
+            <button class="term" data-term="hs">HS Code</button> có thể dẫn đến việc phải sửa
+            nhiều chứng từ liên quan. Hãy kiểm tra dữ liệu gốc <em>trước</em> khi tổng hợp báo cáo.
+          </p>
+        </div>
+      </section>
+
+      <section class="section reveal" id="legal-map" data-color="violet">
+        <div class="section-head">
+          <span class="section-num">SECTION 02</span>
+          <h2>Bản đồ pháp lý tương tác</h2>
+          <p class="section-desc">Hover để xem quan hệ, click vào từng văn bản để xem chi tiết.</p>
+        </div>
+
+        <div class="map-shell">
+          <div class="map-toolbar">
+            <div class="map-legend">
+              <span class="legend-item"><i class="legend-swatch law"></i>Luật</span>
+              <span class="legend-item"><i class="legend-swatch decree"></i>Nghị định</span>
+              <span class="legend-item"><i class="legend-swatch circ"></i>Thông tư</span>
+            </div>
+            <div class="map-controls">
+              <button class="map-btn" id="zoomIn" aria-label="Phóng to">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <button class="map-btn" id="zoomOut" aria-label="Thu nhỏ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M5 12h14"/></svg>
+              </button>
+              <button class="map-btn" id="zoomReset" aria-label="Đặt lại">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="map-viewport" id="mapViewport">
+            <div class="map-canvas" id="mapCanvas">
+              <svg class="medges" viewBox="0 0 900 680" aria-hidden="true">
+                <defs>
+                  <linearGradient id="edgeGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#8B5CF6"/>
+                    <stop offset="50%" stop-color="#E08A2B"/>
+                    <stop offset="100%" stop-color="#0EA5E9"/>
+                  </linearGradient>
+                </defs>
+                <path class="medge" data-from="lhc" data-to="nd08" d="M450 50 L450 155"/>
+                <path class="medge" data-from="nd08" data-to="tt38" d="M450 155 L450 260"/>
+                <path class="medge" data-from="tt38" data-to="tt39" d="M450 260 L450 365"/>
+                <path class="medge" data-from="tt39" data-to="bcqt" d="M450 365 C450 428, 200 427, 200 490"/>
+                <path class="medge" data-from="tt39" data-to="khaihq" d="M450 365 L450 490"/>
+                <path class="medge" data-from="tt39" data-to="vnaccs" d="M450 365 C450 428, 700 427, 700 490"/>
+                <path class="medge" data-from="bcqt" data-to="mau15" d="M200 490 C200 550, 120 550, 120 610"/>
+              </svg>
+
+              <button class="mnode" data-kind="law" data-level="root" data-doc="lhc" style="left:450px;top:50px">
+                <span class="mnode-type">Luật</span>
+                <span class="mnode-title">Luật Hải quan 2014</span>
+              </button>
+
+              <button class="mnode" data-kind="decree" data-doc="nd08" style="left:450px;top:155px">
+                <span class="mnode-type">Nghị định</span>
+                <span class="mnode-title">08/2015/NĐ-CP</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="tt38" style="left:450px;top:260px">
+                <span class="mnode-type">Thông tư</span>
+                <span class="mnode-title">38/2015/TT-BTC</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="tt39" style="left:450px;top:365px">
+                <span class="mnode-type">Thông tư</span>
+                <span class="mnode-title">39/2018/TT-BTC</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="bcqt" style="left:200px;top:490px">
+                <span class="mnode-type">Nghiệp vụ</span>
+                <span class="mnode-title">Báo cáo quyết toán</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="khaihq" style="left:450px;top:490px">
+                <span class="mnode-type">Nghiệp vụ</span>
+                <span class="mnode-title">Khai hải quan</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="vnaccs" style="left:700px;top:490px">
+                <span class="mnode-type">Hệ thống</span>
+                <span class="mnode-title">VNACCS / VCIS</span>
+              </button>
+
+              <button class="mnode" data-kind="circ" data-doc="mau15" style="left:120px;top:610px">
+                <span class="mnode-type">Biểu mẫu</span>
+                <span class="mnode-title">Mẫu 15/BCQT</span>
+              </button>
+            </div>
+
+            <div class="map-hint">Kéo để di chuyển · Ctrl + cuộn để zoom · Click node để xem chi tiết</div>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">✓ Cách đọc bản đồ</div>
+          <p>
+            Nhánh bên trái là <strong>nghiệp vụ quyết toán</strong>, nhánh giữa là
+            <strong>khai báo hải quan</strong>, nhánh phải là <strong>hệ thống công nghệ</strong>.
+            Cả ba đều bắt nguồn từ
+            <button class="legal-cite" data-doc="tt39">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+              TT 39/2018/TT-BTC
+            </button>
+            — văn bản hợp nhất quan trọng nhất mà người làm XNK cần nắm.
+          </p>
+        </div>
+      </section>
+
+      <section class="section reveal" id="quy-trinh" data-color="accent">
+        <div class="section-head">
+          <span class="section-num">SECTION 03</span>
+          <h2>Quy trình 6 bước</h2>
+          <p class="section-desc">Cuộn để theo dõi từng bước — bước đang xem sẽ được đánh dấu.</p>
+        </div>
+
+        <p>
+          Trình tự dưới đây áp dụng cho doanh nghiệp sản xuất xuất khẩu theo quy định tại
+          <button class="legal-cite" data-doc="tt39">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+            Thông tư 39/2018/TT-BTC
+          </button>
+          (sửa đổi, bổ sung
+          <button class="legal-cite" data-doc="tt38">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+            Thông tư 38/2015/TT-BTC
+          </button>).
+        </p>
+
+        <div class="stepper" id="stepper">
+          <div class="step">
+            <div class="step-top"><span class="step-num">01</span><h3 class="step-title">Thu thập dữ liệu</h3></div>
+            <p>Tập hợp toàn bộ tờ khai nhập khẩu, tờ khai xuất khẩu, hóa đơn, phiếu nhập kho – xuất kho và định mức nguyên liệu trong kỳ quyết toán.</p>
+            <div class="step-tags"><span class="step-tag">Tờ khai</span><span class="step-tag">Invoice</span><span class="step-tag">Phiếu kho</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">02</span><h3 class="step-title">Đối chiếu nhập – xuất</h3></div>
+            <p>So khớp số liệu trên tờ khai hải quan với sổ sách kế toán và thực tế kho. Đây là bước phát hiện phần lớn sai lệch.</p>
+            <div class="step-tags"><span class="step-tag">Đối chiếu</span><span class="step-tag">Kế toán</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">03</span><h3 class="step-title">Xử lý tồn kho</h3></div>
+            <p>Xác định lượng nguyên liệu còn tồn cuối kỳ, bao gồm tồn tại kho doanh nghiệp, tồn tại kho ngoại quan và hàng đang trên đường.</p>
+            <div class="step-tags"><span class="step-tag">Tồn kho</span><span class="step-tag">Kho ngoại quan</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">04</span><h3 class="step-title">Kiểm tra chênh lệch</h3></div>
+            <p>Phân tích nguyên nhân chênh lệch: sai định mức, hư hỏng, hao hụt tự nhiên, chuyển mục đích sử dụng hay sai sót khai báo.</p>
+            <div class="step-tags"><span class="step-tag">Định mức</span><span class="step-tag">Hao hụt</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">05</span><h3 class="step-title">Lập báo cáo</h3></div>
+            <p>Lập báo cáo quyết toán theo mẫu quy định, kèm bảng tổng hợp số liệu và thuyết minh chênh lệch nếu có.</p>
+            <div class="step-tags"><span class="step-tag">Mẫu 15/BCQT</span><span class="step-tag">Thuyết minh</span></div>
+          </div>
+
+          <div class="step">
+            <div class="step-top"><span class="step-num">06</span><h3 class="step-title">Nộp / xử lý theo quy định</h3></div>
+            <p>Nộp qua hệ thống <button class="term" data-term="ecus">ECUS</button> hoặc nộp trực tiếp. Theo dõi phản hồi và bổ sung hồ sơ nếu cơ quan hải quan yêu cầu.</p>
+            <div class="step-tags"><span class="step-tag">ECUS</span><span class="step-tag">Theo dõi</span></div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p>Quyết toán không phải là việc của riêng bộ phận hải quan — nó là bài kiểm tra tổng thể độ chính xác của toàn bộ chuỗi chứng từ.</p>
+          <cite>Tony EXIM</cite>
+        </div>
+      </section>
+
+      <section class="section reveal" id="checklist" data-color="emerald">
+        <div class="section-head">
+          <span class="section-num">SECTION 04</span>
+          <h2>Checklist thực tế</h2>
+          <p class="section-desc">Tick từng mục khi bạn đã có đủ dữ liệu trong tay.</p>
+        </div>
+
+        <div class="checklist" id="checklist-box">
+          <div class="checklist-head">
+            <h3>Hồ sơ cần chuẩn bị</h3>
+            <div class="check-progress">
+              <div class="check-bar"><span id="checkBar"></span></div>
+              <span class="check-count" id="checkCount">0/7 hoàn thành</span>
+            </div>
+          </div>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Dữ liệu nhập khẩu</span>
+              <span class="check-sub">Import data — tờ khai, invoice, packing list</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Dữ liệu xuất khẩu</span>
+              <span class="check-sub">Export data — tờ khai xuất, hóa đơn thương mại</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Số liệu tồn kho</span>
+              <span class="check-sub">Inventory — kiểm kê thực tế và sổ kho</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Định mức sử dụng nguyên liệu</span>
+              <span class="check-sub">Material usage — định mức đã đăng ký</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Tờ khai hải quan</span>
+              <span class="check-sub">Customs declarations — đầy đủ và đúng trạng thái</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Giấy chứng nhận xuất xứ</span>
+              <span class="check-sub"><button class="term" data-term="co" onclick="event.preventDefault()">C/O</button> — kiểm tra hiệu lực và tiêu chí xuất xứ</span>
+            </span>
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="checkbox"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            <span class="check-body">
+              <span class="check-text">Chứng từ hỗ trợ</span>
+              <span class="check-sub">Supporting documents — biên bản, thuyết minh chênh lệch</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-label">⚠ Lưu ý quan trọng</div>
+          <p>
+            Nếu phát hiện chênh lệch sau khi đã nộp báo cáo, doanh nghiệp cần chủ động
+            khai bổ sung và giải trình theo
+            <button class="legal-cite" data-doc="tt39">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M3 12h4l2 5 2-5h4l2 5 2-5h2"/></svg>
+              TT 39/2018/TT-BTC
+            </button>.
+            Việc chủ động xử lý luôn có lợi hơn so với việc để cơ quan hải quan phát hiện
+            trong quá trình kiểm tra sau thông quan.
+          </p>
+        </div>
+      </section>
+
+      <section class="section reveal" id="faq" data-color="rose">
+        <div class="section-head">
+          <span class="section-num">SECTION 05</span>
+          <h2>Câu hỏi thường gặp</h2>
+        </div>
+
+        <div class="faq" id="faq">
+          <div class="faq-item">
+            <button class="faq-q">Báo cáo quyết toán là gì?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Là báo cáo do doanh nghiệp tự lập, đối chiếu toàn bộ lượng nguyên liệu, vật tư nhập khẩu với lượng đã sử dụng để sản xuất hàng xuất khẩu, lượng đã xuất khẩu và lượng còn tồn, nhằm chứng minh việc sử dụng hàng hóa đúng mục đích được miễn thuế hoặc hoàn thuế.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Đối tượng nào phải lập báo cáo quyết toán?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Doanh nghiệp nhập khẩu nguyên liệu, vật tư để sản xuất hàng hóa xuất khẩu; doanh nghiệp nhận gia công cho thương nhân nước ngoài; doanh nghiệp hoạt động trong khu chế xuất, khu công nghiệp xuất khẩu và một số trường hợp tạm nhập tái xuất theo quy định.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Thời hạn nộp báo cáo quyết toán là khi nào?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Chậm nhất là ngày thứ 90 kể từ ngày kết thúc năm tài chính. Đối với trường hợp chấm dứt hoạt động, thời hạn nộp là 45 ngày kể từ ngày chấm dứt. Doanh nghiệp nên lập kế hoạch quyết toán từ trước khi kết thúc năm ít nhất 2 tháng.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Chênh lệch số liệu thì xử lý thế nào?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Trước tiên cần xác định nguyên nhân: sai định mức, hao hụt tự nhiên, hư hỏng, mất mát, chuyển mục đích sử dụng hay sai sót khai báo. Tùy từng trường hợp sẽ có hướng xử lý tương ứng — khai bổ sung, nộp thuế bổ sung hoặc giải trình bằng biên bản, chứng từ chứng minh.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q">Có phải nộp báo cáo khi không còn hoạt động sản xuất xuất khẩu?<span class="faq-icon"></span></button>
+            <div class="faq-a"><div class="faq-a-inner">
+              <p>Có. Khi chấm dứt hoạt động sản xuất xuất khẩu, doanh nghiệp vẫn phải lập báo cáo quyết toán cho phần nguyên liệu, vật tư đã nhập khẩu theo diện miễn thuế, và thời hạn rút ngắn còn 45 ngày kể từ ngày chấm dứt.</p>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="related" data-color="cyan">
+        <div class="section-head">
+          <span class="section-num">SECTION 06</span>
+          <h2>Kiến thức liên quan</h2>
+          <p class="section-desc">Những chủ đề bạn nên đọc tiếp để hoàn thiện bức tranh.</p>
+        </div>
+
+        <div class="related-pills">
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">C/O Form EUR.1
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">C/O Form E
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">HS Code
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Customs Declaration
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">VNACCS
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Invoice
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="pill" href="https://luonghongquang.github.io/Tony-EXIM/#blog">Packing List
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+        </div>
+      </section>
+
+      <div class="takeaways reveal">
+        <h3>Key takeaways</h3>
+        <ul>
+          <li>Thời hạn nộp báo cáo quyết toán là <strong>90 ngày</strong> kể từ ngày kết thúc năm tài chính.</li>
+          <li>Ba nhóm dữ liệu cốt lõi: <strong>nhập khẩu – xuất khẩu – tồn kho</strong>.</li>
+          <li>Mọi chênh lệch đều phải được <strong>giải trình bằng chứng từ</strong>, không được bỏ qua.</li>
+          <li>Hệ thống <button class="term" data-term="ecus">ECUS</button> là kênh nộp chính thức hiện nay.</li>
+          <li>Chủ động rà soát trước khi nộp luôn rẻ hơn xử lý sau kiểm tra.</li>
+        </ul>
+      </div>
+
+      <div class="section reveal" style="margin-bottom:40px">
+        <div class="section-head">
+          <span class="section-num">ĐỌC TIẾP</span>
+          <h2>Bài viết liên quan</h2>
+        </div>
+
+        <div class="bento">
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Customs · Featured</div>
+            <h4>Kiểm tra sau thông quan: Doanh nghiệp cần chuẩn bị những gì?</h4>
+            <p>Quy trình, thời hạn và những điểm dễ bị xử lý vi phạm nhất trong kiểm tra sau thông quan.</p>
+            <div class="acard-meta">14 phút đọc <i></i> 18/01/2025</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Documentation</div>
+            <h4>Phân biệt C/O Form E và Form EUR.1</h4>
+            <div class="acard-meta">8 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Logistics</div>
+            <h4>DEM &amp; DET: Cách tránh phí lưu bãi</h4>
+            <div class="acard-meta">6 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Supply Chain</div>
+            <h4>Định mức nguyên liệu: Nền tảng của mọi kỳ quyết toán</h4>
+            <div class="acard-meta">11 phút đọc</div>
+          </a>
+
+          <a class="acard" href="https://luonghongquang.github.io/Tony-EXIM/#blog">
+            <div class="acard-cat">Legal</div>
+            <h4>Thông tư 39/2018/TT-BTC — những thay đổi cốt lõi</h4>
+            <div class="acard-meta">9 phút đọc</div>
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="brand-mark">TE</span>
+      <div>
+        <div class="brand-text" style="font-size:15px">TONY<em>EXIM</em></div>
+        <p style="margin-top:2px">Import – Export Knowledge System</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="https://luonghongquang.github.io/Tony-EXIM/">Home</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#about">About</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#resume">Resume</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#portfolio">Portfolio</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#blog">Blog</a>
+      <a href="https://luonghongquang.github.io/Tony-EXIM/#contact">Contact</a>
+    </div>
+    <p>© 2025 TONY EXIM. Kiến thức thực chiến cho người làm XNK.</p>
+  </div>
+</footer>
+
+<!-- ══════════════ CITE POPOVER ══════════════ -->
+<div class="cite-popover" id="citePopover" role="dialog" aria-label="Chi tiết văn bản pháp lý">
+  <button class="cite-close" id="citeClose" aria-label="Đóng">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <span class="cite-tag" id="citeTag"><span class="dot"></span>VĂN BẢN</span>
+  <h4 class="cite-title" id="citeTitle"></h4>
+  <div class="cite-meta" id="citeMeta"></div>
+  <p class="cite-body" id="citeBody"></p>
+  <div class="cite-actions">
+    <button class="cite-btn primary" id="citeOpen">
+      Xem toàn bộ
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    </button>
+    <button class="cite-btn ghost" id="citeSearch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Tìm liên quan
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ TERM MODAL ══════════════ -->
+<div class="backdrop" id="termModal" role="dialog" aria-modal="true" aria-labelledby="termTitle">
+  <div class="modal modal-sm">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="termTag">THUẬT NGỮ</div>
+    <h3 id="termTitle">C/O</h3>
+    <div class="modal-meta" id="termSub">Certificate of Origin</div>
+    <div class="modal-body">
+      <p id="termDef"></p>
+      <div class="modal-section">
+        <h5>Ý nghĩa thực tế</h5>
+        <p id="termPrac"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Khái niệm liên quan</h5>
+        <div class="modal-related" id="termRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ LEGAL MODAL ══════════════ -->
+<div class="backdrop" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="modal">
+    <button class="modal-close" data-close aria-label="Đóng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal-tag" id="legalTag">VĂN BẢN</div>
+    <h3 id="legalTitle"></h3>
+    <div class="modal-meta" id="legalMeta"></div>
+    <div class="modal-body">
+      <p id="legalDesc"></p>
+      <div class="modal-section">
+        <h5>Nội dung liên quan</h5>
+        <p id="legalContent"></p>
+      </div>
+      <div class="modal-section">
+        <h5>Văn bản liên quan</h5>
+        <div class="modal-related" id="legalRelated"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SEARCH OVERLAY ══════════════ -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Tìm kiếm">
+  <div class="search-box">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="searchInput" placeholder="Tìm bài viết, thuật ngữ, văn bản pháp lý…" autocomplete="off" spellcheck="false">
+      <span class="kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   TONY EXIM — MAIN SCRIPT
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const $  = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+  /* 0. PARTICLES */
+  (function makeParticles() {
+    const container = $('#particles');
+    if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colors = ['#0EA5E9', '#8B5CF6', '#E08A2B', '#10B981', '#F43F5E'];
+    const count = window.innerWidth < 640 ? 12 : 24;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = (100 + Math.random() * 40) + '%';
+      p.style.background = colors[i % colors.length];
+      p.style.animationDuration = (14 + Math.random() * 20) + 's';
+      p.style.animationDelay = (-Math.random() * 20) + 's';
+      p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+      p.style.boxShadow = '0 0 12px currentColor';
+      p.style.color = colors[i % colors.length];
+      container.appendChild(p);
+    }
+  })();
+
+  /* 1. THEME */
+  const themeBtn = $('#themeBtn');
+  const themeIcon = $('#themeIcon');
+  const SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeIcon.innerHTML = t === 'dark' ? SUN : MOON;
+    try { localStorage.setItem('te-theme', t); } catch (e) {}
+  }
+  let saved = 'light';
+  try { saved = localStorage.getItem('te-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+  applyTheme(saved);
+
+  themeBtn.addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* 2. SCROLL / PROGRESS */
+  const nav = $('#nav');
+  const progress = $('#progress');
+
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 20);
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = h > 0 ? Math.min(100, (y / h) * 100) + '%' : '0%';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* 3. MOBILE MENU */
+  const menuBtn = $('#menuBtn');
+  const mobileMenu = $('#mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  $$('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* 4. REVEAL */
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  $$('.reveal').forEach(el => revealIO.observe(el));
+
+  /* 5. TOC */
+  const tocLinks = $$('#tocList a');
+  const sections = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+  const tocIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = '#' + e.target.id;
+        tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => tocIO.observe(s));
+
+  /* 6. STEPPER */
+  const steps = $$('#stepper .step');
+  const stepIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      e.target.classList.toggle('active', e.isIntersecting);
+    });
+  }, { rootMargin: '-32% 0px -42% 0px', threshold: 0 });
+  steps.forEach(s => stepIO.observe(s));
+
+  /* 7. CHECKLIST */
+  const checkItems = $$('#checklist-box .check-item input');
+  const checkBar = $('#checkBar');
+  const checkCount = $('#checkCount');
+
+  function updateChecklist() {
+    const total = checkItems.length;
+    const done = checkItems.filter(i => i.checked).length;
+    checkBar.style.width = (done / total * 100) + '%';
+    checkCount.textContent = done + '/' + total + ' hoàn thành';
+  }
+  checkItems.forEach(i => i.addEventListener('change', updateChecklist));
+  updateChecklist();
+
+  /* 8. FAQ */
+  $$('#faq .faq-item').forEach(item => {
+    const btn = $('.faq-q', item);
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      $$('#faq .faq-item').forEach(i => {
+        i.classList.remove('open');
+        $('.faq-q', i).setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* 9. TERMS */
+  const TERMS = {
+    co: {
+      name: 'C/O — Certificate of Origin',
+      sub: 'Giấy chứng nhận xuất xứ hàng hóa',
+      def: 'C/O là chứng từ do cơ quan có thẩm quyền của nước xuất khẩu cấp, xác nhận nguồn gốc xuất xứ của hàng hóa. Đây là căn cứ để hưởng thuế suất ưu đãi theo các Hiệp định thương mại tự do (FTA).',
+      prac: 'Trong báo cáo quyết toán, C/O là một trong những chứng từ được kiểm tra chéo. Sai lệch giữa C/O và tờ khai — đặc biệt về tiêu chí xuất xứ hoặc trị giá — có thể làm mất hiệu lực ưu đãi thuế.',
+      related: ['HS Code', 'Rules of Origin', 'Form EUR.1', 'Form E']
+    },
+    hs: {
+      name: 'HS Code',
+      sub: 'Harmonized System Code — Mã phân loại hàng hóa',
+      def: 'HS Code là mã số phân loại hàng hóa theo hệ thống hài hòa của Tổ chức Hải quan Thế giới (WCO). Tại Việt Nam, mã HS thường ở cấp 8 chữ số theo Biểu thuế xuất nhập khẩu.',
+      prac: 'HS Code quyết định thuế suất, chính sách mặt hàng và các điều kiện kiểm tra chuyên ngành. Áp sai mã HS là một trong những lỗi phổ biến nhất và thường dẫn đến truy thu thuế.',
+      related: ['Biểu thuế XNK', 'C/O', 'Phân loại hàng hóa', 'VNACCS']
+    },
+    vnaccs: {
+      name: 'VNACCS / VCIS',
+      sub: 'Vietnam Automated Cargo Clearance System',
+      def: 'VNACCS là hệ thống thông quan tự động do Hải quan Việt Nam triển khai từ 2014. VCIS là hệ thống thông tin tuyên bố hàng hóa đi kèm, do doanh nghiệp tự khai báo.',
+      prac: 'Toàn bộ tờ khai điện tử hiện nay được xử lý qua VNACCS/VCIS. Doanh nghiệp cần phân luồng (xanh/vàng/đỏ) và lưu trữ dữ liệu khai báo để phục vụ quyết toán.',
+      related: ['ECUS', 'Khai hải quan điện tử', 'Tờ khai', 'Phân luồng']
+    },
+    ecus: {
+      name: 'ECUS',
+      sub: 'Hệ thống thông quan điện tử — nghiệp vụ quyết toán',
+      def: 'ECUS là hệ thống nghiệp vụ hải quan điện tử dùng cho các thủ tục như báo cáo quyết toán, hoàn thuế, miễn thuế và kiểm tra sau thông quan.',
+      prac: 'Doanh nghiệp nộp báo cáo quyết toán qua ECUS, nhận phản hồi tự động về tình trạng tiếp nhận và các yêu cầu bổ sung hồ sơ từ cơ quan hải quan.',
+      related: ['VNACCS', 'Báo cáo quyết toán', 'Hoàn thuế', 'Miễn thuế']
+    },
+    invoice: {
+      name: 'Invoice',
+      sub: 'Commercial Invoice — Hóa đơn thương mại',
+      def: 'Invoice là chứng từ do người bán phát hành, ghi nhận thông tin hàng hóa, số lượng, đơn giá và tổng trị giá giao dịch giữa người mua và người bán.',
+      prac: 'Invoice là căn cứ xác định trị giá hải quan. Sự không khớp giữa Invoice, Packing List và tờ khai là nguyên nhân phổ biến gây chậm thông quan và phát sinh yêu cầu giải trình.',
+      related: ['Packing List', 'Trị giá hải quan', 'Tờ khai', 'HS Code']
+    },
+    dem: {
+      name: 'DEM — Demurrage',
+      sub: 'Phí lưu container tại cảng',
+      def: 'Demurrage là khoản phí phát sinh khi container lưu quá thời gian miễn phí (free time) tại cảng hoặc bãi, tính từ sau khi dỡ hàng khỏi tàu.',
+      prac: 'Demurrage thường phát sinh do chậm thông quan hoặc chậm làm thủ tục lấy hàng. Chi phí này có thể được tính vào giá thành nhập khẩu.',
+      related: ['DET', 'FCL', 'LCL', 'Free time']
+    },
+    det: {
+      name: 'DET — Detention',
+      sub: 'Phí lưu container ngoài cảng',
+      def: 'Detention là khoản phí phát sinh khi container được lấy ra khỏi cảng nhưng chưa được trả lại đúng hạn cho hãng tàu.',
+      prac: 'Detention thường phát sinh do chậm đóng hàng hoặc chậm trả vỏ container. Cần phân biệt rõ DEM và DET khi đối chiếu hóa đơn logistics.',
+      related: ['DEM', 'FCL', 'LCL', 'Hãng tàu']
+    },
+    incoterms: {
+      name: 'Incoterms',
+      sub: 'International Commercial Terms',
+      def: 'Incoterms là bộ quy tắc thương mại quốc tế do ICC ban hành, quy định trách nhiệm của người mua và người bán về giao hàng, rủi ro và chi phí.',
+      prac: 'Incoterms ảnh hưởng trực tiếp đến việc xác định trị giá hải quan và nghĩa vụ thuế. Chọn sai điều kiện có thể khiến doanh nghiệp khai thiếu hoặc khai thừa trị giá.',
+      related: ['FOB', 'CIF', 'EXW', 'Trị giá hải quan']
+    }
+  };
+
+  const termModal = $('#termModal');
+  const legalModal = $('#legalModal');
+  let lastFocused = null;
+
+  function openModal(el) {
+    lastFocused = document.activeElement;
+    el.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const closeBtn = $('.modal-close', el);
+    setTimeout(() => closeBtn && closeBtn.focus(), 60);
+  }
+  function closeModal(el) {
+    el.classList.remove('open');
+    if (!document.querySelector('.backdrop.open') &&
+        !$('#searchOverlay').classList.contains('open') &&
+        !$('#citePopover').classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  function openTerm(key) {
+    const t = TERMS[key];
+    if (!t) return;
+    $('#termTitle').textContent = t.name;
+    $('#termSub').textContent = t.sub;
+    $('#termDef').textContent = t.def;
+    $('#termPrac').textContent = t.prac;
+    const rel = $('#termRelated');
+    rel.innerHTML = '';
+    t.related.forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(termModal);
+  }
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.term');
+    if (t && !t.closest('.cite-popover')) {
+      e.preventDefault();
+      openTerm(t.dataset.term);
+    }
+  });
+
+  /* 10. LEGAL DOCS */
+  const LEGAL_DOCS = {
+    lhc: {
+      kind: 'law', tag: 'LUẬT',
+      title: 'Luật Hải quan 2014',
+      meta: 'Quốc hội · Ban hành 23/06/2014 · Hiệu lực 01/01/2015',
+      desc: 'Luật Hải quan số 54/2014/QH13 quy định về chính sách, nguyên tắc quản lý nhà nước về hải quan đối với hàng hóa xuất khẩu, nhập khẩu, quá cảnh và phương tiện vận tải.',
+      content: 'Đây là văn bản gốc, là nền tảng cho toàn bộ hệ thống văn bản dưới luật về thủ tục hải quan, kiểm tra giám sát hải quan và tổ chức bộ máy hải quan.',
+      short: 'Văn bản gốc quy định nguyên tắc quản lý nhà nước về hải quan đối với hàng hóa XNK.',
+      related: ['Nghị định 08/2015/NĐ-CP', 'Thông tư 38/2015/TT-BTC', 'Thủ tục hải quan']
+    },
+    nd08: {
+      kind: 'decree', tag: 'NGHỊ ĐỊNH',
+      title: 'Nghị định 08/2015/NĐ-CP',
+      meta: 'Chính phủ · Ban hành 21/01/2015 · Hiệu lực 01/03/2015',
+      desc: 'Quy định chi tiết và biện pháp thi hành Luật Hải quan về thủ tục hải quan, kiểm tra, giám sát hải quan.',
+      content: 'Nghị định này là cầu nối giữa Luật Hải quan và các thông tư hướng dẫn, quy định rõ trình tự thủ tục, hồ sơ và thẩm quyền xử lý của cơ quan hải quan.',
+      short: 'Quy định chi tiết thi hành Luật Hải quan về thủ tục, kiểm tra, giám sát hải quan.',
+      related: ['Luật Hải quan 2014', 'Thông tư 38/2015/TT-BTC', 'Thủ tục hải quan']
+    },
+    tt38: {
+      kind: 'circ', tag: 'THÔNG TƯ',
+      title: 'Thông tư 38/2015/TT-BTC',
+      meta: 'Bộ Tài chính · Ban hành 25/03/2015 · Hiệu lực 01/04/2015',
+      desc: 'Quy định về thủ tục hải quan; kiểm tra, giám sát hải quan; thuế xuất khẩu, thuế nhập khẩu và quản lý thuế đối với hàng hóa xuất khẩu, nhập khẩu.',
+      content: 'Là thông tư nghiệp vụ quan trọng nhất đối với người làm khai báo hải quan. Được sửa đổi, bổ sung bởi Thông tư 39/2018/TT-BTC.',
+      short: 'Thông tư nghiệp vụ cốt lõi về thủ tục hải quan và quản lý thuế XNK.',
+      related: ['Nghị định 08/2015/NĐ-CP', 'Thông tư 39/2018/TT-BTC', 'Khai hải quan']
+    },
+    tt39: {
+      kind: 'circ', tag: 'THÔNG TƯ',
+      title: 'Thông tư 39/2018/TT-BTC',
+      meta: 'Bộ Tài chính · Ban hành 20/04/2018 · Hiệu lực 05/06/2018',
+      desc: 'Sửa đổi, bổ sung một số điều của Thông tư 38/2015/TT-BTC, trong đó có nhiều nội dung quan trọng về báo cáo quyết toán.',
+      content: 'Đây là văn bản hợp nhất quan trọng nhất hiện hành. Người làm XNK cần nắm rõ các điểm sửa đổi về thời hạn, mẫu biểu và hình thức nộp báo cáo quyết toán.',
+      short: 'Sửa đổi TT 38/2015/TT-BTC — văn bản hợp nhất quan trọng nhất về quyết toán.',
+      related: ['Thông tư 38/2015/TT-BTC', 'Báo cáo quyết toán', 'Mẫu 15/BCQT', 'VNACCS']
+    },
+    bcqt: {
+      kind: 'circ', tag: 'NGHIỆP VỤ',
+      title: 'Báo cáo quyết toán',
+      meta: 'Nghĩa vụ định kỳ · Thời hạn 90 ngày sau năm tài chính',
+      desc: 'Hoạt động doanh nghiệp tự đối chiếu, tổng hợp lượng nguyên liệu nhập khẩu – sử dụng – xuất khẩu – tồn kho để báo cáo cơ quan hải quan.',
+      content: 'Là căn cứ để cơ quan hải quan xác nhận việc sử dụng hàng hóa đúng mục đích miễn thuế/hoàn thuế.',
+      short: 'Nghĩa vụ định kỳ đối chiếu nguyên liệu nhập – xuất – tồn.',
+      related: ['Mẫu 15/BCQT', 'ECUS', 'Hoàn thuế', 'Kiểm tra sau thông quan']
+    },
+    khaihq: {
+      kind: 'circ', tag: 'NGHIỆP VỤ',
+      title: 'Khai hải quan',
+      meta: 'Thủ tục bắt buộc · Thực hiện điện tử',
+      desc: 'Việc doanh nghiệp khai báo thông tin hàng hóa, trị giá, thuế suất và các thông tin liên quan để cơ quan hải quan ra quyết định thông quan.',
+      content: 'Dữ liệu khai hải quan là đầu vào cho mọi kỳ quyết toán. Sai sót ở khâu khai báo sẽ kéo dài sang khâu quyết toán.',
+      short: 'Khai báo thông tin hàng hóa để cơ quan hải quan thông quan.',
+      related: ['VNACCS', 'ECUS', 'Tờ khai', 'Phân luồng']
+    },
+    vnaccs: {
+      kind: 'circ', tag: 'HỆ THỐNG',
+      title: 'VNACCS / VCIS',
+      meta: 'Hải quan Việt Nam · Vận hành từ 2014',
+      desc: 'Hệ thống thông quan tự động và hệ thống thông tin tuyên bố hàng hóa của ngành Hải quan Việt Nam.',
+      content: 'Toàn bộ tờ khai điện tử hiện nay được xử lý qua VNACCS/VCIS với cơ chế phân luồng xanh – vàng – đỏ.',
+      short: 'Hệ thống thông quan tự động của ngành Hải quan Việt Nam.',
+      related: ['ECUS', 'Khai hải quan', 'Tờ khai']
+    },
+    mau15: {
+      kind: 'circ', tag: 'BIỂU MẪU',
+      title: 'Mẫu 15/BCQT',
+      meta: 'Phụ lục Thông tư 39/2018/TT-BTC',
+      desc: 'Mẫu báo cáo quyết toán tình hình sử dụng nguyên liệu, vật tư nhập khẩu để sản xuất hàng hóa xuất khẩu.',
+      content: 'Doanh nghiệp lập theo mẫu này, kèm bảng tổng hợp số liệu nhập – xuất – tồn và thuyết minh chênh lệch nếu có.',
+      short: 'Mẫu báo cáo quyết toán tình hình sử dụng nguyên liệu.',
+      related: ['Báo cáo quyết toán', 'Thông tư 39/2018/TT-BTC', 'Định mức nguyên liệu']
+    }
+  };
+
+  /* 11. LEGAL MAP */
+  const viewport = $('#mapViewport');
+  const canvas = $('#mapCanvas');
+  const nodes = $$('.mnode', canvas);
+  const edges = $$('.medge', canvas);
+
+  let scale = 1, tx = 0, ty = 0;
+
+  function applyTransform(smooth) {
+    canvas.classList.toggle('smooth', !!smooth);
+    canvas.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    if (smooth) setTimeout(() => canvas.classList.remove('smooth'), 520);
+  }
+
+  function fitMap(animate) {
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    if (window.innerWidth < 760) {
+      scale = 0.75; tx = 0; ty = 40;
+    } else {
+      const s = Math.min(vw / 900, vh / 680) * 0.94;
+      scale = Math.min(Math.max(s, 0.5), 1);
+      tx = 0; ty = 0;
+    }
+    applyTransform(animate);
+  }
+
+  fitMap(false);
+  window.addEventListener('resize', () => fitMap(false));
+
+  $('#zoomIn').addEventListener('click', () => { scale = Math.min(scale * 1.2, 2.4); applyTransform(true); });
+  $('#zoomOut').addEventListener('click', () => { scale = Math.max(scale / 1.2, 0.35); applyTransform(true); });
+  $('#zoomReset').addEventListener('click', () => fitMap(true));
+
+  viewport.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+    scale = Math.min(Math.max(scale * factor, 0.35), 2.4);
+    applyTransform(false);
+  }, { passive: false });
+
+  let dragging = false, startX = 0, startY = 0, originX = 0, originY = 0, moved = false;
+
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.map-btn')) return;
+    dragging = true; moved = false;
+    startX = e.clientX; startY = e.clientY;
+    originX = tx; originY = ty;
+    viewport.classList.add('grabbing');
+    viewport.setPointerCapture(e.pointerId);
+  });
+
+  viewport.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+    tx = originX + dx;
+    ty = originY + dy;
+    applyTransform(false);
+  });
+
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    viewport.classList.remove('grabbing');
+    try { viewport.releasePointerCapture(e.pointerId); } catch (err) {}
+  }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+
+  nodes.forEach(node => {
+    const id = node.dataset.doc;
+    node.addEventListener('mouseenter', () => {
+      const connected = new Set([id]);
+      edges.forEach(edge => {
+        const { from, to } = edge.dataset;
+        if (from === id || to === id) {
+          edge.classList.add('hl'); edge.classList.remove('dim');
+          connected.add(from); connected.add(to);
+        } else {
+          edge.classList.add('dim'); edge.classList.remove('hl');
+        }
+      });
+      nodes.forEach(n => n.classList.toggle('dim', !connected.has(n.dataset.doc)));
+    });
+    node.addEventListener('mouseleave', () => {
+      edges.forEach(edge => edge.classList.remove('hl', 'dim'));
+      nodes.forEach(n => n.classList.remove('dim'));
+    });
+    node.addEventListener('click', () => {
+      if (moved) return;
+      openLegal(id);
+    });
+  });
+
+  function openLegal(key) {
+    const d = LEGAL_DOCS[key];
+    if (!d) return;
+    $('#legalTag').textContent = d.tag;
+    $('#legalTitle').textContent = d.title;
+    $('#legalMeta').textContent = d.meta;
+    $('#legalDesc').textContent = d.desc;
+    $('#legalContent').textContent = d.content;
+    const rel = $('#legalRelated');
+    rel.innerHTML = '';
+    d.related.forEach(r => {
+      const s = document.createElement('span');
+      s.textContent = r;
+      rel.appendChild(s);
+    });
+    openModal(legalModal);
+  }
+
+  /* 12. CITE POPOVER */
+  const popover = $('#citePopover');
+  let popoverCurrentDoc = null;
+  let popoverAnchor = null;
+
+  function positionPopover(anchor) {
+    const rect = anchor.getBoundingClientRect();
+    const popW = 380;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let left = rect.left + rect.width / 2 - popW / 2;
+    left = Math.max(16, Math.min(left, vw - popW - 16));
+
+    popover.style.visibility = 'hidden';
+    popover.style.opacity = '0';
+    popover.style.transform = 'none';
+    popover.style.display = 'block';
+    popover.style.width = popW + 'px';
+    const popH = popover.offsetHeight;
+
+    const spaceBelow = vh - rect.bottom;
+    const spaceAbove = rect.top;
+    let top, pos;
+
+    if (spaceBelow >= popH + 20 || spaceBelow >= spaceAbove) {
+      top = rect.bottom + window.scrollY + 14;
+      pos = 'bottom';
+    } else {
+      top = rect.top + window.scrollY - popH - 14;
+      pos = 'top';
+    }
+
+    popover.style.left = left + window.scrollX + 'px';
+    popover.style.top = top + 'px';
+    popover.dataset.pos = pos;
+
+    popover.style.visibility = '';
+    popover.style.opacity = '';
+    popover.style.transform = '';
+    popover.style.display = '';
+  }
+
+  function openCitePopover(anchor, docKey) {
+    const d = LEGAL_DOCS[docKey];
+    if (!d) return;
+    popoverCurrentDoc = docKey;
+    popoverAnchor = anchor;
+
+    const tag = $('#citeTag');
+    tag.className = 'cite-tag ' + (d.kind || '');
+    tag.innerHTML = '<span class="dot"></span>' + d.tag;
+
+    $('#citeTitle').textContent = d.title;
+    $('#citeMeta').textContent = d.meta;
+    $('#citeBody').textContent = d.short || d.desc;
+
+    positionPopover(anchor);
+    popover.classList.add('open');
+  }
+
+  function closeCitePopover() {
+    popover.classList.remove('open');
+    popoverCurrentDoc = null;
+    popoverAnchor = null;
+    if (!document.querySelector('.backdrop.open') && !$('#searchOverlay').classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const cite = e.target.closest('.legal-cite');
+    if (cite && !cite.closest('.cite-popover')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (popoverCurrentDoc === cite.dataset.doc && popover.classList.contains('open')) {
+        closeCitePopover();
+      } else {
+        openCitePopover(cite, cite.dataset.doc);
+      }
+      return;
+    }
+    if (popover.classList.contains('open') && !e.target.closest('#citePopover')) {
+      closeCitePopover();
+    }
+  });
+
+  $('#citeClose').addEventListener('click', closeCitePopover);
+
+  $('#citeOpen').addEventListener('click', () => {
+    if (!popoverCurrentDoc) return;
+    const key = popoverCurrentDoc;
+    closeCitePopover();
+    setTimeout(() => openLegal(key), 180);
+  });
+
+  $('#citeSearch').addEventListener('click', () => {
+    if (!popoverCurrentDoc) return;
+    const d = LEGAL_DOCS[popoverCurrentDoc];
+    closeCitePopover();
+    setTimeout(() => {
+      openSearch();
+      searchInput.value = d.title;
+      renderSearch(d.title);
+    }, 180);
+  });
+
+  let scrollRAF = null;
+  window.addEventListener('scroll', () => {
+    if (!popover.classList.contains('open') || !popoverAnchor) return;
+    if (scrollRAF) cancelAnimationFrame(scrollRAF);
+    scrollRAF = requestAnimationFrame(() => {
+      const rect = popoverAnchor.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+        closeCitePopover();
+      } else {
+        positionPopover(popoverAnchor);
+      }
+    });
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (popover.classList.contains('open') && popoverAnchor) {
+      positionPopover(popoverAnchor);
+    }
+  });
+
+  /* 13. MODAL CLOSE */
+  $$('.backdrop').forEach(bd => {
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd) closeModal(bd);
+    });
+    const btn = $('.modal-close', bd);
+    if (btn) btn.addEventListener('click', () => closeModal(bd));
+  });
+
+  /* 14. SEARCH */
+  const SEARCH_DATA = [
+    { type: 'Bài viết', icon: '📄', title: 'Hướng dẫn chi tiết Quy trình Báo cáo Quyết toán Hải quan', meta: 'CUSTOMS · 12 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'Kiểm tra sau thông quan: Doanh nghiệp cần chuẩn bị gì?', meta: 'CUSTOMS · 14 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'Phân biệt C/O Form E và Form EUR.1', meta: 'DOCUMENTATION · 8 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'DEM & DET: Cách tránh phí lưu bãi', meta: 'LOGISTICS · 6 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'Định mức nguyên liệu: Nền tảng của mọi kỳ quyết toán', meta: 'SUPPLY CHAIN · 11 phút đọc', url: '#' },
+    { type: 'Bài viết', icon: '📄', title: 'Thông tư 39/2018/TT-BTC — những thay đổi cốt lõi', meta: 'LEGAL · 9 phút đọc', url: '#' },
+
+    { type: 'Thuật ngữ', icon: '🔖', title: 'C/O — Certificate of Origin', meta: 'Giấy chứng nhận xuất xứ', term: 'co' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'HS Code', meta: 'Mã phân loại hàng hóa', term: 'hs' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'VNACCS / VCIS', meta: 'Hệ thống thông quan tự động', term: 'vnaccs' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'ECUS', meta: 'Hệ thống nghiệp vụ quyết toán', term: 'ecus' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Invoice', meta: 'Hóa đơn thương mại', term: 'invoice' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'DEM — Demurrage', meta: 'Phí lưu container tại cảng', term: 'dem' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'DET — Detention', meta: 'Phí lưu container ngoài cảng', term: 'det' },
+    { type: 'Thuật ngữ', icon: '🔖', title: 'Incoterms', meta: 'Điều kiện thương mại quốc tế', term: 'incoterms' },
+
+    { type: 'Văn bản', icon: '⚖️', title: 'Luật Hải quan 2014', meta: 'Luật · 2014', doc: 'lhc' },
+    { type: 'Văn bản', icon: '⚖️', title: 'Nghị định 08/2015/NĐ-CP', meta: 'Nghị định · 2015', doc: 'nd08' },
+    { type: 'Văn bản', icon: '⚖️', title: 'Thông tư 38/2015/TT-BTC', meta: 'Thông tư · 2015', doc: 'tt38' },
+    { type: 'Văn bản', icon: '⚖️', title: 'Thông tư 39/2018/TT-BTC', meta: 'Thông tư · 2018', doc: 'tt39' },
+    { type: 'Văn bản', icon: '⚖️', title: 'Mẫu 15/BCQT', meta: 'Biểu mẫu · Phụ lục TT39', doc: 'mau15' }
+  ];
+
+  const searchOverlay = $('#searchOverlay');
+  const searchInput = $('#searchInput');
+  const searchResults = $('#searchResults');
+  let focusIndex = -1;
+  let currentResults = [];
+
+  function escapeHTML(s) {
+    return s.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  function highlight(text, q) {
+    if (!q) return escapeHTML(text);
+    const safe = escapeHTML(text);
+    const qSafe = escapeHTML(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return safe.replace(new RegExp('(' + qSafe + ')', 'gi'), '<mark>$1</mark>');
+  }
+
+  function renderSearch(q) {
+    const query = q.trim().toLowerCase();
+    focusIndex = -1;
+
+    if (!query) {
+      currentResults = SEARCH_DATA.slice(0, 5);
+      searchResults.innerHTML =
+        '<div class="sr-group-label">Gợi ý nhanh</div>' +
+        currentResults.map((item, i) => itemHTML(item, '', i)).join('');
+      return;
+    }
+
+    const found = SEARCH_DATA.filter(item =>
+      item.title.toLowerCase().includes(query) ||
+      (item.meta && item.meta.toLowerCase().includes(query)) ||
+      item.type.toLowerCase().includes(query)
+    );
+
+    currentResults = found;
+
+    if (!found.length) {
+      searchResults.innerHTML =
+        '<div class="empty-state">' +
+        '<div class="es-icon">🔍</div>' +
+        '<p>Không tìm thấy kết quả cho "<strong>' + escapeHTML(q) + '</strong>"</p>' +
+        '</div>';
+      return;
+    }
+
+    const groups = {};
+    found.forEach(item => {
+      (groups[item.type] = groups[item.type] || []).push(item);
+    });
+
+    let html = '';
+    let idx = 0;
+    Object.keys(groups).forEach(type => {
+      html += '<div class="sr-group-label">' + type + ' · ' + groups[type].length + '</div>';
+      groups[type].forEach(item => {
+        html += itemHTML(item, q, idx++);
+      });
+    });
+    searchResults.innerHTML = html;
+  }
+
+  function itemHTML(item, q, i) {
+    return '<button class="sr-item" data-index="' + i + '">' +
+      '<span class="sr-icon">' + item.icon + '</span>' +
+      '<span class="sr-body">' +
+        '<span class="sr-title">' + highlight(item.title, q) + '</span>' +
+        '<span class="sr-meta">' + highlight(item.meta || item.type, q) + '</span>' +
+      '</span>' +
+    '</button>';
+  }
+
+  function openSearch() {
+    lastFocused = document.activeElement;
+    searchOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    searchInput.value = '';
+    renderSearch('');
+    setTimeout(() => searchInput.focus(), 80);
+  }
+
+  function closeSearch() {
+    searchOverlay.classList.remove('open');
+    if (!document.querySelector('.backdrop.open') && !popover.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  window.openSearch = openSearch;
+
+  $('#searchBtn').addEventListener('click', openSearch);
+
+  searchOverlay.addEventListener('click', (e) => {
+    if (e.target === searchOverlay) closeSearch();
+  });
+
+  searchInput.addEventListener('input', (e) => renderSearch(e.target.value));
+
+  searchInput.addEventListener('keydown', (e) => {
+    const items = $$('.sr-item', searchResults);
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusIndex = Math.min(focusIndex + 1, items.length - 1);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusIndex = Math.max(focusIndex - 1, 0);
+      items.forEach((el, i) => el.classList.toggle('focused', i === focusIndex));
+      if (items[focusIndex]) items[focusIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (items[focusIndex]) items[focusIndex].click();
+      else if (items[0]) items[0].click();
+    }
+  });
+
+  searchResults.addEventListener('click', (e) => {
+    const btn = e.target.closest('.sr-item');
+    if (!btn) return;
+    const item = currentResults[Number(btn.dataset.index)];
+    if (!item) return;
+    closeSearch();
+    if (item.term) setTimeout(() => openTerm(item.term), 220);
+    else if (item.doc) setTimeout(() => openLegal(item.doc), 220);
+  });
+
+  /* 15. GLOBAL KEYBOARD */
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      else openSearch();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (searchOverlay.classList.contains('open')) closeSearch();
+      if (popover.classList.contains('open')) closeCitePopover();
+      $$('.backdrop.open').forEach(bd => closeModal(bd));
+    }
+  });
+
+  /* 16. SMOOTH ANCHOR (chỉ với link # nội bộ) */
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 92;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
