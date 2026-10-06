@@ -188,8 +188,225 @@ a{color:inherit;text-decoration:none}
   100%{opacity:0}
 }
 
+/* ============================================================
+   ✨ BACKGROUND STAGE — CẬP NHẤT LỚN
+   3 hiệu ứng: Pixel Stars · Multiple Parallax · Shooting Stars
+   ============================================================ */
+.stars-stage{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%,color-mix(in srgb,var(--violet-soft) 70%,transparent),transparent 60%),
+    radial-gradient(ellipse 120% 70% at 50% 110%,color-mix(in srgb,var(--cyan-soft) 60%,transparent),transparent 60%);
+}
+
+/* ── 1A. MULTIPLE BACKGROUND IMAGE PARALLAX ─────────────────── */
+/* 3 lớp radial-gradient chồng nhau di chuyển ngược chiều nhau */
+.bg-parallax{
+  position:absolute;inset:-15%;pointer-events:none;overflow:hidden;
+}
+.bg-parallax-layer{
+  position:absolute;inset:0;will-change:transform;
+  opacity:.55;mix-blend-mode:soft-light;
+  transition:transform .25s linear;
+}
+[data-theme="dark"] .bg-parallax-layer{opacity:.85;mix-blend-mode:screen}
+
+.bg-parallax-layer.pl-1{
+  background:
+    radial-gradient(circle at 18% 28%,var(--accent-soft) 0%,transparent 30%),
+    radial-gradient(circle at 76% 62%,var(--cyan-soft) 0%,transparent 30%),
+    radial-gradient(circle at 42% 88%,var(--violet-soft) 0%,transparent 30%);
+  background-size:150% 150%;
+  animation:plDrift1 70s ease-in-out infinite;
+}
+.bg-parallax-layer.pl-2{
+  background:
+    radial-gradient(circle at 82% 20%,var(--emerald-soft) 0%,transparent 28%),
+    radial-gradient(circle at 12% 72%,var(--rose-soft) 0%,transparent 28%),
+    radial-gradient(circle at 56% 40%,var(--amber-soft) 0%,transparent 28%);
+  background-size:130% 130%;
+  animation:plDrift2 90s ease-in-out infinite;
+}
+.bg-parallax-layer.pl-3{
+  background:
+    radial-gradient(circle at 30% 50%,color-mix(in srgb,var(--violet) 25%,transparent) 0%,transparent 35%),
+    radial-gradient(circle at 70% 30%,color-mix(in srgb,var(--cyan) 25%,transparent) 0%,transparent 35%);
+  background-size:180% 180%;
+  animation:plDrift3 110s ease-in-out infinite;
+}
+
+@keyframes plDrift1{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-70px,50px,0) scale(1.08)}
+}
+@keyframes plDrift2{
+  0%,100%{transform:translate3d(0,0,0) scale(1.05)}
+  50%{transform:translate3d(80px,-60px,0) scale(1)}
+}
+@keyframes plDrift3{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-40px,-80px,0) scale(1.12)}
+}
+
+/* ── 1B. PARALLAX PIXEL STARS ───────────────────────────────── */
+/* 4 lớp sao với kích thước, màu sắc và tốc độ khác nhau */
+.stars-layer{
+  position:absolute;left:0;top:-50vh;width:100%;height:220vh;
+  will-change:transform;
+  transition:transform .08s linear;
+}
+
+.star{
+  position:absolute;
+  border-radius:0;
+  image-rendering:pixelated;
+  transform:translateZ(0);
+  animation:starTwinkle ease-in-out infinite;
+  box-shadow:0 0 8px currentColor;
+}
+.star.deep{
+  width:2px;height:2px;
+  animation-duration:4.5s;
+}
+.star.mid{
+  width:3px;height:3px;
+  animation-duration:3.2s;
+}
+.star.near{
+  width:4px;height:4px;
+  animation-duration:2.4s;
+  box-shadow:0 0 14px currentColor,0 0 4px currentColor;
+}
+.star.shine{
+  width:5px;height:5px;
+  animation-duration:2.8s;
+  box-shadow:0 0 20px currentColor,0 0 6px #fff;
+}
+
+@keyframes starTwinkle{
+  0%,100%{opacity:var(--star-op,1);transform:scale(1)}
+  50%{opacity:calc(var(--star-op,.6) * .3);transform:scale(.7)}
+}
+
+/* Sao shine có hiệu ứng lóe chữ thập */
+.star.shine::before{
+  content:"";position:absolute;inset:-3px;
+  background:
+    linear-gradient(0deg,transparent 45%,currentColor 45%,currentColor 55%,transparent 55%),
+    linear-gradient(90deg,transparent 45%,currentColor 45%,currentColor 55%,transparent 55%);
+  opacity:.5;
+  animation:starFlash 5s ease-in-out infinite;
+}
+@keyframes starFlash{
+  0%,86%,100%{opacity:0}
+  90%{opacity:.7}
+  94%{opacity:.25}
+}
+
+/* ── 1C. SHOOTING STARS ─────────────────────────────────────── */
+/* Sao băng với đuôi gradient nhiều màu */
+.shooting-stars{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+}
+
+.shooting-star{
+  position:absolute;
+  width:2px;height:2px;border-radius:50%;
+  background:#fff;
+  box-shadow:
+    0 0 6px 1px #fff,
+    0 0 14px 3px currentColor,
+    0 0 22px 5px color-mix(in srgb,currentColor 40%,transparent);
+  opacity:0;will-change:transform,opacity;
+  animation:shootStar 3.5s ease-out forwards;
+}
+
+.shooting-star::before{
+  content:"";position:absolute;top:50%;right:0;
+  transform:translateY(-50%);
+  width:180px;height:2px;border-radius:2px;
+  background:linear-gradient(270deg,transparent 0%,currentColor 40%,#fff 90%);
+  opacity:.95;
+  filter:blur(.3px);
+}
+.shooting-star::after{
+  content:"";position:absolute;top:50%;right:0;
+  transform:translateY(-50%);
+  width:280px;height:4px;border-radius:50%;
+  background:linear-gradient(270deg,transparent,color-mix(in srgb,currentColor 50%,transparent));
+  filter:blur(2px);opacity:.5;
+}
+
+@keyframes shootStar{
+  0%{transform:translate3d(0,0,0) rotate(-32deg);opacity:0}
+  6%{opacity:1}
+  72%{opacity:1}
+  100%{transform:translate3d(-620px,400px,0) rotate(-32deg);opacity:0}
+}
+
+/* Ánh sáng tỏa kèm sao băng */
+.shooting-star-glow{
+  position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,currentColor 0%,transparent 70%);
+  filter:blur(24px);pointer-events:none;opacity:0;
+  animation:glowFade 3.5s ease-out forwards;
+}
+@keyframes glowFade{
+  0%,100%{opacity:0;transform:scale(.6)}
+  20%{opacity:.8;transform:scale(1)}
+  80%{opacity:.35;transform:scale(1.35)}
+}
+
+/* ── 1D. DECORATIVE LAYERS ──────────────────────────────────── */
+.stars-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 20%,var(--violet-soft),transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 70%,var(--cyan-soft),transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 105%,var(--accent-soft),transparent 65%);
+  opacity:.5;
+}
+[data-theme="dark"] .stars-glow{opacity:.9}
+
+.pixel-grid{
+  position:absolute;inset:0;pointer-events:none;opacity:.12;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000 25%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,#000 25%,transparent 80%);
+  animation:gridScroll 60s linear infinite;
+}
+[data-theme="dark"] .pixel-grid{opacity:.28}
+@keyframes gridScroll{
+  0%{background-position:0 0,0 0}
+  100%{background-position:40px 40px,40px 40px}
+}
+
+.stars-vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,transparent 30%,color-mix(in srgb,var(--bg) 60%,transparent) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 100%,transparent 40%,color-mix(in srgb,var(--bg) 55%,transparent) 100%);
+}
+
+/* ── REDUCED MOTION ─────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
-  .star,.pixel-grid,.shooting-star{animation:none !important}
+  .star,.pixel-grid,.shooting-star,.shooting-star-glow,
+  .bg-parallax-layer,.stars-layer{
+    animation:none !important;
+    transform:none !important;
+  }
+  .shooting-star,.shooting-star-glow{display:none}
+}
+
+/* ── MOBILE: giảm tải ───────────────────────────────────────── */
+@media(max-width:640px){
+  .stars-layer{opacity:.7}
+  .bg-parallax-layer{opacity:.35}
+  .shooting-star::before{width:110px}
+  .shooting-star::after{width:170px}
 }
 
 /* PROGRESS */
@@ -1230,23 +1447,53 @@ a{color:inherit;text-decoration:none}
   .reveal{opacity:1;transform:none}
   .stars-stage{display:none}
 }
+
+body.idle .shooting-star,
+body.idle .shooting-star-glow {
+  animation-play-state: paused;
+}
+
+.scroll-glow{
+  position:fixed;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--violet),transparent);
+  filter:blur(2px);opacity:.35;pointer-events:none;z-index:99;
+  transition:top .1s linear;
+}
+
+
 </style>
 </head>
 <body>
 
 <!-- ══════════════ ✨ PARALLAX PIXEL STARS BACKGROUND ══════════════ -->
+<!-- ══════════════ ✨ BACKGROUND STAGE ══════════════ -->
 <div class="stars-stage" aria-hidden="true">
+  <!-- Multiple Background Parallax — 3 lớp gradient -->
+  <div class="bg-parallax">
+    <div class="bg-parallax-layer pl-1"></div>
+    <div class="bg-parallax-layer pl-2"></div>
+    <div class="bg-parallax-layer pl-3"></div>
+  </div>
+
+  <!-- Ambient glow + pixel grid -->
   <div class="stars-glow"></div>
   <div class="pixel-grid"></div>
-  <div class="stars-layer" data-speed="0.08" id="starsDeep"></div>
-  <div class="stars-layer" data-speed="0.18" id="starsMid"></div>
-  <div class="stars-layer" data-speed="0.32" id="starsNear"></div>
-  <div class="stars-layer" data-speed="0.5" id="starsShine"></div>
+
+  <!-- Pixel Stars — 4 layer với tốc độ khác nhau -->
+  <div class="stars-layer" data-speed="0.06" id="starsDeep"></div>
+  <div class="stars-layer" data-speed="0.15" id="starsMid"></div>
+  <div class="stars-layer" data-speed="0.28" id="starsNear"></div>
+  <div class="stars-layer" data-speed="0.45" id="starsShine"></div>
+
+  <!-- Shooting stars container -->
   <div class="shooting-stars" id="shootingStars"></div>
+
+  <!-- Vignette + noise -->
   <div class="stars-vignette"></div>
 </div>
 
 <div class="progress" id="progress"></div>
+<div class="scroll-glow" id="scrollGlow" aria-hidden="true"></div>
 
 <!-- ══════════════ NAVBAR ══════════════ -->
 <header class="nav" id="nav">
@@ -2325,80 +2572,166 @@ a{color:inherit;text-decoration:none}
   /* ============================================================
      ✨ PARALLAX PIXEL STARS GENERATION
      ============================================================ */
-  (function makeStars() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  /* ============================================================
+     ✨ BACKGROUND EFFECTS — PIXEL STARS + SHOOTING STARS
+     ============================================================ */
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const IS_MOBILE = window.innerWidth < 640;
 
-    const layerConfigs = [
-      { id: 'starsDeep',  count: window.innerWidth < 640 ? 50 : 100, cls: 'deep',  colors: ['#ffffff','#e0e7ff','#c7d2fe'], opRange: [.35,.6] },
-      { id: 'starsMid',   count: window.innerWidth < 640 ? 35 : 70,  cls: 'mid',   colors: ['#ffffff','#a5b4fc','#fbbf24','#93c5fd'], opRange: [.5,.8] },
-      { id: 'starsNear',  count: window.innerWidth < 640 ? 20 : 40,  cls: 'near',  colors: ['#ffffff','#fbbf24','#a78bfa','#38bdf8'], opRange: [.7,1] },
-      { id: 'starsShine', count: window.innerWidth < 640 ? 8  : 16,  cls: 'shine', colors: ['#ffffff','#fbbf24','#f472b6','#22d3ee'], opRange: [.85,1] }
+  /* ── PARALLAX PIXEL STARS ────────────────────────────────── */
+  (function makeStars() {
+    if (REDUCED) return;
+
+    const configs = [
+      {
+        id: 'starsDeep',
+        count: IS_MOBILE ? 45 : 110,
+        cls: 'deep',
+        colors: ['#FFFFFF', '#E0E7FF', '#C7D2FE'],
+        opRange: [.35, .6]
+      },
+      {
+        id: 'starsMid',
+        count: IS_MOBILE ? 30 : 70,
+        cls: 'mid',
+        colors: ['#FFFFFF', '#A5B4FC', '#FBBF24', '#93C5FD'],
+        opRange: [.5, .8]
+      },
+      {
+        id: 'starsNear',
+        count: IS_MOBILE ? 18 : 38,
+        cls: 'near',
+        colors: ['#FFFFFF', '#FBBF24', '#A78BFA', '#38BDF8'],
+        opRange: [.7, 1]
+      },
+      {
+        id: 'starsShine',
+        count: IS_MOBILE ? 6 : 14,
+        cls: 'shine',
+        colors: ['#FFFFFF', '#FBBF24', '#F472B6', '#22D3EE'],
+        opRange: [.85, 1]
+      }
     ];
 
-    layerConfigs.forEach(cfg => {
+    configs.forEach(cfg => {
       const layer = document.getElementById(cfg.id);
       if (!layer) return;
       const frag = document.createDocumentFragment();
       for (let i = 0; i < cfg.count; i++) {
         const s = document.createElement('div');
         s.className = 'star ' + cfg.cls;
-        // random position across 220vh tall layer
         s.style.left = Math.random() * 100 + '%';
-        s.style.top = Math.random() * 100 + '%';
-        const color = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
-        s.style.background = color;
-        s.style.color = color;
+        s.style.top  = Math.random() * 100 + '%';
+        const c = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
+        s.style.background = c;
+        s.style.color = c;
         const op = cfg.opRange[0] + Math.random() * (cfg.opRange[1] - cfg.opRange[0]);
-        s.style.setProperty('--star-op', op);
-        s.style.opacity = op;
-        s.style.animationDelay = (-Math.random() * 4) + 's';
-        s.style.animationDuration = (1.5 + Math.random() * 3) + 's';
+        s.style.setProperty('--star-op', op.toFixed(2));
+        s.style.opacity = op.toFixed(2);
+        s.style.animationDelay = (-Math.random() * 5) + 's';
+        s.style.animationDuration = (1.8 + Math.random() * 3.4) + 's';
         frag.appendChild(s);
       }
       layer.appendChild(frag);
     });
   })();
 
-  /* Shooting stars */
+  /* ── SHOOTING STARS ──────────────────────────────────────── */
   (function makeShootingStars() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (REDUCED) return;
     const container = document.getElementById('shootingStars');
     if (!container) return;
-    const colors = ['#ffffff', '#fbbf24', '#a78bfa', '#38bdf8'];
-    for (let i = 0; i < 4; i++) {
-      const el = document.createElement('div');
-      el.className = 'shooting-star';
-      el.style.left = (5 + Math.random() * 60) + '%';
-      el.style.top = (5 + Math.random() * 50) + '%';
-      el.style.color = colors[i % colors.length];
-      el.style.animationDuration = (8 + Math.random() * 12) + 's';
-      el.style.animationDelay = (Math.random() * 15) + 's';
-      container.appendChild(el);
+
+    const COLORS = ['#FFFFFF', '#FBBF24', '#A78BFA', '#38BDF8', '#F472B6'];
+
+    function spawnStar() {
+      // Mobile giảm tần suất
+      if (IS_MOBILE && Math.random() < 0.5) {
+        scheduleNext();
+        return;
+      }
+
+      const star = document.createElement('span');
+      star.className = 'shooting-star';
+      const c = COLORS[Math.floor(Math.random() * COLORS.length)];
+      star.style.color = c;
+
+      // Xuất phát ở nửa trên, lệch phải
+      const startX = 30 + Math.random() * 65;   // 30% → 95%
+      const startY = 5 + Math.random() * 42;    // 5% → 47%
+      star.style.left = startX + '%';
+      star.style.top  = startY + '%';
+
+      // Vệt sáng đi kèm
+      const glow = document.createElement('span');
+      glow.className = 'shooting-star-glow';
+      glow.style.color = c;
+      glow.style.left = `calc(${startX}% - 100px)`;
+      glow.style.top  = `calc(${startY}% - 100px)`;
+
+      container.appendChild(star);
+      container.appendChild(glow);
+
+      const cleanup = () => {
+        star.remove();
+        glow.remove();
+      };
+      star.addEventListener('animationend', cleanup, { once: true });
+      setTimeout(cleanup, 4500);
+
+      scheduleNext();
     }
+
+    function scheduleNext() {
+      const base = 3500 + Math.random() * 4500;
+      const burst = Math.random() < 0.2;
+      setTimeout(() => {
+        spawnStar();
+        if (burst) setTimeout(spawnStar, 200 + Math.random() * 350);
+      }, base);
+    }
+
+    // Khởi động sau 1.2s để trang load xong
+    setTimeout(scheduleNext, 1200);
   })();
 
-  /* Parallax scroll */
-  const starLayers = $$('.stars-layer');
-  let ticking = false;
+  /* ── PARALLAX ON SCROLL ──────────────────────────────────── */
+  (function initScrollParallax() {
+    if (REDUCED) return;
 
-  function updateParallax() {
-    const y = window.scrollY;
-    starLayers.forEach(layer => {
-      const speed = parseFloat(layer.dataset.speed || '0.15');
-      const offset = -y * speed;
-      layer.style.transform = `translate3d(0, ${offset}px, 0)`;
-    });
-    ticking = false;
-  }
+    // Star layers (từ HTML data-speed)
+    const starLayers = $$('.stars-layer');
+    // Background parallax layers (nhích nhẹ ngược lại)
+    const bgLayers = $$('.bg-parallax-layer');
 
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(updateParallax);
-      ticking = true;
+    let ticking = false;
+
+    function update() {
+      const y = window.scrollY;
+
+      starLayers.forEach(layer => {
+        const speed = parseFloat(layer.dataset.speed || '0.15');
+        layer.style.transform = `translate3d(0, ${-y * speed}px, 0)`;
+      });
+
+      // Background layers nhích theo scroll với tốc độ rất nhẹ
+      bgLayers.forEach((layer, i) => {
+        const speed = 0.015 * (i + 1);
+        layer.style.transform = `translate3d(0, ${y * speed}px, 0)`;
+      });
+
+      ticking = false;
     }
-  }, { passive: true });
 
-  updateParallax();
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    update();
+  })();
 
   /* THEME */
   const themeBtn = $('#themeBtn');
@@ -2899,6 +3232,21 @@ a{color:inherit;text-decoration:none}
     if (btn) btn.addEventListener('click', () => closeModal(bd));
   });
 
+  /* Tạm dừng sao băng khi user idle > 30s để tiết kiệm pin */
+  (function idleDetection() {
+    let timer;
+    function reset() {
+      document.body.classList.remove('idle');
+      clearTimeout(timer);
+      timer = setTimeout(() => document.body.classList.add('idle'), 30000);
+    }
+    ['mousemove','keydown','touchstart','scroll'].forEach(ev =>
+      window.addEventListener(ev, reset, { passive: true })
+    );
+    reset();
+  })();
+
+
   /* SEARCH */
   const SEARCH_DATA = [
     { type: 'Bài viết', icon: '📄', title: 'Báo cáo quyết toán: Hướng dẫn toàn diện từ A đến Z', meta: 'CUSTOMS · 25 phút đọc', url: '#' },
@@ -3053,6 +3401,8 @@ a{color:inherit;text-decoration:none}
     else if (item.doc) setTimeout(() => openLegal(item.doc), 220);
   });
 
+
+
   /* GLOBAL KEYBOARD */
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -3068,6 +3418,8 @@ a{color:inherit;text-decoration:none}
     }
   });
 
+
+
   /* SMOOTH ANCHOR */
   $$('a[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
@@ -3080,8 +3432,68 @@ a{color:inherit;text-decoration:none}
       window.scrollTo({ top, behavior: 'smooth' });
     });
   });
-
 })();
+
+
+
+
+  (function scrollGlow() {
+    if (REDUCED) return;
+    const glow = document.getElementById('scrollGlow');
+    if (!glow) return;
+    let raf = null;
+    window.addEventListener('scroll', () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const h = window.innerHeight;
+        // Vệt sáng luôn nằm trong viewport, nhích theo tốc độ scroll
+        const pos = (y * 0.15) % h;
+        glow.style.top = pos + 'px';
+        raf = null;
+      });
+    }, { passive: true });
+  })();
+
+
+
+  /* Chuột di chuyển → sao nhích nhẹ theo (chỉ trên desktop) */
+  (function mouseParallax() {
+    if (REDUCED || IS_MOBILE) return;
+    const layers = $$('.stars-layer');
+    let targetX = 0, targetY = 0, curX = 0, curY = 0;
+    let raf = null;
+
+    window.addEventListener('mousemove', (e) => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      targetX = (e.clientX - cx) / cx;
+      targetY = (e.clientY - cy) / cy;
+      if (!raf) loop();
+    }, { passive: true });
+
+    function loop() {
+      curX += (targetX - curX) * 0.06;
+      curY += (targetY - curY) * 0.06;
+      layers.forEach((layer, i) => {
+        const depth = 4 + i * 6;
+        const base = -window.scrollY * parseFloat(layer.dataset.speed || 0.15);
+        layer.style.transform =
+          `translate3d(${curX * depth}px, ${base + curY * depth}px, 0)`;
+      });
+      if (Math.abs(targetX - curX) > 0.001 || Math.abs(targetY - curY) > 0.001) {
+        raf = requestAnimationFrame(loop);
+      } else {
+        raf = null;
+      }
+    }
+  })();
+
+
+
+
+
+
 </script>
 </body>
 </html>
