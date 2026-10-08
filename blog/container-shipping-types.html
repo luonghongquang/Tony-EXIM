@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Container Types & ISO Code Lookup – Tony EXIM Knowledge Base</title>
+  <meta name="description" content="Hướng dẫn chi tiết về các loại container trong vận tải quốc tế. Tra cứu mã ISO cũ và mới, kích thước, đặc điểm và ứng dụng thực tế. Kiến thức XNK từ Tony EXIM.">
+  <meta property="og:title" content="Container Types & ISO Code Lookup – Tony EXIM">
+  <meta property="og:description" content="Tra cứu mã container ISO 6346 – Cũ và mới. Hướng dẫn chọn loại container phù hợp cho hàng hóa XNK.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       DESIGN TOKENS
+       ============================================ */
+    :root {
+      --color-primary: #0A2540;
+      --color-primary-light: #1E3A5F;
+      --color-accent: #F59E0B;
+      --color-accent-hover: #D97706;
+      --color-accent-light: #FCD34D;
+      --color-bg: #FFFFFF;
+      --color-bg-soft: #F8FAFC;
+      --color-bg-card: #FFFFFF;
+      --color-bg-glass: rgba(255, 255, 255, 0.85);
+      --color-text: #1E293B;
+      --color-text-muted: #64748B;
+      --color-text-light: #94A3B8;
+      --color-border: #E2E8F0;
+      --color-border-light: #F1F5F9;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-error: #EF4444;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.25rem;
+      --text-2xl: 1.5rem;
+      --text-3xl: 1.875rem;
+      --text-4xl: 2.25rem;
+      --text-5xl: 3rem;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+      --space-12: 48px; --space-16: 64px; --space-20: 80px;
+      --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px;
+      --radius-xl: 24px; --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.10);
+      --shadow-xl: 0 20px 48px rgba(0,0,0,0.12);
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+      --transition-slow: 400ms ease;
+      --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      --container-max: 1200px;
+      --container-padding: var(--space-6);
+      --header-height: 72px;
+    }
+    [data-theme="dark"] {
+      --color-bg: #0F172A;
+      --color-bg-soft: #1E293B;
+      --color-bg-card: #1E293B;
+      --color-bg-glass: rgba(15, 23, 42, 0.85);
+      --color-text: #F1F5F9;
+      --color-text-muted: #94A3B8;
+      --color-text-light: #64748B;
+      --color-border: #334155;
+      --color-border-light: #1E293B;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    /* ============================================
+       BASE
+       ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        /* Fix: [hidden] phải thắng mọi display được set trong CSS */
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; scroll-padding-top: var(--header-height); font-size: 16px; }
+    body {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      transition: background-color var(--transition-base), color var(--transition-base);
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; transition: color var(--transition-fast); }
+    a:hover { color: var(--color-accent); }
+    h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; color: var(--color-text); }
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--container-padding); }
+    .section { padding: var(--space-16) 0; }
+    .section__title {
+      font-size: var(--text-3xl); font-weight: 800; margin-bottom: var(--space-8);
+      position: relative; display: inline-block;
+    }
+    .section__title::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 48px; height: 4px; background: var(--color-accent); border-radius: var(--radius-full);
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky; top: 0; z-index: 100; height: var(--header-height);
+      background: var(--color-bg-glass); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border-light);
+      transition: background-color var(--transition-base), border-color var(--transition-base);
+    }
+    .header--scrolled { box-shadow: var(--shadow-sm); }
+    .header__inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); }
+    .header__logo {
+      font-size: var(--text-xl); font-weight: 800; letter-spacing: 0.05em;
+      color: var(--color-primary); transition: color var(--transition-fast);
+    }
+    [data-theme="dark"] .header__logo { color: var(--color-accent); }
+    .header__logo:hover { color: var(--color-accent); }
+    .header__nav { display: flex; align-items: center; gap: var(--space-6); }
+    .header__link {
+      font-size: var(--text-sm); font-weight: 500; color: var(--color-text-muted);
+      padding: var(--space-2) 0; position: relative; transition: color var(--transition-fast);
+    }
+    .header__link::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+      background: var(--color-accent); transition: width var(--transition-base);
+    }
+    .header__link:hover, .header__link--active { color: var(--color-text); }
+    .header__link:hover::after, .header__link--active::after { width: 100%; }
+    .header__actions { display: flex; align-items: center; gap: var(--space-3); }
+    .theme-toggle {
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--color-border); background: var(--color-bg-soft);
+      border-radius: var(--radius-full); cursor: pointer; font-size: var(--text-lg);
+      transition: all var(--transition-fast);
+    }
+    .theme-toggle:hover { background: var(--color-border); transform: scale(1.05); }
+    .header__hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: var(--space-2); }
+    .header__hamburger span { width: 24px; height: 2px; background: var(--color-text); border-radius: var(--radius-full); transition: all var(--transition-base); }
+
+    /* ===== FOOTER ===== */
+    .footer { padding: var(--space-8) 0; background: var(--color-bg-soft); border-top: 1px solid var(--color-border); text-align: center; font-size: var(--text-sm); color: var(--color-text-muted); }
+    .footer__inner { display: flex; flex-direction: column; gap: var(--space-3); align-items: center; }
+    .footer a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 3px; }
+    .footer a:hover { color: var(--color-accent); }
+
+    /* ===== BACK TO TOP ===== */
+    .back-to-top {
+      position: fixed; bottom: var(--space-6); right: var(--space-6);
+      width: 48px; height: 48px; border-radius: var(--radius-full);
+      background: var(--color-primary); color: #fff; border: none;
+      font-size: var(--text-xl); cursor: pointer; opacity: 0; visibility: hidden;
+      transform: translateY(16px); transition: all var(--transition-base);
+      box-shadow: var(--shadow-lg); z-index: 99;
+    }
+    .back-to-top--visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover { background: var(--color-accent); transform: translateY(-4px); }
+
+    /* ============================================
+       BLOG HERO
+       ============================================ */
+    .blog-hero {
+      padding: var(--space-12) 0 var(--space-8);
+      background: linear-gradient(135deg, var(--color-bg-soft) 0%, var(--color-bg) 100%);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+    .blog-hero__breadcrumb {
+      font-size: var(--text-sm); color: var(--color-text-muted);
+      margin-bottom: var(--space-4); display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center;
+    }
+    .blog-hero__breadcrumb a { color: var(--color-text-muted); }
+    .blog-hero__breadcrumb a:hover { color: var(--color-accent); }
+    .blog-hero__breadcrumb span { color: var(--color-text-light); }
+    .blog-hero__badge {
+      display: inline-block; font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.1em;
+      color: var(--color-accent); background: rgba(245, 158, 11, 0.1);
+      padding: var(--space-1) var(--space-4); border-radius: var(--radius-full); margin-bottom: var(--space-4);
+    }
+    .blog-hero__title { font-size: var(--text-4xl); font-weight: 800; letter-spacing: -0.02em; margin-bottom: var(--space-4); max-width: 800px; }
+    .blog-hero__meta { display: flex; flex-wrap: wrap; gap: var(--space-4); font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-6); }
+    .blog-hero__meta span { display: flex; align-items: center; gap: var(--space-1); }
+    .blog-hero__desc { max-width: 720px; font-size: var(--text-lg); color: var(--color-text-muted); line-height: 1.7; margin-bottom: var(--space-6); }
+
+    /* ============================================
+       TOC
+       ============================================ */
+    .toc {
+      background: var(--color-bg-card); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-8);
+    }
+    .toc__title { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-4); }
+    .toc__list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-2); }
+    .toc__list a {
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+      font-size: var(--text-sm); color: var(--color-text-muted);
+      transition: all var(--transition-fast);
+    }
+    .toc__list a:hover { background: var(--color-bg-soft); color: var(--color-accent); }
+
+    /* ============================================
+       ARTICLE CONTENT
+       ============================================ */
+    .article-content { max-width: 800px; }
+    .article-content h2 {
+      font-size: var(--text-2xl); font-weight: 800; margin: var(--space-12) 0 var(--space-4);
+      padding-top: var(--space-6); border-top: 1px solid var(--color-border-light);
+    }
+    .article-content h2:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+    .article-content h3 { font-size: var(--text-xl); font-weight: 700; margin: var(--space-8) 0 var(--space-3); }
+    .article-content p { margin-bottom: var(--space-4); color: var(--color-text-muted); line-height: 1.8; }
+    .article-content ul, .article-content ol { margin-bottom: var(--space-4); padding-left: var(--space-6); color: var(--color-text-muted); line-height: 1.8; }
+    .article-content li { margin-bottom: var(--space-2); }
+    .article-content strong { color: var(--color-text); font-weight: 600; }
+    .article-content a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-content a:hover { color: var(--color-accent-hover); }
+    .article-content blockquote {
+      border-left: 4px solid var(--color-accent); background: var(--color-bg-soft);
+      padding: var(--space-4) var(--space-6); border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: var(--space-6) 0; font-style: italic; color: var(--color-text-muted);
+    }
+    .article-content code {
+      font-family: var(--font-mono); font-size: 0.9em; background: var(--color-bg-soft);
+      padding: 2px 6px; border-radius: var(--radius-sm); color: var(--color-accent);
+    }
+
+    /* ============================================
+       LOOKUP TOOL
+       ============================================ */
+    .tool-section {
+      background: var(--color-bg-soft); padding: var(--space-12) 0;
+      border-top: 1px solid var(--color-border-light);
+      border-bottom: 1px solid var(--color-border-light);
+      margin: var(--space-12) 0;
+    }
+    .tool-section__title { text-align: center; font-size: var(--text-3xl); font-weight: 800; margin-bottom: var(--space-2); }
+    .tool-section__desc { text-align: center; color: var(--color-text-muted); max-width: 640px; margin: 0 auto var(--space-8); }
+
+    .tool-tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); justify-content: center; flex-wrap: wrap; }
+    .tool-tab {
+      padding: var(--space-3) var(--space-5); font-size: var(--text-sm); font-weight: 600;
+      font-family: inherit; color: var(--color-text-muted); background: var(--color-bg-card);
+      border: 1px solid var(--color-border); border-radius: var(--radius-full);
+      cursor: pointer; transition: all var(--transition-fast); white-space: nowrap;
+    }
+    .tool-tab:hover { border-color: var(--color-accent); color: var(--color-text); }
+    .tool-tab--active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    [data-theme="dark"] .tool-tab--active { background: var(--color-accent); color: #0F172A; border-color: var(--color-accent); }
+
+    .tool-panel { display: none; }
+    .tool-panel--active { display: block; }
+    .tool-panel__hint { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-3); text-align: center; }
+
+    .tool-input-wrap {
+      position: relative; display: flex; align-items: center;
+      background: var(--color-bg-card); border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg); transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      max-width: 640px; margin: 0 auto;
+    }
+    .tool-input-wrap:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); }
+    .tool-input-icon { padding: 0 var(--space-4); font-size: var(--text-lg); color: var(--color-text-light); }
+    .tool-input {
+      flex: 1; padding: var(--space-4) var(--space-2); font-size: var(--text-base);
+      font-family: inherit; color: var(--color-text); background: transparent; border: none; outline: none;
+    }
+    .tool-input::placeholder { color: var(--color-text-light); }
+    .tool-input-clear {
+      margin-right: var(--space-3); width: 32px; height: 32px; display: flex;
+      align-items: center; justify-content: center; background: var(--color-bg-soft);
+      border: none; border-radius: 50%; color: var(--color-text-muted); cursor: pointer;
+      font-size: var(--text-sm); transition: all var(--transition-fast);
+    }
+    .tool-input-clear:hover { background: var(--color-error); color: #fff; }
+
+    .tool-suggestions {
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: var(--color-bg-card); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+      max-height: 320px; overflow-y: auto; z-index: 100;
+    }
+    .suggestion-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) var(--space-4); cursor: pointer;
+      transition: background var(--transition-fast);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background: var(--color-bg-soft); }
+    .suggestion-item__code { font-family: var(--font-mono); font-weight: 700; color: var(--color-accent); min-width: 60px; }
+    .suggestion-item__desc { font-size: var(--text-sm); color: var(--color-text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .suggestion-item__meta { font-size: var(--text-xs); color: var(--color-text-light); }
+
+    .tool-quick-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); justify-content: center; }
+    .quick-tag {
+      padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 500;
+      font-family: inherit; color: var(--color-text-muted); background: var(--color-bg-card);
+      border: 1px solid var(--color-border); border-radius: var(--radius-full);
+      cursor: pointer; transition: all var(--transition-fast);
+    }
+    .quick-tag:hover { border-color: var(--color-accent); color: var(--color-accent); transform: translateY(-1px); }
+
+    .tool-group-chips {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-2); max-height: 320px; overflow-y: auto; padding: var(--space-1);
+      max-width: 800px; margin: 0 auto;
+    }
+    .group-chip {
+      display: flex; flex-direction: column; padding: var(--space-3) var(--space-4);
+      background: var(--color-bg-card); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-fast);
+      text-align: left; font-family: inherit;
+    }
+    .group-chip:hover { border-color: var(--color-accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .group-chip--active { border-color: var(--color-accent); background: rgba(245, 158, 11, 0.08); }
+    .group-chip__code { font-family: var(--font-mono); font-weight: 700; font-size: var(--text-sm); color: var(--color-accent); margin-bottom: 2px; }
+    .group-chip__desc { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.4; }
+
+    .tool-filters { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); justify-content: center; }
+    .tool-filter {
+      padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-family: inherit;
+      font-weight: 500; color: var(--color-text); background: var(--color-bg-card);
+      border: 1px solid var(--color-border); border-radius: var(--radius-md);
+      cursor: pointer; transition: all var(--transition-fast); min-width: 160px;
+    }
+    .tool-filter:hover { border-color: var(--color-accent); }
+    .tool-filter--reset { background: transparent; color: var(--color-text-muted); min-width: auto; }
+    .tool-filter--reset:hover { color: var(--color-error); border-color: var(--color-error); }
+
+    /* Results */
+    .tool-results { padding: var(--space-8) 0; }
+    .tool-results__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); gap: var(--space-4); flex-wrap: wrap; }
+    .tool-results__count { font-size: var(--text-sm); font-weight: 600; color: var(--color-text-muted); }
+    .tool-results__view { display: flex; gap: var(--space-1); padding: 3px; background: var(--color-bg-soft); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+    .view-btn {
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      background: transparent; border: none; border-radius: var(--radius-sm);
+      color: var(--color-text-muted); cursor: pointer; font-size: var(--text-base); transition: all var(--transition-fast);
+    }
+    .view-btn--active { background: var(--color-primary); color: #fff; }
+    [data-theme="dark"] .view-btn--active { background: var(--color-accent); color: #0F172A; }
+
+    .tool-results__body--grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-4); }
+
+    .c-card {
+      background: var(--color-bg-card); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer;
+      transition: all var(--transition-base); position: relative; overflow: hidden;
+    }
+    .c-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      transform: scaleX(0); transform-origin: left; transition: transform var(--transition-base);
+    }
+    .c-card:hover::before { transform: scaleX(1); }
+    .c-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--color-accent); }
+    .c-card__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+    .c-card__code { font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 800; color: var(--color-primary); letter-spacing: 0.02em; }
+    [data-theme="dark"] .c-card__code { color: var(--color-accent); }
+    .c-card__badge { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; padding: 2px 8px; border-radius: var(--radius-full); text-transform: uppercase; }
+    .c-card__badge--new { background: rgba(16, 185, 129, 0.12); color: var(--color-success); }
+    .c-card__badge--old { background: rgba(100, 116, 139, 0.12); color: var(--color-text-muted); }
+    .c-card__desc { font-size: var(--text-base); font-weight: 600; color: var(--color-text); margin-bottom: var(--space-3); line-height: 1.4; }
+    .c-card__specs { display: flex; gap: var(--space-3); margin-bottom: var(--space-3); font-size: var(--text-xs); color: var(--color-text-muted); }
+    .c-card__specs span { display: inline-flex; align-items: center; gap: 4px; }
+    .c-card__group { font-size: var(--text-xs); color: var(--color-text-light); padding-top: var(--space-3); border-top: 1px dashed var(--color-border); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .tool-results__body--table { background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; overflow-x: auto; }
+    .c-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    .c-table thead { background: var(--color-bg-soft); border-bottom: 1px solid var(--color-border); }
+    .c-table th { text-align: left; padding: var(--space-3) var(--space-4); font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); white-space: nowrap; }
+    .c-table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border-light); color: var(--color-text); }
+    .c-table tbody tr { cursor: pointer; transition: background var(--transition-fast); }
+    .c-table tbody tr:hover { background: var(--color-bg-soft); }
+    .c-table tbody tr:last-child td { border-bottom: none; }
+    .c-table__code { font-family: var(--font-mono); font-weight: 700; color: var(--color-accent); }
+
+    .tool-empty { grid-column: 1 / -1; text-align: center; padding: var(--space-16) var(--space-6); color: var(--color-text-muted); }
+    .tool-empty p:first-child { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+
+    .tool-load-more {
+      display: block; margin: var(--space-8) auto 0; padding: var(--space-3) var(--space-8);
+      font-size: var(--text-sm); font-weight: 600; font-family: inherit;
+      color: var(--color-text); background: var(--color-bg-card);
+      border: 2px solid var(--color-border); border-radius: var(--radius-full);
+      cursor: pointer; transition: all var(--transition-fast);
+    }
+    .tool-load-more:hover { border-color: var(--color-accent); color: var(--color-accent); transform: translateY(-2px); }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
+    .modal__backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); animation: fadeIn var(--transition-base); }
+    .modal__content {
+      position: relative; background: var(--color-bg-card); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl); max-width: 560px; width: 100%; max-height: 90vh;
+      overflow-y: auto; animation: modalIn var(--transition-bounce);
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.94) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal__header { display: flex; justify-content: space-between; align-items: flex-start; padding: var(--space-6); border-bottom: 1px solid var(--color-border); gap: var(--space-4); }
+    .modal__code { font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 800; color: var(--color-primary); letter-spacing: 0.02em; }
+    [data-theme="dark"] .modal__code { color: var(--color-accent); }
+    .modal__desc { font-size: var(--text-lg); font-weight: 600; color: var(--color-text); margin-top: var(--space-1); }
+    .modal__close {
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      background: var(--color-bg-soft); border: none; border-radius: 50%;
+      color: var(--color-text-muted); cursor: pointer; font-size: var(--text-base);
+      transition: all var(--transition-fast); flex-shrink: 0;
+    }
+    .modal__close:hover { background: var(--color-error); color: #fff; }
+    .modal__body { padding: var(--space-6); }
+    .modal__specs { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-5); }
+    .spec { padding: var(--space-3); background: var(--color-bg-soft); border-radius: var(--radius-md); }
+    .spec__label { display: block; font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-light); margin-bottom: 2px; }
+    .spec__value { font-size: var(--text-base); font-weight: 700; color: var(--color-text); }
+    .modal__group { padding: var(--space-4); background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--color-accent); border-radius: var(--radius-sm); font-size: var(--text-sm); color: var(--color-text); margin-bottom: var(--space-5); }
+    .modal__related h4 { font-size: var(--text-sm); font-weight: 700; margin-bottom: var(--space-3); color: var(--color-text-muted); }
+    .modal__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-5); }
+    .chip {
+      padding: var(--space-1) var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs);
+      font-weight: 700; color: var(--color-accent); background: var(--color-bg-soft);
+      border: 1px solid var(--color-border); border-radius: var(--radius-full);
+      cursor: pointer; transition: all var(--transition-fast);
+    }
+    .chip:hover { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .modal__actions { display: flex; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+      padding: var(--space-3) var(--space-6); font-size: var(--text-sm); font-weight: 600;
+      font-family: inherit; border-radius: var(--radius-full); border: 2px solid transparent;
+      cursor: pointer; transition: all var(--transition-base); text-decoration: none; white-space: nowrap;
+    }
+    .btn--primary { background: var(--color-accent); color: #0F172A; border-color: var(--color-accent); }
+    .btn--primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); color: #0F172A; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); }
+    .btn--outline { background: transparent; color: var(--color-text); border-color: var(--color-border); }
+    .btn--outline:hover { border-color: var(--color-accent); color: var(--color-accent); transform: translateY(-2px); }
+
+    /* Content tables */
+    .content-table { width: 100%; border-collapse: collapse; margin: var(--space-6) 0; font-size: var(--text-sm); background: var(--color-bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .content-table th { background: var(--color-primary); color: #fff; padding: var(--space-3) var(--space-4); text-align: left; font-weight: 600; }
+    .content-table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border-light); color: var(--color-text-muted); }
+    .content-table tr:last-child td { border-bottom: none; }
+    .content-table tr:hover td { background: var(--color-bg-soft); }
+
+    /* References */
+    .references { margin-top: var(--space-12); padding-top: var(--space-8); border-top: 2px solid var(--color-border); }
+    .references h3 { font-size: var(--text-lg); margin-bottom: var(--space-4); }
+    .references ul { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+    .references li { font-size: var(--text-sm); color: var(--color-text-muted); padding-left: var(--space-4); position: relative; }
+    .references li::before { content: '🔗'; position: absolute; left: 0; font-size: var(--text-xs); }
+    .references a { color: var(--color-accent); }
+
+    /* Progress bar */
+    .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--color-accent); z-index: 200; transition: width 100ms linear; width: 0%; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      :root { --container-padding: var(--space-4); --header-height: 64px; }
+      .header__nav { position: fixed; top: var(--header-height); left: 0; right: 0; flex-direction: column; background: var(--color-bg); border-bottom: 1px solid var(--color-border); padding: var(--space-4); gap: var(--space-2); transform: translateY(-120%); transition: transform var(--transition-base); z-index: 99; box-shadow: var(--shadow-lg); }
+      .header__nav--open { transform: translateY(0); }
+      .header__hamburger { display: flex; }
+      .section { padding: var(--space-12) 0; }
+      .section__title { font-size: var(--text-2xl); }
+      .blog-hero__title { font-size: var(--text-2xl); }
+      .tool-tabs { flex-direction: column; align-items: stretch; }
+      .tool-filters { flex-direction: column; }
+      .tool-filter { width: 100%; }
+      .tool-results__body--grid { grid-template-columns: 1fr; }
+      .modal__specs { grid-template-columns: 1fr; }
+      .modal__content { border-radius: var(--radius-lg); }
+      .content-table { font-size: var(--text-xs); }
+      .content-table th, .content-table td { padding: var(--space-2); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="../index.html" class="header__logo">TONY EXIM</a>
+      <nav class="header__nav" id="navMenu">
+        <a href="../about/index.html" class="header__link">About</a>
+        <a href="../blog/index.html" class="header__link header__link--active">Blog</a>
+        <a href="../tools/iso-container.html" class="header__link">Tools</a>
+      </nav>
+      <div class="header__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-toggle__icon">🌙</span>
+        </button>
+        <button class="header__hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== BLOG HERO ===== -->
+    <section class="blog-hero">
+      <div class="container">
+        <div class="blog-hero__breadcrumb">
+          <a href="../index.html">Home</a>
+          <span>/</span>
+          <a href="../blog/index.html">Blog</a>
+          <span>/</span>
+          <span>Container Types</span>
+        </div>
+        <div class="blog-hero__badge">🚢 LOGISTICS</div>
+        <h1 class="blog-hero__title">Các loại Container trong Vận tải Quốc tế: Hướng dẫn Toàn diện & Tra cứu Mã ISO</h1>
+        <div class="blog-hero__meta">
+          <span>👤 Tony EXIM</span>
+          <span>📅 08/10/2026</span>
+          <span>⏱ 15 phút đọc</span>
+          <span>🏷 #Container #Logistics #ISO</span>
+        </div>
+        <p class="blog-hero__desc">
+          Từ Standard Dry đến Reefer, Tank, Flat Rack — mỗi loại container được thiết kế cho một mục đích cụ thể. 
+          Bài viết này hướng dẫn bạn cách chọn đúng loại container, giải mã mã ISO 6346 (cả mã cũ và mã mới), 
+          và cung cấp công cụ tra cứu trực tuyến ngay trong trang.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== ARTICLE ===== -->
+    <section class="section">
+      <div class="container">
+
+        <!-- TOC -->
+        <div class="toc" data-aos="fade-up">
+          <h2 class="toc__title">📑 Mục lục</h2>
+          <ul class="toc__list">
+            <li><a href="#gioi-thieu">1. Giới thiệu về container</a></li>
+            <li><a href="#cac-loai">2. Các loại container phổ biến</a></li>
+            <li><a href="#kich-thuoc">3. Kích thước & dung tích</a></li>
+            <li><a href="#iso-code">4. Giải mã mã ISO 6346</a></li>
+            <li><a href="#tra-cuu">5. Công cụ tra cứu mã ISO</a></li>
+            <li><a href="#chon-loai">6. Cách chọn loại container phù hợp</a></li>
+            <li><a href="#tham-khao">7. Tài liệu tham khảo</a></li>
+          </ul>
+        </div>
+
+        <!-- ARTICLE CONTENT -->
+        <article class="article-content">
+
+          <!-- Section 1 -->
+          <h2 id="gioi-thieu">1. Giới thiệu về Container trong Vận tải Quốc tế</h2>
+          <p>
+            Container (hay còn gọi là thùng hàng tiêu chuẩn) là một trong những phát minh vĩ đại nhất của thế kỷ 20 trong lĩnh vực logistics. 
+            Trước khi container ra đời, hàng hóa được vận chuyển dưới dạng "break bulk" — hàng nghìn thùng, bao, thùng phuy rời rạc được bốc dỡ bằng tay tại mỗi cảng. 
+            Quá trình này tốn kém, chậm chạp và dễ hư hỏng.
+          </p>
+          <p>
+            Năm 1956, doanh nhân người Mỹ Malcolm McLean đã thực hiện chuyến đi đầu tiên với 58 thùng kim loại tiêu chuẩn từ Newark đến Houston. 
+            Ý tưởng cốt lõi: một chiếc hộp có kích thước phù hợp với xe tải cũng có thể được cẩu lên tàu, và cùng một kích thước tiêu chuẩn sẽ hoạt động ở mọi nơi. 
+            Đây chính là khởi nguồn của tiêu chuẩn container ISO.
+          </p>
+          <p>
+            Ngày nay, hơn 90% hàng hóa thương mại toàn cầu được vận chuyển bằng container. 
+            Hiểu rõ các loại container và mã ISO của chúng là kỹ năng nền tảng của bất kỳ chuyên viên xuất nhập khẩu nào.
+          </p>
+
+          <!-- Section 2 -->
+          <h2 id="cac-loai">2. Các loại Container Phổ biến</h2>
+          <p>
+            Dưới đây là 9 loại container chính được sử dụng phổ biến nhất trong vận tải quốc tế, cùng với mã ISO type code tương ứng.
+          </p>
+
+          <h3>2.1. Standard Dry Container (GP) – Container khô tiêu chuẩn</h3>
+          <p>
+            Loại container phổ biến nhất trên thế giới, chiếm phần lớn đội tàu container toàn cầu. 
+            Container khô có tường thép gấp nếp, nóc kín, sàn gỗ và cửa đôi ở một đầu. 
+            Dùng để chở hàng khô, không cần kiểm soát nhiệt độ: hàng tiêu dùng, điện tử, quần áo, máy móc đóng thùng.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXGX</code> (G = General Purpose). Ví dụ: <code>22G1</code> (20ft), <code>42G1</code> (40ft), <code>45G1</code> (40ft High Cube).</p>
+
+          <h3>2.2. High Cube Container (HC) – Container cao</h3>
+          <p>
+            Tương tự Standard Dry nhưng cao hơn 1 feet (9'6" thay vì 8'6"). 
+            Cung cấp thêm khoảng 13% thể tích. 
+            Được ưa chuộng cho hàng cồng kềnh, nhẹ: đồ nội thất, quần áo, hàng điện tử, pallet cao.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>45G1</code>, <code>L5G1</code> (45ft High Cube).</p>
+
+          <h3>2.3. Reefer Container (RT) – Container lạnh</h3>
+          <p>
+            Container lạnh có bộ phận làm lạnh tích hợp ở một đầu, duy trì nhiệt độ chính xác trong suốt hành trình. 
+            Dải nhiệt độ từ -60°C đến +25°C. 
+            Dùng cho thực phẩm tươi sống, hàng đông lạnh, dược phẩm, hoa tươi.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXRX</code> (R = Reefer). Ví dụ: <code>22R1</code>, <code>42R1</code>, <code>45R1</code>.</p>
+
+          <h3>2.4. Open Top Container (OT) – Container hở nóc</h3>
+          <p>
+            Không có nóc cố định, thay vào đó là tấm bạt che phủ. 
+            Hàng hóa được cẩu từ trên xuống, phù hợp với máy móc cao, cuộn thép, đá hoa cương, tấm kính lớn.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXUX</code> (U = Open Top). Ví dụ: <code>22U1</code>, <code>42U1</code>.</p>
+
+          <h3>2.5. Flat Rack Container (FR) – Container sàn phẳng</h3>
+          <p>
+            Chỉ có sàn và hai vách đầu (cố định hoặc gấp được), không có vách hông và nóc. 
+            Dùng cho hàng quá khổ, quá nặng: thiết bị công trình, máy biến áp, xe cộ, kết cấu thép.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXPX</code> (P = Platform). Ví dụ: <code>22P1</code>, <code>42P1</code>.</p>
+
+          <h3>2.6. Tank Container (TK) – Container bồn</h3>
+          <p>
+            Bồn thép không gỉ hình trụ được đặt trong khung ISO. 
+            Dùng để vận chuyển chất lỏng: hóa chất công nghiệp, dầu ăn, rượu vang, dược phẩm lỏng. 
+            Tuân thủ quy định IMDG cho hàng nguy hiểm.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXTX</code> (T = Tank). Ví dụ: <code>22T1</code>, <code>42T1</code>.</p>
+
+          <h3>2.7. Bulk Container (BU) – Container chở hàng rời</h3>
+          <p>
+            Container chuyên dụng cho hàng rời khô: hạt nhựa, bột mì, hạt cà phê, ngũ cốc. 
+            Có thể có cửa nạp/xả riêng hoặc lót túi Flexi Tank.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXBX</code> (B = Bulk). Ví dụ: <code>22B0</code>, <code>42B0</code>.</p>
+
+          <h3>2.8. Ventilated Container (VH) – Container thông gió</h3>
+          <p>
+            Có hệ thống thông gió tự nhiên hoặc cơ học để lưu thông không khí. 
+            Dùng cho hàng cần thoáng khí: cà phê hạt, ca cao, hạt điều, hàng nông sản.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXVX</code> (V = Ventilated). Ví dụ: <code>22V0</code>, <code>42V0</code>.</p>
+
+          <h3>2.9. Insulated Container (HR) – Container cách nhiệt</h3>
+          <p>
+            Có tường cách nhiệt nhưng không có bộ phận làm lạnh chủ động. 
+            Duy trì nhiệt độ ổn định trong thời gian ngắn, thường dùng kết hợp với Reefer.
+          </p>
+          <p><strong>Mã ISO:</strong> <code>XXHX</code> (H = Insulated). Ví dụ: <code>22H1</code>, <code>42H1</code>.</p>
+
+          <!-- Section 3 -->
+          <h2 id="kich-thuoc">3. Kích thước & Dung tích Container</h2>
+          <p>
+            Container được tiêu chuẩn hóa theo chiều dài danh nghĩa: 10ft, 20ft, 40ft, 45ft. 
+            Dưới đây là bảng so sánh các loại phổ biến nhất:
+          </p>
+
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>Loại Container</th>
+                <th>Kích thước ngoài (D×R×C)</th>
+                <th>Thể tích trong</th>
+                <th>Payload tối đa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>20ft Standard (1 TEU)</strong></td>
+                <td>6.1m × 2.44m × 2.59m</td>
+                <td>~33 CBM</td>
+                <td>~28,000 kg</td>
+              </tr>
+              <tr>
+                <td><strong>40ft Standard (2 TEU / 1 FEU)</strong></td>
+                <td>12.2m × 2.44m × 2.59m</td>
+                <td>~67 CBM</td>
+                <td>~28,000 kg</td>
+              </tr>
+              <tr>
+                <td><strong>40ft High Cube</strong></td>
+                <td>12.2m × 2.44m × 2.90m</td>
+                <td>~76 CBM</td>
+                <td>~28,000 kg</td>
+              </tr>
+              <tr>
+                <td><strong>45ft High Cube</strong></td>
+                <td>13.7m × 2.44m × 2.90m</td>
+                <td>~86 CBM</td>
+                <td>~28,000 kg</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <blockquote>
+            💡 <strong>Lưu ý:</strong> Kích thước trong lòng container luôn nhỏ hơn kích thước ngoài do độ dày của tường, cửa và nóc. 
+            Ví dụ, container 20ft có chiều dài trong lòng chỉ khoảng 5.9m thay vì 6.1m.
+          </blockquote>
+
+          <!-- Section 4 -->
+          <h2 id="iso-code">4. Giải mã mã ISO 6346 – Tiêu chuẩn Nhận dạng Container</h2>
+          <p>
+            Mỗi container trên thế giới đều mang một số nhận dạng duy nhất gồm 11 ký tự, theo tiêu chuẩn ISO 6346. 
+            Số này được in trên cửa, thành và nóc container.
+          </p>
+
+          <h3>4.1. Cấu trúc số container (11 ký tự)</h3>
+          <ul>
+            <li><strong>3 chữ cái đầu (Owner Code):</strong> Mã chủ sở hữu, đăng ký với BIC (Bureau International des Containers). VD: MSK (Maersk), MSC, HLC (Hapag-Lloyd).</li>
+            <li><strong>Ký tự thứ 4 (Category):</strong> Loại thiết bị. <code>U</code> = container hàng hóa, <code>J</code> = thiết bị gắn kèm, <code>Z</code> = chassis.</li>
+            <li><strong>6 chữ số (Serial Number):</strong> Số sê-ri do chủ sở hữu cấp.</li>
+            <li><strong>Ký tự thứ 11 (Check Digit):</strong> Số kiểm tra, tính toán theo thuật toán để phát hiện lỗi nhập liệu.</li>
+          </ul>
+
+          <h3>4.2. Mã Size & Type Code (4 ký tự)</h3>
+          <p>
+            Nằm dưới số container chính, mã này cung cấp thông tin về kích thước và loại container:
+          </p>
+          <ul>
+            <li><strong>Ký tự 1 – Chiều dài:</strong> <code>2</code> = 20ft, <code>4</code> = 40ft, <code>L</code> = 45ft.</li>
+            <li><strong>Ký tự 2 – Chiều cao & rộng:</strong> <code>2</code> = tiêu chuẩn 8'6", <code>5</code> = High Cube 9'6".</li>
+            <li><strong>2 ký tự cuối – Loại container:</strong> <code>G1</code> = General Purpose, <code>R1</code> = Reefer, <code>T1</code> = Tank, <code>P1</code> = Flat Rack/Platform, <code>U1</code> = Open Top.</li>
+          </ul>
+
+          <p><strong>Ví dụ:</strong></p>
+          <ul>
+            <li><code>22G1</code> = Container khô tiêu chuẩn 20ft, cao 8'6".</li>
+            <li><code>45G1</code> = Container khô High Cube 40ft, cao 9'6".</li>
+            <li><code>45R1</code> = Container lạnh High Cube 40ft.</li>
+            <li><code>22T1</code> = Container bồn 20ft.</li>
+            <li><code>42P1</code> = Container sàn phẳng 40ft.</li>
+          </ul>
+
+          <h3>4.3. Phân biệt mã cũ và mã mới</h3>
+          <p>
+            Trước đây, mã container thường sử dụng dạng số (VD: <code>2000</code>, <code>4300</code>, <code>2200</code>). 
+            Ngày nay, tiêu chuẩn ISO 6346 sử dụng mã chữ-số (VD: <code>22G1</code>, <code>42R1</code>). 
+            Cả hai loại mã đều được hỗ trợ trong công cụ tra cứu bên dưới.
+          </p>
+
+          <!-- Section 5: TOOL -->
+          <h2 id="tra-cuu">5. Công cụ Tra cứu Mã ISO Container</h2>
+          <p>
+            Nhập mã ISO (cũ hoặc mới) để xem loại container, hoặc nhập tên loại container để tìm mã tương ứng.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== LOOKUP TOOL ===== -->
+    <section class="tool-section" id="tool">
+      <div class="container">
+        <h2 class="tool-section__title">🔍 Tra cứu Mã ISO Container</h2>
+        <p class="tool-section__desc">Hỗ trợ cả mã cũ (dạng số) và mã mới (ISO 6346). Nhập mã để xem loại, hoặc nhập loại để tìm mã.</p>
+
+        <!-- Tabs -->
+        <div class="tool-tabs" role="tablist">
+          <button class="tool-tab tool-tab--active" data-tab="code" role="tab">🔍 Tra cứu theo mã</button>
+          <button class="tool-tab" data-tab="type" role="tab">📦 Tra cứu theo loại</button>
+          <button class="tool-tab" data-tab="group" role="tab">📋 Duyệt theo nhóm</button>
+        </div>
+
+        <!-- Panel: Code -->
+        <div class="tool-panel tool-panel--active" data-panel="code">
+          <div class="tool-input-wrap">
+            <span class="tool-input-icon">🔍</span>
+            <input type="text" class="tool-input" id="codeInput" placeholder="Nhập mã ISO (VD: 22G1, 42R1, 2000, 4300...)" autocomplete="off" spellcheck="false">
+            <button class="tool-input-clear" id="clearCode" hidden aria-label="Clear">✕</button>
+          </div>
+          <div class="tool-suggestions" id="codeSuggestions" hidden></div>
+        </div>
+
+        <!-- Panel: Type -->
+        <div class="tool-panel" data-panel="type">
+          <div class="tool-input-wrap">
+            <span class="tool-input-icon">📦</span>
+            <input type="text" class="tool-input" id="typeInput" placeholder="Nhập loại container (VD: Reefer, Open Top, Tank, Flat Rack...)" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="tool-quick-tags" id="typeQuickTags"></div>
+        </div>
+
+        <!-- Panel: Group -->
+        <div class="tool-panel" data-panel="group">
+          <p class="tool-panel__hint">Chọn nhóm container để xem tất cả mã:</p>
+          <div class="tool-group-chips" id="groupChips"></div>
+        </div>
+
+        <!-- Filters -->
+        <div class="tool-filters">
+          <select class="tool-filter" id="sizeFilter">
+            <option value="">Tất cả kích thước</option>
+            <option value="20">20 ft</option>
+            <option value="40">40 ft</option>
+            <option value="45">45 ft</option>
+            <option value="30">30 ft</option>
+            <option value="35">35 ft</option>
+            <option value="10">10 ft</option>
+          </select>
+          <select class="tool-filter" id="groupFilter"><option value="">Tất cả nhóm</option></select>
+          <select class="tool-filter" id="codeTypeFilter">
+            <option value="">Tất cả loại mã</option>
+            <option value="new">Mã mới (ISO 6346)</option>
+            <option value="old">Mã cũ (Legacy)</option>
+          </select>
+          <button class="tool-filter tool-filter--reset" id="resetFilters">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="container tool-results">
+        <div class="tool-results__head">
+          <div class="tool-results__count" id="resultsCount">Đang tải dữ liệu...</div>
+          <div class="tool-results__view">
+            <button class="view-btn view-btn--active" data-view="grid" title="Grid">▦</button>
+            <button class="view-btn" data-view="table" title="Table">☰</button>
+          </div>
+        </div>
+        <div class="tool-results__body tool-results__body--grid" id="resultsBody"></div>
+        <button class="tool-load-more" id="loadMore" hidden>Xem thêm</button>
+      </div>
+    </section>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal" id="detailModal" hidden>
+      <div class="modal__backdrop" data-close-modal></div>
+      <div class="modal__content" id="modalContent" role="dialog" aria-modal="true"></div>
+    </div>
+
+    <!-- ===== CONTINUE ARTICLE ===== -->
+    <section class="section">
+      <div class="container">
+        <article class="article-content">
+
+          <!-- Section 6 -->
+          <h2 id="chon-loai">6. Cách Chọn Loại Container Phù hợp</h2>
+          <p>
+            Việc chọn đúng loại container giúp tối ưu chi phí, tránh hư hỏng hàng hóa và đảm bảo xử lý thuận lợi tại mọi cảng. 
+            Dưới đây là 4 câu hỏi quyết định:
+          </p>
+
+          <h3>Câu hỏi 1: Bạn đang vận chuyển hàng gì?</h3>
+          <ul>
+            <li><strong>Hàng khô thông thường</strong> (điện tử, quần áo, máy móc đóng thùng) → Standard Dry (20ft hoặc 40ft).</li>
+            <li><strong>Hàng tươi sống / đông lạnh</strong> (thực phẩm, dược phẩm, hoa) → Reefer container.</li>
+            <li><strong>Chất lỏng không nguy hiểm</strong> (dầu ăn, rượu vang) → Flexi Tank trong container 20ft.</li>
+            <li><strong>Chất lỏng nguy hiểm</strong> (hóa chất, axit) → ISO Tank container.</li>
+            <li><strong>Hàng quá khổ, quá nặng</strong> (máy móc, xe cộ) → Flat Rack hoặc Open Top.</li>
+          </ul>
+
+          <h3>Câu hỏi 2: Hàng nặng hay cồng kềnh?</h3>
+          <ul>
+            <li><strong>Hàng nặng, gọn</strong> (thép, gốm, đồ hộp): Dùng container 20ft. Đạt giới hạn trọng lượng trước khi đầy thể tích.</li>
+            <li><strong>Hàng nhẹ, cồng kềnh</strong> (nội thất, quần áo, đệm): Dùng container 40ft High Cube. Tối ưu thể tích.</li>
+          </ul>
+
+          <h3>Câu hỏi 3: Cách bốc xếp hàng?</h3>
+          <ul>
+            <li><strong>Xe nâng (forklift)</strong> → Standard Dry container.</li>
+            <li><strong>Cẩu từ trên xuống</strong> → Open Top container.</li>
+            <li><strong>Bốc từ bên hông</strong> → Flat Rack container.</li>
+          </ul>
+
+          <h3>Câu hỏi 4: Có giới hạn trọng lượng đường bộ không?</h3>
+          <blockquote>
+            ⚠️ <strong>Lưu ý quan trọng:</strong> Payload ghi trên container không phải là giới hạn trọng lượng đường bộ hợp pháp tại nước đến. 
+            Tại Mỹ, container 20ft chở đầy thép hoặc gốm có thể cần giấy phép đặc biệt. 
+            Luôn kiểm tra quy định trọng lượng đường bộ của nước đến trước khi đóng hàng.
+          </blockquote>
+
+          <h3>Bảng chọn nhanh</h3>
+          <table class="content-table">
+            <thead>
+              <tr><th>Loại hàng</th><th>Container đề xuất</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Nặng, gọn (kim loại, đá, đồ hộp)</td><td>20ft Standard Dry</td></tr>
+              <tr><td>Nhẹ, cồng kềnh (quần áo, nội thất)</td><td>40ft High Cube</td></tr>
+              <tr><td>Hàng cao &gt; 2.6m</td><td>Open Top hoặc Flat Rack</td></tr>
+              <tr><td>Chất lỏng thực phẩm (không nguy hiểm)</td><td>20ft + Flexi Tank</td></tr>
+              <tr><td>Chất lỏng hóa chất</td><td>ISO Tank Container</td></tr>
+              <tr><td>Hàng cần kiểm soát nhiệt độ</td><td>40ft High Cube Reefer</td></tr>
+            </tbody>
+          </table>
+
+          <!-- Section 7: References -->
+          <div class="references" id="tham-khao">
+            <h3>📚 Tài liệu tham khảo</h3>
+            <ul>
+              <li><a href="https://www.bic-code.org/type-code-designation/" target="_blank" rel="noopener">BIC – ISO 6346:2022 Type Code Designation Table</a></li>
+              <li><a href="https://www.bic-code.org/size-type-code/" target="_blank" rel="noopener">BIC – Container Size and Type Code Explained</a></li>
+              <li><a href="https://tracecontainer.com/blog/what-are-the-main-types-of-shipping-container-for-freight/" target="_blank" rel="noopener">TraceContainer – What Are the Main Types of Shipping Container for Freight?</a></li>
+              <li><a href="https://tracecontainer.com/blog/decoding-container-number/" target="_blank" rel="noopener">TraceContainer – Decoding the Container Number</a></li>
+              <li><a href="https://tracecontainer.com/blog/understanding-container-dimensions-sizes/" target="_blank" rel="noopener">TraceContainer – Why Are Shipping Containers That Size?</a></li>
+              <li><a href="https://dcsa.org/newsroom/shipping-container-types-a-guide" target="_blank" rel="noopener">DCSA – Shipping Container Types: A Guide</a></li>
+              <li><a href="https://vinatrain.edu.vn/cac-loai-container/" target="_blank" rel="noopener">Vinatrain – Các loại container phổ biến</a></li>
+              <li><a href="https://www.dhl.com/vn-en/home/global-forwarding/freight-forwarding-education-center/cargo-container-sizes-and-types.html" target="_blank" rel="noopener">DHL – Cargo Container Sizes and Types</a></li>
+            </ul>
+          </div>
+
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© 2026 Tony EXIM · Built with ❤️</p>
+      <p>
+        <a href="../index.html">Home</a> ·
+        <a href="../about/index.html">About</a> ·
+        <a href="../blog/index.html">Blog</a> ·
+        <a href="../tools/iso-container.html">Tools</a>
+      </p>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <script>
+    /* ============================================
+       DATA: CSV → JavaScript
+       ============================================ */
+    const CSV_CODES = `code,description,length,height,group
+22B0,Bulk,20,8.5,22BU
+22B1,Dry Bulk,20,8.5,22BU
+22B3,Dry Bulk,20,8.5,22BU
+22B4,Dry Bulk,20,8.5,22BU
+22B5,Dry Bulk,20,8.5,22BU
+22B6,Dry Bulk,20,8.5,22BU
+22BK,Dry Bulk,20,8.5,22BU
+2080,Dry Bulk,20,8,22BU
+20B0,Dry Bulk,20,8,22BU
+20B1,Dry Bulk,20,8,22BU
+20B3,Dry Bulk,20,8,22BU
+20B4,Dry Bulk,20,8,22BU
+20B5,Dry Bulk,20,8,22BU
+20B6,Dry Bulk,20,8,22BU
+20BK,Dry Bulk,20,8,22BU
+20BU,Dry Bulk,20,8,22BU
+2280,Dry Bulk,20,8.5,22BU
+2281,Dry Bulk,20,8.5,22BU
+2299,Air/Surface,20,8.5,22BU
+22BU,Dry Bulk,20,8.5,22BU
+22G0,Standard Dry,20,8.5,22GP
+22G1,Standard Dry,20,8.5,22GP
+22G2,Standard Dry,20,8.5,22GP
+22G3,Standard Dry,20,8.5,22GP
+22V3,Standard Dry,20,8.5,22GP
+2300,Standard Dry,20,8.5,22GP
+2301,Standard Dry,20,8.5,22GP
+2302,Standard Dry,20,8.5,22GP
+2303,Standard Dry,20,8.5,22GP
+2304,Standard Dry,20,8.5,22GP
+2410,HIGH CUBE,20,9.5,22GP
+24G0,Standard Dry,20,9,22GP
+24G1,Standard Dry,20,9,22GP
+24G2,Standard Dry,20,9,22GP
+24G3,Standard Dry,20,9,22GP
+24GP,Standard Dry,20,9,22GP
+2500,Standard Dry,20,8.5,22GP
+25G0,Standard Dry High Cube,20,9,22GP
+2600,Standard Dry,20,4.25,22GP
+26G0,Standard Dry,20,9.5,22GP
+26G1,Standard Dry,20,9.5,22GP
+26G2,Standard Dry,20,9.5,22GP
+26G3,Standard Dry,20,9.5,22GP
+26GP,Standard Dry,20,9.5,22GP
+28G0,Standard Dry,20,4.25,22GP
+28GP,Standard Dry,20,4.25,22GP
+28U1,BIN HALF HEIGHT (OPEN TOP),20,4.25,22GP
+28U2,"OPENING(S) AT ONE OR BOTH ENDS, PLUS REMV TOP MEMB",20,8.5,22GP
+28UT,"OPENING(S) AT ONE OR BOTH ENDS, PLUS REMV TOP MEMB",20,8.5,22GP
+2994,Air/Surface,20,4,22GP
+2999,SLIDER CHASSIS,20,0,22GP
+3000,Standard Dry,30,8,22GP
+30G0,DRY CARGO/GENERAL PURPOSE,30,8,22GP
+3200,Standard Dry,30,8.5,22GP
+32G0,DRY CARGO/GENERAL PURPOSE,30,8.5,22GP
+3399,TRIAXLE CHASSIS,23,0,22GP
+7999,SLIDER CHASSIS,20,0,22GP
+B2G1,PASSIVE VENTS AT UPPER PART OF CARGO SPACE,24,8.5,22GP
+1000,Standard Dry,10,8,22GP
+10G0,DRY CARGO/GENERAL PURPOSE,10,8,22GP
+1200,Standard Dry,10,8.5,22GP
+12G0,DRY CARGO/GENERAL PURPOSE,10,8.5,22GP
+2000,Standard Dry,20,8,22GP
+2001,Standard Dry,20,8,22GP
+2002,Standard Dry,20,8,22GP
+2003,Standard Dry,20,8,22GP
+2004,Standard Dry,20,8,22GP
+2025,Livestock Carrier,20,8,22GP
+20G0,Standard Dry,20,8,22GP
+20G1,Standard Dry,20,8,22GP
+20G2,Standard Dry,20,8,22GP
+20G3,Standard Dry,20,8,22GP
+20GP,Standard Dry,20,8,22GP
+2101,Standard Dry,20,8,22GP
+2102,Standard Dry,20,8,22GP
+2103,Standard Dry,20,8,22GP
+2104,Standard Dry,20,8,22GP
+2125,Livestock Carrier,20,8,22GP
+2200,Standard Dry,20,8.5,22GP
+2201,Standard Dry,20,8.5,22GP
+2202,Standard Dry,20,8.5,22GP
+2204,Standard Dry,20,8.5,22GP
+2205,Standard Dry,20,8.5,22GP
+2210,Standard Dry,20,8.5,22GP
+2213,Standard Dry,20,8.5,22GP
+2225,Livestock Carrier,20,8.5,22GP
+22GP,Standard Dry,20,8.5,22GP
+2212,General Purpose (Hanging Garments),20,8.5,22GP
+25GP,High Cube,20,9.5,22GP
+22H0,Insulated (Conair),20,8.5,22HR
+22H1,Thermal Refrigerated/Heated,20,8.5,22HR
+22H2,Thermal Refrigerated/Heated,20,8.5,22HR
+22H5,Thermal Insulated,20,8.5,22HR
+22H6,Thermal Insulated,20,8.5,22HR
+22HI,Thermal Refrigerated/Heated,20,8.5,22HR
+24H5,Thermal Insulated,20,9,22HR
+24H6,Thermal Insulated,20,9,22HR
+2020,Thermal Insulated,20,8,22HR
+20H0,Thermal Refrigerated/Heated,20,8,22HR
+20H1,Thermal Refrigerated/Heated,20,8,22HR
+20H2,Thermal Refrigerated/Heated,20,8,22HR
+20H5,Thermal Insulated,20,8,22HR
+20H6,Thermal Insulated,20,8,22HR
+20HI,Thermal Refrigerated/Heated,20,8,22HR
+20HR,Thermal Refrigerated/Heated,20,8,22HR
+2220,Thermal Insulated,20,8.5,22HR
+2224,Insulated,20,8.5,22HR
+22HR,Thermal Refrigerated/Heated,20,8.5,22HR
+22P1,Flat Rack,20,8.5,22PF
+22P2,Platform,20,8.5,22PF
+22P4,Platform,20,8.5,22PF
+22P5,Platform,20,8.5,22PF
+22P7,PLATFORM FIXED,20,8.5,22PF
+22P8,Platform,20,8.5,22PF
+22P9,Platform,20,8.5,22PF
+22PL,Platform,20,8.5,22PF
+22PS,Platform,20,8.5,22PF
+2361,Platform,20,8.5,22PF
+2362,Platform,20,8.5,22PF
+2363,Platform,20,8.5,22PF
+2364,Platform,20,8.5,22PF
+2365,Platform,20,8.5,22PF
+2366,Platform,20,8.5,22PF
+2367,Platform,20,8.5,22PF
+2651,Open Top,20,4.25,22PF
+2661,Platform,20,4.25,22PF
+2761,Platform,20,4.25,22PF
+2063,Flat,20,8,22PF
+2066,Platform,20,8,22PF
+2067,Platform,20,8,22PF
+20P2,Platform,20,8,22PF
+20P4,Platform,20,8,22PF
+20P5,Platform,20,8,22PF
+20PC,Platform,20,8,22PF
+20PF,Platform,20,8,22PF
+20PL,Platform,20,8,22PF
+20PS,Platform,20,8,22PF
+2160,Flat,20,8,22PF
+2161,Platform,20,8,22PF
+2162,Platform,20,8,22PF
+2163,Platform,20,8,22PF
+2164,Platform,20,8,22PF
+2165,Platform,20,8,22PF
+2166,Platform,20,8,22PF
+2167,Platform,20,8,22PF
+2260,Flat,20,8.5,22PF
+2261,Flat,20,8.5,22PF
+2262,Platform,20,8.5,22PF
+2265,Platform,20,8.5,22PF
+2266,Platform,20,8.5,22PF
+2267,Platform,20,8.5,22PF
+22PF,Platform,20,8.5,22PF
+22PC,Platform,20,8.5,22PF
+8888,Uncontainerised,0,0,8888
+22P3,Collapsible Flat Rack,20,8.5,22PC
+20P3,Platform,20,8,22PC
+2263,Flat,20,8.5,22PC
+2264,Platform,20,8.5,22PC
+22R1,Reefer,20,8.5,22RT
+22R2,Thermal Refrigerated/Heated,20,8.5,22RT
+22R3,Thermal Refrigerated/Heated,20,8.5,22RT
+22R9,Thermal Refrigerated/Heated,20,8.5,22RT
+22RC,Thermal Refrigerated/Heated,20,8.5,22RT
+22RE,Thermal Refrigerated,20,8.5,22RT
+22RS,Thermal Refrigerated/Heated,20,8.5,22RT
+2330,Thermal Refrigerated,20,8.5,22RT
+2331,Thermal Refrigerated,20,8.5,22RT
+2332,Thermal Refrigerated/Heated,20,8.5,22RT
+2432,Thermal Refrigerated/Heated,20,9,22RT
+24H0,Thermal Refrigerated/Heated,20,9,22RT
+24H1,Thermal Refrigerated/Heated,20,9,22RT
+24H2,Thermal Refrigerated/Heated,20,9,22RT
+24HI,Thermal Refrigerated/Heated,20,9,22RT
+24HR,Thermal Refrigerated/Heated,20,9,22RT
+24R0,Thermal Refrigerated/Heated,20,9,22RT
+24R1,Thermal Refrigerated/Heated,20,9,22RT
+24R2,Thermal Refrigerated/Heated,20,9,22RT
+24R3,Thermal Refrigerated/Heated,20,9,22RT
+24RE,Thermal Refrigerated,20,9,22RT
+24RS,Thermal Refrigerated/Heated,20,9,22RT
+24RT,Thermal Refrigerated/Heated,20,9,22RT
+2030,Thermal Refrigerated,20,8,22RT
+2031,Thermal Refrigerated,20,8,22RT
+2032,Thermal Refrigerated/Heated,20,8,22RT
+2040,Thermal Refrigerated,20,8,22RT
+2041,Thermal Refrigerated,20,8,22RT
+2042,Thermal Refrigerated,20,8,22RT
+2043,Thermal Refrigerated,20,8,22RT
+20R0,Thermal Refrigerated,20,8,22RT
+20R1,Thermal Refrigerated/Heated,20,8,22RT
+20R2,Thermal Refrigerated/Heated,20,8,22RT
+20R3,Thermal Refrigerated/Heated,20,8,22RT
+20RE,Thermal Refrigerated,20,8,22RT
+20RS,Thermal Refrigerated/Heated,20,8,22RT
+20RT,Thermal Refrigerated/Heated,20,8,22RT
+2130,Thermal Refrigerated,20,8,22RT
+2131,Thermal Refrigerated,20,8,22RT
+2132,Thermal Refrigerated,20,8,22RT
+2230,Thermal Refrigerated,20,8.5,22RT
+2231,Thermal Refrigerated,20,8.5,22RT
+2232,Thermal Refrigerated/Heated,20,8.5,22RT
+2240,Thermal Refrigerated,20,8.5,22RT
+2242,Thermal Refrigerated,20,8.5,22RT
+22R0,Thermal Refrigerated/Heated,20,8.5,22RT
+22RT,Thermal Refrigerated/Heated,20,8.5,22RT
+2234,"Thermal containers, Heated",20,8.5,22RT
+22T0,Tank,20,8.5,22TN
+22T1,Tank,20,8.5,22TN
+22T2,Tank,20,8.5,22TN
+22T3,Tank,20,8.5,22TN
+22T4,Tank,20,8.5,22TN
+22T5,Tank,20,8.5,22TN
+22T6,Tank,20,8.5,22TN
+22T7,Tank,20,8.5,22TN
+22T8,Tank,20,8.5,22TN
+22T9,Tank,20,8.5,22TN
+22TD,Tank,20,8.5,22TN
+22TG,Tank,20,8.5,22TN
+2670,Tank,20,4.25,22TN
+2671,Tank,20,4.25,22TN
+2870,HALF HEIGHT THERMAL TANK,20,0,22TN
+2070,Tank,20,8,22TN
+2071,Tank,20,8,22TN
+2072,Tank,20,8,22TN
+2073,Tank,20,8,22TN
+2074,Tank,20,8,22TN
+2075,Tank,20,8,22TN
+2076,Tank,20,8,22TN
+2077,Tank,20,8,22TN
+2078,Tank,20,8,22TN
+2079,Tank,20,8,22TN
+20T0,Tank,20,8,22TN
+20T1,Tank,20,8,22TN
+20T2,Tank,20,8,22TN
+20T3,Tank,20,8,22TN
+20T4,Tank,20,8,22TN
+20T5,Tank,20,8,22TN
+20T6,Tank,20,8,22TN
+20T7,Tank,20,8,22TN
+20T8,Tank,20,8,22TN
+20T9,Tank,20,8,22TN
+20TD,Tank,20,8,22TN
+20TG,Tank,20,8,22TN
+20TN,Tank,20,8,22TN
+2270,Tank,20,8.5,22TN
+2271,Tank,20,8.5,22TN
+2272,Tank,20,8.5,22TN
+2273,Tank,20,8.5,22TN
+2274,Tank,20,8.5,22TN
+2275,Tank,20,8.5,22TN
+2276,Tank,20,8.5,22TN
+2277,Tank,20,8.5,22TN
+2278,Tank,20,8.5,22TN
+2279,Tank,20,8.5,22TN
+22TN,Tank,20,8.5,22TN
+22U1,Open Top,20,8.5,22UT
+22U2,Open Top,20,8.5,22UT
+22U3,Open Top,20,8.5,22UT
+22U4,Open Top,20,8.5,22UT
+22U5,Open Top,20,8.5,22UT
+22U6,Standard Dry,20,8.5,22UT
+2650,Open Top,0,4.25,22UT
+2750,Open Top,20,4.25,22UT
+2770,Tank,20,4.25,22UT
+2771,Tank,20,4.25,22UT
+2851,HALF OPEN TOP,20,0,22UT
+2050,Open Top,20,8,22UT
+2051,Open Top,20,8,22UT
+2052,Open Top,20,8,22UT
+2053,Open Top,20,8,22UT
+20U0,Open Top,20,8,22UT
+20U1,Open Top,20,8,22UT
+20U2,Open Top,20,8,22UT
+20U3,Open Top,20,8,22UT
+20U4,Open Top,20,8,22UT
+20U5,Open Top,20,8,22UT
+20UT,Open Top,20,8,22UT
+2150,Open Top,20,8,22UT
+2203,Standard Dry,20,8.5,22UT
+2250,Open Top,20,8.5,22UT
+2251,Open Top,20,8.5,22UT
+2252,Open Top,20,8.5,22UT
+2253,Open Top,20,8.5,22UT
+2259,Open Top,20,8.5,22UT
+22U0,Open Top,20,8.5,22UT
+22UT,Open Top,20,8.5,22UT
+22UP,Hard Top,20,8.5,22UP
+22V0,Closed Vented,20,8.5,22VH
+22V2,Closed Vented,20,8.5,22VH
+22V4,Closed Vented,20,8.5,22VH
+22VH,Ventilated,20,8.5,22VH
+28VH,Vented,20,4.75,22VH
+28VO,Vented,20,4.75,22VH
+2010,Closed Vented,20,8,22VH
+2011,Closed Vented,20,8,22VH
+2013,Closed Ventilated,20,8,22VH
+2015,Closed Ventilated,20,8,22VH
+2017,Closed Ventilated,20,8,22VH
+20V0,Closed Vented,20,8,22VH
+20V2,Closed Vented,20,8,22VH
+20V4,Closed Vented,20,8,22VH
+20VH,Closed Vented,20,8,22VH
+2113,Closed Ventilated,20,8,22VH
+2117,Closed Ventilated,20,8,22VH
+2211,Closed Vented,20,8.5,22VH
+2215,Closed Ventilated,20,8.5,22VH
+2216,Closed Ventilated,20,8.5,22VH
+2217,Closed Ventilated,20,8.5,22VH
+29P0,Platform,20,1,29PL
+29P1,PLATFORM (CONTAINER),20,4,29PL
+2060,Platform,20,8,29PL
+2061,Platform,20,8,29PL
+2062,Platform,20,8,29PL
+2064,Platform,20,8,29PL
+2065,Platform,20,8,29PL
+20P0,Platform,20,8,29PL
+20P1,Platform,20,8,29PL
+22P0,Platform,20,8.5,29PL
+2760,Platform,20,4.25,29PL
+2960,Platform,20,4,29PL
+2969,Platform,20,4,29PL
+29PL,PLATFORM (CONTAINER),20,1,29PL
+42G0,Standard Dry,40,8.5,42GP
+42G1,Standard Dry,40,8.5,42GP
+42G2,Standard Dry,40,8.5,42GP
+42G3,Standard Dry,40,8.5,42GP
+4300,Standard Dry,40,8.5,42GP
+4301,Standard Dry,40,8.5,42GP
+4302,Standard Dry,40,8.5,42GP
+4303,Standard Dry,40,8.5,42GP
+4304,Standard Dry,40,8.5,42GP
+4305,Standard Dry,40,8.5,42GP
+4310,Standard Dry,40,8.5,42GP
+4311,Closed Vented,40,8.5,42GP
+4312,General Purpose (Hanging Garments),40,8.5,42GP
+4313,VENTILATED,40,0,42GP
+4315,Closed Ventilated,40,8.5,42GP
+4325,Livestock Carrier,40,8.5,42GP
+4326,Automobile Carrier,40,8.5,42GP
+4380,Dry Bulk,40,8.5,42GP
+44G0,Standard Dry,40,9,42GP
+44G1,Standard Dry,40,9,42GP
+44G2,Standard Dry,40,9,42GP
+44G3,Standard Dry,40,9,42GP
+44GP,Standard Dry,40,9,42GP
+4595,Air/Surface,40,8.5,42GP
+4599,Air/Surface,40,9,42GP
+4651,HALF HIGH,40,0,42GP
+4699,Air/Surface,40,4.25,42GP
+4886,Dry Bulk,40,4.25,42GP
+48UI,HALF HEIGHT (OPEN TOP),40,4.25,42GP
+4994,Air/Surface,40,8.5,42GP
+4999,GOOSENECK CHASSIS,40,0,42GP
+4CG0,OPENING(S) AT ONE OR BOTH ENDS,40,8.5,42GP
+4CGP,OPENING(S) AT ONE OR BOTH ENDS,40,8.5,42GP
+8500,Standard Dry,35,8.5,42GP
+8599,Air/Surface,35,8.5,42GP
+9995,Air/Surface,40,4,42GP
+9998,Air/Surface,40,4,42GP
+9999,Air/Surface,40,4,42GP
+M2G0,OPENING(S) AT ONE END OR BOTH ENDS,48,8.5,42GP
+P2G0,OPENING(S) AT ONE END OR BOTH ENDS,53,8.5,42GP
+4000,Standard Dry,40,8,42GP
+4001,Standard Dry,40,8,42GP
+4002,Standard Dry,40,8,42GP
+4003,Standard Dry,40,8,42GP
+4004,Standard Dry,40,8,42GP
+4020,Thermal Insulated,40,8,42GP
+4025,Livestock Carrier,40,8,42GP
+4026,Automobile Carrier,40,8,42GP
+4080,Dry Bulk,40,8,42GP
+4096,Air/Surface,40,8,42GP
+40B0,Dry Bulk,40,8,42GP
+40B1,Dry Bulk,40,8,42GP
+40B3,Dry Bulk,40,8,42GP
+40B4,Dry Bulk,40,8,42GP
+40B5,Dry Bulk,40,8,42GP
+40B6,Dry Bulk,40,8,42GP
+40BK,Dry Bulk,40,8,42GP
+40BU,Dry Bulk,40,8,42GP
+40G0,Standard Dry,40,8,42GP
+40G1,Standard Dry,40,8,42GP
+40G2,Standard Dry,40,8,42GP
+40G3,Standard Dry,40,8,42GP
+40GP,Standard Dry,40,8,42GP
+4101,Standard Dry,40,8,42GP
+4102,Standard Dry,40,8,42GP
+4103,Standard Dry,40,8,42GP
+4104,Standard Dry,40,8,42GP
+4126,Automobile Carrier,40,8,42GP
+4200,Standard Dry,40,8.5,42GP
+4201,Standard Dry,40,8.5,42GP
+4202,Standard Dry,40,8.5,42GP
+4203,Standard Dry,40,8.5,42GP
+4204,Standard Dry,40,8.5,42GP
+4225,Livestock Carrier,40,8.5,42GP
+4226,Automobile Carrier,40,8.5,42GP
+4280,Dry Bulk,40,8.5,42GP
+42B0,Dry Bulk,40,8.5,42GP
+42B1,Dry Bulk,40,8.5,42GP
+42B3,Dry Bulk,40,8.5,42GP
+42B4,Dry Bulk,40,8.5,42GP
+42B5,Dry Bulk,40,8.5,42GP
+42B6,Dry Bulk,40,8.5,42GP
+42BK,Dry Bulk,40,8.5,42GP
+42BU,Dry Bulk,40,8.5,42GP
+42GP,Standard Dry,40,8.5,42GP
+42G4,General Purose (Hanging Garments),40,8.5,42GP
+4CG1,PASSIVE VENTS AT UPPER PART OF CARGO SPACE,40,8.5,42GP
+42H5,Thermal Insulated,40,8.5,42HR
+42H6,Thermal Insulated,40,8.5,42HR
+44H5,Thermal Insulated,40,9,42HR
+44H6,Thermal Insulated,40,9,42HR
+45H5,Thermal Insulated,45,9.5,42HR
+45H6,Thermal Insulated,45,9.5,42HR
+L2H5,Thermal Insulated,45,8.5,42HR
+L2H6,Thermal Insulated,45,8.5,42HR
+L5H5,Thermal Insulated,45,9.5,42HR
+L5H6,Thermal Insulated,45,9.5,42HR
+42HR,Insulated (Conair),40,8.5,42HR
+42HI,Thermal Refrigerated/Heated,40,8.5,42HR
+42P1,Flat Rack,40,8.5,42PF
+42P2,Platform,40,8.5,42PF
+42P4,Platform,40,8.5,42PF
+42P5,Platform,40,8.5,42PF
+42P8,Platform,40,8.5,42PF
+42P9,Platform,40,8.5,42PF
+42PL,Platform,40,8.5,42PF
+42PS,Platform,40,8.5,42PF
+4361,Flat,40,8.5,42PF
+4362,Platform,40,8.5,42PF
+4364,Platform,40,8.5,42PF
+4365,Platform,40,8.5,42PF
+4366,Platform,40,8.5,42PF
+4367,Platform,40,8.5,42PF
+4560,Platform,40,8.5,42PF
+4561,Platform,40,8.5,42PF
+4661,Platform,40,4.25,42PF
+4761,Platform,40,4.25,42PF
+48P1,Platform,40,4.25,42PF
+48P5,Platform,40,4.25,42PF
+48PC,Platform,40,4.25,42PF
+48PF,Platform,40,4.25,42PF
+48PL,Platform,40,4.25,42PF
+4061,Platform,40,8,42PF
+4062,Platform,40,8,42PF
+4063,Platform,40,8,42PF
+4064,Platform,40,8,42PF
+4065,Platform,40,8,42PF
+4066,Platform,40,8,42PF
+4067,Platform,40,8,42PF
+40P1,Platform,40,8,42PF
+40P2,Platform,40,8,42PF
+40P4,Platform,40,8,42PF
+40P5,Platform,40,8,42PF
+40PC,Platform,40,8,42PF
+40PF,Platform,40,8,42PF
+40PL,Platform,40,8,42PF
+40PS,Platform,40,8,42PF
+4161,Platform,40,8,42PF
+4162,Platform,40,8,42PF
+4163,Platform,40,8,42PF
+4164,Platform,40,8,42PF
+4165,Platform,40,8,42PF
+4166,Platform,40,8,42PF
+4167,Platform,40,8,42PF
+4261,Platform,40,8.5,42PF
+4262,Platform,40,8.5,42PF
+4263,Flat,40,8.5,42PF
+4264,Platform,40,8.5,42PF
+4265,Platform,40,8.5,42PF
+4266,Platform,40,8.5,42PF
+4267,Platform,40,8.5,42PF
+42PC,Platform,40,8.5,42PF
+42PF,Platform,40,8.5,42PF
+42P3,Collapsible Flat Rack,40,8.5,42PC
+4363,Flat,40,8.5,42PC
+48P3,Platform,40,4.25,42PC
+40P3,Platform,40,8,42PC
+42R1,Reefer,40,8.5,42RT
+42R2,Thermal Refrigerated/Heated,40,8.5,42RT
+42R3,Thermal Refrigerated/Heated,40,8.5,42RT
+42R9,Thermal Refrigerated/Heated,40,8.5,42RT
+42RC,Thermal Refrigerated/Heated,40,8.5,42RT
+42RE,Thermal Refrigerated,40,8.5,42RT
+42RS,Thermal Refrigerated/Heated,40,8.5,42RT
+4320,Thermal Insulated,40,8.5,42RT
+4330,Thermal Refrigerated,40,8.5,42RT
+4332,Thermal Refrigerated/Heated,40,8.5,42RT
+4333,Thermal Refrigerated/Heated,40,8.5,42RT
+4340,Thermal Refrigerated,40,8.5,42RT
+44H0,Thermal Refrigerated/Heated,40,9,42RT
+44H1,Thermal Refrigerated/Heated,40,9,42RT
+44H2,Thermal Refrigerated/Heated,40,9,42RT
+44HI,Thermal Refrigerated/Heated,40,9,42RT
+44HR,Thermal Refrigerated/Heated,40,9,42RT
+44R0,Thermal Refrigerated/Heated,40,9,42RT
+44R1,Thermal Refrigerated/Heated,40,9,42RT
+44R2,Thermal Refrigerated/Heated,40,9,42RT
+44R3,Thermal Refrigerated/Heated,40,9,42RT
+44RE,Thermal Refrigerated,40,9,42RT
+44RS,Thermal Refrigerated/Heated,40,9,42RT
+44RT,Thermal Refrigerated/Heated,40,9,42RT
+8520,Thermal Insulated,35,8.5,42RT
+8532,Thermal Refrigerated/Heated,35,8.5,42RT
+4030,Thermal Refrigerated,40,8,42RT
+4031,Thermal Refrigerated,40,8,42RT
+4032,Thermal Refrigerated/Heated,40,8,42RT
+4040,Thermal Refrigerated,40,8,42RT
+40H0,Thermal Refrigerated/Heated,40,8,42RT
+40H1,Thermal Refrigerated/Heated,40,8,42RT
+40H2,Thermal Refrigerated/Heated,40,8,42RT
+40H5,Thermal Insulated,40,8,42RT
+40H6,Thermal Insulated,40,8,42RT
+40HI,Thermal Refrigerated/Heated,40,8,42RT
+40HR,Thermal Refrigerated/Heated,40,8,42RT
+40R0,Thermal Refrigerated/Heated,40,8,42RT
+40R1,Thermal Refrigerated/Heated,40,8,42RT
+40R2,Thermal Refrigerated/Heated,40,8,42RT
+40R3,Thermal Refrigerated/Heated,40,8,42RT
+40RE,Thermal Refrigerated,40,8,42RT
+40RS,Thermal Refrigerated/Heated,40,8,42RT
+40RT,Thermal Refrigerated/Heated,40,8,42RT
+4130,Thermal Refrigerated,40,8,42RT
+4131,Thermal Refrigerated,40,8,42RT
+4132,Thermal Refrigerated/Heated,40,8,42RT
+4224,Insulated,40,8.5,42RT
+4230,Thermal Refrigerated,40,8.5,42RT
+4231,Thermal Refrigerated,40,8.5,42RT
+4232,Thermal Refrigerated/Heated,40,8.5,42RT
+4240,Thermal Refrigerated,40,8.5,42RT
+4243,Thermal Refrigerated,40,8.5,42RT
+42H1,Thermal Refrigerated/Heated,40,8.5,42RT
+42H2,Thermal Refrigerated/Heated,40,8.5,42RT
+42HR,Thermal Refrigerated/Heated,40,8.5,42RT
+42R0,Thermal Refrigerated/Heated,40,8.5,42RT
+4432,Thermal Refrigerated/Heated,40,9,42RT
+42RT,Thermal Refrigerated/Heated,40,8.5,42RT
+42T0,Tank,40,8.5,42TN
+42T1,Tank,40,8.5,42TN
+42T2,Tank,40,8.5,42TN
+42T3,Tank,40,8.5,42TN
+42T4,Tank,40,8.5,42TN
+42T5,Tank,40,8.5,42TN
+42T6,Tank,40,8.5,42TN
+42T7,Tank,40,8.5,42TN
+42T8,Tank,40,8.5,42TN
+42T9,Tank,40,8.5,42TN
+42TD,Tank,40,8.5,42TN
+42TG,Tank,40,8.5,42TN
+4370,Tank,40,8.5,42TN
+8770,Tank,35,4.25,42TN
+4070,Tank,40,8,42TN
+4071,Tank,40,8,42TN
+40T0,Tank,40,8,42TN
+40T1,Tank,40,8,42TN
+40T2,Tank,40,8,42TN
+40T3,Tank,40,8,42TN
+40T4,Tank,40,8,42TN
+40T5,Tank,40,8,42TN
+40T6,Tank,40,8,42TN
+40T7,Tank,40,8,42TN
+40T8,Tank,40,8,42TN
+40T9,Tank,40,8,42TN
+40TD,Tank,40,8,42TN
+40TG,Tank,40,8,42TN
+40TN,Tank,40,8,42TN
+4170,Tank,40,8,42TN
+4270,Tank,40,8.5,42TN
+4271,Tank,40,8.5,42TN
+42TN,Tank,40,8.5,42TN
+42U1,Open Top,40,8.5,42UT
+42U2,Open Top,40,8.5,42UT
+42U3,Open Top,40,8.5,42UT
+42U4,Open Top,40,8.5,42UT
+42U5,Open Top,40,8.5,42UT
+42U6,Standard Dry,40,8.5,42UT
+4350,Open Top,40,8.5,42UT
+4351,Open Top,40,8.5,42UT
+4650,Open Top,40,4.25,42UT
+4750,Open Top,40,4.25,42UT
+4751,Open Top,40,4.25,42UT
+48U0,Open top,40,4.25,42UT
+48UT,Open top,40,4.25,42UT
+8550,Open top,35,8.5,42UT
+4050,Open Top,40,8,42UT
+4051,Open Top,40,8,42UT
+4052,Open Top,40,8,42UT
+4053,Open Top,40,8,42UT
+40U0,Open Top,40,8,42UT
+40U1,Open Top,40,8,42UT
+40U2,Open Top,40,8,42UT
+40U3,Open Top,40,8,42UT
+40U4,Open Top,40,8,42UT
+40U5,Open Top,40,8,42UT
+40UT,Open Top,40,8,42UT
+4250,Open Top,40,8.5,42UT
+4251,Open Top,40,8.5,42UT
+4252,Open Top,40,8.5,42UT
+4253,Open Top,40,8.5,42UT
+42P6,Open Top,40,8.5,42UT
+42U0,Open Top,40,8.5,42UT
+42UT,Open Top,40,8.5,42UT
+4551,OPEN TOP HIGHCUBE,40,9.5,42UT
+42UP,Hard Top,40,8.5,42UP
+42V0,Closed Vented,40,8.5,42VH
+42V2,Closed Vented,40,8.5,42VH
+42V4,Closed Vented,40,8.5,42VH
+42VH,Ventilated,40,8.5,42VH
+4010,Closed Vented,40,8,42VH
+4011,Closed Vented,40,8,42VH
+4015,Closed Ventilated,40,8,42VH
+40V0,Closed Vented,40,8,42VH
+40V2,Closed Vented,40,8,42VH
+40V4,Closed Vented,40,8,42VH
+40VH,Closed Vented,40,8,42VH
+4210,Closed Vented,40,8.5,42VH
+4211,Closed Vented,40,8.5,42VH
+4215,Closed Ventilated,40,8.5,42VH
+45G0,High Cube,40,9.5,45GP
+45G1,High Cube,40,9.5,45GP
+45G2,Standard Dry,40,9.5,45GP
+45G3,Standard Dry,40,9.5,45GP
+45G4,Unrecognized container type,0,0,45GP
+9200,Standard Dry,45,8.5,45GP
+9400,Standard Dry,45,9.5,45GP
+4400,Standard Dry,40,9,45GP
+4410,HIGH CUBE,40,9.5,45GP
+4420,Thermal Insulated,40,9,45GP
+4426,Automobile Carrier,40,9,45GP
+4500,Standard Dry,40,8.5,45GP
+4505,Standard Dry,40,8.5,45GP
+4510,Standard Dry,40,9.5,45GP
+4511,Standard Dry,40,9.5,45GP
+4514,HIGH CUBE,40,9.5,45GP
+45GP,Standard Dry,40,9.5,45GP
+45R0,Thermal Refrigerated/Heated,45,9.5,45RT
+45R1,Reefer High Cube,40,9.5,45RT
+45R2,Thermal Refrigerated/Heated,45,9.5,45RT
+45R3,Thermal Refrigerated/Heated,45,9.5,45RT
+45R9,Thermal Refrigerated,40,9.5,45RT
+45RC,Thermal Refrigerated/Heated,40,9.5,45RT
+45RE,Thermal Refrigerated,45,9.5,45RT
+45RS,Thermal Refrigerated/Heated,45,9.5,45RT
+4530,Thermal Refrigerated,40,8.5,45RT
+4531,Thermal Refrigerated,40,8.5,45RT
+4532,Thermal Refrigerated/Heated,40,8.5,45RT
+4533,Thermal Refrigerated/Heated,40,8.5,45RT
+45H2,Thermal Refrigerated/Heated,45,9.5,45RT
+45RT,Thermal Refrigerated/Heated,45,9.5,45RT
+4534,HIGHCUBE INTEGRATED REEFER,40,9.5,45RT
+45U6,High Cube Hard Top,40,9.5,45UP
+45UP,High Cube Hard Top,40,9.5,45UP
+49P0,Platform,40,4,49PL
+49P1,Platform,40,4,49PL
+49P3,Platform,40,4,49PL
+49P5,Platform,40,4,49PL
+49PC,Platform,40,4,49PL
+49PF,Platform,40,4,49PL
+4060,Flat,40,8,49PL
+40P0,Platform,40,8,49PL
+4260,Flat,40,8.5,49PL
+42P0,Platform,40,8.5,49PL
+4360,Flat,40,8.5,49PL
+45P3,FOLDING COMPLETE END STRUCTURE (PLATFORM),40,9.5,49PL
+45P8,Platform,40,9.5,49PL
+45PC,FOLDING COMPLETE END STRUCTURE (PLATFORM),40,9.5,49PL
+48P0,Platform,40,4.25,49PL
+4960,Platform,40,4,49PL
+49PL,Platform,40,4,49PL
+9500,Standard Dry,45,9.5,L5GP
+9510,Standard Dry,45,9.5,L5GP
+L5G1,45 High Cube,45,9,L5GP
+L5G2,Standard Dry,45,9.5,L5GP
+L5G3,Standard Dry,45,9.5,L5GP
+L5G9,Standard Dry,45,9.5,L5GP
+L0G9,Standard Dry,45,8,L5GP
+L0GP,HL: OPENING(S) AT ONE END OR BOTH ENDS,45,8,L5GP
+L2G0,Standard Dry,45,8.5,L5GP
+L2G1,Standard Dry,45,8.5,L5GP
+L2G2,Standard Dry,45,8.5,L5GP
+L2G3,Standard Dry,45,8.5,L5GP
+L2G9,Standard Dry,45,8.5,L5GP
+L2GP,Standard Dry,45,8.5,L5GP
+L5G0,Standard Dry,45,9,L5GP
+L5GP,Standard Dry,45,9.5,L5GP
+L5R1,45 Reefer High Cube,45,9.5,L5RT
+L5R2,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5R3,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5RE,Thermal Refrigerated,45,9.5,L5RT
+L5RS,Thermal Refrigerated/Heated,45,9.5,L5RT
+45H0,Thermal Refrigerated/Heated,45,9.5,L5RT
+45H1,Thermal Refrigerated/Heated,45,9.5,L5RT
+45HI,Thermal Refrigerated/Heated,45,9.5,L5RT
+45HR,Thermal Refrigerated/Heated,45,9.5,L5RT
+9532,Thermal Refrigerated/Heated,45,9.5,L5RT
+L2H0,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2H1,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2H2,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2HI,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2HR,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2R0,Thermal Refrigerated,45,8.5,L5RT
+L2R1,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2R2,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2R3,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2RE,Thermal Refrigerated,45,8.5,L5RT
+L2RS,Thermal Refrigerated/Heated,45,8.5,L5RT
+L2RT,Thermal Refrigerated/Heated,45,8.5,L5RT
+L5H0,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5H1,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5H2,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5HI,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5HR,Thermal Refrigerated/Heated,45,9.5,L5RT
+L5R0,Thermal Refrigerated,45,9.5,L5RT
+L5RT,Thermal Refrigerated/Heated,45,9.5,L5RT
+12TR,Flatbed,42,8,12TR`;
+
+    const CSV_GROUPS = `code,description
+22BU,20 BULK CONTAINER
+22GP,20 GENERAL PURPOSE CONT.
+22HR,20 INSULATED CONTAINER
+22PF,20 FLAT (FIXED ENDS)
+8888,Uncontainerised
+22PC,20 FLAT (COLLAPSIBLE)
+22RT,20 REEFER CONTAINER
+22TN,20 TANK CONTAINER
+22UT,20 OPEN TOP CONTAINER
+22UP,20 HARDTOP CONTAINER
+22VH,20 VENTILATED CONTAINER
+29PL,20 PLATFORM
+42GP,40 GENERAL PURPOSE CONT.
+42HR,40 INSULATED CONTAINER
+42PF,40 FLAT (FIXED ENDS)
+42PC,40 FLAT (COLLAPSIBLE)
+42RT,40 REEFER CONTAINER
+42TD,40 TANK CONTAINER
+42UT,40 OPEN TOP CONTAINER
+42UP,40 HARDTOP CONTAINER
+42VH,40 VENTILATED CONTAINER
+45GP,40 HIGH CUBE CONT.
+45RT,40 REEFER HIGHCUBE CONTAINER
+45UP,40 HIGH CUBE HARDTOP CONT.
+49PL,40 PLATFORM
+L5GP,45 HIGH CUBE CONT.
+L5R1,45 REEFER HIGHCUBE CONTAINER
+12TR,FLATBED`;
+
+    /* ============================================
+       STATE
+       ============================================ */
+    const state = {
+      containers: [],
+      groups: {},
+      mode: 'code',
+      filters: { size: '', group: '', codeType: '' },
+      query: '',
+      view: 'grid',
+      page: 1,
+      perPage: 24,
+      selectedGroup: null,
+    };
+
+    const QUICK_TAGS = ['Standard Dry', 'Reefer', 'Open Top', 'Flat Rack', 'Platform', 'Tank', 'Bulk', 'Ventilated', 'Insulated', 'High Cube'];
+
+    /* ============================================
+       DOM
+       ============================================ */
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const els = {
+      codeInput: $('#codeInput'),
+      typeInput: $('#typeInput'),
+      clearCode: $('#clearCode'),
+      codeSuggestions: $('#codeSuggestions'),
+      typeQuickTags: $('#typeQuickTags'),
+      groupChips: $('#groupChips'),
+      groupFilter: $('#groupFilter'),
+      sizeFilter: $('#sizeFilter'),
+      codeTypeFilter: $('#codeTypeFilter'),
+      resetFilters: $('#resetFilters'),
+      resultsCount: $('#resultsCount'),
+      resultsBody: $('#resultsBody'),
+      loadMore: $('#loadMore'),
+      detailModal: $('#detailModal'),
+      modalContent: $('#modalContent'),
+    };
+
+    /* ============================================
+       CSV PARSER
+       ============================================ */
+    function parseCSV(text) {
+      const lines = text.replace(/\r\n/g, '\n').trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      return lines.slice(1).filter(l => l.trim()).map(line => {
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        for (const ch of line) {
+          if (ch === '"') inQuotes = !inQuotes;
+          else if (ch === ',' && !inQuotes) { values.push(current.trim()); current = ''; }
+          else current += ch;
+        }
+        values.push(current.trim());
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = values[i] || '');
+        return obj;
+      });
+    }
+
+    function parseGroupsCSV(text) {
+      const rows = parseCSV(text);
+      const map = {};
+      rows.forEach(r => { if (r.code) map[r.code] = r.description || r.code; });
+      return map;
+    }
+
+    /* ============================================
+       HELPERS
+       ============================================ */
+    function isNewISO(c) { return /[A-Z]/.test(c.code); }
+    function matchesQuery(c, q) {
+      if (!q) return true;
+      const Q = q.toLowerCase().trim();
+      if (state.mode === 'code') return c.code.toLowerCase().includes(Q);
+      if (state.mode === 'type') return c.description.toLowerCase().includes(Q);
+      return true;
+    }
+    function getFiltered() {
+      let items = state.containers;
+      if (state.query) items = items.filter(c => matchesQuery(c, state.query));
+      if (state.selectedGroup && state.mode === 'group') items = items.filter(c => c.group === state.selectedGroup);
+      if (state.filters.size) items = items.filter(c => c.length == state.filters.size);
+      if (state.filters.group) items = items.filter(c => c.group === state.filters.group);
+      if (state.filters.codeType === 'new') items = items.filter(isNewISO);
+      if (state.filters.codeType === 'old') items = items.filter(c => !isNewISO(c));
+      return items.slice().sort((a, b) => a.code.localeCompare(b.code));
+    }
+
+    /* ============================================
+       BUILD UI
+       ============================================ */
+    function buildUI() {
+      els.typeQuickTags.innerHTML = QUICK_TAGS.map(t => `<button class="quick-tag" data-tag="${t}">${t}</button>`).join('');
+      const groupOptions = Object.entries(state.groups).sort((a, b) => a[0].localeCompare(b[0])).map(([code, desc]) => `<option value="${code}">${code} – ${desc}</option>`).join('');
+      els.groupFilter.innerHTML = `<option value="">Tất cả nhóm</option>${groupOptions}`;
+      els.groupChips.innerHTML = Object.entries(state.groups).sort((a, b) => a[0].localeCompare(b[0])).map(([code, desc]) => `
+        <button class="group-chip" data-group="${code}">
+          <span class="group-chip__code">${code}</span>
+          <span class="group-chip__desc">${desc}</span>
+        </button>`).join('');
+    }
+
+    /* ============================================
+       RENDER
+       ============================================ */
+    function render() {
+      const items = getFiltered();
+      const total = items.length;
+      const visible = items.slice(0, state.page * state.perPage);
+      const hasFilter = state.query || state.filters.size || state.filters.group || state.filters.codeType || state.selectedGroup;
+      els.resultsCount.textContent = hasFilter ? `Tìm thấy ${total} kết quả` : `Hiển thị ${Math.min(visible.length, total)} / ${total} mã container`;
+      els.resultsBody.className = `tool-results__body tool-results__body--${state.view}`;
+      if (visible.length === 0) {
+        els.resultsBody.innerHTML = `<div class="tool-empty"><p>😕 Không tìm thấy container nào phù hợp</p><p>Thử từ khóa khác hoặc xóa bộ lọc</p></div>`;
+      } else if (state.view === 'grid') {
+        els.resultsBody.innerHTML = visible.map(renderCard).join('');
+      } else {
+        els.resultsBody.innerHTML = renderTable(visible);
+      }
+      els.loadMore.hidden = visible.length >= total;
+    }
+
+    function renderCard(c) {
+      const badge = isNewISO(c) ? 'new' : 'old';
+      const badgeTxt = isNewISO(c) ? 'NEW' : 'OLD';
+      const groupDesc = state.groups[c.group] || c.group;
+      return `<article class="c-card" data-code="${c.code}" tabindex="0" role="button">
+        <div class="c-card__head"><span class="c-card__code">${c.code}</span><span class="c-card__badge c-card__badge--${badge}">${badgeTxt}</span></div>
+        <div class="c-card__desc">${c.description || '—'}</div>
+        <div class="c-card__specs"><span>📏 ${c.length || '?'} ft</span><span>📐 ${c.height || '?'} ft</span></div>
+        <div class="c-card__group" title="${groupDesc}">${c.group} · ${groupDesc}</div>
+      </article>`;
+    }
+
+    function renderTable(items) {
+      return `<table class="c-table"><thead><tr><th>Mã ISO</th><th>Loại</th><th>Dài</th><th>Cao</th><th>Nhóm</th><th>Loại mã</th></tr></thead><tbody>
+        ${items.map(c => `<tr data-code="${c.code}"><td class="c-table__code">${c.code}</td><td>${c.description || '—'}</td><td>${c.length || '?'} ft</td><td>${c.height || '?'} ft</td><td>${state.groups[c.group] || c.group}</td><td>${isNewISO(c) ? '🟢 Mới' : '⚪ Cũ'}</td></tr>`).join('')}
+      </tbody></table>`;
+    }
+
+    /* ============================================
+       SUGGESTIONS
+       ============================================ */
+    function showSuggestions(q) {
+      if (!q || q.length < 1) { els.codeSuggestions.hidden = true; return; }
+      const Q = q.toLowerCase();
+      const matches = state.containers.filter(c => c.code.toLowerCase().includes(Q)).slice(0, 8);
+      if (matches.length === 0) { els.codeSuggestions.hidden = true; return; }
+      els.codeSuggestions.innerHTML = matches.map(c => `<div class="suggestion-item" data-code="${c.code}"><span class="suggestion-item__code">${c.code}</span><span class="suggestion-item__desc">${c.description || '—'}</span><span class="suggestion-item__meta">${c.length}ft</span></div>`).join('');
+      els.codeSuggestions.hidden = false;
+    }
+
+    /* ============================================
+       MODAL
+       ============================================ */
+    function openDetail(code) {
+      const c = state.containers.find(x => x.code === code);
+      if (!c) return;
+      const groupDesc = state.groups[c.group] || c.group;
+      const related = state.containers.filter(x => x.group === c.group && x.code !== c.code).slice(0, 8);
+      els.modalContent.innerHTML = `
+        <div class="modal__header">
+          <div><div class="modal__code">${c.code}</div><div class="modal__desc">${c.description || '—'}</div></div>
+          <button class="modal__close" data-close-modal aria-label="Close">✕</button>
+        </div>
+        <div class="modal__body">
+          <div class="modal__specs">
+            <div class="spec"><span class="spec__label">Chiều dài</span><span class="spec__value">${c.length || '?'} ft</span></div>
+            <div class="spec"><span class="spec__label">Chiều cao</span><span class="spec__value">${c.height || '?'} ft</span></div>
+            <div class="spec"><span class="spec__label">Nhóm</span><span class="spec__value">${c.group}</span></div>
+            <div class="spec"><span class="spec__label">Loại mã</span><span class="spec__value">${isNewISO(c) ? 'Mới (ISO 6346)' : 'Cũ (Legacy)'}</span></div>
+          </div>
+          <div class="modal__group">${groupDesc}</div>
+          ${related.length ? `<div class="modal__related"><h4>Mã liên quan trong nhóm <code>${c.group}</code></h4><div class="modal__chips">${related.map(r => `<button class="chip" data-code="${r.code}">${r.code}</button>`).join('')}</div></div>` : ''}
+          <div class="modal__actions"><button class="btn btn--primary" data-copy="${c.code}">📋 Copy mã</button></div>
+        </div>`;
+      els.detailModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() { els.detailModal.hidden = true; document.body.style.overflow = ''; }
+
+    /* ============================================
+       EVENTS
+       ============================================ */
+    function bindEvents() {
+      $$('.tool-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          $$('.tool-tab').forEach(t => t.classList.remove('tool-tab--active'));
+          tab.classList.add('tool-tab--active');
+          state.mode = tab.dataset.tab; state.page = 1; state.selectedGroup = null;
+          $$('.tool-panel').forEach(p => p.classList.toggle('tool-panel--active', p.dataset.panel === state.mode));
+          render();
+        });
+      });
+
+      els.codeInput.addEventListener('input', (e) => {
+        state.query = e.target.value; state.page = 1;
+        els.clearCode.hidden = !state.query;
+        showSuggestions(state.query); render();
+      });
+      els.clearCode.addEventListener('click', () => { els.codeInput.value = ''; state.query = ''; els.clearCode.hidden = true; els.codeSuggestions.hidden = true; render(); });
+      els.codeSuggestions.addEventListener('click', (e) => {
+        const item = e.target.closest('.suggestion-item'); if (!item) return;
+        els.codeInput.value = item.dataset.code; state.query = item.dataset.code; els.codeSuggestions.hidden = true; openDetail(item.dataset.code); render();
+      });
+
+      els.typeInput.addEventListener('input', (e) => { state.query = e.target.value; state.page = 1; render(); });
+      els.typeQuickTags.addEventListener('click', (e) => {
+        const tag = e.target.closest('.quick-tag'); if (!tag) return;
+        els.typeInput.value = tag.dataset.tag; state.query = tag.dataset.tag; state.page = 1; render();
+      });
+
+      els.groupChips.addEventListener('click', (e) => {
+        const chip = e.target.closest('.group-chip'); if (!chip) return;
+        const group = chip.dataset.group;
+        state.selectedGroup = (state.selectedGroup === group) ? null : group;
+        $$('.group-chip').forEach(c => c.classList.toggle('group-chip--active', c.dataset.group === state.selectedGroup));
+        state.page = 1; render();
+      });
+
+      els.sizeFilter.addEventListener('change', (e) => { state.filters.size = e.target.value; state.page = 1; render(); });
+      els.groupFilter.addEventListener('change', (e) => { state.filters.group = e.target.value; state.page = 1; render(); });
+      els.codeTypeFilter.addEventListener('change', (e) => { state.filters.codeType = e.target.value; state.page = 1; render(); });
+
+      els.resetFilters.addEventListener('click', () => {
+        state.filters = { size: '', group: '', codeType: '' }; state.query = ''; state.selectedGroup = null; state.page = 1;
+        els.sizeFilter.value = ''; els.groupFilter.value = ''; els.codeTypeFilter.value = '';
+        els.codeInput.value = ''; els.typeInput.value = ''; els.clearCode.hidden = true; els.codeSuggestions.hidden = true;
+        $$('.group-chip').forEach(c => c.classList.remove('group-chip--active'));
+        render();
+      });
+
+      $$('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          $$('.view-btn').forEach(b => b.classList.remove('view-btn--active'));
+          btn.classList.add('view-btn--active'); state.view = btn.dataset.view; render();
+        });
+      });
+
+      els.loadMore.addEventListener('click', () => { state.page += 1; render(); });
+      els.resultsBody.addEventListener('click', (e) => { const card = e.target.closest('[data-code]'); if (card) openDetail(card.dataset.code); });
+      els.resultsBody.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('[data-code]')) openDetail(e.target.dataset.code); });
+
+      els.detailModal.addEventListener('click', (e) => {
+        if (e.target.hasAttribute('data-close-modal')) closeModal();
+        const chip = e.target.closest('.chip[data-code]');
+        if (chip) { closeModal(); setTimeout(() => openDetail(chip.dataset.code), 150); }
+        const copy = e.target.closest('[data-copy]');
+        if (copy) { navigator.clipboard.writeText(copy.dataset.copy).then(() => { const orig = copy.textContent; copy.textContent = '✓ Đã copy!'; setTimeout(() => copy.textContent = orig, 1500); }); }
+      });
+
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !els.detailModal.hidden) closeModal(); });
+      document.addEventListener('click', (e) => { if (!e.target.closest('.tool-input-wrap') && !e.target.closest('.tool-suggestions')) els.codeSuggestions.hidden = true; });
+    }
+
+    /* ============================================
+       MAIN INIT
+       ============================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load data
+      state.containers = parseCSV(CSV_CODES).filter(c => c.code);
+      state.groups = parseGroupsCSV(CSV_GROUPS);
+      buildUI();
+      render();
+      bindEvents();
+
+      // Theme toggle
+      const themeToggle = $('#themeToggle');
+      const themeIcon = themeToggle?.querySelector('.theme-toggle__icon');
+      function getTheme() { return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+      function setTheme(theme) { document.documentElement.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); if (themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙'; }
+      setTheme(getTheme());
+      themeToggle?.addEventListener('click', () => { const cur = document.documentElement.getAttribute('data-theme'); setTheme(cur === 'dark' ? 'light' : 'dark'); });
+
+      // Mobile menu
+      const hamburger = $('#hamburger'); const navMenu = $('#navMenu');
+      hamburger?.addEventListener('click', () => navMenu?.classList.toggle('header__nav--open'));
+      navMenu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('header__nav--open')));
+
+      // Header scroll
+      const header = $('#header');
+      window.addEventListener('scroll', () => { if (window.scrollY > 20) header?.classList.add('header--scrolled'); else header?.classList.remove('header--scrolled'); });
+
+      // Back to top
+      const backToTop = $('#backToTop');
+      window.addEventListener('scroll', () => { if (window.scrollY > 400) backToTop?.classList.add('back-to-top--visible'); else backToTop?.classList.remove('back-to-top--visible'); });
+      backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      // Progress bar
+      const progressBar = $('#progressBar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+      });
+    });
+  </script>
+</body>
+</html>
