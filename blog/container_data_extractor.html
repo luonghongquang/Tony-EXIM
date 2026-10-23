@@ -80,13 +80,6 @@
         .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px; }
         .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
         
-        .btn-settings {
-            background: transparent; border: 1px solid var(--border-glass); color: var(--text-main);
-            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; gap: 8px; font-size: 0.875rem;
-        }
-        .btn-settings:hover { background: rgba(255, 255, 255, 0.1); }
-
         /* Layout */
         .container {
             max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
@@ -164,20 +157,6 @@
         .btn-copy:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .btn-copy.active { display: flex; }
 
-        /* Modal Settings */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: var(--bg-base); border: 1px solid var(--border-glass); border-radius: 16px; width: 100%; max-width: 500px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 1.25rem; font-weight: 700; }
-        .modal-desc { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5; }
-        .input-group { margin-bottom: 1.5rem; }
-        .input-group label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .input-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 8px; color: #fff; font-family: monospace; outline: none; transition: border 0.2s; }
-        .input-group input:focus { border-color: var(--accent-cyan); }
-        .btn-save { width: 100%; padding: 0.875rem; background: var(--accent-cyan); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .btn-save:hover { background: #22d3ee; }
-
         /* Toast */
         .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #10B981; color: #fff; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 500; font-size: 0.875rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px -10px #10B981; opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 200; }
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -191,9 +170,9 @@
             <div class="logo-icon"><i data-lucide="scan-line"></i></div>
             <span>AI Container Extractor</span>
         </div>
-        <button class="btn-settings" onclick="openSettings()">
-            <i data-lucide="settings" style="width: 16px; height: 16px;"></i> Cài đặt API
-        </button>
+        <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">
+            Tony EXIM • Vision Tool
+        </div>
     </header>
 
     <!-- Main Content -->
@@ -239,19 +218,16 @@
                 </div>
 
                 <div id="result-data" class="data-group">
-                    <!-- Container Number -->
                     <div class="data-field field-container">
                         <div class="data-label">Số Container (kèm Check Digit)</div>
                         <div id="val-container" class="data-value">-</div>
                     </div>
                     
-                    <!-- Type -->
                     <div class="data-field">
                         <div class="data-label">Loại Cont / Kích thước</div>
                         <div id="val-type" class="data-value font-mono">-</div>
                     </div>
 
-                    <!-- Weights -->
                     <div class="grid-2">
                         <div class="data-field">
                             <div class="data-label">Max Gross</div>
@@ -263,7 +239,6 @@
                         </div>
                     </div>
 
-                    <!-- Seal Number -->
                     <div class="data-field field-seal">
                         <div class="data-label">Số Seal (Niêm phong)</div>
                         <div id="val-seal" class="data-value">-</div>
@@ -275,34 +250,12 @@
         </div>
     </main>
 
-    <!-- Settings Modal -->
-    <div class="modal-overlay" id="settings-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Cài đặt API Key</div>
-                <button onclick="closeSettings()" style="background:none; border:none; color:#fff; cursor:pointer;"><i data-lucide="x"></i></button>
-            </div>
-            <p class="modal-desc">
-                Để AI có thể đọc hình ảnh, bạn cần nhập API Key của Google Gemini. 
-                Key này sẽ được lưu an toàn trong trình duyệt của bạn (Local Storage) và <b>không bao giờ</b> bị đưa lên GitHub.
-                <br><br>
-                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: var(--accent-cyan);">Lấy API Key miễn phí tại đây ↗</a>
-            </p>
-            <div class="input-group">
-                <label>Google Gemini API Key</label>
-                <input type="password" id="api-key-input" placeholder="AIzaSy...">
-            </div>
-            <button class="btn-save" onclick="saveApiKey()">Lưu API Key</button>
-        </div>
-    </div>
-
     <!-- Toast -->
     <div id="toast" class="toast"><i data-lucide="check-circle" style="width: 18px; height: 18px;"></i><span id="toast-msg">Thành công!</span></div>
 
     <script>
         lucide.createIcons();
 
-        // DOM Elements
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const imagePreview = document.getElementById('image-preview');
@@ -322,30 +275,18 @@
         const valTare = document.getElementById('val-tare');
         const valSeal = document.getElementById('val-seal');
 
-        // State
         let currentBase64Image = null;
         let currentMimeType = null;
-        let apiKey = localStorage.getItem('gemini_api_key') || "";
 
-        // Kiểm tra API key lần đầu
-        if (!apiKey) {
-            setTimeout(() => openSettings(), 500);
-        }
-
-        // Settings Logic
-        function openSettings() { document.getElementById('settings-modal').classList.add('active'); }
-        function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
+        // ========================================================
+        // CẤU HÌNH API KEY GẮN CỨNG (DÀNH CHO PUBLIC WEB)
+        // Dán Key của bạn vào giữa 2 dấu ngoặc kép dưới đây:
+        // ========================================================
+        const HARDCODED_API_KEY = "AQ.Ab8RN6LaijObX3p7Yqtb1ltDGv0cfU7Bf0Vf-q_kfp_DUlj21Q"; 
         
-        function saveApiKey() {
-            const input = document.getElementById('api-key-input').value.trim();
-            if (input.length > 10) {
-                localStorage.setItem('gemini_api_key', input);
-                apiKey = input;
-                closeSettings();
-                showToast("Đã lưu API Key!");
-            } else {
-                alert("Vui lòng nhập API Key hợp lệ!");
-            }
+        // Nếu bạn chưa dán key, sẽ hiện cảnh báo
+        if (HARDCODED_API_KEY === "DÁN_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+            setTimeout(() => alert("Lỗi: Bạn chưa điền API Key vào biến HARDCODED_API_KEY trong code!"), 500);
         }
 
         // Drag & Drop Logic
@@ -386,17 +327,16 @@
         // Xử lý Trích xuất
         extractBtn.addEventListener('click', async () => {
             if (!currentBase64Image) return;
-
-            if (!apiKey) {
-                openSettings();
-                showError("Vui lòng nhập API Key trước khi sử dụng.");
+            
+            if (HARDCODED_API_KEY === "DÁN_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+                showError("Chưa cấu hình API Key trong code.");
                 return;
             }
 
             setLoadingState(true);
             hideError();
 
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
 
             const promptText = `
                 Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (cửa container hoặc phiếu EIR).
@@ -435,19 +375,16 @@
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': HARDCODED_API_KEY // Dùng key gắn cứng
+                    },
                     body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
                     const err = await response.json();
-                    if (err.error && err.error.message.includes("API key not valid")) {
-                        localStorage.removeItem('gemini_api_key');
-                        apiKey = "";
-                        openSettings();
-                        throw new Error("API Key không hợp lệ hoặc đã bị xóa. Vui lòng nhập lại.");
-                    }
-                    throw new Error(`Lỗi API: ${response.status}`);
+                    throw new Error(`Lỗi API (${response.status}): ${err.error ? err.error.message : 'Key có thể đã bị khóa hoặc hết hạn mức'}`);
                 }
 
                 const result = await response.json();
@@ -461,7 +398,7 @@
 
             } catch (error) {
                 console.error("Extraction error:", error);
-                showError(error.message || "Không thể trích xuất dữ liệu. Vui lòng thử lại.");
+                showError(error.message || "Không thể trích xuất dữ liệu.");
                 resetResultsView();
             } finally {
                 setLoadingState(false);
