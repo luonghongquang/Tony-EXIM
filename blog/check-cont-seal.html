@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container Data Extractor | Tony EXIM Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .drag-active { border-color: #0d9488 !important; background-color: #f0fdfa !important; }
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid #ffffff;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .toast {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-teal-700 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <h1 class="text-2xl font-bold tracking-tight">AI Container Extractor</h1>
+            </div>
+            <p class="text-teal-100 text-sm hidden sm:block">Smart Logistics Vision</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-6xl mx-auto px-4 py-8">
+        <div class="mb-6">
+            <p class="text-slate-600 text-lg">Upload an image of a container door or EIR document to automatically extract key specifications.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column: Upload Area -->
+            <div class="flex flex-col space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
+                    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h2 class="font-semibold text-slate-700">Image Source</h2>
+                        <button onclick="resetApp()" class="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors">Reset</button>
+                    </div>
+                    
+                    <div class="p-6 flex-grow flex flex-col">
+                        <!-- Upload Zone -->
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-slate-100 transition-colors h-64 relative">
+                            <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/webp" />
+                            
+                            <div id="upload-prompt" class="flex flex-col items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p class="text-slate-600 font-medium">Drag & drop image here</p>
+                                <p class="text-slate-400 text-sm mt-1">or click to browse files (JPEG, PNG)</p>
+                            </div>
+                            
+                            <!-- Image Preview -->
+                            <img id="image-preview" class="hidden absolute inset-0 w-full h-full object-contain bg-slate-900 rounded-lg p-2" src="" alt="Preview" />
+                        </div>
+                        
+                        <button id="extract-btn" disabled class="mt-6 w-full py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex justify-center items-center space-x-2">
+                            <span id="btn-text">Extract Information</span>
+                            <div id="btn-spinner" class="spinner hidden"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Results Area -->
+            <div class="flex flex-col space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full relative">
+                    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h2 class="font-semibold text-slate-700">Extracted Data</h2>
+                        <button id="copy-btn" onclick="copyToClipboard()" disabled class="text-sm bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 rounded-md font-medium transition-colors flex items-center space-x-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            <span>Copy Text</span>
+                        </button>
+                    </div>
+                    
+                    <div class="p-6 flex-grow">
+                        <!-- Empty State -->
+                        <div id="result-empty" class="h-full flex flex-col items-center justify-center text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            <p>Results will appear here after extraction.</p>
+                        </div>
+
+                        <!-- Data Fields -->
+                        <div id="result-data" class="hidden space-y-5">
+                            <div class="relative">
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Container Number</label>
+                                <div id="val-container" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-mono text-lg font-medium break-words min-h-[44px]"></div>
+                            </div>
+                            
+                            <div class="relative">
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Type / Size</label>
+                                <div id="val-type" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="relative">
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Max Gross Weight</label>
+                                    <div id="val-gross" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
+                                </div>
+                                <div class="relative">
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tare Weight</label>
+                                    <div id="val-tare" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
+                                </div>
+                            </div>
+
+                            <div class="relative pt-2">
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Seal Number</label>
+                                <div id="val-seal" class="w-full bg-orange-50 border border-orange-200 rounded-md py-2 px-3 text-orange-800 font-mono font-bold break-words min-h-[42px]"></div>
+                            </div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div id="error-message" class="hidden mt-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-xl flex items-center space-x-2 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <span id="toast-msg">Copied to clipboard!</span>
+    </div>
+
+    <!-- Hidden textarea for copy fallback -->
+    <textarea id="copy-area" class="sr-only" aria-hidden="true"></textarea>
+
+    <script>
+        // DOM Elements
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const imagePreview = document.getElementById('image-preview');
+        const uploadPrompt = document.getElementById('upload-prompt');
+        const extractBtn = document.getElementById('extract-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnSpinner = document.getElementById('btn-spinner');
+        
+        const resultEmpty = document.getElementById('result-empty');
+        const resultData = document.getElementById('result-data');
+        const copyBtn = document.getElementById('copy-btn');
+        const errorMessage = document.getElementById('error-message');
+        
+        const valContainer = document.getElementById('val-container');
+        const valType = document.getElementById('val-type');
+        const valGross = document.getElementById('val-gross');
+        const valTare = document.getElementById('val-tare');
+        const valSeal = document.getElementById('val-seal');
+
+        let currentBase64Image = null;
+        let currentMimeType = null;
+
+        // Gemini API Configuration
+        const apiKey = ""; // API key injected by environment
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+        // Event Listeners for Drag and Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-active'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-active'), false);
+        });
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+        extractBtn.addEventListener('click', processExtraction, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            
+            if (!file.type.match('image.*')) {
+                showError("Please upload a valid image file (JPEG, PNG).");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            reader.onloadend = function() {
+                const result = reader.result;
+                // Display preview
+                imagePreview.src = result;
+                imagePreview.classList.remove('hidden');
+                uploadPrompt.classList.add('hidden');
+                
+                // Store base64 data for API (remove prefix)
+                const base64Parts = result.split(',');
+                currentBase64Image = base64Parts[1];
+                
+                // Extract mime type from prefix (e.g., data:image/jpeg;base64)
+                const mimeMatch = base64Parts[0].match(/:(.*?);/);
+                currentMimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+                
+                // Enable extract button
+                extractBtn.disabled = false;
+                
+                // Clear previous results/errors
+                hideError();
+            }
+        }
+
+        async function processExtraction() {
+            if (!currentBase64Image) return;
+
+            setLoadingState(true);
+            hideError();
+
+            const promptText = `
+                Analyze this image (which could be a container door or an Equipment Interchange Receipt - EIR).
+                Extract the following information carefully:
+                1. Container Number
+                2. Container Type/Size
+                3. Max Gross Weight
+                4. Tare Weight
+                5. Seal Number
+                If a specific piece of information is not present in the image, return "N/A".
+            `;
+
+            const payload = {
+                contents: [
+                    {
+                        role: "user",
+                        parts: [
+                            { text: promptText },
+                            {
+                                inlineData: {
+                                    mimeType: currentMimeType,
+                                    data: currentBase64Image
+                                }
+                            }
+                        ]
+                    }
+                ],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "containerNumber": { type: "STRING", description: "The container ID number (usually 4 letters and 7 digits). Return N/A if not found." },
+                            "containerType": { type: "STRING", description: "The container size and type (e.g., 40 HC, 20 GP, 45G1). Return N/A if not found." },
+                            "maxGross": { type: "STRING", description: "The maximum gross weight with units (e.g., 32,500 KGS). Return N/A if not found." },
+                            "tare": { type: "STRING", description: "The tare weight with units (e.g., 3,850 KGS). Return N/A if not found." },
+                            "sealNumber": { type: "STRING", description: "The security seal number attached. Return N/A if not found." }
+                        }
+                    }
+                }
+            };
+
+            try {
+                // Implementing exponential backoff logic (simplified for immediate usage)
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const parsedData = JSON.parse(jsonString);
+                    
+                    displayResults(parsedData);
+                } else {
+                    throw new Error("Unexpected API response structure.");
+                }
+
+            } catch (error) {
+                console.error("Extraction error:", error);
+                showError("Failed to extract data. Please try again or check the image quality.");
+                resetResultsView();
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        function displayResults(data) {
+            // Populate DOM
+            valContainer.textContent = data.containerNumber || 'N/A';
+            valType.textContent = data.containerType || 'N/A';
+            valGross.textContent = data.maxGross || 'N/A';
+            valTare.textContent = data.tare || 'N/A';
+            valSeal.textContent = data.sealNumber || 'N/A';
+
+            // Switch views
+            resultEmpty.classList.add('hidden');
+            resultData.classList.remove('hidden');
+            
+            // Enable copy button
+            copyBtn.disabled = false;
+        }
+
+        function copyToClipboard() {
+            const textToCopy = `Container No: ${valContainer.textContent}\nType/Size: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSeal No: ${valSeal.textContent}`;
+            
+            const copyArea = document.getElementById('copy-area');
+            copyArea.value = textToCopy;
+            copyArea.select();
+            copyArea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+                showToast("Data copied to clipboard!");
+            } catch (err) {
+                console.error("Failed to copy text: ", err);
+                showToast("Failed to copy. Please copy manually.");
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function setLoadingState(isLoading) {
+            extractBtn.disabled = isLoading;
+            if (isLoading) {
+                btnText.textContent = "Processing...";
+                btnSpinner.classList.remove('hidden');
+            } else {
+                btnText.textContent = "Extract Information";
+                btnSpinner.classList.add('hidden');
+            }
+        }
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorMessage.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+
+        function resetResultsView() {
+            resultEmpty.classList.remove('hidden');
+            resultData.classList.add('hidden');
+            copyBtn.disabled = true;
+        }
+
+        function resetApp() {
+            currentBase64Image = null;
+            currentMimeType = null;
+            fileInput.value = '';
+            imagePreview.src = '';
+            imagePreview.classList.add('hidden');
+            uploadPrompt.classList.remove('hidden');
+            extractBtn.disabled = true;
+            hideError();
+            resetResultsView();
+        }
+    </script>
+</body>
+</html>
