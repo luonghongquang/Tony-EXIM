@@ -280,11 +280,9 @@
 
         // ========================================================
         // CẤU HÌNH API KEY GẮN CỨNG (DÀNH CHO PUBLIC WEB)
-        // Dán Key của bạn vào giữa 2 dấu ngoặc kép dưới đây:
         // ========================================================
-        const HARDCODED_API_KEY = "AQ.Ab8RN6Kn8BVcRhh_njDfH_buOPcZ9_VVkCCXItda4ySXOsJZFg"; 
+        const HARDCODED_API_KEY = "AQ.Ab8RN6Ijvc3fEyEN7p7ksdSpE6tZAC5AZy58IZoaSErAKrcDRQ"; 
         
-        // Nếu bạn chưa dán key, sẽ hiện cảnh báo
         if (HARDCODED_API_KEY === "DÁN_KEY_CỦA_BẠN_VÀO_ĐÂY") {
             setTimeout(() => alert("Lỗi: Bạn chưa điền API Key vào biến HARDCODED_API_KEY trong code!"), 500);
         }
@@ -336,7 +334,8 @@
             setLoadingState(true);
             hideError();
 
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
+            // SỬA URL ĐỂ TRUYỀN TRỰC TIẾP API KEY VÀO PATH
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${HARDCODED_API_KEY}`;
 
             const promptText = `
                 Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (cửa container hoặc phiếu EIR).
@@ -376,15 +375,15 @@
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': HARDCODED_API_KEY // Dùng key gắn cứng
+                        'Content-Type': 'application/json'
+                        // Đã xóa header 'x-goog-api-key'
                     },
                     body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
                     const err = await response.json();
-                    throw new Error(`Lỗi API (${response.status}): ${err.error ? err.error.message : 'Key có thể đã bị khóa hoặc hết hạn mức'}`);
+                    throw new Error(`Lỗi API (${response.status}): ${err.error ? err.error.message : 'Kiểm tra lại cấu hình Key'}`);
                 }
 
                 const result = await response.json();
