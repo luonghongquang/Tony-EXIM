@@ -608,22 +608,6 @@
             setLoadingState(true);
             hideError();
 
-            // Nếu chưa có API Key -> Chạy Mock Data để test giao diện
-            if (!API_KEY || API_KEY.trim() === "") {
-                setTimeout(() => {
-                    const mockData = {
-                        containerNumber: "BEAU 420115 0",
-                        containerType: "40 HC (45G1)",
-                        maxGross: "32,500 KGS",
-                        tare: "3,850 KGS",
-                        sealNumber: "HLC3246362"
-                    };
-                    displayResults(mockData);
-                    setLoadingState(false);
-                }, 1500);
-                return;
-            }
-
             // Gọi API Gemini thật
             const promptText = `
                 Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (có thể là cửa container hoặc phiếu EIR).
