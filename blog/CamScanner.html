@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Document Scanner - CamScanner Clone</title>
+    <title>Document Scanner</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,12 +14,11 @@
     <!-- jsPDF for PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <!-- OpenCV.js (Computer Vision Engine) - Sử dụng CDN ổn định hơn -->
-    <!-- Thay thế docs.opencv.org bằng jsDelivr package -->
+    <!-- OpenCV.js (Computer Vision Engine) -->
     <script async src="https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js" onload="onOpenCvScriptLoaded();"></script>
 
     <style>
-        /* Custom Styles for Crop Handles and Canvas */
+        /* Custom Styles */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; }
         
         .screen { display: none; }
@@ -35,8 +34,9 @@
         }
 
         #baseImage {
-            max-width: 100%;
-            max-height: 100%;
+            display: block;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
             user-select: none;
             -webkit-user-drag: none;
@@ -73,18 +73,13 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-weight: bold;
         }
         .loader-overlay button {
-            margin-top: 20px;
-            padding: 8px 16px;
-            background: #3b82f6;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
+            margin-top: 20px; padding: 8px 16px; background: #3b82f6; border-radius: 8px; font-size: 14px; cursor: pointer;
         }
     </style>
 </head>
 <body class="h-screen w-full flex flex-col overflow-hidden text-gray-800">
 
-    <!-- Global Loader với nút bỏ qua -->
+    <!-- Global Loader -->
     <div id="globalLoader" class="loader-overlay">
         <div class="flex flex-col items-center">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
@@ -103,7 +98,7 @@
                 <i data-lucide="file-scan" class="w-12 h-12 text-blue-600"></i>
             </div>
             <h2 class="text-xl font-bold text-center">Quét tài liệu của bạn</h2>
-            <p class="text-center text-gray-500 mb-8 max-w-xs">Chụp ảnh hoặc tải lên hình ảnh tài liệu để tự động cắt viền và xuất PDF chất lượng cao.</p>
+            <p class="text-center text-gray-500 mb-8 max-w-xs">Chụp ảnh hoặc tải lên hình ảnh tài liệu để tự động cắt viền và xuất PDF chuẩn A4.</p>
             <div class="w-full max-w-xs flex flex-col gap-4">
                 <button onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
                     <i data-lucide="upload"></i> Tải ảnh lên
@@ -127,7 +122,7 @@
             <div class="w-8"></div>
         </header>
         <main id="workspace" class="flex-1 relative bg-gray-900 overflow-hidden">
-            <img id="baseImage" src="" alt="Document" class="hidden">
+            <img id="baseImage" src="" alt="Document">
             <svg id="cropOverlay">
                 <polygon id="cropPolygon" fill="rgba(59, 130, 246, 0.3)" stroke="#3b82f6" stroke-width="2"/>
             </svg>
@@ -193,7 +188,7 @@
                     <i data-lucide="download"></i> Lưu Ảnh
                 </button>
                 <button onclick="exportPDF()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                    <i data-lucide="file-text"></i> Xuất PDF
+                    <i data-lucide="file-text"></i> Xuất PDF (A4)
                 </button>
             </div>
         </div>
@@ -205,7 +200,7 @@
         let cvLoadingFailed = false;
         let currentImage = new Image();
         let originalCanvas = document.createElement('canvas');
-        let warpedCanvas = document.createElement('canvas');
+        let warpedCanvas = document.createElement('canvas'); // Sẽ chứa ảnh đã được căn chuẩn A4
         let cropPoints = [];
         let imgDisplayRect = { x: 0, y: 0, width: 0, height: 0, scaleX: 1, scaleY: 1 };
         let activeHandleIndex = -1;
@@ -224,27 +219,13 @@
 
         // --- XỬ LÝ TẢI OPENCV ---
         function onOpenCvScriptLoaded() {
-            // Script đã tải, nhưng runtime có thể chưa sẵn sàng.
-            // Thiết lập timeout 10 giây để tránh treo.
-            if (typeof cv === 'undefined') {
-                // Có thể cv chưa được định nghĩa, đợi một chút
-            }
-            
-            // Kiểm tra nếu cv đã tồn tại và có onRuntimeInitialized
-            // Đây là cách chuẩn để đợi OpenCV sẵn sàng
             const checkInterval = setInterval(() => {
                 if (typeof cv !== 'undefined') {
-                    // Nếu cv đã có, gán callback
-                    if (cv['onRuntimeInitialized']) {
-                        // Đã có callback, có thể đang khởi tạo
-                    }
                     cv['onRuntimeInitialized'] = () => {
                         clearInterval(checkInterval);
                         cvReady = true;
                         globalLoader.style.display = 'none';
-                        console.log('OpenCV Runtime Initialized');
                     };
-                    // Nếu cv đã sẵn sàng ngay lập tức (trường hợp hiếm)
                     if (cv.Mat) {
                         clearInterval(checkInterval);
                         cvReady = true;
@@ -253,17 +234,13 @@
                 }
             }, 100);
 
-            // Timeout 10 giây
             setTimeout(() => {
                 if (!cvReady) {
                     clearInterval(checkInterval);
                     cvLoadingFailed = true;
                     loaderText.textContent = 'Không thể tải AI. Bạn có thể tiếp tục cắt thủ công.';
                     skipAiBtn.classList.remove('hidden');
-                    // Tự động chuyển sang chế độ thủ công sau 5 giây nếu người dùng không bấm
-                    setTimeout(() => {
-                        if (!cvReady) skipAiLoading();
-                    }, 5000);
+                    setTimeout(() => { if (!cvReady) skipAiLoading(); }, 5000);
                 }
             }, 10000);
         }
@@ -271,16 +248,11 @@
         function skipAiLoading() {
             cvLoadingFailed = true;
             globalLoader.style.display = 'none';
-            // Nếu đang ở màn hình upload, không cần làm gì thêm
         }
 
-        // Hàm khởi tạo ban đầu (có thể gọi sau khi DOM ready)
         document.addEventListener('DOMContentLoaded', () => {
-            // Nếu sau 5 giây mà loader vẫn hiển thị và cv chưa sẵn sàng, hiện nút bỏ qua
             setTimeout(() => {
-                if (!cvReady && !cvLoadingFailed) {
-                    skipAiBtn.classList.remove('hidden');
-                }
+                if (!cvReady && !cvLoadingFailed) skipAiBtn.classList.remove('hidden');
             }, 5000);
         });
 
@@ -306,7 +278,7 @@
                             if (cvReady) {
                                 autoDetectDocument();
                             } else {
-                                resetCropPoints(); // Fallback
+                                resetCropPoints();
                             }
                         }
                     }, 50);
@@ -321,9 +293,9 @@
             document.getElementById('screen-upload').classList.add('active');
             document.getElementById('fileInput').value = '';
             document.getElementById('cameraInput').value = '';
+            baseImage.src = '';
         }
 
-        // --- LOGIC TÍNH TOÁN VỊ TRÍ ẢNH HIỂN THỊ ---
         function calculateDisplayRect() {
             const workspace = document.getElementById('workspace');
             const wW = workspace.clientWidth;
@@ -345,13 +317,9 @@
             };
         }
 
-        // --- TỰ ĐỘNG NHẬN DIỆN VIỀN (OPENCV) ---
+        // --- TỰ ĐỘNG NHẬN DIỆN VIỀN ---
         function autoDetectDocument() {
-            if (!cvReady) {
-                console.warn("OpenCV chưa sẵn sàng");
-                resetCropPoints();
-                return;
-            }
+            if (!cvReady) { resetCropPoints(); return; }
 
             try {
                 let src = cv.imread(originalCanvas);
@@ -373,10 +341,7 @@
                 for (let i = 0; i < contours.size(); ++i) {
                     let cnt = contours.get(i);
                     let area = cv.contourArea(cnt);
-                    if (area > maxArea) {
-                        maxArea = area;
-                        bestContour = cnt;
-                    }
+                    if (area > maxArea) { maxArea = area; bestContour = cnt; }
                 }
 
                 if (bestContour && maxArea > (src.rows * src.cols * 0.1)) {
@@ -392,8 +357,7 @@
                         pts.sort((a, b) => a.y - b.y);
                         let top = pts.slice(0, 2).sort((a, b) => a.x - b.x);
                         let bottom = pts.slice(2, 4).sort((a, b) => a.x - b.x);
-                        let orderedPts = [top[0], top[1], bottom[1], bottom[0]];
-                        cropPoints = orderedPts;
+                        cropPoints = [top[0], top[1], bottom[1], bottom[0]];
                     } else {
                         resetCropPoints();
                     }
@@ -404,15 +368,13 @@
 
                 src.delete(); dst.delete(); gray.delete(); blurred.delete(); edges.delete(); contours.delete(); hierarchy.delete();
                 if (bestContour) bestContour.delete();
-
                 drawCropUI();
             } catch (err) {
-                console.error("Lỗi OpenCV:", err);
                 resetCropPoints();
             }
         }
 
-        // --- UI CROP & KÉO THẢ ---
+        // --- UI CROP ---
         function resetCropPoints() {
             const margin = 0.05;
             cropPoints = [
@@ -434,10 +396,8 @@
             cropPolygon.setAttribute('points', polygonPoints);
             handles.forEach((handle, index) => {
                 let p = cropPoints[index];
-                let screenX = (p.x / imgDisplayRect.scaleX) + imgDisplayRect.x;
-                let screenY = (p.y / imgDisplayRect.scaleY) + imgDisplayRect.y;
-                handle.style.left = `${screenX}px`;
-                handle.style.top = `${screenY}px`;
+                handle.style.left = `${(p.x / imgDisplayRect.scaleX) + imgDisplayRect.x}px`;
+                handle.style.top = `${(p.y / imgDisplayRect.scaleY) + imgDisplayRect.y}px`;
             });
         }
 
@@ -474,23 +434,81 @@
             ctx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
             ctx.rotate(90 * Math.PI / 180);
             ctx.drawImage(originalCanvas, -originalCanvas.width / 2, -originalCanvas.height / 2);
+            
             originalCanvas.width = tempCanvas.width;
             originalCanvas.height = tempCanvas.height;
             originalCanvas.getContext('2d').drawImage(tempCanvas, 0, 0);
+            
             currentImage.src = originalCanvas.toDataURL('image/jpeg', 1.0);
+            baseImage.src = currentImage.src;
+            
             setTimeout(() => {
                 calculateDisplayRect();
                 resetCropPoints();
             }, 50);
         }
 
-        // --- PERSPECTIVE TRANSFORM (WARP) ---
+        // --- HELPER: CHUYỂN ẢNH VỀ CHUẨN KHỔ A4 ---
+        function resizeToA4(sourceCanvas) {
+            const w = sourceCanvas.width;
+            const h = sourceCanvas.height;
+            const isLandscape = w > h;
+
+            // Độ phân giải chuẩn A4 ở 150 DPI (Cân bằng giữa chất lượng và bộ nhớ)
+            // A4 dọc: 1240 x 1754 px | A4 ngang: 1754 x 1240 px
+            const A4_W = isLandscape ? 1754 : 1240;
+            const A4_H = isLandscape ? 1240 : 1754;
+
+            const a4Canvas = document.createElement('canvas');
+            a4Canvas.width = A4_W;
+            a4Canvas.height = A4_H;
+            const ctx = a4Canvas.getContext('2d');
+
+            // Tô nền trắng
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, A4_W, A4_H);
+
+            // Tính toán tỷ lệ để ảnh vừa vặn bên trong trang A4 (không bị méo, có viền trắng)
+            const scale = Math.min(A4_W / w, A4_H / h);
+            const newW = w * scale;
+            const newH = h * scale;
+            const x = (A4_W - newW) / 2;
+            const y = (A4_H - newH) / 2;
+
+            // Vẽ ảnh đã cắt vào giữa trang A4
+            ctx.drawImage(sourceCanvas, x, y, newW, newH);
+            return a4Canvas;
+        }
+
+        // --- PERSPECTIVE TRANSFORM & FALLBACK CROP ---
         function applyCrop() {
+            // 1. Xử lý ảnh thô (Warp hoặc Cắt vuông)
             if (!cvReady) {
-                alert("AI chưa sẵn sàng. Không thể tự động cắt. Vui lòng thử lại sau hoặc sử dụng chế độ thủ công.");
+                // Fallback: Cắt chữ nhật thủ công nếu không có AI
+                try {
+                    const minX = Math.min(...cropPoints.map(p => p.x));
+                    const minY = Math.min(...cropPoints.map(p => p.y));
+                    const maxX = Math.max(...cropPoints.map(p => p.x));
+                    const maxY = Math.max(...cropPoints.map(p => p.y));
+                    const w = maxX - minX;
+                    const h = maxY - minY;
+                    
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = w;
+                    tempCanvas.height = h;
+                    tempCanvas.getContext('2d').drawImage(originalCanvas, minX, minY, w, h, 0, 0, w, h);
+                    
+                    // Đưa về A4
+                    warpedCanvas = resizeToA4(tempCanvas);
+
+                    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                    document.getElementById('screen-preview').classList.add('active');
+                    applyFilter('original');
+                } catch(e) { alert("Có lỗi khi cắt ảnh thủ công."); }
                 return;
             }
 
+            // Có OpenCV -> Warp
             try {
                 let src = cv.imread(originalCanvas);
                 let widthTop = Math.hypot(cropPoints[1].x - cropPoints[0].x, cropPoints[1].y - cropPoints[0].y);
@@ -501,24 +519,28 @@
                 let maxHeight = Math.max(heightLeft, heightRight);
 
                 let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
-                    cropPoints[0].x, cropPoints[0].y,
-                    cropPoints[1].x, cropPoints[1].y,
-                    cropPoints[2].x, cropPoints[2].y,
-                    cropPoints[3].x, cropPoints[3].y
+                    cropPoints[0].x, cropPoints[0].y, cropPoints[1].x, cropPoints[1].y,
+                    cropPoints[2].x, cropPoints[2].y, cropPoints[3].x, cropPoints[3].y
                 ]);
                 let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
-                    0, 0,
-                    maxWidth - 1, 0,
-                    maxWidth - 1, maxHeight - 1,
-                    0, maxHeight - 1
+                    0, 0, maxWidth - 1, 0, maxWidth - 1, maxHeight - 1, 0, maxHeight - 1
                 ]);
+                
                 let dsize = new cv.Size(maxWidth, maxHeight);
                 let M = cv.getPerspectiveTransform(srcTri, dstTri);
                 let dst = new cv.Mat();
+                
                 cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
-                warpedCanvas.width = maxWidth;
-                warpedCanvas.height = maxHeight;
-                cv.imshow(warpedCanvas, dst);
+                
+                // Tạo canvas tạm chứa ảnh vừa warp
+                let tempCanvas = document.createElement('canvas');
+                tempCanvas.width = maxWidth;
+                tempCanvas.height = maxHeight;
+                cv.imshow(tempCanvas, dst);
+                
+                // 2. Đưa ảnh vừa warp vào khung A4
+                warpedCanvas = resizeToA4(tempCanvas);
+
                 src.delete(); srcTri.delete(); dstTri.delete(); M.delete(); dst.delete();
 
                 document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -526,7 +548,7 @@
                 applyFilter('original');
             } catch (err) {
                 console.error("Lỗi Warp:", err);
-                alert("Có lỗi khi cắt ảnh. Vui lòng thử lại.");
+                alert("Có lỗi khi cắt ảnh.");
             }
         }
 
@@ -552,62 +574,77 @@
 
             previewCanvas.width = warpedCanvas.width;
             previewCanvas.height = warpedCanvas.height;
+            
             if (type === 'original') {
                 ctxPreview.drawImage(warpedCanvas, 0, 0);
-            } else if (type === 'grayscale') {
-                if (!cvReady) return; // Fallback nếu không có OpenCV
-                let src = cv.imread(warpedCanvas);
-                let dst = new cv.Mat();
-                cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-                cv.imshow(previewCanvas, dst);
-                src.delete(); dst.delete();
-            } else if (type === 'magic') {
-                if (!cvReady) return;
-                let src = cv.imread(warpedCanvas);
-                let gray = new cv.Mat();
-                let dst = new cv.Mat();
-                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-                cv.adaptiveThreshold(gray, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 15, 10);
-                cv.imshow(previewCanvas, dst);
-                src.delete(); gray.delete(); dst.delete();
+            } else {
+                if (!cvReady) {
+                    ctxPreview.drawImage(warpedCanvas, 0, 0);
+                    return; 
+                }
+                
+                if (type === 'grayscale') {
+                    let src = cv.imread(warpedCanvas);
+                    let dst = new cv.Mat();
+                    cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+                    cv.imshow(previewCanvas, dst);
+                    src.delete(); dst.delete();
+                } else if (type === 'magic') {
+                    let src = cv.imread(warpedCanvas);
+                    let gray = new cv.Mat();
+                    let dst = new cv.Mat();
+                    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+                    // Tăng blockSize lên 21 để làm mịn vùng nền trắng A4
+                    cv.adaptiveThreshold(gray, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 21, 15);
+                    cv.imshow(previewCanvas, dst);
+                    src.delete(); gray.delete(); dst.delete();
+                }
             }
         }
 
         // --- XUẤT FILE ---
         function downloadImage() {
             const link = document.createElement('a');
-            link.download = `scanned_doc_${Date.now()}.jpg`;
+            link.download = `scanned_A4_${Date.now()}.jpg`;
             link.href = previewCanvas.toDataURL('image/jpeg', 0.95);
             link.click();
         }
 
         function exportPDF() {
-            if (!window.jspdf) {
-                alert("Thư viện PDF chưa tải xong.");
-                return;
-            }
+            if (!window.jspdf) { alert("Thư viện PDF chưa tải xong."); return; }
             const { jsPDF } = window.jspdf;
+            
             const imgData = previewCanvas.toDataURL('image/jpeg', 0.95);
             const imgWidth = previewCanvas.width;
             const imgHeight = previewCanvas.height;
             const isLandscape = imgWidth > imgHeight;
+            
+            // Khởi tạo PDF khổ A4
             const pdf = new jsPDF({
                 orientation: isLandscape ? 'landscape' : 'portrait',
                 unit: 'mm',
                 format: 'a4'
             });
+            
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
-            const margin = 10;
+            
+            // Margin 5mm (rất sát mép giấy)
+            const margin = 5; 
             const maxW = pageWidth - (margin * 2);
             const maxH = pageHeight - (margin * 2);
+            
+            // Ảnh của chúng ta đã chuẩn tỷ lệ A4 nên ratio sẽ xấp xỉ 1
             const ratio = Math.min(maxW / imgWidth, maxH / imgHeight);
             const newW = imgWidth * ratio;
             const newH = imgHeight * ratio;
+            
+            // Căn giữa trang
             const x = (pageWidth - newW) / 2;
             const y = (pageHeight - newH) / 2;
+            
             pdf.addImage(imgData, 'JPEG', x, y, newW, newH);
-            pdf.save(`scanned_document_${Date.now()}.pdf`);
+            pdf.save(`Scanned_Doc_A4_${Date.now()}.pdf`);
         }
 
         window.addEventListener('resize', () => {
