@@ -1,173 +1,534 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Container Data Extractor | Logistics Tool</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>AI Container Extractor | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .drag-active { border-color: #0d9488 !important; background-color: #f0fdfa !important; }
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            
+            /* Highlight Colors */
+            --hl-container: #FBBF24; /* Vàng hổ phách */
+            --hl-container-bg: rgba(251, 191, 36, 0.1);
+            --hl-container-border: rgba(251, 191, 36, 0.3);
+            
+            --hl-seal: #FB923C; /* Cam */
+            --hl-seal-bg: rgba(251, 146, 60, 0.1);
+            --hl-seal-border: rgba(251, 146, 60, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            /* Hiệu ứng ánh sáng nền */
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(11, 17, 32, 1) 100%);
+            background-attachment: fixed;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(6, 182, 212, 0.1);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .container { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Panel Headers */
+        .panel-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title svg { width: 18px; height: 18px; color: var(--accent-cyan); }
+
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-reset:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Upload Area */
+        .upload-container {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .drop-zone {
+            flex-grow: 1;
+            min-height: 350px;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .drop-zone:hover, .drop-zone.drag-active {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.05);
+            box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.1);
+        }
+
+        .drop-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone:hover .upload-icon {
+            color: var(--accent-cyan);
+            transform: translateY(-5px);
+        }
+
+        .drop-zone p { font-weight: 500; color: var(--text-main); }
+        .drop-zone span { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
+
+        .image-preview {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            display: none;
+            z-index: 5;
+        }
+
+        /* Extract Button */
+        .btn-extract {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-extract::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-extract:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--accent-blue);
+        }
+
+        .btn-extract:hover:not(:disabled)::before { left: 100%; }
+
+        .btn-extract:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #334155;
+        }
+
+        /* Spinner */
         .spinner {
             border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #fff;
             border-radius: 50%;
-            border-top: 3px solid #ffffff;
             width: 20px;
             height: 20px;
-            -webkit-animation: spin 1s linear infinite; /* Safari */
             animation: spin 1s linear infinite;
+            display: none;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Results Area */
+        .results-container {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
+
+        .empty-state {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-align: center;
+            gap: 1rem;
+            padding: 3rem 0;
+        }
+
+        .empty-state svg { width: 64px; height: 64px; opacity: 0.2; }
+
+        /* Data Cards */
+        .data-group { display: none; flex-direction: column; gap: 1.25rem; }
+        .data-group.active { display: flex; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .data-field {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .data-field:hover {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .data-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .data-value {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        /* Highlighted Fields */
+        .field-container {
+            background: var(--hl-container-bg);
+            border: 1px solid var(--hl-container-border);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.05);
+        }
+        .field-container .data-label { color: var(--hl-container); }
+        .field-container .data-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--hl-container);
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .field-seal {
+            background: var(--hl-seal-bg);
+            border: 1px solid var(--hl-seal-border);
+            box-shadow: 0 0 20px rgba(251, 146, 60, 0.05);
+        }
+        .field-seal .data-label { color: var(--hl-seal); }
+        .field-seal .data-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--hl-seal);
+            text-shadow: 0 0 15px rgba(251, 146, 60, 0.4);
+        }
+
+        /* Grid for weights */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        /* Copy Button */
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-copy:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .btn-copy.active { display: flex; }
+
+        /* Toast */
         .toast {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10B981;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 30px -10px #10B981;
             opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 100;
         }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body>
 
     <!-- Header -->
-    <header class="bg-teal-700 text-white shadow-md">
-        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <h1 class="text-2xl font-bold tracking-tight">AI Container Extractor</h1>
+    <header>
+        <div class="logo">
+            <div class="logo-icon">
+                <i data-lucide="scan-line"></i>
             </div>
-            <p class="text-teal-100 text-sm hidden sm:block">Smart Logistics Vision</p>
+            <span>AI Container Extractor</span>
+        </div>
+        <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">
+            Tony EXIM • Vision Tool
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow w-full max-w-6xl mx-auto px-4 py-8">
-        <div class="mb-6">
-            <p class="text-slate-600 text-lg">Upload an image of a container door or EIR document to automatically extract key specifications.</p>
+    <main class="container">
+        
+        <!-- Left Column: Upload -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i data-lucide="image"></i> Hình ảnh nguồn
+                </div>
+                <button class="btn-reset" onclick="resetApp()">
+                    <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Làm mới
+                </button>
+            </div>
+            
+            <div class="upload-container">
+                <div class="drop-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp">
+                    
+                    <div id="upload-prompt" style="display: flex; flex-direction: column; align-items: center; z-index: 2; pointer-events: none;">
+                        <i data-lucide="upload-cloud" class="upload-icon"></i>
+                        <p>Kéo thả ảnh vào đây</p>
+                        <span>hoặc click để chọn file (JPEG, PNG)</span>
+                    </div>
+                    
+                    <img id="image-preview" class="image-preview" src="" alt="Preview">
+                </div>
+                
+                <button id="extract-btn" class="btn-extract" disabled>
+                    <i data-lucide="sparkles" id="btn-icon"></i>
+                    <span id="btn-text">Trích xuất thông tin</span>
+                    <div id="btn-spinner" class="spinner"></div>
+                </button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Left Column: Upload Area -->
-            <div class="flex flex-col space-y-4">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
-                    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h2 class="font-semibold text-slate-700">Image Source</h2>
-                        <button onclick="resetApp()" class="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors">Reset</button>
-                    </div>
-                    
-                    <div class="p-6 flex-grow flex flex-col">
-                        <!-- Upload Zone -->
-                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-slate-100 transition-colors h-64 relative">
-                            <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/webp" />
-                            
-                            <div id="upload-prompt" class="flex flex-col items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p class="text-slate-600 font-medium">Drag & drop image here</p>
-                                <p class="text-slate-400 text-sm mt-1">or click to browse files (JPEG, PNG)</p>
-                            </div>
-                            
-                            <!-- Image Preview -->
-                            <img id="image-preview" class="hidden absolute inset-0 w-full h-full object-contain bg-slate-900 rounded-lg p-2" src="" alt="Preview" />
-                        </div>
-                        
-                        <button id="extract-btn" disabled class="mt-6 w-full py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex justify-center items-center space-x-2">
-                            <span id="btn-text">Extract Information</span>
-                            <div id="btn-spinner" class="spinner hidden"></div>
-                        </button>
-                    </div>
+        <!-- Right Column: Results -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i data-lucide="database"></i> Kết quả trích xuất
                 </div>
+                <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()">
+                    <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy
+                </button>
             </div>
+            
+            <div class="results-container">
+                <!-- Empty State -->
+                <div id="result-empty" class="empty-state">
+                    <i data-lucide="file-search"></i>
+                    <p>Kết quả sẽ xuất hiện ở đây sau khi<br>hệ thống AI phân tích xong.</p>
+                </div>
 
-            <!-- Right Column: Results Area -->
-            <div class="flex flex-col space-y-4">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full relative">
-                    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h2 class="font-semibold text-slate-700">Extracted Data</h2>
-                        <button id="copy-btn" onclick="copyToClipboard()" disabled class="text-sm bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 rounded-md font-medium transition-colors flex items-center space-x-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                            </svg>
-                            <span>Copy Text</span>
-                        </button>
+                <!-- Data Group -->
+                <div id="result-data" class="data-group">
+                    
+                    <!-- Highlight Container Number -->
+                    <div class="data-field field-container">
+                        <div class="data-label">Số Container (kèm Check Digit)</div>
+                        <div id="val-container" class="data-value">-</div>
                     </div>
                     
-                    <div class="p-6 flex-grow">
-                        <!-- Empty State -->
-                        <div id="result-empty" class="h-full flex flex-col items-center justify-center text-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                            </svg>
-                            <p>Results will appear here after extraction.</p>
-                        </div>
-
-                        <!-- Data Fields -->
-                        <div id="result-data" class="hidden space-y-5">
-                            <div class="relative">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Container Number</label>
-                                <div id="val-container" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-mono text-lg font-medium break-words min-h-[44px]"></div>
-                            </div>
-                            
-                            <div class="relative">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Type / Size</label>
-                                <div id="val-type" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="relative">
-                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Max Gross Weight</label>
-                                    <div id="val-gross" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
-                                </div>
-                                <div class="relative">
-                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tare Weight</label>
-                                    <div id="val-tare" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
-                                </div>
-                            </div>
-
-                            <div class="relative pt-2">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Seal Number</label>
-                                <div id="val-seal" class="w-full bg-orange-50 border border-orange-200 rounded-md py-2 px-3 text-orange-800 font-mono font-bold break-words min-h-[42px]"></div>
-                            </div>
-                        </div>
-
-                        <!-- Error Message -->
-                        <div id="error-message" class="hidden mt-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm"></div>
+                    <!-- Type -->
+                    <div class="data-field">
+                        <div class="data-label">Loại Cont / Kích thước</div>
+                        <div id="val-type" class="data-value font-mono">-</div>
                     </div>
+
+                    <!-- Weights -->
+                    <div class="grid-2">
+                        <div class="data-field">
+                            <div class="data-label">Max Gross</div>
+                            <div id="val-gross" class="data-value font-mono">-</div>
+                        </div>
+                        <div class="data-field">
+                            <div class="data-label">Tare Weight</div>
+                            <div id="val-tare" class="data-value font-mono">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Highlight Seal Number -->
+                    <div class="data-field field-seal">
+                        <div class="data-label">Số Seal (Niêm phong)</div>
+                        <div id="val-seal" class="data-value">-</div>
+                    </div>
+
                 </div>
+
+                <!-- Error Message -->
+                <div id="error-message" style="display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; color: #FCA5A5; font-size: 0.875rem;"></div>
             </div>
         </div>
     </main>
 
     <!-- Toast Notification -->
-    <div id="toast" class="toast fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-xl flex items-center space-x-2 z-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-        <span id="toast-msg">Copied to clipboard!</span>
+    <div id="toast" class="toast">
+        <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+        <span id="toast-msg">Đã copy dữ liệu!</span>
     </div>
 
-    <!-- Hidden textarea for copy fallback -->
-    <textarea id="copy-area" class="sr-only" aria-hidden="true"></textarea>
-
     <script>
+        // Khởi tạo icons
+        lucide.createIcons();
+
         // DOM Elements
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const imagePreview = document.getElementById('image-preview');
         const uploadPrompt = document.getElementById('upload-prompt');
         const extractBtn = document.getElementById('extract-btn');
+        
         const btnText = document.getElementById('btn-text');
         const btnSpinner = document.getElementById('btn-spinner');
+        const btnIcon = document.getElementById('btn-icon');
         
         const resultEmpty = document.getElementById('result-empty');
         const resultData = document.getElementById('result-data');
@@ -183,19 +544,16 @@
         let currentBase64Image = null;
         let currentMimeType = null;
 
-        // Gemini API Configuration
-        const apiKey = ""; // API key injected by environment
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+        // ==========================================
+        // CẤU HÌNH API KEY (GEMINI)
+        // ==========================================
+        const API_KEY = "AIzaSyB9K5UkcAME45Rb-AZbuScPNvwVzY6NdBo"; 
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-        // Event Listeners for Drag and Drop
+        // Drag & Drop Logic
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
+            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
         });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
 
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-active'), false);
@@ -205,27 +563,15 @@
             dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-active'), false);
         });
 
-        dropZone.addEventListener('drop', handleDrop, false);
-        fileInput.addEventListener('change', handleFileSelect, false);
-        extractBtn.addEventListener('click', processExtraction, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-
-        function handleFileSelect(e) {
-            const files = e.target.files;
-            handleFiles(files);
-        }
+        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
         function handleFiles(files) {
             if (files.length === 0) return;
             const file = files[0];
             
             if (!file.type.match('image.*')) {
-                showError("Please upload a valid image file (JPEG, PNG).");
+                showError("Vui lòng tải lên file hình ảnh hợp lệ (JPEG, PNG).");
                 return;
             }
 
@@ -234,184 +580,181 @@
             
             reader.onloadend = function() {
                 const result = reader.result;
-                // Display preview
-                imagePreview.src = result;
-                imagePreview.classList.remove('hidden');
-                uploadPrompt.classList.add('hidden');
                 
-                // Store base64 data for API (remove prefix)
+                // Hiển thị ảnh preview
+                imagePreview.src = result;
+                imagePreview.style.display = 'block';
+                uploadPrompt.style.display = 'none';
+                dropZone.style.borderStyle = 'solid';
+                dropZone.style.borderColor = 'transparent';
+                
+                // Xử lý Base64
                 const base64Parts = result.split(',');
                 currentBase64Image = base64Parts[1];
-                
-                // Extract mime type from prefix (e.g., data:image/jpeg;base64)
                 const mimeMatch = base64Parts[0].match(/:(.*?);/);
                 currentMimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
                 
-                // Enable extract button
+                // Kích hoạt nút bấm
                 extractBtn.disabled = false;
-                
-                // Clear previous results/errors
                 hideError();
+                resetResultsView();
             }
         }
 
-        async function processExtraction() {
+        // Xử lý Trích xuất
+        extractBtn.addEventListener('click', async () => {
             if (!currentBase64Image) return;
 
             setLoadingState(true);
             hideError();
 
+            // Nếu chưa có API Key -> Chạy Mock Data để test giao diện
+            if (!API_KEY || API_KEY.trim() === "") {
+                setTimeout(() => {
+                    const mockData = {
+                        containerNumber: "BEAU 420115 0",
+                        containerType: "40 HC (45G1)",
+                        maxGross: "32,500 KGS",
+                        tare: "3,850 KGS",
+                        sealNumber: "HLC3246362"
+                    };
+                    displayResults(mockData);
+                    setLoadingState(false);
+                }, 1500);
+                return;
+            }
+
+            // Gọi API Gemini thật
             const promptText = `
-                Analyze this image (which could be a container door or an Equipment Interchange Receipt - EIR).
-                Extract the following information carefully:
-                1. Container Number
-                2. Container Type/Size
-                3. Max Gross Weight
-                4. Tare Weight
-                5. Seal Number
-                If a specific piece of information is not present in the image, return "N/A".
+                Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (có thể là cửa container hoặc phiếu EIR).
+                Trích xuất các thông tin sau:
+                1. Số Container (bao gồm 4 chữ cái, 6 số và 1 số check-digit, ví dụ: BEAU4201150)
+                2. Loại Cont / Kích thước (ví dụ: 40 HC, 20 GP, 45G1)
+                3. Max Gross Weight (Trọng lượng tổng tối đa, kèm đơn vị)
+                4. Tare Weight (Trọng lượng vỏ, kèm đơn vị)
+                5. Số Seal (Số niêm phong)
+                Nếu thông tin nào không có trong ảnh, hãy trả về "N/A".
+                Định dạng trả về là JSON.
             `;
 
             const payload = {
-                contents: [
-                    {
-                        role: "user",
-                        parts: [
-                            { text: promptText },
-                            {
-                                inlineData: {
-                                    mimeType: currentMimeType,
-                                    data: currentBase64Image
-                                }
-                            }
-                        ]
-                    }
-                ],
+                contents: [{
+                    role: "user",
+                    parts: [
+                        { text: promptText },
+                        { inlineData: { mimeType: currentMimeType, data: currentBase64Image } }
+                    ]
+                }],
                 generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: "OBJECT",
                         properties: {
-                            "containerNumber": { type: "STRING", description: "The container ID number (usually 4 letters and 7 digits). Return N/A if not found." },
-                            "containerType": { type: "STRING", description: "The container size and type (e.g., 40 HC, 20 GP, 45G1). Return N/A if not found." },
-                            "maxGross": { type: "STRING", description: "The maximum gross weight with units (e.g., 32,500 KGS). Return N/A if not found." },
-                            "tare": { type: "STRING", description: "The tare weight with units (e.g., 3,850 KGS). Return N/A if not found." },
-                            "sealNumber": { type: "STRING", description: "The security seal number attached. Return N/A if not found." }
+                            "containerNumber": { type: "STRING" },
+                            "containerType": { type: "STRING" },
+                            "maxGross": { type: "STRING" },
+                            "tare": { type: "STRING" },
+                            "sealNumber": { type: "STRING" }
                         }
                     }
                 }
             };
 
             try {
-                // Implementing exponential backoff logic (simplified for immediate usage)
-                const response = await fetch(apiUrl, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    throw new Error(`API returned status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
 
                 const result = await response.json();
                 
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    
+                if (result.candidates && result.candidates.length > 0) {
                     const jsonString = result.candidates[0].content.parts[0].text;
-                    const parsedData = JSON.parse(jsonString);
-                    
-                    displayResults(parsedData);
+                    displayResults(JSON.parse(jsonString));
                 } else {
-                    throw new Error("Unexpected API response structure.");
+                    throw new Error("Không nhận được phản hồi hợp lệ từ AI.");
                 }
 
             } catch (error) {
                 console.error("Extraction error:", error);
-                showError("Failed to extract data. Please try again or check the image quality.");
+                showError("Không thể trích xuất dữ liệu. Vui lòng thử lại hoặc kiểm tra chất lượng ảnh.");
                 resetResultsView();
             } finally {
                 setLoadingState(false);
             }
-        }
+        });
 
+        // Hiển thị kết quả
         function displayResults(data) {
-            // Populate DOM
             valContainer.textContent = data.containerNumber || 'N/A';
             valType.textContent = data.containerType || 'N/A';
             valGross.textContent = data.maxGross || 'N/A';
             valTare.textContent = data.tare || 'N/A';
             valSeal.textContent = data.sealNumber || 'N/A';
 
-            // Switch views
-            resultEmpty.classList.add('hidden');
-            resultData.classList.remove('hidden');
-            
-            // Enable copy button
-            copyBtn.disabled = false;
+            resultEmpty.style.display = 'none';
+            resultData.classList.add('active');
+            copyBtn.classList.add('active');
         }
 
+        // Copy
         function copyToClipboard() {
-            const textToCopy = `Container No: ${valContainer.textContent}\nType/Size: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSeal No: ${valSeal.textContent}`;
+            const textToCopy = `Số Cont: ${valContainer.textContent}\nLoại Cont: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSố Seal: ${valSeal.textContent}`;
             
-            const copyArea = document.getElementById('copy-area');
-            copyArea.value = textToCopy;
-            copyArea.select();
-            copyArea.setSelectionRange(0, 99999); // For mobile devices
-
-            try {
-                document.execCommand('copy');
-                showToast("Data copied to clipboard!");
-            } catch (err) {
-                console.error("Failed to copy text: ", err);
-                showToast("Failed to copy. Please copy manually.");
-            }
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("Đã copy dữ liệu!");
+            }).catch(err => {
+                showToast("Copy thất bại, vui lòng copy thủ công.");
+            });
         }
 
+        // UI Helpers
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function setLoadingState(isLoading) {
             extractBtn.disabled = isLoading;
             if (isLoading) {
-                btnText.textContent = "Processing...";
-                btnSpinner.classList.remove('hidden');
+                btnText.textContent = "Đang xử lý...";
+                btnIcon.style.display = 'none';
+                btnSpinner.style.display = 'block';
             } else {
-                btnText.textContent = "Extract Information";
-                btnSpinner.classList.add('hidden');
+                btnText.textContent = "Trích xuất thông tin";
+                btnIcon.style.display = 'block';
+                btnSpinner.style.display = 'none';
             }
         }
 
         function showError(msg) {
             errorMessage.textContent = msg;
-            errorMessage.classList.remove('hidden');
+            errorMessage.style.display = 'block';
         }
 
         function hideError() {
-            errorMessage.classList.add('hidden');
+            errorMessage.style.display = 'none';
         }
 
         function resetResultsView() {
-            resultEmpty.classList.remove('hidden');
-            resultData.classList.add('hidden');
-            copyBtn.disabled = true;
+            resultEmpty.style.display = 'flex';
+            resultData.classList.remove('active');
+            copyBtn.classList.remove('active');
         }
 
         function resetApp() {
             currentBase64Image = null;
-            currentMimeType = null;
             fileInput.value = '';
             imagePreview.src = '';
-            imagePreview.classList.add('hidden');
-            uploadPrompt.classList.remove('hidden');
+            imagePreview.style.display = 'none';
+            uploadPrompt.style.display = 'flex';
+            dropZone.style.borderStyle = 'dashed';
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
             extractBtn.disabled = true;
             hideError();
             resetResultsView();
