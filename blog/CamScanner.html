@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Document Scanner - CamScanner Clone</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- jsPDF for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- OpenCV.js (Computer Vision Engine) - Sử dụng CDN ổn định hơn -->
+    <!-- Thay thế docs.opencv.org bằng jsDelivr package -->
+    <script async src="https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js" onload="onOpenCvScriptLoaded();"></script>
+
+    <style>
+        /* Custom Styles for Crop Handles and Canvas */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; }
+        
+        .screen { display: none; }
+        .screen.active { display: flex; }
+        
+        #workspace {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1e293b;
+        }
+
+        #baseImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        #cropOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .handle {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border: 3px solid #3b82f6;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            pointer-events: auto;
+            z-index: 10;
+        }
+        .handle:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.2); }
+
+        ::-webkit-scrollbar { display: none; }
+        
+        .loader-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-weight: bold;
+        }
+        .loader-overlay button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            background: #3b82f6;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex flex-col overflow-hidden text-gray-800">
+
+    <!-- Global Loader với nút bỏ qua -->
+    <div id="globalLoader" class="loader-overlay">
+        <div class="flex flex-col items-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+            <span id="loaderText">Đang khởi tạo AI (OpenCV)...</span>
+            <button id="skipAiBtn" onclick="skipAiLoading()" class="hidden">Bỏ qua AI & Cắt thủ công</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 1: UPLOAD -->
+    <div id="screen-upload" class="screen active flex-col h-full w-full bg-gray-100">
+        <header class="bg-white px-4 py-3 shadow-sm flex items-center justify-center z-10">
+            <h1 class="text-lg font-semibold text-gray-800">Tạo tài liệu mới</h1>
+        </header>
+        <main class="flex-1 flex flex-col items-center justify-center p-6 gap-6">
+            <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <i data-lucide="file-scan" class="w-12 h-12 text-blue-600"></i>
+            </div>
+            <h2 class="text-xl font-bold text-center">Quét tài liệu của bạn</h2>
+            <p class="text-center text-gray-500 mb-8 max-w-xs">Chụp ảnh hoặc tải lên hình ảnh tài liệu để tự động cắt viền và xuất PDF chất lượng cao.</p>
+            <div class="w-full max-w-xs flex flex-col gap-4">
+                <button onclick="document.getElementById('fileInput').click()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <i data-lucide="upload"></i> Tải ảnh lên
+                </button>
+                <button onclick="document.getElementById('cameraInput').click()" class="w-full bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                    <i data-lucide="camera"></i> Chụp ảnh
+                </button>
+            </div>
+            <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" class="hidden" onchange="handleImageUpload(event)">
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+        </main>
+    </div>
+
+    <!-- SCREEN 2: CROP & ADJUST -->
+    <div id="screen-crop" class="screen flex-col h-full w-full">
+        <header class="bg-[#1e3a8a] text-white px-4 py-3 flex items-center justify-between z-10 shadow-md">
+            <button onclick="resetToUpload()" class="p-2 hover:bg-white/20 rounded-full transition">
+                <i data-lucide="arrow-left"></i>
+            </button>
+            <h1 class="text-lg font-semibold">Điều chỉnh đường biên</h1>
+            <div class="w-8"></div>
+        </header>
+        <main id="workspace" class="flex-1 relative bg-gray-900 overflow-hidden">
+            <img id="baseImage" src="" alt="Document" class="hidden">
+            <svg id="cropOverlay">
+                <polygon id="cropPolygon" fill="rgba(59, 130, 246, 0.3)" stroke="#3b82f6" stroke-width="2"/>
+            </svg>
+            <div class="handle" data-index="0"></div>
+            <div class="handle" data-index="1"></div>
+            <div class="handle" data-index="2"></div>
+            <div class="handle" data-index="3"></div>
+        </main>
+        <footer class="bg-white py-4 px-6 flex justify-between items-center z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+            <button onclick="resetToUpload()" class="flex flex-col items-center text-gray-500 hover:text-blue-600 transition">
+                <i data-lucide="arrow-left" class="mb-1"></i>
+                <span class="text-xs">Quay lại</span>
+            </button>
+            <button onclick="rotateImage()" class="flex flex-col items-center text-gray-500 hover:text-blue-600 transition">
+                <i data-lucide="rotate-cw" class="mb-1"></i>
+                <span class="text-xs">Xoay</span>
+            </button>
+            <button onclick="resetCropPoints()" class="flex flex-col items-center text-gray-500 hover:text-blue-600 transition">
+                <i data-lucide="maximize" class="mb-1"></i>
+                <span class="text-xs text-center leading-tight">Tự động/<br>Vừa khít</span>
+            </button>
+            <button onclick="applyCrop()" class="w-14 h-14 bg-blue-400 hover:bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-105">
+                <i data-lucide="check" class="w-7 h-7"></i>
+            </button>
+        </footer>
+    </div>
+
+    <!-- SCREEN 3: PREVIEW & FILTERS -->
+    <div id="screen-preview" class="screen flex-col h-full w-full bg-gray-100">
+        <header class="bg-white px-4 py-3 flex items-center justify-between shadow-sm z-10">
+            <button onclick="backToCrop()" class="p-2 hover:bg-gray-100 rounded-full transition text-gray-600">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <h1 class="text-lg font-semibold">Xem trước</h1>
+            <div class="w-8"></div>
+        </header>
+        <main class="flex-1 overflow-auto p-4 flex justify-center bg-gray-200">
+            <canvas id="previewCanvas" class="max-w-full h-auto shadow-md border border-gray-300 bg-white"></canvas>
+        </main>
+        <div class="bg-white pb-6 pt-4 px-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10 flex flex-col gap-6">
+            <div class="flex justify-center gap-4">
+                <button onclick="applyFilter('original')" id="btn-original" class="filter-btn flex flex-col items-center group">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500 flex items-center justify-center bg-gray-100">
+                        <i data-lucide="image" class="text-gray-600"></i>
+                    </div>
+                    <span class="text-xs mt-1 text-blue-600 font-medium">Gốc</span>
+                </button>
+                <button onclick="applyFilter('magic')" id="btn-magic" class="filter-btn flex flex-col items-center group">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent group-hover:border-gray-300 flex items-center justify-center bg-gray-100">
+                        <i data-lucide="sun" class="text-gray-600"></i>
+                    </div>
+                    <span class="text-xs mt-1 text-gray-500">Scan Đen/Trắng</span>
+                </button>
+                <button onclick="applyFilter('grayscale')" id="btn-grayscale" class="filter-btn flex flex-col items-center group">
+                    <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent group-hover:border-gray-300 flex items-center justify-center bg-gray-300">
+                        <i data-lucide="droplet" class="text-gray-600"></i>
+                    </div>
+                    <span class="text-xs mt-1 text-gray-500">Xám</span>
+                </button>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="downloadImage()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 border border-gray-300">
+                    <i data-lucide="download"></i> Lưu Ảnh
+                </button>
+                <button onclick="exportPDF()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <i data-lucide="file-text"></i> Xuất PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- KHỞI TẠO & TRẠNG THÁI ---
+        let cvReady = false;
+        let cvLoadingFailed = false;
+        let currentImage = new Image();
+        let originalCanvas = document.createElement('canvas');
+        let warpedCanvas = document.createElement('canvas');
+        let cropPoints = [];
+        let imgDisplayRect = { x: 0, y: 0, width: 0, height: 0, scaleX: 1, scaleY: 1 };
+        let activeHandleIndex = -1;
+        let currentFilter = 'original';
+
+        const baseImage = document.getElementById('baseImage');
+        const cropPolygon = document.getElementById('cropPolygon');
+        const handles = document.querySelectorAll('.handle');
+        const previewCanvas = document.getElementById('previewCanvas');
+        const ctxPreview = previewCanvas.getContext('2d');
+        const globalLoader = document.getElementById('globalLoader');
+        const loaderText = document.getElementById('loaderText');
+        const skipAiBtn = document.getElementById('skipAiBtn');
+
+        lucide.createIcons();
+
+        // --- XỬ LÝ TẢI OPENCV ---
+        function onOpenCvScriptLoaded() {
+            // Script đã tải, nhưng runtime có thể chưa sẵn sàng.
+            // Thiết lập timeout 10 giây để tránh treo.
+            if (typeof cv === 'undefined') {
+                // Có thể cv chưa được định nghĩa, đợi một chút
+            }
+            
+            // Kiểm tra nếu cv đã tồn tại và có onRuntimeInitialized
+            // Đây là cách chuẩn để đợi OpenCV sẵn sàng
+            const checkInterval = setInterval(() => {
+                if (typeof cv !== 'undefined') {
+                    // Nếu cv đã có, gán callback
+                    if (cv['onRuntimeInitialized']) {
+                        // Đã có callback, có thể đang khởi tạo
+                    }
+                    cv['onRuntimeInitialized'] = () => {
+                        clearInterval(checkInterval);
+                        cvReady = true;
+                        globalLoader.style.display = 'none';
+                        console.log('OpenCV Runtime Initialized');
+                    };
+                    // Nếu cv đã sẵn sàng ngay lập tức (trường hợp hiếm)
+                    if (cv.Mat) {
+                        clearInterval(checkInterval);
+                        cvReady = true;
+                        globalLoader.style.display = 'none';
+                    }
+                }
+            }, 100);
+
+            // Timeout 10 giây
+            setTimeout(() => {
+                if (!cvReady) {
+                    clearInterval(checkInterval);
+                    cvLoadingFailed = true;
+                    loaderText.textContent = 'Không thể tải AI. Bạn có thể tiếp tục cắt thủ công.';
+                    skipAiBtn.classList.remove('hidden');
+                    // Tự động chuyển sang chế độ thủ công sau 5 giây nếu người dùng không bấm
+                    setTimeout(() => {
+                        if (!cvReady) skipAiLoading();
+                    }, 5000);
+                }
+            }, 10000);
+        }
+
+        function skipAiLoading() {
+            cvLoadingFailed = true;
+            globalLoader.style.display = 'none';
+            // Nếu đang ở màn hình upload, không cần làm gì thêm
+        }
+
+        // Hàm khởi tạo ban đầu (có thể gọi sau khi DOM ready)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Nếu sau 5 giây mà loader vẫn hiển thị và cv chưa sẵn sàng, hiện nút bỏ qua
+            setTimeout(() => {
+                if (!cvReady && !cvLoadingFailed) {
+                    skipAiBtn.classList.remove('hidden');
+                }
+            }, 5000);
+        });
+
+        // --- XỬ LÝ UPLOAD ẢNH ---
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage.onload = () => {
+                    originalCanvas.width = currentImage.width;
+                    originalCanvas.height = currentImage.height;
+                    originalCanvas.getContext('2d').drawImage(currentImage, 0, 0);
+
+                    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                    document.getElementById('screen-crop').classList.add('active');
+
+                    setTimeout(() => {
+                        baseImage.src = currentImage.src;
+                        baseImage.onload = () => {
+                            calculateDisplayRect();
+                            if (cvReady) {
+                                autoDetectDocument();
+                            } else {
+                                resetCropPoints(); // Fallback
+                            }
+                        }
+                    }, 50);
+                };
+                currentImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetToUpload() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-upload').classList.add('active');
+            document.getElementById('fileInput').value = '';
+            document.getElementById('cameraInput').value = '';
+        }
+
+        // --- LOGIC TÍNH TOÁN VỊ TRÍ ẢNH HIỂN THỊ ---
+        function calculateDisplayRect() {
+            const workspace = document.getElementById('workspace');
+            const wW = workspace.clientWidth;
+            const wH = workspace.clientHeight;
+            const iW = currentImage.width;
+            const iH = currentImage.height;
+
+            const scale = Math.min(wW / iW, wH / iH);
+            const dW = iW * scale;
+            const dH = iH * scale;
+
+            imgDisplayRect = {
+                x: (wW - dW) / 2,
+                y: (wH - dH) / 2,
+                width: dW,
+                height: dH,
+                scaleX: iW / dW,
+                scaleY: iH / dH
+            };
+        }
+
+        // --- TỰ ĐỘNG NHẬN DIỆN VIỀN (OPENCV) ---
+        function autoDetectDocument() {
+            if (!cvReady) {
+                console.warn("OpenCV chưa sẵn sàng");
+                resetCropPoints();
+                return;
+            }
+
+            try {
+                let src = cv.imread(originalCanvas);
+                let dst = new cv.Mat();
+                let gray = new cv.Mat();
+                let blurred = new cv.Mat();
+                let edges = new cv.Mat();
+                let contours = new cv.MatVector();
+                let hierarchy = new cv.Mat();
+
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+                cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT);
+                cv.Canny(blurred, edges, 75, 200);
+                cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+
+                let maxArea = 0;
+                let bestContour = null;
+
+                for (let i = 0; i < contours.size(); ++i) {
+                    let cnt = contours.get(i);
+                    let area = cv.contourArea(cnt);
+                    if (area > maxArea) {
+                        maxArea = area;
+                        bestContour = cnt;
+                    }
+                }
+
+                if (bestContour && maxArea > (src.rows * src.cols * 0.1)) {
+                    let approx = new cv.Mat();
+                    let peri = cv.arcLength(bestContour, true);
+                    cv.approxPolyDP(bestContour, approx, 0.02 * peri, true);
+
+                    if (approx.rows === 4) {
+                        let pts = [];
+                        for (let i = 0; i < 4; i++) {
+                            pts.push({ x: approx.data32S[i * 2], y: approx.data32S[i * 2 + 1] });
+                        }
+                        pts.sort((a, b) => a.y - b.y);
+                        let top = pts.slice(0, 2).sort((a, b) => a.x - b.x);
+                        let bottom = pts.slice(2, 4).sort((a, b) => a.x - b.x);
+                        let orderedPts = [top[0], top[1], bottom[1], bottom[0]];
+                        cropPoints = orderedPts;
+                    } else {
+                        resetCropPoints();
+                    }
+                    approx.delete();
+                } else {
+                    resetCropPoints();
+                }
+
+                src.delete(); dst.delete(); gray.delete(); blurred.delete(); edges.delete(); contours.delete(); hierarchy.delete();
+                if (bestContour) bestContour.delete();
+
+                drawCropUI();
+            } catch (err) {
+                console.error("Lỗi OpenCV:", err);
+                resetCropPoints();
+            }
+        }
+
+        // --- UI CROP & KÉO THẢ ---
+        function resetCropPoints() {
+            const margin = 0.05;
+            cropPoints = [
+                { x: currentImage.width * margin, y: currentImage.height * margin },
+                { x: currentImage.width * (1 - margin), y: currentImage.height * margin },
+                { x: currentImage.width * (1 - margin), y: currentImage.height * (1 - margin) },
+                { x: currentImage.width * margin, y: currentImage.height * (1 - margin) }
+            ];
+            drawCropUI();
+        }
+
+        function drawCropUI() {
+            if (cropPoints.length !== 4) return;
+            let polygonPoints = cropPoints.map(p => {
+                let screenX = (p.x / imgDisplayRect.scaleX) + imgDisplayRect.x;
+                let screenY = (p.y / imgDisplayRect.scaleY) + imgDisplayRect.y;
+                return `${screenX},${screenY}`;
+            }).join(' ');
+            cropPolygon.setAttribute('points', polygonPoints);
+            handles.forEach((handle, index) => {
+                let p = cropPoints[index];
+                let screenX = (p.x / imgDisplayRect.scaleX) + imgDisplayRect.x;
+                let screenY = (p.y / imgDisplayRect.scaleY) + imgDisplayRect.y;
+                handle.style.left = `${screenX}px`;
+                handle.style.top = `${screenY}px`;
+            });
+        }
+
+        handles.forEach(handle => {
+            handle.addEventListener('pointerdown', (e) => {
+                activeHandleIndex = parseInt(e.target.dataset.index);
+                e.target.setPointerCapture(e.pointerId);
+            });
+            handle.addEventListener('pointermove', (e) => {
+                if (activeHandleIndex === -1) return;
+                const workspace = document.getElementById('workspace');
+                const rect = workspace.getBoundingClientRect();
+                let clientX = e.clientX - rect.left;
+                let clientY = e.clientY - rect.top;
+                let imgX = (clientX - imgDisplayRect.x) * imgDisplayRect.scaleX;
+                let imgY = (clientY - imgDisplayRect.y) * imgDisplayRect.scaleY;
+                imgX = Math.max(0, Math.min(imgX, currentImage.width));
+                imgY = Math.max(0, Math.min(imgY, currentImage.height));
+                cropPoints[activeHandleIndex] = { x: imgX, y: imgY };
+                drawCropUI();
+            });
+            handle.addEventListener('pointerup', (e) => {
+                activeHandleIndex = -1;
+                e.target.releasePointerCapture(e.pointerId);
+            });
+        });
+
+        // --- XOAY ẢNH ---
+        function rotateImage() {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = originalCanvas.height;
+            tempCanvas.height = originalCanvas.width;
+            const ctx = tempCanvas.getContext('2d');
+            ctx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+            ctx.rotate(90 * Math.PI / 180);
+            ctx.drawImage(originalCanvas, -originalCanvas.width / 2, -originalCanvas.height / 2);
+            originalCanvas.width = tempCanvas.width;
+            originalCanvas.height = tempCanvas.height;
+            originalCanvas.getContext('2d').drawImage(tempCanvas, 0, 0);
+            currentImage.src = originalCanvas.toDataURL('image/jpeg', 1.0);
+            setTimeout(() => {
+                calculateDisplayRect();
+                resetCropPoints();
+            }, 50);
+        }
+
+        // --- PERSPECTIVE TRANSFORM (WARP) ---
+        function applyCrop() {
+            if (!cvReady) {
+                alert("AI chưa sẵn sàng. Không thể tự động cắt. Vui lòng thử lại sau hoặc sử dụng chế độ thủ công.");
+                return;
+            }
+
+            try {
+                let src = cv.imread(originalCanvas);
+                let widthTop = Math.hypot(cropPoints[1].x - cropPoints[0].x, cropPoints[1].y - cropPoints[0].y);
+                let widthBottom = Math.hypot(cropPoints[2].x - cropPoints[3].x, cropPoints[2].y - cropPoints[3].y);
+                let maxWidth = Math.max(widthTop, widthBottom);
+                let heightLeft = Math.hypot(cropPoints[3].x - cropPoints[0].x, cropPoints[3].y - cropPoints[0].y);
+                let heightRight = Math.hypot(cropPoints[2].x - cropPoints[1].x, cropPoints[2].y - cropPoints[1].y);
+                let maxHeight = Math.max(heightLeft, heightRight);
+
+                let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                    cropPoints[0].x, cropPoints[0].y,
+                    cropPoints[1].x, cropPoints[1].y,
+                    cropPoints[2].x, cropPoints[2].y,
+                    cropPoints[3].x, cropPoints[3].y
+                ]);
+                let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                    0, 0,
+                    maxWidth - 1, 0,
+                    maxWidth - 1, maxHeight - 1,
+                    0, maxHeight - 1
+                ]);
+                let dsize = new cv.Size(maxWidth, maxHeight);
+                let M = cv.getPerspectiveTransform(srcTri, dstTri);
+                let dst = new cv.Mat();
+                cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
+                warpedCanvas.width = maxWidth;
+                warpedCanvas.height = maxHeight;
+                cv.imshow(warpedCanvas, dst);
+                src.delete(); srcTri.delete(); dstTri.delete(); M.delete(); dst.delete();
+
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById('screen-preview').classList.add('active');
+                applyFilter('original');
+            } catch (err) {
+                console.error("Lỗi Warp:", err);
+                alert("Có lỗi khi cắt ảnh. Vui lòng thử lại.");
+            }
+        }
+
+        function backToCrop() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-crop').classList.add('active');
+        }
+
+        // --- BỘ LỌC MÀU (FILTERS) ---
+        function applyFilter(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.querySelector('div').classList.remove('border-blue-500');
+                btn.querySelector('div').classList.add('border-transparent');
+                btn.querySelector('span').classList.remove('text-blue-600');
+                btn.querySelector('span').classList.add('text-gray-500');
+            });
+            let activeBtn = document.getElementById(`btn-${type}`);
+            activeBtn.querySelector('div').classList.remove('border-transparent');
+            activeBtn.querySelector('div').classList.add('border-blue-500');
+            activeBtn.querySelector('span').classList.remove('text-gray-500');
+            activeBtn.querySelector('span').classList.add('text-blue-600');
+
+            previewCanvas.width = warpedCanvas.width;
+            previewCanvas.height = warpedCanvas.height;
+            if (type === 'original') {
+                ctxPreview.drawImage(warpedCanvas, 0, 0);
+            } else if (type === 'grayscale') {
+                if (!cvReady) return; // Fallback nếu không có OpenCV
+                let src = cv.imread(warpedCanvas);
+                let dst = new cv.Mat();
+                cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+                cv.imshow(previewCanvas, dst);
+                src.delete(); dst.delete();
+            } else if (type === 'magic') {
+                if (!cvReady) return;
+                let src = cv.imread(warpedCanvas);
+                let gray = new cv.Mat();
+                let dst = new cv.Mat();
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+                cv.adaptiveThreshold(gray, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 15, 10);
+                cv.imshow(previewCanvas, dst);
+                src.delete(); gray.delete(); dst.delete();
+            }
+        }
+
+        // --- XUẤT FILE ---
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = `scanned_doc_${Date.now()}.jpg`;
+            link.href = previewCanvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+        }
+
+        function exportPDF() {
+            if (!window.jspdf) {
+                alert("Thư viện PDF chưa tải xong.");
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const imgData = previewCanvas.toDataURL('image/jpeg', 0.95);
+            const imgWidth = previewCanvas.width;
+            const imgHeight = previewCanvas.height;
+            const isLandscape = imgWidth > imgHeight;
+            const pdf = new jsPDF({
+                orientation: isLandscape ? 'landscape' : 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 10;
+            const maxW = pageWidth - (margin * 2);
+            const maxH = pageHeight - (margin * 2);
+            const ratio = Math.min(maxW / imgWidth, maxH / imgHeight);
+            const newW = imgWidth * ratio;
+            const newH = imgHeight * ratio;
+            const x = (pageWidth - newW) / 2;
+            const y = (pageHeight - newH) / 2;
+            pdf.addImage(imgData, 'JPEG', x, y, newW, newH);
+            pdf.save(`scanned_document_${Date.now()}.pdf`);
+        }
+
+        window.addEventListener('resize', () => {
+            if (document.getElementById('screen-crop').classList.contains('active')) {
+                calculateDisplayRect();
+                drawCropUI();
+            }
+        });
+    </script>
+</body>
+</html>
