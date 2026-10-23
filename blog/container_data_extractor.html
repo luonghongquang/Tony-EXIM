@@ -44,7 +44,6 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            /* Hiệu ứng ánh sáng nền */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
                 radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
@@ -69,228 +68,75 @@
 
         /* Header */
         header {
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.5);
+            backdrop-filter: blur(10px);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .btn-settings {
+            background: transparent; border: 1px solid var(--border-glass); color: var(--text-main);
+            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px; font-size: 0.875rem;
         }
-
-        .logo-icon {
-            color: var(--accent-cyan);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(6, 182, 212, 0.1);
-            padding: 8px;
-            border-radius: 12px;
-            border: 1px solid rgba(6, 182, 212, 0.2);
-        }
+        .btn-settings:hover { background: rgba(255, 255, 255, 0.1); }
 
         /* Layout */
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            width: 100%;
-            flex-grow: 1;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 2rem;
         }
-
-        @media (min-width: 1024px) {
-            .container { grid-template-columns: 1fr 1fr; }
-        }
+        @media (min-width: 1024px) { .container { grid-template-columns: 1fr 1fr; } }
 
         /* Panel Headers */
-        .panel-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border-glass);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .panel-title {
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .panel-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); }
+        .panel-title { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .panel-title svg { width: 18px; height: 18px; color: var(--accent-cyan); }
-
-        .btn-reset {
-            background: transparent;
-            border: 1px solid var(--border-glass);
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-reset:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
+        
+        .btn-reset { background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .btn-reset:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
 
         /* Upload Area */
-        .upload-container {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            flex-grow: 1;
-        }
-
+        .upload-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; flex-grow: 1; }
         .drop-zone {
-            flex-grow: 1;
-            min-height: 350px;
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            flex-grow: 1; min-height: 350px; border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease; position: relative; background: rgba(0, 0, 0, 0.2); overflow: hidden;
         }
-
-        .drop-zone:hover, .drop-zone.drag-active {
-            border-color: var(--accent-cyan);
-            background: rgba(6, 182, 212, 0.05);
-            box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.1);
-        }
-
-        .drop-zone input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .upload-icon {
-            width: 64px;
-            height: 64px;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .drop-zone:hover .upload-icon {
-            color: var(--accent-cyan);
-            transform: translateY(-5px);
-        }
-
+        .drop-zone:hover, .drop-zone.drag-active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.05); box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.1); }
+        .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
+        .upload-icon { width: 64px; height: 64px; color: var(--text-muted); margin-bottom: 1rem; transition: all 0.3s ease; }
+        .drop-zone:hover .upload-icon { color: var(--accent-cyan); transform: translateY(-5px); }
         .drop-zone p { font-weight: 500; color: var(--text-main); }
         .drop-zone span { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
-
-        .image-preview {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
-            display: none;
-            z-index: 5;
-        }
+        
+        .image-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; display: none; z-index: 5; }
 
         /* Extract Button */
         .btn-extract {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
+            width: 100%; padding: 1rem; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff;
+            font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
         }
-
-        .btn-extract::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: all 0.5s ease;
-        }
-
-        .btn-extract:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -10px var(--accent-blue);
-        }
-
+        .btn-extract::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: all 0.5s ease; }
+        .btn-extract:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px -10px var(--accent-blue); }
         .btn-extract:hover:not(:disabled)::before { left: 100%; }
-
-        .btn-extract:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: #334155;
-        }
+        .btn-extract:disabled { opacity: 0.5; cursor: not-allowed; background: #334155; }
 
         /* Spinner */
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid #fff;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Results Area */
-        .results-container {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .empty-state {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            text-align: center;
-            gap: 1rem;
-            padding: 3rem 0;
-        }
-
+        .results-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+        .empty-state { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); text-align: center; gap: 1rem; padding: 3rem 0; }
         .empty-state svg { width: 64px; height: 64px; opacity: 0.2; }
 
         /* Data Cards */
@@ -298,106 +144,43 @@
         .data-group.active { display: flex; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .data-field {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .data-field:hover {
-            background: rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .data-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .data-value {
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: var(--text-main);
-            word-break: break-all;
-        }
+        .data-field { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; transition: all 0.3s ease; }
+        .data-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600; }
+        .data-value { font-size: 1.125rem; font-weight: 500; color: var(--text-main); word-break: break-all; }
 
         /* Highlighted Fields */
-        .field-container {
-            background: var(--hl-container-bg);
-            border: 1px solid var(--hl-container-border);
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.05);
-        }
+        .field-container { background: var(--hl-container-bg); border: 1px solid var(--hl-container-border); box-shadow: 0 0 20px rgba(251, 191, 36, 0.05); }
         .field-container .data-label { color: var(--hl-container); }
-        .field-container .data-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--hl-container);
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
-        }
+        .field-container .data-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--hl-container); text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
 
-        .field-seal {
-            background: var(--hl-seal-bg);
-            border: 1px solid var(--hl-seal-border);
-            box-shadow: 0 0 20px rgba(251, 146, 60, 0.05);
-        }
+        .field-seal { background: var(--hl-seal-bg); border: 1px solid var(--hl-seal-border); box-shadow: 0 0 20px rgba(251, 146, 60, 0.05); }
         .field-seal .data-label { color: var(--hl-seal); }
-        .field-seal .data-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--hl-seal);
-            text-shadow: 0 0 15px rgba(251, 146, 60, 0.4);
-        }
+        .field-seal .data-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--hl-seal); text-shadow: 0 0 15px rgba(251, 146, 60, 0.4); }
 
-        /* Grid for weights */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
         /* Copy Button */
-        .btn-copy {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glass);
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: none;
-            align-items: center;
-            gap: 6px;
-        }
+        .btn-copy { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem; cursor: pointer; display: none; align-items: center; gap: 6px; transition: all 0.2s; }
         .btn-copy:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .btn-copy.active { display: flex; }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #10B981;
-            color: #fff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 500;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 30px -10px #10B981;
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 100;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        /* Modal Settings */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: var(--bg-base); border: 1px solid var(--border-glass); border-radius: 16px; width: 100%; max-width: 500px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.25rem; font-weight: 700; }
+        .modal-desc { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5; }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .input-group input { width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 8px; color: #fff; font-family: monospace; outline: none; transition: border 0.2s; }
+        .input-group input:focus { border-color: var(--accent-cyan); }
+        .btn-save { width: 100%; padding: 0.875rem; background: var(--accent-cyan); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn-save:hover { background: #22d3ee; }
 
+        /* Toast */
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #10B981; color: #fff; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 500; font-size: 0.875rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px -10px #10B981; opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 200; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
@@ -405,14 +188,12 @@
     <!-- Header -->
     <header>
         <div class="logo">
-            <div class="logo-icon">
-                <i data-lucide="scan-line"></i>
-            </div>
+            <div class="logo-icon"><i data-lucide="scan-line"></i></div>
             <span>AI Container Extractor</span>
         </div>
-        <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">
-            Tony EXIM • Vision Tool
-        </div>
+        <button class="btn-settings" onclick="openSettings()">
+            <i data-lucide="settings" style="width: 16px; height: 16px;"></i> Cài đặt API
+        </button>
     </header>
 
     <!-- Main Content -->
@@ -421,24 +202,18 @@
         <!-- Left Column: Upload -->
         <div class="glass-panel">
             <div class="panel-header">
-                <div class="panel-title">
-                    <i data-lucide="image"></i> Hình ảnh nguồn
-                </div>
-                <button class="btn-reset" onclick="resetApp()">
-                    <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Làm mới
-                </button>
+                <div class="panel-title"><i data-lucide="image"></i> Hình ảnh nguồn</div>
+                <button class="btn-reset" onclick="resetApp()"><i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Làm mới</button>
             </div>
             
             <div class="upload-container">
                 <div class="drop-zone" id="drop-zone">
                     <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp">
-                    
                     <div id="upload-prompt" style="display: flex; flex-direction: column; align-items: center; z-index: 2; pointer-events: none;">
                         <i data-lucide="upload-cloud" class="upload-icon"></i>
                         <p>Kéo thả ảnh vào đây</p>
                         <span>hoặc click để chọn file (JPEG, PNG)</span>
                     </div>
-                    
                     <img id="image-preview" class="image-preview" src="" alt="Preview">
                 </div>
                 
@@ -453,25 +228,18 @@
         <!-- Right Column: Results -->
         <div class="glass-panel">
             <div class="panel-header">
-                <div class="panel-title">
-                    <i data-lucide="database"></i> Kết quả trích xuất
-                </div>
-                <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()">
-                    <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy
-                </button>
+                <div class="panel-title"><i data-lucide="database"></i> Kết quả trích xuất</div>
+                <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()"><i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy</button>
             </div>
             
             <div class="results-container">
-                <!-- Empty State -->
                 <div id="result-empty" class="empty-state">
                     <i data-lucide="file-search"></i>
                     <p>Kết quả sẽ xuất hiện ở đây sau khi<br>hệ thống AI phân tích xong.</p>
                 </div>
 
-                <!-- Data Group -->
                 <div id="result-data" class="data-group">
-                    
-                    <!-- Highlight Container Number -->
+                    <!-- Container Number -->
                     <div class="data-field field-container">
                         <div class="data-label">Số Container (kèm Check Digit)</div>
                         <div id="val-container" class="data-value">-</div>
@@ -495,28 +263,43 @@
                         </div>
                     </div>
 
-                    <!-- Highlight Seal Number -->
+                    <!-- Seal Number -->
                     <div class="data-field field-seal">
                         <div class="data-label">Số Seal (Niêm phong)</div>
                         <div id="val-seal" class="data-value">-</div>
                     </div>
-
                 </div>
 
-                <!-- Error Message -->
                 <div id="error-message" style="display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; color: #FCA5A5; font-size: 0.875rem;"></div>
             </div>
         </div>
     </main>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
-        <span id="toast-msg">Đã copy dữ liệu!</span>
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Cài đặt API Key</div>
+                <button onclick="closeSettings()" style="background:none; border:none; color:#fff; cursor:pointer;"><i data-lucide="x"></i></button>
+            </div>
+            <p class="modal-desc">
+                Để AI có thể đọc hình ảnh, bạn cần nhập API Key của Google Gemini. 
+                Key này sẽ được lưu an toàn trong trình duyệt của bạn (Local Storage) và <b>không bao giờ</b> bị đưa lên GitHub.
+                <br><br>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: var(--accent-cyan);">Lấy API Key miễn phí tại đây ↗</a>
+            </p>
+            <div class="input-group">
+                <label>Google Gemini API Key</label>
+                <input type="password" id="api-key-input" placeholder="AIzaSy...">
+            </div>
+            <button class="btn-save" onclick="saveApiKey()">Lưu API Key</button>
+        </div>
     </div>
 
+    <!-- Toast -->
+    <div id="toast" class="toast"><i data-lucide="check-circle" style="width: 18px; height: 18px;"></i><span id="toast-msg">Thành công!</span></div>
+
     <script>
-        // Khởi tạo icons
         lucide.createIcons();
 
         // DOM Elements
@@ -525,11 +308,9 @@
         const imagePreview = document.getElementById('image-preview');
         const uploadPrompt = document.getElementById('upload-prompt');
         const extractBtn = document.getElementById('extract-btn');
-        
         const btnText = document.getElementById('btn-text');
         const btnSpinner = document.getElementById('btn-spinner');
         const btnIcon = document.getElementById('btn-icon');
-        
         const resultEmpty = document.getElementById('result-empty');
         const resultData = document.getElementById('result-data');
         const copyBtn = document.getElementById('copy-btn');
@@ -541,27 +322,36 @@
         const valTare = document.getElementById('val-tare');
         const valSeal = document.getElementById('val-seal');
 
+        // State
         let currentBase64Image = null;
         let currentMimeType = null;
+        let apiKey = localStorage.getItem('gemini_api_key') || "";
 
-        // ==========================================
-        // CẤU HÌNH API KEY (GEMINI)
-        // ==========================================
-        const API_KEY = "AIzaSyB9K5UkcAME45Rb-AZbuScPNvwVzY6NdBo"; 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        // Kiểm tra API key lần đầu
+        if (!apiKey) {
+            setTimeout(() => openSettings(), 500);
+        }
+
+        // Settings Logic
+        function openSettings() { document.getElementById('settings-modal').classList.add('active'); }
+        function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
+        
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input').value.trim();
+            if (input.length > 10) {
+                localStorage.setItem('gemini_api_key', input);
+                apiKey = input;
+                closeSettings();
+                showToast("Đã lưu API Key!");
+            } else {
+                alert("Vui lòng nhập API Key hợp lệ!");
+            }
+        }
 
         // Drag & Drop Logic
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
-        });
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-active'), false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-active'), false);
-        });
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); }, false));
+        ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('drag-active'), false));
+        ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('drag-active'), false));
 
         dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
         fileInput.addEventListener('change', e => handleFiles(e.target.files));
@@ -569,32 +359,24 @@
         function handleFiles(files) {
             if (files.length === 0) return;
             const file = files[0];
-            
-            if (!file.type.match('image.*')) {
-                showError("Vui lòng tải lên file hình ảnh hợp lệ (JPEG, PNG).");
-                return;
-            }
+            if (!file.type.match('image.*')) { showError("Vui lòng tải lên file hình ảnh hợp lệ."); return; }
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
             
             reader.onloadend = function() {
                 const result = reader.result;
-                
-                // Hiển thị ảnh preview
                 imagePreview.src = result;
                 imagePreview.style.display = 'block';
                 uploadPrompt.style.display = 'none';
                 dropZone.style.borderStyle = 'solid';
                 dropZone.style.borderColor = 'transparent';
                 
-                // Xử lý Base64
                 const base64Parts = result.split(',');
                 currentBase64Image = base64Parts[1];
                 const mimeMatch = base64Parts[0].match(/:(.*?);/);
                 currentMimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
                 
-                // Kích hoạt nút bấm
                 extractBtn.disabled = false;
                 hideError();
                 resetResultsView();
@@ -605,20 +387,26 @@
         extractBtn.addEventListener('click', async () => {
             if (!currentBase64Image) return;
 
+            if (!apiKey) {
+                openSettings();
+                showError("Vui lòng nhập API Key trước khi sử dụng.");
+                return;
+            }
+
             setLoadingState(true);
             hideError();
 
-            // Gọi API Gemini thật
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
             const promptText = `
-                Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (có thể là cửa container hoặc phiếu EIR).
-                Trích xuất các thông tin sau:
-                1. Số Container (bao gồm 4 chữ cái, 6 số và 1 số check-digit, ví dụ: BEAU4201150)
+                Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (cửa container hoặc phiếu EIR).
+                Trích xuất chính xác các thông tin sau, KHÔNG tự bịa ra thông tin:
+                1. Số Container (bao gồm 4 chữ cái, 6 số và 1 số check-digit)
                 2. Loại Cont / Kích thước (ví dụ: 40 HC, 20 GP, 45G1)
-                3. Max Gross Weight (Trọng lượng tổng tối đa, kèm đơn vị)
-                4. Tare Weight (Trọng lượng vỏ, kèm đơn vị)
-                5. Số Seal (Số niêm phong)
-                Nếu thông tin nào không có trong ảnh, hãy trả về "N/A".
-                Định dạng trả về là JSON.
+                3. Max Gross Weight (kèm đơn vị)
+                4. Tare Weight (kèm đơn vị)
+                5. Số Seal (nếu có, không có ghi N/A)
+                Trả về định dạng JSON.
             `;
 
             const payload = {
@@ -651,7 +439,16 @@
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
+                if (!response.ok) {
+                    const err = await response.json();
+                    if (err.error && err.error.message.includes("API key not valid")) {
+                        localStorage.removeItem('gemini_api_key');
+                        apiKey = "";
+                        openSettings();
+                        throw new Error("API Key không hợp lệ hoặc đã bị xóa. Vui lòng nhập lại.");
+                    }
+                    throw new Error(`Lỗi API: ${response.status}`);
+                }
 
                 const result = await response.json();
                 
@@ -664,14 +461,13 @@
 
             } catch (error) {
                 console.error("Extraction error:", error);
-                showError("Không thể trích xuất dữ liệu. Vui lòng thử lại hoặc kiểm tra chất lượng ảnh.");
+                showError(error.message || "Không thể trích xuất dữ liệu. Vui lòng thử lại.");
                 resetResultsView();
             } finally {
                 setLoadingState(false);
             }
         });
 
-        // Hiển thị kết quả
         function displayResults(data) {
             valContainer.textContent = data.containerNumber || 'N/A';
             valType.textContent = data.containerType || 'N/A';
@@ -684,18 +480,11 @@
             copyBtn.classList.add('active');
         }
 
-        // Copy
         function copyToClipboard() {
             const textToCopy = `Số Cont: ${valContainer.textContent}\nLoại Cont: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSố Seal: ${valSeal.textContent}`;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast("Đã copy dữ liệu!");
-            }).catch(err => {
-                showToast("Copy thất bại, vui lòng copy thủ công.");
-            });
+            navigator.clipboard.writeText(textToCopy).then(() => showToast("Đã copy dữ liệu!")).catch(() => showToast("Copy thất bại."));
         }
 
-        // UI Helpers
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = message;
@@ -705,31 +494,14 @@
 
         function setLoadingState(isLoading) {
             extractBtn.disabled = isLoading;
-            if (isLoading) {
-                btnText.textContent = "Đang xử lý...";
-                btnIcon.style.display = 'none';
-                btnSpinner.style.display = 'block';
-            } else {
-                btnText.textContent = "Trích xuất thông tin";
-                btnIcon.style.display = 'block';
-                btnSpinner.style.display = 'none';
-            }
+            btnText.textContent = isLoading ? "Đang xử lý..." : "Trích xuất thông tin";
+            btnIcon.style.display = isLoading ? 'none' : 'block';
+            btnSpinner.style.display = isLoading ? 'block' : 'none';
         }
 
-        function showError(msg) {
-            errorMessage.textContent = msg;
-            errorMessage.style.display = 'block';
-        }
-
-        function hideError() {
-            errorMessage.style.display = 'none';
-        }
-
-        function resetResultsView() {
-            resultEmpty.style.display = 'flex';
-            resultData.classList.remove('active');
-            copyBtn.classList.remove('active');
-        }
+        function showError(msg) { errorMessage.textContent = msg; errorMessage.style.display = 'block'; }
+        function hideError() { errorMessage.style.display = 'none'; }
+        function resetResultsView() { resultEmpty.style.display = 'flex'; resultData.classList.remove('active'); copyBtn.classList.remove('active'); }
 
         function resetApp() {
             currentBase64Image = null;
