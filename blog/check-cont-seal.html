@@ -1,36 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Container Data Extractor | Tony EXIM Tool</title>
+    <title>Container & Seal Extractor | Tony EXIM Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Hiệu ứng kéo thả */
         .drag-active { border-color: #0d9488 !important; background-color: #f0fdfa !important; }
+        
+        /* Spinner Loading */
         .spinner {
             border: 3px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top: 3px solid #ffffff;
             width: 20px;
             height: 20px;
-            -webkit-animation: spin 1s linear infinite; /* Safari */
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Toast Notification */
         .toast {
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
+            opacity: 0; transform: translateY(20px); pointer-events: none;
         }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* Highlight Styles */
+        .highlight-box {
+            background-color: #fef08a; /* Vàng nhạt */
+            color: #854d0e;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #fde047;
+            display: inline-block;
+        }
+        .highlight-seal {
+            background-color: #ffedd5; /* Cam nhạt */
+            color: #9a3412;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #fed7aa;
+            display: inline-block;
         }
     </style>
 </head>
@@ -43,16 +59,16 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                <h1 class="text-2xl font-bold tracking-tight">AI Container Extractor</h1>
+                <h1 class="text-2xl font-bold tracking-tight">Container & Seal Extractor</h1>
             </div>
-            <p class="text-teal-100 text-sm hidden sm:block">Smart Logistics Vision</p>
+            <p class="text-teal-100 text-sm hidden sm:block">Tony EXIM Logistics Vision</p>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="flex-grow w-full max-w-6xl mx-auto px-4 py-8">
         <div class="mb-6">
-            <p class="text-slate-600 text-lg">Upload an image of a container door or EIR document to automatically extract key specifications.</p>
+            <p class="text-slate-600 text-lg">Tải lên hình ảnh cửa container hoặc phiếu EIR để tự động trích xuất Số Cont, Loại Cont, Trọng lượng và Số Seal.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -60,21 +76,21 @@
             <div class="flex flex-col space-y-4">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
                     <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h2 class="font-semibold text-slate-700">Image Source</h2>
-                        <button onclick="resetApp()" class="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors">Reset</button>
+                        <h2 class="font-semibold text-slate-700">Hình ảnh nguồn</h2>
+                        <button onclick="resetApp()" class="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors">Làm mới</button>
                     </div>
                     
                     <div class="p-6 flex-grow flex flex-col">
                         <!-- Upload Zone -->
-                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-slate-100 transition-colors h-64 relative">
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-slate-100 transition-colors h-80 relative">
                             <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/webp" />
                             
                             <div id="upload-prompt" class="flex flex-col items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <p class="text-slate-600 font-medium">Drag & drop image here</p>
-                                <p class="text-slate-400 text-sm mt-1">or click to browse files (JPEG, PNG)</p>
+                                <p class="text-slate-600 font-medium">Kéo thả ảnh vào đây</p>
+                                <p class="text-slate-400 text-sm mt-1">hoặc click để chọn file (JPEG, PNG)</p>
                             </div>
                             
                             <!-- Image Preview -->
@@ -82,7 +98,7 @@
                         </div>
                         
                         <button id="extract-btn" disabled class="mt-6 w-full py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex justify-center items-center space-x-2">
-                            <span id="btn-text">Extract Information</span>
+                            <span id="btn-text">Trích xuất thông tin</span>
                             <div id="btn-spinner" class="spinner hidden"></div>
                         </button>
                     </div>
@@ -93,7 +109,7 @@
             <div class="flex flex-col space-y-4">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full relative">
                     <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h2 class="font-semibold text-slate-700">Extracted Data</h2>
+                        <h2 class="font-semibold text-slate-700">Kết quả trích xuất</h2>
                         <button id="copy-btn" onclick="copyToClipboard()" disabled class="text-sm bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 rounded-md font-medium transition-colors flex items-center space-x-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -108,24 +124,25 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                             </svg>
-                            <p>Results will appear here after extraction.</p>
+                            <p>Kết quả sẽ xuất hiện ở đây sau khi trích xuất.</p>
                         </div>
 
                         <!-- Data Fields -->
                         <div id="result-data" class="hidden space-y-5">
-                            <div class="relative">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Container Number</label>
-                                <div id="val-container" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-mono text-lg font-medium break-words min-h-[44px]"></div>
+                            <!-- Highlight Container Number -->
+                            <div class="relative bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                                <label class="block text-xs font-bold text-yellow-700 uppercase tracking-wider mb-1">Số Container (kèm Check Digit)</label>
+                                <div id="val-container" class="w-full font-mono text-xl font-bold text-yellow-900 break-words min-h-[32px]"></div>
                             </div>
                             
                             <div class="relative">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Type / Size</label>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Loại Cont / Kích thước</label>
                                 <div id="val-type" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="relative">
-                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Max Gross Weight</label>
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Max Gross</label>
                                     <div id="val-gross" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
                                 </div>
                                 <div class="relative">
@@ -134,9 +151,10 @@
                                 </div>
                             </div>
 
-                            <div class="relative pt-2">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Seal Number</label>
-                                <div id="val-seal" class="w-full bg-orange-50 border border-orange-200 rounded-md py-2 px-3 text-orange-800 font-mono font-bold break-words min-h-[42px]"></div>
+                            <!-- Highlight Seal Number -->
+                            <div class="relative bg-orange-50 p-3 rounded-lg border border-orange-200">
+                                <label class="block text-xs font-bold text-orange-700 uppercase tracking-wider mb-1">Số Seal (Niêm phong)</label>
+                                <div id="val-seal" class="w-full font-mono text-xl font-bold text-orange-900 break-words min-h-[32px]"></div>
                             </div>
                         </div>
 
@@ -153,7 +171,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
         </svg>
-        <span id="toast-msg">Copied to clipboard!</span>
+        <span id="toast-msg">Đã copy!</span>
     </div>
 
     <!-- Hidden textarea for copy fallback -->
@@ -183,9 +201,13 @@
         let currentBase64Image = null;
         let currentMimeType = null;
 
-        // Gemini API Configuration
-        const apiKey = ""; // API key injected by environment
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+        // ==========================================
+        // CẤU HÌNH API KEY (GEMINI)
+        // ==========================================
+        // Nhập API Key của bạn vào đây để sử dụng thật.
+        // Nếu để trống, hệ thống sẽ chạy ở chế độ Giả lập (Mock).
+        const API_KEY = ""; 
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
         // Event Listeners for Drag and Drop
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -225,7 +247,7 @@
             const file = files[0];
             
             if (!file.type.match('image.*')) {
-                showError("Please upload a valid image file (JPEG, PNG).");
+                showError("Vui lòng tải lên file hình ảnh hợp lệ (JPEG, PNG).");
                 return;
             }
 
@@ -234,24 +256,18 @@
             
             reader.onloadend = function() {
                 const result = reader.result;
-                // Display preview
                 imagePreview.src = result;
                 imagePreview.classList.remove('hidden');
                 uploadPrompt.classList.add('hidden');
                 
-                // Store base64 data for API (remove prefix)
                 const base64Parts = result.split(',');
                 currentBase64Image = base64Parts[1];
-                
-                // Extract mime type from prefix (e.g., data:image/jpeg;base64)
                 const mimeMatch = base64Parts[0].match(/:(.*?);/);
                 currentMimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
                 
-                // Enable extract button
                 extractBtn.disabled = false;
-                
-                // Clear previous results/errors
                 hideError();
+                resetResultsView();
             }
         }
 
@@ -261,76 +277,81 @@
             setLoadingState(true);
             hideError();
 
+            // Nếu không có API Key, chạy chế độ giả lập
+            if (!API_KEY || API_KEY.trim() === "") {
+                setTimeout(() => {
+                    const mockData = {
+                        containerNumber: "BEAU 420115 0",
+                        containerType: "40 HC (45G1)",
+                        maxGross: "32,500 KGS",
+                        tare: "3,850 KGS",
+                        sealNumber: "HLC3246362"
+                    };
+                    displayResults(mockData);
+                    setLoadingState(false);
+                }, 1500);
+                return;
+            }
+
             const promptText = `
-                Analyze this image (which could be a container door or an Equipment Interchange Receipt - EIR).
-                Extract the following information carefully:
-                1. Container Number
-                2. Container Type/Size
-                3. Max Gross Weight
-                4. Tare Weight
-                5. Seal Number
-                If a specific piece of information is not present in the image, return "N/A".
+                Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (có thể là cửa container hoặc phiếu EIR).
+                Trích xuất các thông tin sau:
+                1. Số Container (bao gồm 4 chữ cái, 6 số và 1 số check-digit, ví dụ: BEAU4201150)
+                2. Loại Cont / Kích thước (ví dụ: 40 HC, 20 GP, 45G1)
+                3. Max Gross Weight (Trọng lượng tổng tối đa, kèm đơn vị)
+                4. Tare Weight (Trọng lượng vỏ, kèm đơn vị)
+                5. Số Seal (Số niêm phong)
+                Nếu thông tin nào không có trong ảnh, hãy trả về "N/A".
+                Định dạng trả về là JSON.
             `;
 
             const payload = {
-                contents: [
-                    {
-                        role: "user",
-                        parts: [
-                            { text: promptText },
-                            {
-                                inlineData: {
-                                    mimeType: currentMimeType,
-                                    data: currentBase64Image
-                                }
-                            }
-                        ]
-                    }
-                ],
+                contents: [{
+                    role: "user",
+                    parts: [
+                        { text: promptText },
+                        { inlineData: { mimeType: currentMimeType, data: currentBase64Image } }
+                    ]
+                }],
                 generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: "OBJECT",
                         properties: {
-                            "containerNumber": { type: "STRING", description: "The container ID number (usually 4 letters and 7 digits). Return N/A if not found." },
-                            "containerType": { type: "STRING", description: "The container size and type (e.g., 40 HC, 20 GP, 45G1). Return N/A if not found." },
-                            "maxGross": { type: "STRING", description: "The maximum gross weight with units (e.g., 32,500 KGS). Return N/A if not found." },
-                            "tare": { type: "STRING", description: "The tare weight with units (e.g., 3,850 KGS). Return N/A if not found." },
-                            "sealNumber": { type: "STRING", description: "The security seal number attached. Return N/A if not found." }
+                            "containerNumber": { type: "STRING" },
+                            "containerType": { type: "STRING" },
+                            "maxGross": { type: "STRING" },
+                            "tare": { type: "STRING" },
+                            "sealNumber": { type: "STRING" }
                         }
                     }
                 }
             };
 
             try {
-                // Implementing exponential backoff logic (simplified for immediate usage)
-                const response = await fetch(apiUrl, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
-                    throw new Error(`API returned status: ${response.status}`);
+                    throw new Error(`Lỗi API: ${response.status}`);
                 }
 
                 const result = await response.json();
                 
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    
+                if (result.candidates && result.candidates.length > 0) {
                     const jsonString = result.candidates[0].content.parts[0].text;
                     const parsedData = JSON.parse(jsonString);
-                    
                     displayResults(parsedData);
                 } else {
-                    throw new Error("Unexpected API response structure.");
+                    throw new Error("Không nhận được phản hồi hợp lệ từ AI.");
                 }
 
             } catch (error) {
                 console.error("Extraction error:", error);
-                showError("Failed to extract data. Please try again or check the image quality.");
+                showError("Không thể trích xuất dữ liệu. Vui lòng thử lại hoặc kiểm tra chất lượng ảnh.");
                 resetResultsView();
             } finally {
                 setLoadingState(false);
@@ -338,35 +359,32 @@
         }
 
         function displayResults(data) {
-            // Populate DOM
+            // Điền dữ liệu vào các trường
             valContainer.textContent = data.containerNumber || 'N/A';
             valType.textContent = data.containerType || 'N/A';
             valGross.textContent = data.maxGross || 'N/A';
             valTare.textContent = data.tare || 'N/A';
             valSeal.textContent = data.sealNumber || 'N/A';
 
-            // Switch views
+            // Hiển thị kết quả
             resultEmpty.classList.add('hidden');
             resultData.classList.remove('hidden');
-            
-            // Enable copy button
             copyBtn.disabled = false;
         }
 
         function copyToClipboard() {
-            const textToCopy = `Container No: ${valContainer.textContent}\nType/Size: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSeal No: ${valSeal.textContent}`;
+            const textToCopy = `Số Cont: ${valContainer.textContent}\nLoại Cont: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSố Seal: ${valSeal.textContent}`;
             
             const copyArea = document.getElementById('copy-area');
             copyArea.value = textToCopy;
             copyArea.select();
-            copyArea.setSelectionRange(0, 99999); // For mobile devices
+            copyArea.setSelectionRange(0, 99999);
 
             try {
                 document.execCommand('copy');
-                showToast("Data copied to clipboard!");
+                showToast("Đã copy dữ liệu!");
             } catch (err) {
-                console.error("Failed to copy text: ", err);
-                showToast("Failed to copy. Please copy manually.");
+                showToast("Copy thất bại, vui lòng copy thủ công.");
             }
         }
 
@@ -374,18 +392,16 @@
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function setLoadingState(isLoading) {
             extractBtn.disabled = isLoading;
             if (isLoading) {
-                btnText.textContent = "Processing...";
+                btnText.textContent = "Đang xử lý...";
                 btnSpinner.classList.remove('hidden');
             } else {
-                btnText.textContent = "Extract Information";
+                btnText.textContent = "Trích xuất thông tin";
                 btnSpinner.classList.add('hidden');
             }
         }
