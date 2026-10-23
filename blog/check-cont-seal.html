@@ -3,182 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Container & Seal Extractor | Tony EXIM Tools</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>AI Container Extractor | Tony EXIM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        :root {
+            --bg-base: #0B1120; --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08); --text-main: #F8FAFC; --text-muted: #94A3B8;
+            --accent-cyan: #06B6D4; --accent-blue: #3B82F6;
+            --hl-container: #FBBF24; --hl-container-bg: rgba(251, 191, 36, 0.1); --hl-container-border: rgba(251, 191, 36, 0.3);
+            --hl-seal: #FB923C; --hl-seal-bg: rgba(251, 146, 60, 0.1); --hl-seal-border: rgba(251, 146, 60, 0.3);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-main);
+            min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
+            background-image: radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(11, 17, 32, 1) 100%);
+            background-attachment: fixed;
+        }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        
-        /* Hiệu ứng kéo thả */
-        .drag-active { border-color: #0d9488 !important; background-color: #f0fdfa !important; }
-        
-        /* Spinner Loading */
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top: 3px solid #ffffff;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Toast Notification */
-        .toast {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-            opacity: 0; transform: translateY(20px); pointer-events: none;
-        }
-        .toast.show { opacity: 1; transform: translateY(0); }
-
-        /* Highlight Styles */
-        .highlight-box {
-            background-color: #fef08a; /* Vàng nhạt */
-            color: #854d0e;
-            padding: 2px 8px;
-            border-radius: 4px;
-            border: 1px solid #fde047;
-            display: inline-block;
-        }
-        .highlight-seal {
-            background-color: #ffedd5; /* Cam nhạt */
-            color: #9a3412;
-            padding: 2px 8px;
-            border-radius: 4px;
-            border: 1px solid #fed7aa;
-            display: inline-block;
-        }
+        .api-warning { background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; text-align: center; padding: 10px; font-weight: 600; font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .glass-panel { background: var(--bg-panel); backdrop-filter: blur(16px); border: 1px solid var(--border-glass); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow: hidden; display: flex; flex-direction: column; }
+        header { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%; flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 1024px) { .container { grid-template-columns: 1fr 1fr; } }
+        .panel-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); }
+        .panel-title { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .panel-title svg { width: 18px; height: 18px; color: var(--accent-cyan); }
+        .btn-reset { background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .btn-reset:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .upload-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; flex-grow: 1; }
+        .drop-zone { flex-grow: 1; min-height: 350px; border: 2px dashed rgba(255,255,255,0.15); border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; background: rgba(0,0,0,0.2); overflow: hidden; }
+        .drop-zone:hover, .drop-zone.drag-active { border-color: var(--accent-cyan); background: rgba(6,182,212,0.05); }
+        .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
+        .upload-icon { width: 64px; height: 64px; color: var(--text-muted); margin-bottom: 1rem; }
+        .drop-zone p { font-weight: 500; } .drop-zone span { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
+        .image-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; display: none; z-index: 5; }
+        .btn-extract { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-extract:disabled { opacity: 0.5; cursor: not-allowed; background: #334155; }
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .results-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+        .empty-state { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); text-align: center; gap: 1rem; padding: 3rem 0; }
+        .empty-state svg { width: 64px; height: 64px; opacity: 0.2; }
+        .data-group { display: none; flex-direction: column; gap: 1.25rem; }
+        .data-group.active { display: flex; }
+        .data-field { background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; }
+        .data-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600; }
+        .data-value { font-size: 1.125rem; font-weight: 500; color: var(--text-main); word-break: break-all; }
+        .field-container { background: var(--hl-container-bg); border: 1px solid var(--hl-container-border); }
+        .field-container .data-label { color: var(--hl-container); }
+        .field-container .data-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--hl-container); }
+        .field-seal { background: var(--hl-seal-bg); border: 1px solid var(--hl-seal-border); }
+        .field-seal .data-label { color: var(--hl-seal); }
+        .field-seal .data-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--hl-seal); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .btn-copy { background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem; cursor: pointer; display: none; align-items: center; gap: 6px; }
+        .btn-copy.active { display: flex; }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #10B981; color: #fff; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 500; font-size: 0.875rem; display: flex; align-items: center; gap: 8px; opacity: 0; transition: all 0.4s; z-index: 100; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body>
 
-    <!-- Header -->
-    <header class="bg-teal-700 text-white shadow-md">
-        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <h1 class="text-2xl font-bold tracking-tight">Container & Seal Extractor</h1>
-            </div>
-            <p class="text-teal-100 text-sm hidden sm:block">Tony EXIM Logistics Vision</p>
-        </div>
+    <!-- Banner cảnh báo -->
+    <div id="api-warning" class="api-warning">
+        <i data-lucide="alert-triangle"></i>
+        ĐANG CHẠY CHẾ ĐỘ GIẢ LẬP. VUI LÒNG CẤU HÌNH API PROXY URL TRONG CODE.
+    </div>
+
+    <header>
+        <div class="logo"><div class="logo-icon"><i data-lucide="scan-line"></i></div><span>AI Container Extractor</span></div>
+        <div style="font-size: 0.875rem; color: var(--text-muted);">Tony EXIM • Vision Tool</div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-grow w-full max-w-6xl mx-auto px-4 py-8">
-        <div class="mb-6">
-            <p class="text-slate-600 text-lg">Tải lên hình ảnh cửa container hoặc phiếu EIR để tự động trích xuất Số Cont, Loại Cont, Trọng lượng và Số Seal.</p>
+    <main class="container">
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title"><i data-lucide="image"></i> Hình ảnh nguồn</div>
+                <button class="btn-reset" onclick="resetApp()"><i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Làm mới</button>
+            </div>
+            <div class="upload-container">
+                <div class="drop-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp">
+                    <div id="upload-prompt" style="display: flex; flex-direction: column; align-items: center; z-index: 2; pointer-events: none;">
+                        <i data-lucide="upload-cloud" class="upload-icon"></i><p>Kéo thả ảnh vào đây</p><span>hoặc click để chọn file</span>
+                    </div>
+                    <img id="image-preview" class="image-preview" src="" alt="Preview">
+                </div>
+                <button id="extract-btn" class="btn-extract" disabled><i data-lucide="sparkles" id="btn-icon"></i><span id="btn-text">Trích xuất thông tin</span><div id="btn-spinner" class="spinner"></div></button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Left Column: Upload Area -->
-            <div class="flex flex-col space-y-4">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
-                    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h2 class="font-semibold text-slate-700">Hình ảnh nguồn</h2>
-                        <button onclick="resetApp()" class="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors">Làm mới</button>
-                    </div>
-                    
-                    <div class="p-6 flex-grow flex flex-col">
-                        <!-- Upload Zone -->
-                        <div id="drop-zone" class="border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-slate-100 transition-colors h-80 relative">
-                            <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/jpeg, image/png, image/webp" />
-                            
-                            <div id="upload-prompt" class="flex flex-col items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p class="text-slate-600 font-medium">Kéo thả ảnh vào đây</p>
-                                <p class="text-slate-400 text-sm mt-1">hoặc click để chọn file (JPEG, PNG)</p>
-                            </div>
-                            
-                            <!-- Image Preview -->
-                            <img id="image-preview" class="hidden absolute inset-0 w-full h-full object-contain bg-slate-900 rounded-lg p-2" src="" alt="Preview" />
-                        </div>
-                        
-                        <button id="extract-btn" disabled class="mt-6 w-full py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex justify-center items-center space-x-2">
-                            <span id="btn-text">Trích xuất thông tin</span>
-                            <div id="btn-spinner" class="spinner hidden"></div>
-                        </button>
-                    </div>
-                </div>
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title"><i data-lucide="database"></i> Kết quả trích xuất</div>
+                <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()"><i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy</button>
             </div>
-
-            <!-- Right Column: Results Area -->
-            <div class="flex flex-col space-y-4">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full relative">
-                    <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h2 class="font-semibold text-slate-700">Kết quả trích xuất</h2>
-                        <button id="copy-btn" onclick="copyToClipboard()" disabled class="text-sm bg-slate-200 hover:bg-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 rounded-md font-medium transition-colors flex items-center space-x-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                            </svg>
-                            <span>Copy Text</span>
-                        </button>
+            <div class="results-container">
+                <div id="result-empty" class="empty-state"><i data-lucide="file-search"></i><p>Kết quả sẽ xuất hiện ở đây sau khi<br>hệ thống AI phân tích xong.</p></div>
+                <div id="result-data" class="data-group">
+                    <div class="data-field field-container"><div class="data-label">Số Container (kèm Check Digit)</div><div id="val-container" class="data-value">-</div></div>
+                    <div class="data-field"><div class="data-label">Loại Cont / Kích thước</div><div id="val-type" class="data-value font-mono">-</div></div>
+                    <div class="grid-2">
+                        <div class="data-field"><div class="data-label">Max Gross</div><div id="val-gross" class="data-value font-mono">-</div></div>
+                        <div class="data-field"><div class="data-label">Tare Weight</div><div id="val-tare" class="data-value font-mono">-</div></div>
                     </div>
-                    
-                    <div class="p-6 flex-grow">
-                        <!-- Empty State -->
-                        <div id="result-empty" class="h-full flex flex-col items-center justify-center text-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                            </svg>
-                            <p>Kết quả sẽ xuất hiện ở đây sau khi trích xuất.</p>
-                        </div>
-
-                        <!-- Data Fields -->
-                        <div id="result-data" class="hidden space-y-5">
-                            <!-- Highlight Container Number -->
-                            <div class="relative bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                                <label class="block text-xs font-bold text-yellow-700 uppercase tracking-wider mb-1">Số Container (kèm Check Digit)</label>
-                                <div id="val-container" class="w-full font-mono text-xl font-bold text-yellow-900 break-words min-h-[32px]"></div>
-                            </div>
-                            
-                            <div class="relative">
-                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Loại Cont / Kích thước</label>
-                                <div id="val-type" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="relative">
-                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Max Gross</label>
-                                    <div id="val-gross" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
-                                </div>
-                                <div class="relative">
-                                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tare Weight</label>
-                                    <div id="val-tare" class="w-full bg-slate-50 border border-slate-200 rounded-md py-2 px-3 text-slate-800 font-medium break-words min-h-[42px]"></div>
-                                </div>
-                            </div>
-
-                            <!-- Highlight Seal Number -->
-                            <div class="relative bg-orange-50 p-3 rounded-lg border border-orange-200">
-                                <label class="block text-xs font-bold text-orange-700 uppercase tracking-wider mb-1">Số Seal (Niêm phong)</label>
-                                <div id="val-seal" class="w-full font-mono text-xl font-bold text-orange-900 break-words min-h-[32px]"></div>
-                            </div>
-                        </div>
-
-                        <!-- Error Message -->
-                        <div id="error-message" class="hidden mt-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm"></div>
-                    </div>
+                    <div class="data-field field-seal"><div class="data-label">Số Seal (Niêm phong)</div><div id="val-seal" class="data-value">-</div></div>
                 </div>
+                <div id="error-message" style="display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; color: #FCA5A5; font-size: 0.875rem;"></div>
             </div>
         </div>
     </main>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-xl flex items-center space-x-2 z-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-        <span id="toast-msg">Đã copy!</span>
-    </div>
-
-    <!-- Hidden textarea for copy fallback -->
-    <textarea id="copy-area" class="sr-only" aria-hidden="true"></textarea>
+    <div id="toast" class="toast"><i data-lucide="check-circle" style="width: 18px; height: 18px;"></i><span id="toast-msg">Đã copy dữ liệu!</span></div>
 
     <script>
-        // DOM Elements
+        lucide.createIcons();
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const imagePreview = document.getElementById('image-preview');
@@ -186,12 +133,11 @@
         const extractBtn = document.getElementById('extract-btn');
         const btnText = document.getElementById('btn-text');
         const btnSpinner = document.getElementById('btn-spinner');
-        
+        const btnIcon = document.getElementById('btn-icon');
         const resultEmpty = document.getElementById('result-empty');
         const resultData = document.getElementById('result-data');
         const copyBtn = document.getElementById('copy-btn');
         const errorMessage = document.getElementById('error-message');
-        
         const valContainer = document.getElementById('val-container');
         const valType = document.getElementById('val-type');
         const valGross = document.getElementById('val-gross');
@@ -202,190 +148,108 @@
         let currentMimeType = null;
 
         // ==========================================
-        // CẤU HÌNH API KEY (GEMINI)
+        // CẤU HÌNH API PROXY (BẮT BUỘC)
+        // Dán URL của Google Apps Script hoặc Backend Proxy vào đây
+        // TUYỆT ĐỐI KHÔNG dán API Key trực tiếp vào đây
         // ==========================================
-        // Nhập API Key của bạn vào đây để sử dụng thật.
-        // Nếu để trống, hệ thống sẽ chạy ở chế độ Giả lập (Mock).
-        const API_KEY = ""; 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        const API_PROXY_URL = ""; 
 
-        // Event Listeners for Drag and Drop
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        if (API_PROXY_URL && API_PROXY_URL.trim() !== "") {
+            document.getElementById('api-warning').style.display = 'none';
         }
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-active'), false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-active'), false);
-        });
-
-        dropZone.addEventListener('drop', handleDrop, false);
-        fileInput.addEventListener('change', handleFileSelect, false);
-        extractBtn.addEventListener('click', processExtraction, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        }
-
-        function handleFileSelect(e) {
-            const files = e.target.files;
-            handleFiles(files);
-        }
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); }, false));
+        ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('drag-active'), false));
+        ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('drag-active'), false));
+        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
         function handleFiles(files) {
             if (files.length === 0) return;
             const file = files[0];
-            
-            if (!file.type.match('image.*')) {
-                showError("Vui lòng tải lên file hình ảnh hợp lệ (JPEG, PNG).");
-                return;
-            }
-
+            if (!file.type.match('image.*')) { showError("Vui lòng tải lên file hình ảnh hợp lệ."); return; }
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            
             reader.onloadend = function() {
                 const result = reader.result;
                 imagePreview.src = result;
-                imagePreview.classList.remove('hidden');
-                uploadPrompt.classList.add('hidden');
-                
+                imagePreview.style.display = 'block';
+                uploadPrompt.style.display = 'none';
+                dropZone.style.borderStyle = 'solid';
+                dropZone.style.borderColor = 'transparent';
                 const base64Parts = result.split(',');
                 currentBase64Image = base64Parts[1];
-                const mimeMatch = base64Parts[0].match(/:(.*?);/);
-                currentMimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-                
+                currentMimeType = base64Parts[0].match(/:(.*?);/)[1];
                 extractBtn.disabled = false;
                 hideError();
                 resetResultsView();
             }
         }
 
-        async function processExtraction() {
+        extractBtn.addEventListener('click', async () => {
             if (!currentBase64Image) return;
-
             setLoadingState(true);
             hideError();
 
-            // Nếu không có API Key, chạy chế độ giả lập
-            if (!API_KEY || API_KEY.trim() === "") {
+            // Chế độ giả lập nếu chưa cấu hình Proxy
+            if (!API_PROXY_URL || API_PROXY_URL.trim() === "") {
                 setTimeout(() => {
                     const mockData = {
                         containerNumber: "BEAU 420115 0",
-                        containerType: "40 HC (45G1)",
+                        containerType: "45G1",
                         maxGross: "32,500 KGS",
                         tare: "3,850 KGS",
                         sealNumber: "HLC3246362"
                     };
                     displayResults(mockData);
                     setLoadingState(false);
-                }, 1500);
+                }, 1000);
                 return;
             }
 
-            const promptText = `
-                Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (có thể là cửa container hoặc phiếu EIR).
-                Trích xuất các thông tin sau:
-                1. Số Container (bao gồm 4 chữ cái, 6 số và 1 số check-digit, ví dụ: BEAU4201150)
-                2. Loại Cont / Kích thước (ví dụ: 40 HC, 20 GP, 45G1)
-                3. Max Gross Weight (Trọng lượng tổng tối đa, kèm đơn vị)
-                4. Tare Weight (Trọng lượng vỏ, kèm đơn vị)
-                5. Số Seal (Số niêm phong)
-                Nếu thông tin nào không có trong ảnh, hãy trả về "N/A".
-                Định dạng trả về là JSON.
-            `;
-
+            // Gọi đến Proxy (không gọi trực tiếp Google)
             const payload = {
-                contents: [{
-                    role: "user",
-                    parts: [
-                        { text: promptText },
-                        { inlineData: { mimeType: currentMimeType, data: currentBase64Image } }
-                    ]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "containerNumber": { type: "STRING" },
-                            "containerType": { type: "STRING" },
-                            "maxGross": { type: "STRING" },
-                            "tare": { type: "STRING" },
-                            "sealNumber": { type: "STRING" }
-                        }
-                    }
-                }
+                mimeType: currentMimeType,
+                base64Image: currentBase64Image
             };
 
             try {
-                const response = await fetch(API_URL, {
+                const response = await fetch(API_PROXY_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
-                if (!response.ok) {
-                    throw new Error(`Lỗi API: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`Lỗi Proxy: ${response.status}`);
                 const result = await response.json();
                 
-                if (result.candidates && result.candidates.length > 0) {
-                    const jsonString = result.candidates[0].content.parts[0].text;
-                    const parsedData = JSON.parse(jsonString);
-                    displayResults(parsedData);
+                if (result.success && result.data) {
+                    displayResults(result.data);
                 } else {
-                    throw new Error("Không nhận được phản hồi hợp lệ từ AI.");
+                    throw new Error(result.error || "Phản hồi không hợp lệ từ Proxy.");
                 }
-
             } catch (error) {
                 console.error("Extraction error:", error);
-                showError("Không thể trích xuất dữ liệu. Vui lòng thử lại hoặc kiểm tra chất lượng ảnh.");
+                showError("Không thể trích xuất dữ liệu. Vui lòng kiểm tra lại cấu hình Proxy hoặc thử lại.");
                 resetResultsView();
             } finally {
                 setLoadingState(false);
             }
-        }
+        });
 
         function displayResults(data) {
-            // Điền dữ liệu vào các trường
             valContainer.textContent = data.containerNumber || 'N/A';
             valType.textContent = data.containerType || 'N/A';
             valGross.textContent = data.maxGross || 'N/A';
             valTare.textContent = data.tare || 'N/A';
             valSeal.textContent = data.sealNumber || 'N/A';
-
-            // Hiển thị kết quả
-            resultEmpty.classList.add('hidden');
-            resultData.classList.remove('hidden');
-            copyBtn.disabled = false;
+            resultEmpty.style.display = 'none';
+            resultData.classList.add('active');
+            copyBtn.classList.add('active');
         }
 
         function copyToClipboard() {
             const textToCopy = `Số Cont: ${valContainer.textContent}\nLoại Cont: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSố Seal: ${valSeal.textContent}`;
-            
-            const copyArea = document.getElementById('copy-area');
-            copyArea.value = textToCopy;
-            copyArea.select();
-            copyArea.setSelectionRange(0, 99999);
-
-            try {
-                document.execCommand('copy');
-                showToast("Đã copy dữ liệu!");
-            } catch (err) {
-                showToast("Copy thất bại, vui lòng copy thủ công.");
-            }
+            navigator.clipboard.writeText(textToCopy).then(() => showToast("Đã copy dữ liệu!")).catch(() => showToast("Copy thất bại."));
         }
 
         function showToast(message) {
@@ -397,37 +261,23 @@
 
         function setLoadingState(isLoading) {
             extractBtn.disabled = isLoading;
-            if (isLoading) {
-                btnText.textContent = "Đang xử lý...";
-                btnSpinner.classList.remove('hidden');
-            } else {
-                btnText.textContent = "Trích xuất thông tin";
-                btnSpinner.classList.add('hidden');
-            }
+            btnText.textContent = isLoading ? "Đang xử lý..." : "Trích xuất thông tin";
+            btnIcon.style.display = isLoading ? 'none' : 'block';
+            btnSpinner.style.display = isLoading ? 'block' : 'none';
         }
 
-        function showError(msg) {
-            errorMessage.textContent = msg;
-            errorMessage.classList.remove('hidden');
-        }
-
-        function hideError() {
-            errorMessage.classList.add('hidden');
-        }
-
-        function resetResultsView() {
-            resultEmpty.classList.remove('hidden');
-            resultData.classList.add('hidden');
-            copyBtn.disabled = true;
-        }
+        function showError(msg) { errorMessage.textContent = msg; errorMessage.style.display = 'block'; }
+        function hideError() { errorMessage.style.display = 'none'; }
+        function resetResultsView() { resultEmpty.style.display = 'flex'; resultData.classList.remove('active'); copyBtn.classList.remove('active'); }
 
         function resetApp() {
             currentBase64Image = null;
-            currentMimeType = null;
             fileInput.value = '';
             imagePreview.src = '';
-            imagePreview.classList.add('hidden');
-            uploadPrompt.classList.remove('hidden');
+            imagePreview.style.display = 'none';
+            uploadPrompt.style.display = 'flex';
+            dropZone.style.borderStyle = 'dashed';
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
             extractBtn.disabled = true;
             hideError();
             resetResultsView();
