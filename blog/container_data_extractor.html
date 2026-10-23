@@ -1,456 +1,617 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Container Extractor | Tony EXIM</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <style>
-        :root {
-            --bg-base: #0B1120;
-            --bg-panel: rgba(30, 41, 59, 0.6);
-            --border-glass: rgba(255, 255, 255, 0.08);
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            
-            --accent-cyan: #06B6D4;
-            --accent-blue: #3B82F6;
-            
-            /* Highlight Colors */
-            --hl-container: #FBBF24; /* Vàng hổ phách */
-            --hl-container-bg: rgba(251, 191, 36, 0.1);
-            --hl-container-border: rgba(251, 191, 36, 0.3);
-            
-            --hl-seal: #FB923C; /* Cam */
-            --hl-seal-bg: rgba(251, 146, 60, 0.1);
-            --hl-seal-border: rgba(251, 146, 60, 0.3);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(11, 17, 32, 1) 100%);
-            background-attachment: fixed;
-        }
-
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: var(--bg-panel);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-glass);
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header */
-        header {
-            padding: 1.25rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-glass);
-            background: rgba(11, 17, 32, 0.5);
-            backdrop-filter: blur(10px);
-        }
-
-        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px; }
-        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
-        
-        /* Layout */
-        .container {
-            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
-            flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 2rem;
-        }
-        @media (min-width: 1024px) { .container { grid-template-columns: 1fr 1fr; } }
-
-        /* Panel Headers */
-        .panel-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); }
-        .panel-title { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .panel-title svg { width: 18px; height: 18px; color: var(--accent-cyan); }
-        
-        .btn-reset { background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
-        .btn-reset:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
-
-        /* Upload Area */
-        .upload-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; flex-grow: 1; }
-        .drop-zone {
-            flex-grow: 1; min-height: 350px; border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s ease; position: relative; background: rgba(0, 0, 0, 0.2); overflow: hidden;
-        }
-        .drop-zone:hover, .drop-zone.drag-active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.05); box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.1); }
-        .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
-        .upload-icon { width: 64px; height: 64px; color: var(--text-muted); margin-bottom: 1rem; transition: all 0.3s ease; }
-        .drop-zone:hover .upload-icon { color: var(--accent-cyan); transform: translateY(-5px); }
-        .drop-zone p { font-weight: 500; color: var(--text-main); }
-        .drop-zone span { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
-        
-        .image-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; display: none; z-index: 5; }
-
-        /* Extract Button */
-        .btn-extract {
-            width: 100%; padding: 1rem; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff;
-            font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
-        }
-        .btn-extract::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: all 0.5s ease; }
-        .btn-extract:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px -10px var(--accent-blue); }
-        .btn-extract:hover:not(:disabled)::before { left: 100%; }
-        .btn-extract:disabled { opacity: 0.5; cursor: not-allowed; background: #334155; }
-
-        /* Spinner */
-        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Results Area */
-        .results-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
-        .empty-state { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); text-align: center; gap: 1rem; padding: 3rem 0; }
-        .empty-state svg { width: 64px; height: 64px; opacity: 0.2; }
-
-        /* Data Cards */
-        .data-group { display: none; flex-direction: column; gap: 1.25rem; }
-        .data-group.active { display: flex; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .data-field { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; transition: all 0.3s ease; }
-        .data-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600; }
-        .data-value { font-size: 1.125rem; font-weight: 500; color: var(--text-main); word-break: break-all; }
-
-        /* Highlighted Fields */
-        .field-container { background: var(--hl-container-bg); border: 1px solid var(--hl-container-border); box-shadow: 0 0 20px rgba(251, 191, 36, 0.05); }
-        .field-container .data-label { color: var(--hl-container); }
-        .field-container .data-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--hl-container); text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
-
-        .field-seal { background: var(--hl-seal-bg); border: 1px solid var(--hl-seal-border); box-shadow: 0 0 20px rgba(251, 146, 60, 0.05); }
-        .field-seal .data-label { color: var(--hl-seal); }
-        .field-seal .data-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--hl-seal); text-shadow: 0 0 15px rgba(251, 146, 60, 0.4); }
-
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-        /* Copy Button */
-        .btn-copy { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass); color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem; cursor: pointer; display: none; align-items: center; gap: 6px; transition: all 0.2s; }
-        .btn-copy:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-        .btn-copy.active { display: flex; }
-
-        /* Toast */
-        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #10B981; color: #fff; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 500; font-size: 0.875rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px -10px #10B981; opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 200; }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trích xuất Số Cont & Seal từ ảnh</title>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #0d5c56;
+      --accent: #f59e0b;
+      --danger: #dc2626;
+      --bg: #f0fdfa;
+      --card: #ffffff;
+      --text: #134e4a;
+      --border: #99f6e4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #ecfdf5 0%, #ccfbf1 50%, #99f6e4 100%);
+      min-height: 100vh;
+      color: var(--text);
+      padding: 20px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 28px; }
+    header h1 {
+      font-size: 1.85rem; font-weight: 700;
+      color: var(--primary-dark); margin-bottom: 6px;
+    }
+    header p { color: #0f766e; opacity: 0.85; font-size: 0.95rem; }
+    .main-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    @media (max-width: 800px) { .main-grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card); border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(15, 118, 110, 0.12);
+      padding: 22px; border: 1px solid var(--border);
+    }
+    .card h2 {
+      font-size: 1.1rem; margin-bottom: 14px;
+      color: var(--primary-dark); display: flex; align-items: center; gap: 8px;
+    }
+    .upload-zone {
+      border: 2.5px dashed #5eead4; border-radius: 12px;
+      padding: 36px 20px; text-align: center; cursor: pointer;
+      transition: all 0.25s; background: #f0fdfa;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--primary); background: #ccfbf1; transform: translateY(-2px);
+    }
+    .upload-zone svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.7; }
+    .upload-zone p { font-size: 0.95rem; color: #0f766e; }
+    .upload-zone .hint { font-size: 0.8rem; opacity: 0.7; margin-top: 6px; }
+    #fileInput { display: none; }
+    .preview-wrap { margin-top: 16px; position: relative; display: none; }
+    .preview-wrap img {
+      width: 100%; max-height: 360px; object-fit: contain;
+      border-radius: 10px; border: 1px solid var(--border); background: #f8fafc;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 22px; border: none; border-radius: 10px;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary); color: white; width: 100%; margin-top: 16px;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .progress-wrap { margin-top: 14px; display: none; }
+    .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, #14b8a6, #0d9488);
+      width: 0%; transition: width 0.3s;
+    }
+    .progress-text { font-size: 0.8rem; color: #0f766e; margin-top: 6px; text-align: center; }
+    .result-list { display: flex; flex-direction: column; gap: 12px; }
+    .result-item {
+      background: #f0fdfa; border-radius: 10px; padding: 12px 16px;
+      border-left: 4px solid #99f6e4;
+    }
+    .result-item.highlight {
+      background: #fef3c7; border-left-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+    }
+    .result-item .label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;
+      color: #0f766e; opacity: 0.8; margin-bottom: 4px;
+    }
+    .result-item .value {
+      font-size: 1.25rem; font-weight: 700; font-family: 'Courier New', monospace;
+      color: var(--primary-dark); word-break: break-all;
+    }
+    .result-item.highlight .value { color: #b45309; font-size: 1.4rem; }
+    .result-item .sub { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+    .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
+    .empty-state svg { width: 56px; height: 56px; opacity: 0.4; margin-bottom: 12px; }
+    .raw-text {
+      margin-top: 18px; background: #f8fafc; border-radius: 10px; padding: 12px;
+      font-size: 0.8rem; max-height: 220px; overflow-y: auto; white-space: pre-wrap;
+      font-family: monospace; border: 1px solid #e2e8f0; display: none;
+    }
+    .raw-text .hl-cont {
+      background: #fef08a; color: #854d0e; font-weight: 700; padding: 1px 4px; border-radius: 3px;
+    }
+    .raw-text .hl-seal {
+      background: #fca5a5; color: #991b1b; font-weight: 700; padding: 1px 4px; border-radius: 3px;
+    }
+    .toggle-raw {
+      margin-top: 10px; font-size: 0.8rem; color: var(--primary);
+      background: none; border: none; cursor: pointer; text-decoration: underline; display: none;
+    }
+    .status { font-size: 0.85rem; margin-top: 10px; text-align: center; color: #0f766e; }
+    footer { text-align: center; margin-top: 28px; font-size: 0.8rem; color: #0f766e; opacity: 0.7; }
+    .copy-btn {
+      margin-top: 12px; font-size: 0.85rem; padding: 8px 14px;
+      background: #e0f2fe; color: #0369a1; border: none; border-radius: 8px; cursor: pointer;
+      display: none;
+    }
+    .copy-btn:hover { background: #bae6fd; }
+  </style>
 </head>
 <body>
-
-    <!-- Header -->
+  <div class="container">
     <header>
-        <div class="logo">
-            <div class="logo-icon"><i data-lucide="scan-line"></i></div>
-            <span>AI Container Extractor</span>
-        </div>
-        <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">
-            Tony EXIM • Vision Tool
-        </div>
+      <h1>📦 Trích xuất Số Cont & Seal</h1>
+      <p>Upload ảnh cửa container → tự động lấy số cont (kèm check digit), loại cont, Max. Gross, Tare và số seal</p>
     </header>
 
-    <!-- Main Content -->
-    <main class="container">
-        
-        <!-- Left Column: Upload -->
-        <div class="glass-panel">
-            <div class="panel-header">
-                <div class="panel-title"><i data-lucide="image"></i> Hình ảnh nguồn</div>
-                <button class="btn-reset" onclick="resetApp()"><i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Làm mới</button>
-            </div>
-            
-            <div class="upload-container">
-                <div class="drop-zone" id="drop-zone">
-                    <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp">
-                    <div id="upload-prompt" style="display: flex; flex-direction: column; align-items: center; z-index: 2; pointer-events: none;">
-                        <i data-lucide="upload-cloud" class="upload-icon"></i>
-                        <p>Kéo thả ảnh vào đây</p>
-                        <span>hoặc click để chọn file (JPEG, PNG)</span>
-                    </div>
-                    <img id="image-preview" class="image-preview" src="" alt="Preview">
-                </div>
-                
-                <button id="extract-btn" class="btn-extract" disabled>
-                    <i data-lucide="sparkles" id="btn-icon"></i>
-                    <span id="btn-text">Trích xuất thông tin</span>
-                    <div id="btn-spinner" class="spinner"></div>
-                </button>
-            </div>
+    <div class="main-grid">
+      <div class="card">
+        <h2>
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Tải ảnh lên
+        </h2>
+        <div class="upload-zone" id="uploadZone">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+          <p><strong>Kéo thả ảnh vào đây</strong> hoặc click để chọn</p>
+          <p class="hint">Hỗ trợ JPG, PNG, WEBP • Ảnh rõ nét cho kết quả tốt hơn</p>
         </div>
-
-        <!-- Right Column: Results -->
-        <div class="glass-panel">
-            <div class="panel-header">
-                <div class="panel-title"><i data-lucide="database"></i> Kết quả trích xuất</div>
-                <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()"><i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy</button>
-            </div>
-            
-            <div class="results-container">
-                <div id="result-empty" class="empty-state">
-                    <i data-lucide="file-search"></i>
-                    <p>Kết quả sẽ xuất hiện ở đây sau khi<br>hệ thống AI phân tích xong.</p>
-                </div>
-
-                <div id="result-data" class="data-group">
-                    <div class="data-field field-container">
-                        <div class="data-label">Số Container (kèm Check Digit)</div>
-                        <div id="val-container" class="data-value">-</div>
-                    </div>
-                    
-                    <div class="data-field">
-                        <div class="data-label">Loại Cont / Kích thước</div>
-                        <div id="val-type" class="data-value font-mono">-</div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="data-field">
-                            <div class="data-label">Max Gross</div>
-                            <div id="val-gross" class="data-value font-mono">-</div>
-                        </div>
-                        <div class="data-field">
-                            <div class="data-label">Tare Weight</div>
-                            <div id="val-tare" class="data-value font-mono">-</div>
-                        </div>
-                    </div>
-
-                    <div class="data-field field-seal">
-                        <div class="data-label">Số Seal (Niêm phong)</div>
-                        <div id="val-seal" class="data-value">-</div>
-                    </div>
-                </div>
-
-                <div id="error-message" style="display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; color: #FCA5A5; font-size: 0.875rem;"></div>
-            </div>
+        <input type="file" id="fileInput" accept="image/*" />
+        <div class="preview-wrap" id="previewWrap">
+          <img id="previewImg" alt="Preview" />
         </div>
-    </main>
+        <button class="btn btn-primary" id="btnProcess" disabled>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Bắt đầu nhận dạng
+        </button>
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText">Đang khởi tạo OCR...</div>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
 
-    <!-- Toast -->
-    <div id="toast" class="toast"><i data-lucide="check-circle" style="width: 18px; height: 18px;"></i><span id="toast-msg">Thành công!</span></div>
+      <div class="card">
+        <h2>
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Kết quả trích xuất
+        </h2>
+        <div id="resultArea">
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            <p>Chưa có dữ liệu.<br>Upload ảnh và nhấn "Bắt đầu nhận dạng"</p>
+          </div>
+        </div>
+        <button class="copy-btn" id="copyBtn">📋 Sao chép kết quả</button>
+        <button class="toggle-raw" id="toggleRaw">Xem / ẩn văn bản thô từ OCR</button>
+        <div class="raw-text" id="rawText"></div>
+      </div>
+    </div>
 
-    <script>
-        lucide.createIcons();
+    <footer>
+      Client-side OCR với Tesseract.js + tiền xử lý ảnh • Không gửi ảnh lên server • ISO 6346
+    </footer>
+  </div>
 
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const imagePreview = document.getElementById('image-preview');
-        const uploadPrompt = document.getElementById('upload-prompt');
-        const extractBtn = document.getElementById('extract-btn');
-        const btnText = document.getElementById('btn-text');
-        const btnSpinner = document.getElementById('btn-spinner');
-        const btnIcon = document.getElementById('btn-icon');
-        const resultEmpty = document.getElementById('result-empty');
-        const resultData = document.getElementById('result-data');
-        const copyBtn = document.getElementById('copy-btn');
-        const errorMessage = document.getElementById('error-message');
-        
-        const valContainer = document.getElementById('val-container');
-        const valType = document.getElementById('val-type');
-        const valGross = document.getElementById('val-gross');
-        const valTare = document.getElementById('val-tare');
-        const valSeal = document.getElementById('val-seal');
+  <script>
+    const $ = id => document.getElementById(id);
 
-        let currentBase64Image = null;
-        let currentMimeType = null;
+    // ========== ISO 6346 Check Digit ==========
+    function calcCheckDigit(prefix10) {
+      const map = {};
+      '0123456789'.split('').forEach((c, i) => map[c] = i);
+      let code = 10;
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c => {
+        if (code % 11 === 0) code++;
+        map[c] = code++;
+      });
+      let sum = 0;
+      for (let i = 0; i < 10; i++) {
+        const v = map[prefix10[i].toUpperCase()];
+        if (v === undefined) return null;
+        sum += v * Math.pow(2, i);
+      }
+      const rem = sum % 11;
+      return rem === 10 ? 0 : rem;
+    }
 
-        // ========================================================
-        // CẤU HÌNH API KEY GẮN CỨNG (DÀNH CHO PUBLIC WEB)
-        // ========================================================
-        const HARDCODED_API_KEY = "AQ.Ab8RN6LWjAnd7Quyt6tX9uhsBpAUmkQEtxslIutMhqJahwZ2kg"; 
-        
-        if (HARDCODED_API_KEY === "DÁN_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-            setTimeout(() => alert("Lỗi: Bạn chưa điền API Key vào biến HARDCODED_API_KEY trong code!"), 500);
+    function isValidContNumber(full) {
+      if (!/^[A-Z]{4}\d{7}$/.test(full)) return false;
+      const expected = calcCheckDigit(full.slice(0, 10));
+      return expected !== null && expected === parseInt(full[10], 10);
+    }
+
+    // ========== Image Preprocessing ==========
+    function preprocessImage(file) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxSide = 1600;
+          let w = img.width, h = img.height;
+          if (w > maxSide || h > maxSide) {
+            const scale = maxSide / Math.max(w, h);
+            w = Math.round(w * scale);
+            h = Math.round(h * scale);
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          // Grayscale + contrast boost
+          const imageData = ctx.getImageData(0, 0, w, h);
+          const d = imageData.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+            // Contrast stretch
+            let v = ((gray - 128) * 1.4) + 128;
+            v = Math.max(0, Math.min(255, v));
+            d[i] = d[i + 1] = d[i + 2] = v;
+          }
+          ctx.putImageData(imageData, 0, 0);
+          resolve(canvas);
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    // ========== Robust Parsing ==========
+    function parseContainerInfo(text) {
+      const upper = text.toUpperCase().replace(/[|]/g, 'I').replace(/[O]/g, '0'); // common OCR fixes
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+      // ---------- Container Number ----------
+      // Patterns that handle spaces / dashes: BEAU 420115 0 , BEAU4201150 , BEAU-420115-0
+      const contCandidates = [];
+
+      // 1. Full match with optional spaces
+      const re1 = /\b([A-Z]{4})\s*[-.]?\s*(\d{6})\s*[-.]?\s*(\d)\b/gi;
+      let m;
+      while ((m = re1.exec(upper)) !== null) {
+        const full = (m[1] + m[2] + m[3]).replace(/[^A-Z0-9]/g, '');
+        if (full.length === 11) contCandidates.push(full);
+      }
+
+      // 2. Continuous 11-char
+      const re2 = /\b([A-Z]{4}\d{7})\b/gi;
+      while ((m = re2.exec(upper)) !== null) {
+        contCandidates.push(m[1]);
+      }
+
+      // 3. 4 letters near 7 digits on same or adjacent lines
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].toUpperCase();
+        const letters = line.match(/\b([A-Z]{4})\b/);
+        const digits = line.match(/\b(\d{6,7})\b/);
+        if (letters && digits) {
+          let dig = digits[1];
+          if (dig.length === 6) {
+            // look for single digit nearby
+            const next = (lines[i + 1] || '').toUpperCase();
+            const single = next.match(/^\s*(\d)\b/) || line.match(/(\d)\s*$/);
+            if (single) dig += single[1];
+          }
+          if (dig.length === 7) {
+            contCandidates.push(letters[1] + dig);
+          }
         }
+      }
 
-        // Drag & Drop Logic
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); }, false));
-        ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('drag-active'), false));
-        ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('drag-active'), false));
-
-        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
-        fileInput.addEventListener('change', e => handleFiles(e.target.files));
-
-        function handleFiles(files) {
-            if (files.length === 0) return;
-            const file = files[0];
-            if (!file.type.match('image.*')) { showError("Vui lòng tải lên file hình ảnh hợp lệ."); return; }
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            
-            reader.onloadend = function() {
-                const result = reader.result;
-                imagePreview.src = result;
-                imagePreview.style.display = 'block';
-                uploadPrompt.style.display = 'none';
-                dropZone.style.borderStyle = 'solid';
-                dropZone.style.borderColor = 'transparent';
-                
-                const base64Parts = result.split(',');
-                currentBase64Image = base64Parts[1];
-                const mimeMatch = base64Parts[0].match(/:(.*?);/);
-                currentMimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-                
-                extractBtn.disabled = false;
-                hideError();
-                resetResultsView();
-            }
+      // Prefer valid check digit
+      let contNumber = null;
+      let contValid = false;
+      const unique = [...new Set(contCandidates)];
+      for (const c of unique) {
+        if (isValidContNumber(c)) {
+          contNumber = c;
+          contValid = true;
+          break;
         }
+      }
+      if (!contNumber && unique.length) contNumber = unique[0];
 
-        // Xử lý Trích xuất
-        extractBtn.addEventListener('click', async () => {
-            if (!currentBase64Image) return;
-            
-            if (HARDCODED_API_KEY === "DÁN_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-                showError("Chưa cấu hình API Key trong code.");
-                return;
+      // Format nicely: BEAU 420115 0
+      let contDisplay = contNumber;
+      if (contNumber && contNumber.length === 11) {
+        contDisplay = contNumber.slice(0, 4) + ' ' + contNumber.slice(4, 10) + ' ' + contNumber.slice(10);
+      }
+
+      // ---------- Type / Size code ----------
+      let contType = null;
+      // Common: 22G1 45G1 42R1 40HC etc. Prefer 4-char ISO style
+      const typeCandidates = [];
+      const typeRe = /\b([24L][0259A-Z][A-Z0-9]{2})\b/gi;
+      while ((m = typeRe.exec(upper)) !== null) {
+        typeCandidates.push(m[1]);
+      }
+      // Also 45G1 style
+      const typeRe2 = /\b(\d{2}[A-Z]\d)\b/gi;
+      while ((m = typeRe2.exec(upper)) !== null) {
+        typeCandidates.push(m[1]);
+      }
+      // Prefer ones that look most standard
+      for (const t of typeCandidates) {
+        if (/^(22|42|45|40|20|L5)[A-Z0-9]{2}$/.test(t) || /^[24]\d[A-Z]\d$/.test(t)) {
+          contType = t;
+          break;
+        }
+      }
+      if (!contType && typeCandidates.length) contType = typeCandidates[0];
+
+      // ---------- Max Gross ----------
+      let maxGross = null;
+      // Capture both kg and lb if present
+      // Patterns like: MAX GROSS 32500 KGS 71650 LBS  or  MAX.GROSS 32,500 kg ...
+      const grossBlock = upper.match(/MAX\.?\s*GROSS[\s\S]{0,80}/i) ||
+                        upper.match(/MAX\.?\s*GR\.?[\s\S]{0,60}/i) ||
+                        upper.match(/MGW[\s\S]{0,40}/i);
+      if (grossBlock) {
+        const block = grossBlock[0];
+        const kg = block.match(/([\d,.\s]{3,8})\s*(KGS?|KG)\b/i);
+        const lb = block.match(/([\d,.\s]{3,8})\s*(LBS?|LB)\b/i);
+        const parts = [];
+        if (kg) {
+          const n = kg[1].replace(/[^\d]/g, '');
+          if (n) parts.push(Number(n).toLocaleString('en-US') + ' KGS');
+        }
+        if (lb) {
+          const n = lb[1].replace(/[^\d]/g, '');
+          if (n) parts.push(Number(n).toLocaleString('en-US') + ' LBS');
+        }
+        if (parts.length) maxGross = parts.join(' / ');
+        else {
+          // fallback single number
+          const num = block.match(/([\d,.\s]{4,8})/);
+          if (num) {
+            const n = num[1].replace(/[^\d]/g, '');
+            maxGross = Number(n).toLocaleString('en-US') + ' kg';
+          }
+        }
+      }
+
+      // ---------- Tare ----------
+      let tare = null;
+      const tareBlock = upper.match(/TARE[\s\S]{0,60}/i);
+      if (tareBlock) {
+        const block = tareBlock[0];
+        const kg = block.match(/([\d,.\s]{3,7})\s*(KGS?|KG)\b/i);
+        const lb = block.match(/([\d,.\s]{3,7})\s*(LBS?|LB)\b/i);
+        const parts = [];
+        if (kg) {
+          const n = kg[1].replace(/[^\d]/g, '');
+          if (n) parts.push(Number(n).toLocaleString('en-US') + ' KGS');
+        }
+        if (lb) {
+          const n = lb[1].replace(/[^\d]/g, '');
+          if (n) parts.push(Number(n).toLocaleString('en-US') + ' LBS');
+        }
+        if (parts.length) tare = parts.join(' / ');
+        else {
+          const num = block.match(/([\d,.\s]{3,7})/);
+          if (num) {
+            const n = num[1].replace(/[^\d]/g, '');
+            tare = Number(n).toLocaleString('en-US') + ' kg';
+          }
+        }
+      }
+
+      // ---------- Seal ----------
+      let seal = null;
+      // Keyword based
+      const sealRe = /(?:SEAL\s*(?:NO|NUMBER|#|NR)?|S\/N|SEAL)\s*[:#.\-\s]*([A-Z0-9]{4,18})/i;
+      const sm = text.match(sealRe);
+      if (sm) {
+        seal = sm[1].replace(/[^A-Z0-9]/gi, '').toUpperCase();
+        if (seal === contNumber) seal = null;
+      }
+      // Line based
+      if (!seal) {
+        for (const line of lines) {
+          if (/SEAL/i.test(line)) {
+            const parts = line.toUpperCase().replace(/SEAL/gi, ' ').match(/[A-Z0-9]{5,16}/g);
+            if (parts) {
+              for (const p of parts) {
+                if (p !== contNumber && !/^[A-Z]{4}\d{7}$/.test(p) && /[0-9]/.test(p)) {
+                  seal = p;
+                  break;
+                }
+              }
             }
+            if (seal) break;
+          }
+        }
+      }
 
-            setLoadingState(true);
-            hideError();
+      return {
+        contNumber,
+        contDisplay,
+        contValid,
+        contType,
+        maxGross,
+        tare,
+        seal,
+        raw: text
+      };
+    }
 
-            // SỬA URL ĐỂ TRUYỀN TRỰC TIẾP API KEY VÀO PATH
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${HARDCODED_API_KEY}`;
+    function highlightRaw(text, cont, seal) {
+      let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      if (cont) {
+        // Highlight continuous or spaced version
+        const spaced = cont.slice(0,4) + '\\s*' + cont.slice(4,10) + '\\s*' + cont.slice(10);
+        html = html.replace(new RegExp(spaced, 'gi'), m => `<span class="hl-cont">${m}</span>`);
+        html = html.replace(new RegExp(cont, 'gi'), m => `<span class="hl-cont">${m}</span>`);
+      }
+      if (seal) {
+        html = html.replace(new RegExp(seal, 'gi'), m => `<span class="hl-seal">${m}</span>`);
+      }
+      return html;
+    }
 
-            const promptText = `
-                Bạn là một chuyên gia logistics. Hãy phân tích hình ảnh này (cửa container hoặc phiếu EIR).
-                Trích xuất chính xác các thông tin sau, KHÔNG tự bịa ra thông tin:
-                1. Số Container (bao gồm 4 chữ cái, 6 số và 1 số check-digit)
-                2. Loại Cont / Kích thước (ví dụ: 40 HC, 20 GP, 45G1)
-                3. Max Gross Weight (kèm đơn vị)
-                4. Tare Weight (kèm đơn vị)
-                5. Số Seal (nếu có, không có ghi N/A)
-                Trả về định dạng JSON.
-            `;
+    function renderResults(info) {
+      const area = $('resultArea');
+      const hasAny = info.contNumber || info.contType || info.maxGross || info.tare || info.seal;
+      if (!hasAny) {
+        area.innerHTML = `
+          <div class="empty-state">
+            <p>Không tìm thấy thông tin rõ ràng.<br>
+            Thử ảnh rõ hơn, góc chụp thẳng, ánh sáng tốt.</p>
+          </div>`;
+        $('copyBtn').style.display = 'none';
+        return;
+      }
 
-            const payload = {
-                contents: [{
-                    role: "user",
-                    parts: [
-                        { text: promptText },
-                        { inlineData: { mimeType: currentMimeType, data: currentBase64Image } }
-                    ]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "containerNumber": { type: "STRING" },
-                            "containerType": { type: "STRING" },
-                            "maxGross": { type: "STRING" },
-                            "tare": { type: "STRING" },
-                            "sealNumber": { type: "STRING" }
-                        }
-                    }
-                }
-            };
+      let html = '<div class="result-list">';
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
-                        // Đã xóa header 'x-goog-api-key'
-                    },
-                    body: JSON.stringify(payload)
-                });
+      // Số Cont - HIGHLIGHT
+      html += `
+        <div class="result-item highlight">
+          <div class="label">Số Cont (bao gồm số kiểm tra)</div>
+          <div class="value">${info.contDisplay || '—'}</div>
+          ${info.contNumber ? `<div class="sub">${info.contValid ? '✓ Check digit hợp lệ (ISO 6346)' : '⚠ Check digit không khớp / OCR có thể sai'}</div>` : ''}
+        </div>`;
 
-                if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(`Lỗi API (${response.status}): ${err.error ? err.error.message : 'Kiểm tra lại cấu hình Key'}`);
-                }
+      // Loại Cont
+      html += `
+        <div class="result-item">
+          <div class="label">Loại Cont (Size / Type)</div>
+          <div class="value">${info.contType || '—'}</div>
+        </div>`;
 
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0) {
-                    const jsonString = result.candidates[0].content.parts[0].text;
-                    displayResults(JSON.parse(jsonString));
-                } else {
-                    throw new Error("Không nhận được phản hồi hợp lệ từ AI.");
-                }
+      // Max Gross
+      html += `
+        <div class="result-item">
+          <div class="label">Max. Gross</div>
+          <div class="value">${info.maxGross || '—'}</div>
+        </div>`;
 
-            } catch (error) {
-                console.error("Extraction error:", error);
-                showError(error.message || "Không thể trích xuất dữ liệu.");
-                resetResultsView();
-            } finally {
-                setLoadingState(false);
+      // Tare
+      html += `
+        <div class="result-item">
+          <div class="label">Tare</div>
+          <div class="value">${info.tare || '—'}</div>
+        </div>`;
+
+      // Số Seal - HIGHLIGHT
+      html += `
+        <div class="result-item highlight">
+          <div class="label">Số Seal</div>
+          <div class="value">${info.seal || '—'}</div>
+        </div>`;
+
+      html += '</div>';
+      area.innerHTML = html;
+
+      $('rawText').innerHTML = highlightRaw(info.raw, info.contNumber, info.seal);
+      $('toggleRaw').style.display = 'inline';
+      $('copyBtn').style.display = 'inline-block';
+
+      // Store for copy
+      window.__lastResult = info;
+    }
+
+    // ========== UI ==========
+    const zone = $('uploadZone');
+    const fileInput = $('fileInput');
+    let currentFile = null;
+
+    zone.addEventListener('click', () => fileInput.click());
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', e => {
+      if (e.target.files.length) handleFile(e.target.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Vui lòng chọn file ảnh.');
+        return;
+      }
+      currentFile = file;
+      const url = URL.createObjectURL(file);
+      $('previewImg').src = url;
+      $('previewWrap').style.display = 'block';
+      $('btnProcess').disabled = false;
+      $('status').textContent = `Đã chọn: ${file.name}`;
+      $('resultArea').innerHTML = `<div class="empty-state"><p>Sẵn sàng. Nhấn "Bắt đầu nhận dạng"</p></div>`;
+      $('rawText').style.display = 'none';
+      $('toggleRaw').style.display = 'none';
+      $('copyBtn').style.display = 'none';
+    }
+
+    $('toggleRaw').addEventListener('click', () => {
+      const el = $('rawText');
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    });
+
+    $('copyBtn').addEventListener('click', () => {
+      const info = window.__lastResult;
+      if (!info) return;
+      const txt = [
+        `Số Cont: ${info.contDisplay || '—'}`,
+        `Loại Cont: ${info.contType || '—'}`,
+        `Max. Gross: ${info.maxGross || '—'}`,
+        `Tare: ${info.tare || '—'}`,
+        `Số Seal: ${info.seal || '—'}`
+      ].join('\n');
+      navigator.clipboard.writeText(txt).then(() => {
+        $('copyBtn').textContent = '✓ Đã sao chép!';
+        setTimeout(() => $('copyBtn').textContent = '📋 Sao chép kết quả', 1500);
+      });
+    });
+
+    $('btnProcess').addEventListener('click', async () => {
+      if (!currentFile) return;
+      const btn = $('btnProcess');
+      btn.disabled = true;
+      $('progressWrap').style.display = 'block';
+      $('progressFill').style.width = '5%';
+      $('progressText').textContent = 'Đang tiền xử lý ảnh...';
+      $('status').textContent = '';
+
+      try {
+        // Preprocess
+        const canvas = await preprocessImage(currentFile);
+        $('progressFill').style.width = '15%';
+        $('progressText').textContent = 'Đang tải model OCR...';
+
+        const worker = await Tesseract.createWorker('eng', 1, {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              const p = 15 + Math.round((m.progress || 0) * 80);
+              $('progressFill').style.width = p + '%';
+              $('progressText').textContent = `Đang nhận dạng văn bản... ${Math.round((m.progress || 0) * 100)}%`;
+            } else if (m.status) {
+              $('progressText').textContent = m.status;
             }
+          }
         });
 
-        function displayResults(data) {
-            valContainer.textContent = data.containerNumber || 'N/A';
-            valType.textContent = data.containerType || 'N/A';
-            valGross.textContent = data.maxGross || 'N/A';
-            valTare.textContent = data.tare || 'N/A';
-            valSeal.textContent = data.sealNumber || 'N/A';
+        // Optimized for container door markings
+        await worker.setParameters({
+          tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,:-/#',
+          preserve_interword_spaces: '1',
+          tessedit_pageseg_mode: '6' // Assume uniform block of text
+        });
 
-            resultEmpty.style.display = 'none';
-            resultData.classList.add('active');
-            copyBtn.classList.add('active');
-        }
+        const { data: { text } } = await worker.recognize(canvas);
+        await worker.terminate();
 
-        function copyToClipboard() {
-            const textToCopy = `Số Cont: ${valContainer.textContent}\nLoại Cont: ${valType.textContent}\nMax Gross: ${valGross.textContent}\nTare: ${valTare.textContent}\nSố Seal: ${valSeal.textContent}`;
-            navigator.clipboard.writeText(textToCopy).then(() => showToast("Đã copy dữ liệu!")).catch(() => showToast("Copy thất bại."));
-        }
+        $('progressFill').style.width = '100%';
+        $('progressText').textContent = 'Hoàn tất!';
+        $('status').textContent = 'Nhận dạng xong.';
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+        const info = parseContainerInfo(text);
+        renderResults(info);
 
-        function setLoadingState(isLoading) {
-            extractBtn.disabled = isLoading;
-            btnText.textContent = isLoading ? "Đang xử lý..." : "Trích xuất thông tin";
-            btnIcon.style.display = isLoading ? 'none' : 'block';
-            btnSpinner.style.display = isLoading ? 'block' : 'none';
-        }
-
-        function showError(msg) { errorMessage.textContent = msg; errorMessage.style.display = 'block'; }
-        function hideError() { errorMessage.style.display = 'none'; }
-        function resetResultsView() { resultEmpty.style.display = 'flex'; resultData.classList.remove('active'); copyBtn.classList.remove('active'); }
-
-        function resetApp() {
-            currentBase64Image = null;
-            fileInput.value = '';
-            imagePreview.src = '';
-            imagePreview.style.display = 'none';
-            uploadPrompt.style.display = 'flex';
-            dropZone.style.borderStyle = 'dashed';
-            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-            extractBtn.disabled = true;
-            hideError();
-            resetResultsView();
-        }
-    </script>
+        // Debug to console
+        console.log('=== OCR RAW TEXT ===\n', text);
+        console.log('=== PARSED ===', info);
+      } catch (err) {
+        console.error(err);
+        $('status').textContent = 'Lỗi: ' + err.message;
+        $('progressText').textContent = 'Thất bại';
+      } finally {
+        btn.disabled = false;
+        setTimeout(() => { $('progressWrap').style.display = 'none'; }, 1800);
+      }
+    });
+  </script>
 </body>
 </html>
