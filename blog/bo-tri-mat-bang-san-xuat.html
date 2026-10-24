@@ -151,8 +151,112 @@
         .diag-cell { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px; border: 2px solid var(--accent-violet); border-radius: 12px; }
         .diag-cell .diag-node { width: 20px; height: 20px; border-radius: 50%; background: rgba(139, 92, 246, 0.2); border-color: var(--accent-violet); color: var(--accent-violet); }
 
+        /* =========================================
+           HIGHLIGHTED TOOL SECTION
+           ========================================= */
+        .tool-highlight-wrapper {
+            margin: 4rem 0;
+            padding: 3px; /* For gradient border */
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet), var(--accent-rose));
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+            position: relative;
+            animation: borderGlow 3s infinite alternate;
+        }
+        @keyframes borderGlow {
+            0% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+            100% { box-shadow: 0 0 50px rgba(139, 92, 246, 0.4); }
+        }
+        .tool-inner {
+            background: var(--bg-base);
+            border-radius: 22px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-inner::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .tool-header {
+            text-align: center; margin-bottom: 2rem;
+        }
+        .tool-header h2 {
+            font-size: 2rem; font-weight: 800; color: #fff;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+        }
+        .tool-header h2 i { color: var(--accent-cyan); }
+        .tool-header p { color: var(--text-muted); font-size: 1rem; margin-top: 10px; }
+
+        /* Sub-tabs */
+        .tool-sub-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 2rem; }
+        .sub-tab {
+            padding: 10px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; border: 1px solid var(--border-glass);
+            background: rgba(255,255,255,0.02); color: var(--text-muted);
+        }
+        .sub-tab:hover { background: rgba(255,255,255,0.05); }
+        .sub-tab.active {
+            background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);
+            border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .tool-panel { display: none; animation: fadeIn 0.4s ease; }
+        .tool-panel.active { display: block; }
+
+        /* Tool Inputs & Tables */
+        .input-group { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-end; justify-content: center;}
+        .input-field { display: flex; flex-direction: column; gap: 8px; }
+        .input-field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .input-field input {
+            padding: 10px 14px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none; width: 100%;
+        }
+        .input-field input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6,182,212,0.2); }
+        
+        .data-table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: rgba(0, 0, 0, 0.3); padding: 10px; text-align: center; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-glass); }
+        td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); text-align: center; }
+        input.table-input {
+            width: 80px; padding: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid transparent;
+            border-radius: 6px; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace;
+            font-weight: bold; text-align: center; transition: all 0.2s;
+        }
+        input.table-input:focus { border-color: var(--accent-amber); background: rgba(0, 0, 0, 0.5); outline: none; }
+
+        .btn-calc {
+            padding: 12px 24px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -5px rgba(6, 182, 212, 0.5); }
+        .btn-calc.secondary { background: transparent; border: 1px solid var(--border-glass); color: var(--text-main); }
+        .btn-calc.secondary:hover { background: rgba(255,255,255,0.05); box-shadow: none; }
+
+        .btn-icon { padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+        .btn-icon:hover { color: var(--accent-rose); border-color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass);
+            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; animation: fadeIn 0.5s ease;
+        }
+        .highlight-box {
+            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px;
+            font-size: 1.2rem; color: var(--accent-emerald); font-weight: bold;
+        }
+        
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .metric-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 8px; text-align: center; }
+        .metric-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
+        .metric-value { font-size: 1.5rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+
+        .hidden { display: none !important; }
+
         /* Quiz Section */
-        .quiz-container { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(11, 17, 32, 0.9)); }
+        .quiz-container { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(11, 17, 32, 0.9)); margin-top: 3rem;}
         .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent-cyan); }
         .quiz-options { display: flex; flex-direction: column; gap: 10px; }
         .quiz-btn {
@@ -165,17 +269,6 @@
         .quiz-btn.wrong { background: rgba(251, 113, 133, 0.2); border-color: var(--accent-rose); color: var(--accent-rose); }
         .quiz-feedback { margin-top: 15px; font-size: 0.95rem; display: none; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.3); }
         .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
-
-        /* Navigation Pills */
-        .nav-pills { display: flex; gap: 10px; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
-        .nav-pill {
-            padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: 500;
-            color: var(--text-muted); border: 1px solid var(--border-glass); text-decoration: none;
-            transition: all 0.3s;
-        }
-        .nav-pill:hover { color: var(--accent-cyan); border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
-
-        .tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -197,36 +290,8 @@
             <p>Là quá trình tổ chức, sắp xếp, định dạng về mặt không gian máy móc thiết bị, các khu vực làm việc nhằm tối thiểu hóa chi phí vận chuyển, giảm thời gian sản xuất và đảm bảo an toàn.</p>
         </div>
 
-        <div class="nav-pills">
-            <a href="#principles" class="nav-pill">Nguyên tắc cơ bản</a>
-            <a href="#layouts" class="nav-pill">4 Hình thức Bố trí</a>
-            <a href="#quiz" class="nav-pill">Trắc nghiệm tình huống</a>
-        </div>
-
-        <!-- Section 1: Principles -->
-        <div id="principles" style="margin-bottom: 4rem;">
-            <h2 class="section-title"><i data-lucide="shield-check"></i> Nguyên tắc Bố trí</h2>
-            <div class="grid-3">
-                <div class="glass-panel">
-                    <div class="card-icon" style="color: var(--accent-cyan);"><i data-lucide="workflow"></i></div>
-                    <h3 class="card-title">Tuân thủ quy trình công nghệ</h3>
-                    <p class="card-desc">Sắp xếp thứ tự các bộ phận theo trình tự sản xuất. Sản phẩm đi qua bộ phận nào trước thì đặt gần kho nguyên liệu hơn. Hai bộ phận trao đổi sản phẩm trực tiếp nên đặt cạnh nhau.</p>
-                </div>
-                <div class="glass-panel">
-                    <div class="card-icon" style="color: var(--accent-amber);"><i data-lucide="maximize"></i></div>
-                    <h3 class="card-title">Đảm bảo khả năng mở rộng</h3>
-                    <p class="card-desc">Doanh nghiệp có thể tăng sản lượng hoặc đa dạng hóa sản phẩm trong tương lai. Vì vậy, ngay từ khi chọn địa điểm và bố trí, cần dự kiến không gian mở rộng.</p>
-                </div>
-                <div class="glass-panel">
-                    <div class="card-icon" style="color: var(--accent-rose);"><i data-lucide="hard-hat"></i></div>
-                    <h3 class="card-title">Đảm bảo an toàn</h3>
-                    <p class="card-desc">Tính đến an toàn cho người lao động, máy móc. Tuân thủ quy định chống ồn, bụi, rung, cháy nổ. Đảm bảo thông gió và chiếu sáng tự nhiên.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: Layout Types -->
-        <div id="layouts" style="margin-bottom: 4rem;">
+        <!-- Section 1: Layout Types -->
+        <div id="layouts" style="margin-bottom: 2rem;">
             <h2 class="section-title"><i data-lucide="layout-template"></i> Các hình thức Bố trí Mặt bằng</h2>
             
             <div class="grid-2">
@@ -239,16 +304,10 @@
                             <div class="diag-node">Máy 2</div>
                             <i data-lucide="arrow-right" class="diag-arrow"></i>
                             <div class="diag-node">Máy 3</div>
-                            <i data-lucide="arrow-right" class="diag-arrow"></i>
-                            <div class="diag-node" style="background: rgba(6, 182, 212, 0.5); color: #fff;">Kho TP</div>
                         </div>
                     </div>
-                    <h3 class="card-title">1. Bố trí theo Sản phẩm (Product Layout)</h3>
-                    <p class="card-desc">Máy móc được sắp xếp theo dòng chảy liên tục của sản phẩm. Phù hợp với sản xuất hàng loạt, khối lượng lớn, sản phẩm ít thay đổi.</p>
-                    <div class="pros-cons">
-                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Giảm thời gian vận chuyển, tồn kho thấp.</div>
-                        <div class="con"><i data-lucide="x-circle" size="14"></i> Kém linh hoạt, dễ bị gián đoạn nếu 1 máy hỏng.</div>
-                    </div>
+                    <h3 class="card-title">1. Bố trí theo Sản phẩm</h3>
+                    <p class="card-desc">Máy móc sắp xếp theo dòng chảy liên tục của sản phẩm. Phù hợp sản xuất hàng loạt, khối lượng lớn.</p>
                 </div>
 
                 <!-- 2. Process Layout -->
@@ -261,47 +320,93 @@
                             <div class="diag-node">Mài</div>
                         </div>
                     </div>
-                    <h3 class="card-title">2. Bố trí theo Quá trình (Process Layout)</h3>
-                    <p class="card-desc">Tập trung các máy móc có cùng chức năng vào một khu vực. Sản phẩm di chuyển linh hoạt giữa các khu vực theo quy trình riêng.</p>
-                    <div class="pros-cons">
-                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Rất linh hoạt, dễ dàng thay đổi sản phẩm.</div>
-                        <div class="con"><i data-lucide="x-circle" size="14"></i> Chi phí vận chuyển cao, thời gian chờ đợi lớn.</div>
+                    <h3 class="card-title">2. Bố trí theo Quá trình</h3>
+                    <p class="card-desc">Tập trung máy móc cùng chức năng vào một khu vực. Sản phẩm di chuyển linh hoạt theo quy trình riêng.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================
+             HIGHLIGHTED TOOL SECTION (MID-PAGE)
+             ========================================= -->
+        <div class="tool-highlight-wrapper">
+            <div class="tool-inner">
+                <div class="tool-header">
+                    <h2><i data-lucide="calculator"></i> Công cụ Tính toán Bố trí</h2>
+                    <p>Ứng dụng các công thức thực tế để đánh giá và thiết kế mặt bằng sản xuất.</p>
+                </div>
+
+                <div class="tool-sub-tabs">
+                    <button class="sub-tab active" onclick="switchToolTab('calc-process')">Bố trí theo Quá trình</button>
+                    <button class="sub-tab" onclick="switchToolTab('calc-product')">Cân bằng Dây chuyền (Sản phẩm)</button>
+                </div>
+
+                <!-- TOOL 1: PROCESS LAYOUT COST -->
+                <div id="calc-process" class="tool-panel active">
+                    <p class="panel-desc" style="text-align:center; margin-bottom: 1rem;">Tính tổng chi phí vận chuyển giữa các bộ phận: \(TC = \sum (L_{ij} \times Q_{ij}) \times K\)</p>
+                    
+                    <div class="input-group">
+                        <div class="input-field" style="width: 200px;">
+                            <label>Chi phí / đơn vị khoảng cách (K)</label>
+                            <input type="number" id="proc-cost-k" value="1" step="0.1">
+                        </div>
+                        <button class="btn-calc secondary" onclick="addProcRow()"><i data-lucide="plus"></i> Thêm tuyến đường</button>
+                        <button class="btn-calc" onclick="calcProcessCost()"><i data-lucide="calculator"></i> Tính tổng chi phí</button>
+                    </div>
+
+                    <div class="data-table-wrapper">
+                        <table id="proc-table">
+                            <thead>
+                                <tr>
+                                    <th>Tuyến đường (Từ - Đến)</th>
+                                    <th>Khoảng cách \(L_{ij}\) (m)</th>
+                                    <th>Khối lượng \(Q_{ij}\) (tấn)</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="result-box hidden" id="proc-result-box">
+                        <div class="highlight-box" id="proc-result-text">Tổng chi phí: 0</div>
                     </div>
                 </div>
 
-                <!-- 3. Fixed Position Layout -->
-                <div class="glass-panel">
-                    <div class="diagram-container">
-                        <div class="diag-fixed">
-                            <div class="diag-orbit"></div>
-                            <div class="diag-center">Sản phẩm</div>
+                <!-- TOOL 2: LINE BALANCING -->
+                <div id="calc-product" class="tool-panel">
+                    <p class="panel-desc" style="text-align:center; margin-bottom: 1rem;">Tính thời gian chu kỳ (\(T_{ck}\)) và Số nơi làm việc tối thiểu (\(N_{min}\))</p>
+                    
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label>Thời gian làm việc / ngày (phút)</label>
+                            <input type="number" id="line-time" value="480">
                         </div>
+                        <div class="input-field">
+                            <label>Nhu cầu sản xuất / ngày (SP)</label>
+                            <input type="number" id="line-demand" value="1200">
+                        </div>
+                        <div class="input-field">
+                            <label>Tổng thời gian các công việc (phút)</label>
+                            <input type="number" id="line-sum-tasks" value="1.0" step="0.1">
+                        </div>
+                        <button class="btn-calc" onclick="calcLineBalancing()"><i data-lucide="calculator"></i> Tính toán</button>
                     </div>
-                    <h3 class="card-title">3. Bố trí theo Vị trí cố định</h3>
-                    <p class="card-desc">Sản phẩm được đặt cố định tại một chỗ (do quá nặng, cồng kềnh). Máy móc, thiết bị và công nhân sẽ được di chuyển đến để làm việc.</p>
-                    <div class="pros-cons">
-                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Áp dụng cho dự án đặc thù (đóng tàu, xây dựng).</div>
-                        <div class="con"><i data-lucide="x-circle" size="14"></i> Khó khăn trong quản lý thiết bị, an toàn lao động.</div>
+
+                    <div class="result-box hidden" id="line-result-box">
+                        <div class="metric-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">Thời gian chu kỳ (\(T_{ck}\))</div>
+                                <div class="metric-value text-amber" id="line-tck">0</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Số nơi làm việc tối thiểu (\(N_{min}\))</div>
+                                <div class="metric-value text-cyan" id="line-nmin">0</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 4. Cellular Layout -->
-                <div class="glass-panel">
-                    <div class="diagram-container">
-                        <div class="diag-cell">
-                            <div class="diag-node">M1</div>
-                            <div class="diag-node">M2</div>
-                            <div class="diag-node">M4</div>
-                            <div class="diag-node">M3</div>
-                        </div>
-                    </div>
-                    <h3 class="card-title">4. Bố trí Hỗn hợp / Dạng Tế bào</h3>
-                    <p class="card-desc">Lai ghép giữa Product và Process. Máy móc được nhóm thành các "Cell" nhỏ (chữ U) để sản xuất một họ sản phẩm có đặc tính tương tự nhau.</p>
-                    <div class="pros-cons">
-                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Dòng chảy mượt, giảm thời gian chuẩn bị, linh hoạt.</div>
-                        <div class="con"><i data-lucide="x-circle" size="14"></i> Khó cân bằng năng suất giữa các tế bào.</div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -311,9 +416,7 @@
             <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Hãy chọn hình thức bố trí mặt bằng phù hợp nhất cho tình huống dưới đây.</p>
             
             <div class="quiz-question" id="quiz-question">Đang tải câu hỏi...</div>
-            <div class="quiz-options" id="quiz-options">
-                <!-- Generated by JS -->
-            </div>
+            <div class="quiz-options" id="quiz-options"></div>
             <div class="quiz-feedback" id="quiz-feedback"></div>
             <button class="btn-calc secondary" id="quiz-next-btn" style="margin-top: 15px; display: none;" onclick="nextQuestion()"><i data-lucide="refresh-cw"></i> Câu hỏi tiếp theo</button>
         </div>
@@ -324,32 +427,113 @@
         lucide.createIcons();
 
         // ==========================================
+        // TOOL TAB LOGIC
+        // ==========================================
+        function switchToolTab(tabId) {
+            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ==========================================
+        // TOOL 1: PROCESS COST (Chi phí vận chuyển)
+        // ==========================================
+        let procRowCount = 0;
+        
+        function addProcRow(name = '', dist = '', qty = '') {
+            procRowCount++;
+            const tbody = document.querySelector('#proc-table tbody');
+            const tr = document.createElement('tr');
+            tr.id = `proc-row-${procRowCount}`;
+            tr.innerHTML = `
+                <td><input type="text" class="table-input proc-name" value="${name}" style="width: 120px;" placeholder="VD: A - B"></td>
+                <td><input type="number" class="table-input proc-dist" value="${dist}"></td>
+                <td><input type="number" class="table-input proc-qty" value="${qty}"></td>
+                <td><button class="btn-icon" onclick="document.getElementById('proc-row-${procRowCount}').remove()"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+        }
+
+        // Add initial rows
+        addProcRow('Bộ phận 1 - 2', 50, 100);
+        addProcRow('Bộ phận 2 - 3', 30, 150);
+
+        function calcProcessCost() {
+            const rows = document.querySelectorAll('#proc-table tbody tr');
+            const K = parseFloat(document.getElementById('proc-cost-k').value) || 1;
+            
+            let totalCost = 0;
+            let details = [];
+
+            rows.forEach(row => {
+                const name = row.querySelector('.proc-name').value || 'Tuyến';
+                const dist = parseFloat(row.querySelector('.proc-dist').value) || 0;
+                const qty = parseFloat(row.querySelector('.proc-qty').value) || 0;
+                
+                const cost = dist * qty * K;
+                totalCost += cost;
+                
+                if(dist > 0 && qty > 0) {
+                    details.push(`${name}: ${dist} * ${qty} * ${K} = ${cost}`);
+                }
+            });
+
+            document.getElementById('proc-result-text').innerHTML = `
+                Tổng chi phí vận chuyển: <span class="font-mono text-emerald" style="font-size: 1.8rem; margin-left: 10px;">${totalCost.toLocaleString('vi-VN')}</span>
+            `;
+            document.getElementById('proc-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // TOOL 2: LINE BALANCING (Cân bằng dây chuyền)
+        // ==========================================
+        function calcLineBalancing() {
+            const time = parseFloat(document.getElementById('line-time').value);
+            const demand = parseFloat(document.getElementById('line-demand').value);
+            const sumTasks = parseFloat(document.getElementById('line-sum-tasks').value);
+
+            if(demand <= 0 || time <= 0) {
+                alert("Thời gian và Nhu cầu phải lớn hơn 0!");
+                return;
+            }
+
+            // Tck = Time / Demand
+            const tck = time / demand;
+            
+            // Nmin = SumTasks / Tck (Làm tròn lên)
+            const nminExact = sumTasks / tck;
+            const nmin = Math.ceil(nminExact);
+
+            document.getElementById('line-tck').innerText = tck.toFixed(2) + " phút/SP";
+            document.getElementById('line-nmin').innerText = nmin + " (Chính xác: " + nminExact.toFixed(2) + ")";
+            
+            document.getElementById('line-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
         // QUIZ LOGIC
         // ==========================================
         const quizData = [
             {
                 question: "Bệnh viện là một ví dụ điển hình của hình thức bố trí mặt bằng nào?",
                 options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí theo vị trí cố định", "Bố trí dạng tế bào"],
-                correct: 1, // Index of 'Bố trí theo quá trình'
+                correct: 1,
                 explanation: "Bệnh viện được tổ chức theo khoa/phòng chức năng (Khoa Nội, Khoa Ngoại, Xét nghiệm...). Bệnh nhân di chuyển đến các khu vực khác nhau để khám chữa bệnh, giống như bố trí theo quá trình trong sản xuất."
             },
             {
                 question: "Một nhà máy lắp ráp ô tô với dây chuyền chạy liên tục qua các trạm làm việc nên áp dụng bố trí mặt bằng nào?",
                 options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí theo vị trí cố định", "Bố trí hỗn hợp"],
-                correct: 0, // Index of 'Bố trí theo sản phẩm'
+                correct: 0,
                 explanation: "Lắp ráp ô tô có khối lượng lớn, quy trình chuẩn hóa. Việc bố trí máy móc theo một dòng chảy cố định (dây chuyền) giúp tối ưu hóa thời gian và chi phí di chuyển."
             },
             {
                 question: "Việc đóng một con tàu biển lớn tại nhà máy đóng tàu thường áp dụng hình thức bố trí nào?",
                 options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí theo vị trí cố định", "Hệ thống sản xuất linh hoạt"],
-                correct: 2, // Index of 'Bố trí theo vị trí cố định'
+                correct: 2,
                 explanation: "Con tàu quá lớn và nặng để di chuyển. Do đó, sản phẩm (con tàu) được đặt cố định, còn máy móc, công nhân và nguyên vật liệu phải di chuyển đến xung quanh nó."
-            },
-            {
-                question: "Nhóm các máy móc khác nhau (máy tiện, máy phay) vào một khu vực nhỏ hình chữ U để sản xuất một họ sản phẩm tương tự là đặc điểm của:",
-                options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí dạng tế bào (Cellular)", "Bố trí vị trí cố định"],
-                correct: 2, // Index of 'Bố trí dạng tế bào'
-                explanation: "Đây chính xác là định nghĩa của bố trí dạng tế bào (Cellular Layout) - một dạng bố trí hỗn hợp giúp tăng tính linh hoạt nhưng vẫn đảm bảo dòng chảy mượt mà."
             }
         ];
 
@@ -394,9 +578,7 @@
                 feedbackBox.innerHTML = `<span style="color:var(--accent-rose); font-weight:bold;">Sai rồi!</span> ${q.explanation}`;
             }
 
-            // Disable all buttons
             allBtns.forEach(b => b.style.pointerEvents = 'none');
-
             feedbackBox.classList.add('show');
             
             const nextBtn = document.getElementById('quiz-next-btn');
@@ -409,7 +591,7 @@
         function nextQuestion() {
             currentQuizIndex++;
             if(currentQuizIndex >= quizData.length) {
-                currentQuizIndex = 0; // Reset or show completion message
+                currentQuizIndex = 0;
             }
             loadQuestion();
         }
@@ -417,6 +599,9 @@
         // Init Quiz
         window.onload = () => {
             loadQuestion();
+            // Add default calculation trigger
+            calcProcessCost();
+            calcLineBalancing();
         };
 
     </script>
