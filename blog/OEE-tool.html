@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý OEE Đa Máy | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+            --accent-violet: #8B5CF6;
+            --accent-orange: #F97316;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1400px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 2rem; animation: fadeIn 0.8s ease; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; color: transparent;
+        }
+        .hero p { color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .chapter-badge { 
+            display: inline-block; padding: 6px 16px; background: rgba(6, 182, 212, 0.1); 
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan); 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .panel-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        .panel-title i { color: var(--accent-cyan); }
+
+        /* Tables */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: rgba(0, 0, 0, 0.4); padding: 12px; text-align: center; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-glass); white-space: nowrap; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); text-align: center; }
+        
+        input[type="text"].table-input, input[type="number"].table-input {
+            width: 100%; min-width: 80px; padding: 8px; background: rgba(0, 0, 0, 0.2); 
+            border: 1px solid var(--border-glass); border-radius: 6px; color: var(--accent-amber); 
+            font-family: 'JetBrains Mono', monospace; font-weight: bold; text-align: center; transition: all 0.2s;
+        }
+        input[type="text"].table-input { color: var(--text-main); font-family: 'Inter', sans-serif; text-align: left;}
+        input.table-input:focus { border-color: var(--accent-cyan); background: rgba(0, 0, 0, 0.5); outline: none; }
+
+        /* Buttons */
+        .btn-group { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: center; flex-wrap: wrap;}
+        .btn-calc {
+            padding: 12px 24px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -5px rgba(6, 182, 212, 0.5); }
+        .btn-calc.secondary { background: transparent; border: 1px solid var(--border-glass); color: var(--text-main); }
+        .btn-calc.secondary:hover { background: rgba(255,255,255,0.05); box-shadow: none; }
+        
+        .btn-icon { padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; display: flex; align-items: center; justify-content: center;}
+        .btn-icon:hover { color: var(--accent-rose); border-color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+
+        /* Results Table */
+        .res-table th { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); border-bottom: 2px solid var(--accent-cyan); }
+        .res-table td { font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 1rem; }
+        .res-table td.machine-name { font-family: 'Inter', sans-serif; text-align: left; font-weight: 600; color: var(--text-main); }
+        
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; display: inline-block; white-space: nowrap; font-family: 'Inter', sans-serif; }
+        .badge-normal { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid var(--accent-emerald); }
+        .badge-maintain { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .badge-repair { background: rgba(249, 115, 22, 0.15); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
+        .badge-replace { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); border: 1px solid var(--accent-rose); }
+
+        .chart-container { position: relative; height: 350px; width: 100%; margin-top: 1.5rem; display: none;}
+        .chart-container.active { display: block; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="settings-2"></i></div>
+            <span>Multi-Machine OEE System</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Tony EXIM • Equipment Effectiveness</div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="chapter-badge">Phân tích & Đề xuất Hành động</div>
+            <h1>Quản lý OEE <span>Đa Máy</span></h1>
+            <p>Nhập thông số của nhiều máy để tính toán OEE, so sánh hiệu suất và nhận đề xuất: Bảo trì, Sửa chữa, hay Thay thế (Mua mới).</p>
+        </div>
+
+        <!-- INPUT PANEL -->
+        <div class="glass-panel">
+            <h2 class="panel-title"><i data-lucide="clipboard-list"></i> Nhập dữ liệu sản xuất</h2>
+            
+            <div class="table-responsive">
+                <table id="input-table">
+                    <thead>
+                        <tr>
+                            <th>Tên Máy</th>
+                            <th>Thời gian KH (phút)</th>
+                            <th>Dừng máy (phút)</th>
+                            <th>Chu kỳ lý tưởng (phút/SP)</th>
+                            <th>Tổng SP</th>
+                            <th>SP Tốt</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="input-tbody">
+                        <!-- Rows generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-calc secondary" onclick="addMachineRow()"><i data-lucide="plus"></i> Thêm Máy</button>
+                <button class="btn-calc" onclick="calculateAllOEE()"><i data-lucide="calculator"></i> Tính toán & Đề xuất</button>
+                <button class="btn-calc secondary" onclick="loadExampleData()"><i data-lucide="lightbulb"></i> Tải dữ liệu mẫu</button>
+            </div>
+        </div>
+
+        <!-- RESULT PANEL -->
+        <div class="glass-panel hidden" id="result-panel">
+            <h2 class="panel-title"><i data-lucide="bar-chart-3"></i> Kết quả & Đề xuất</h2>
+            
+            <div class="table-responsive">
+                <table id="result-table" class="res-table">
+                    <thead>
+                        <tr>
+                            <th>Tên Máy</th>
+                            <th>A (%)</th>
+                            <th>P (%)</th>
+                            <th>Q (%)</th>
+                            <th>OEE (%)</th>
+                            <th>Đề xuất Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="result-tbody">
+                        <!-- Rows generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-container" id="chart-container">
+                <canvas id="multiOeeChart"></canvas>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+        let rowCount = 0;
+        let chartInstance = null;
+
+        // Khởi tạo một dòng mới
+        function addMachineRow(name = '', planned = '', downtime = '', cycle = '', total = '', good = '') {
+            rowCount++;
+            const tbody = document.getElementById('input-tbody');
+            const tr = document.createElement('tr');
+            tr.id = `row-${rowCount}`;
+            tr.innerHTML = `
+                <td><input type="text" class="table-input machine-name" value="${name}" placeholder="VD: Máy CNC 1"></td>
+                <td><input type="number" class="table-input planned-time" value="${planned}" min="1"></td>
+                <td><input type="number" class="table-input downtime" value="${downtime}" min="0"></td>
+                <td><input type="number" class="table-input cycle-time" value="${cycle}" min="0.01" step="0.01"></td>
+                <td><input type="number" class="table-input total-count" value="${total}" min="1"></td>
+                <td><input type="number" class="table-input good-parts" value="${good}" min="0"></td>
+                <td><button class="btn-icon" onclick="document.getElementById('row-${rowCount}').remove()"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+        }
+
+        // Tải dữ liệu mẫu (gồm 3 máy với các trạng thái khác nhau)
+        function loadExampleData() {
+            document.getElementById('input-tbody').innerHTML = '';
+            // Máy 1: Hoạt động tốt (World Class)
+            addMachineRow('Máy Ép Nhựa 01', 480, 20, 0.5, 900, 895); 
+            // Máy 2: Cần bảo trì (Trung bình)
+            addMachineRow('Máy Cắt Laser 02', 480, 90, 0.8, 450, 430); 
+            // Máy 3: Tồi tệ, cần sửa chữa/mua mới
+            addMachineRow('Máy Dập Cũ 03', 480, 250, 1.2, 150, 110); 
+        }
+
+        // Hàm đưa ra đề xuất dựa trên thuật toán
+        function getRecommendation(A, P, Q, OEE) {
+            if (OEE >= 0.85) {
+                return { text: "Vận hành bình thường", class: "badge-normal", icon: "check-circle" };
+            } 
+            
+            if (OEE < 0.60) {
+                // OEE Rất thấp
+                if (A < 0.50) {
+                    return { text: "Mua mới (Hư hỏng nặng)", class: "badge-replace", icon: "x-circle" };
+                } else if (P < 0.50) {
+                    return { text: "Mua mới (Công nghệ lỗi thời)", class: "badge-replace", icon: "trending-down" };
+                } else {
+                    return { text: "Đại tu / Sửa chữa lớn", class: "badge-repair", icon: "wrench" };
+                }
+            } 
+            
+            // OEE Trung bình (60% - 85%)
+            if (A < 0.70) {
+                return { text: "Bảo trì (Dừng máy nhiều)", class: "badge-maintain", icon: "settings" };
+            } else if (Q < 0.90) {
+                return { text: "Sửa lỗi Chất lượng", class: "badge-maintain", icon: "alert-triangle" };
+            } else if (P < 0.80) {
+                return { text: "Tối ưu tốc độ chạy", class: "badge-maintain", icon: "gauge" };
+            }
+            return { text: "Bảo trì định kỳ", class: "badge-maintain", icon: "calendar" };
+        }
+
+        // Tính toán OEE cho tất cả các máy
+        function calculateAllOEE() {
+            const rows = document.querySelectorAll('#input-tbody tr');
+            if (rows.length === 0) {
+                alert("Vui lòng thêm ít nhất 1 máy để tính toán!");
+                return;
+            }
+
+            const resultTbody = document.getElementById('result-tbody');
+            resultTbody.innerHTML = '';
+            
+            let chartLabels = [];
+            let chartOEE = [];
+            let hasError = false;
+
+            rows.forEach((row, index) => {
+                const name = row.querySelector('.machine-name').value || `Máy ${index + 1}`;
+                const planned = parseFloat(row.querySelector('.planned-time').value);
+                const downtime = parseFloat(row.querySelector('.downtime').value);
+                const cycle = parseFloat(row.querySelector('.cycle-time').value);
+                const total = parseFloat(row.querySelector('.total-count').value);
+                const good = parseFloat(row.querySelector('.good-parts').value);
+
+                // Validation
+                if (isNaN(planned) || isNaN(downtime) || isNaN(cycle) || isNaN(total) || isNaN(good) || planned <= 0 || cycle <= 0 || total <= 0) {
+                    alert(`Dữ liệu của "${name}" không hợp lệ. Vui lòng kiểm tra lại!`);
+                    hasError = true;
+                    return;
+                }
+                if (downtime > planned || good > total) {
+                    alert(`Lỗi logic ở "${name}": Dừng máy > Thời gian KH hoặc SP Tốt > Tổng SP!`);
+                    hasError = true;
+                    return;
+                }
+
+                // Calculate
+                const operatingTime = planned - downtime;
+                const A = operatingTime / planned;
+                const P = (cycle * total) / operatingTime;
+                const Q = good / total;
+                let OEE = A * P * Q;
+                
+                // Cap max at 100% (in case of weird input)
+                OEE = Math.min(OEE, 1); 
+
+                // Get Recommendation
+                const rec = getRecommendation(A, P, Q, OEE);
+
+                // Render Row
+                const tr = document.createElement('tr');
+                
+                // Color code OEE
+                let oeeColor = "var(--accent-rose)";
+                if (OEE >= 0.85) oeeColor = "var(--accent-emerald)";
+                else if (OEE >= 0.60) oeeColor = "var(--accent-amber)";
+
+                tr.innerHTML = `
+                    <td class="machine-name">${name}</td>
+                    <td style="color:${A < 0.7 ? 'var(--accent-rose)' : 'inherit'}">${(A*100).toFixed(1)}%</td>
+                    <td style="color:${P < 0.8 ? 'var(--accent-rose)' : 'inherit'}">${(P*100).toFixed(1)}%</td>
+                    <td style="color:${Q < 0.9 ? 'var(--accent-rose)' : 'inherit'}">${(Q*100).toFixed(1)}%</td>
+                    <td style="font-size: 1.2rem; color:${oeeColor};">${(OEE*100).toFixed(1)}%</td>
+                    <td><span class="badge ${rec.class}"><i data-lucide="${rec.icon}" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i> ${rec.text}</span></td>
+                `;
+                resultTbody.appendChild(tr);
+
+                chartLabels.push(name);
+                chartOEE.push(OEE * 100);
+            });
+
+            if (!hasError) {
+                document.getElementById('result-panel').classList.remove('hidden');
+                document.getElementById('chart-container').classList.add('active');
+                lucide.createIcons();
+                renderChart(chartLabels, chartOEE);
+            }
+        }
+
+        function renderChart(labels, data) {
+            const ctx = document.getElementById('multiOeeChart').getContext('2d');
+            
+            if (chartInstance) chartInstance.destroy();
+
+            // Determine colors based on thresholds
+            const bgColors = data.map(val => {
+                if (val >= 85) return 'rgba(16, 185, 129, 0.8)'; // Emerald
+                if (val >= 60) return 'rgba(251, 191, 36, 0.8)'; // Amber
+                return 'rgba(251, 113, 133, 0.8)'; // Rose
+            });
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'OEE (%)',
+                        data: data,
+                        backgroundColor: bgColors,
+                        borderColor: bgColors.map(c => c.replace('0.8', '1')),
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return context.parsed.y.toFixed(2) + '%'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true, max: 100,
+                            ticks: { color: '#94A3B8', callback: v => v + '%' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#94A3B8', font: { weight: '600' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chạy khi tải trang
+        window.onload = () => {
+            loadExampleData();
+        };
+    </script>
+</body>
+</html>
