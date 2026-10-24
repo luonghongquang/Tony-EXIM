@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự báo Định tính | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+            --accent-violet: #8B5CF6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 3rem; animation: fadeIn 0.8s ease; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; color: transparent;
+        }
+        .hero p { color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .chapter-badge { 
+            display: inline-block; padding: 6px 16px; background: rgba(6, 182, 212, 0.1); 
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan); 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Theory Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .glass-panel:hover { transform: translateY(-5px); border-color: rgba(6, 182, 212, 0.4); }
+
+        .card-icon {
+            width: 50px; height: 50px; border-radius: 14px; display: flex; 
+            align-items: center; justify-content: center; margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass);
+        }
+        .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); display: flex; align-items: center; gap: 8px;}
+        .card-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem; }
+        
+        .tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-muted); }
+
+        /* =========================================
+           HIGHLIGHTED TOOL SECTION
+           ========================================= */
+        .tool-wrapper {
+            padding: 3px; border-radius: 24px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet), var(--accent-rose));
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+            margin-bottom: 3rem;
+            animation: borderGlow 3s infinite alternate;
+        }
+        @keyframes borderGlow {
+            0% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+            100% { box-shadow: 0 0 50px rgba(139, 92, 246, 0.4); }
+        }
+        .tool-inner {
+            background: var(--bg-base); border-radius: 22px; padding: 2.5rem;
+            position: relative; overflow: hidden;
+        }
+        .tool-inner::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .tool-header { text-align: center; margin-bottom: 2rem; }
+        .tool-header h2 { font-size: 1.75rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .tool-header h2 i { color: var(--accent-cyan); }
+
+        .tool-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        @media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.8rem; }
+        .radio-group { display: flex; flex-direction: column; gap: 10px; }
+        .radio-label {
+            display: flex; align-items: flex-start; gap: 12px; padding: 15px; 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
+            border-radius: 8px; cursor: pointer; transition: all 0.2s;
+        }
+        .radio-label:hover { background: rgba(255,255,255,0.05); }
+        .radio-label input[type="radio"] { margin-top: 4px; accent-color: var(--accent-cyan); }
+        .radio-text { font-size: 0.9rem; color: var(--text-main); }
+        .radio-sub { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        /* Results */
+        .result-box {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass);
+            border-radius: 12px; padding: 2rem; display: flex; flex-direction: column; justify-content: center;
+            height: 100%;
+        }
+        .empty-state { text-align: center; color: var(--text-muted); opacity: 0.5; }
+        .empty-state i { width: 48px; height: 48px; margin-bottom: 1rem; }
+
+        .recommendation { display: none; animation: fadeIn 0.5s ease; }
+        .recommendation.show { display: block; }
+        
+        .rec-badge { 
+            display: inline-block; padding: 8px 16px; border-radius: 8px; font-weight: 700; 
+            font-size: 1.1rem; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .rec-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; }
+        .rec-desc { font-size: 1rem; color: var(--text-main); line-height: 1.7; }
+
+        .btn-calc {
+            width: 100%; padding: 15px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s; margin-top: 1rem;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -5px rgba(6, 182, 212, 0.5); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="users"></i></div>
+            <span>Qualitative Forecasting Hub</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.II - Mục II.1 (Trang 14-15)</div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="chapter-badge">Phương pháp Dự báo dựa trên Kinh nghiệm & Nhận định</div>
+            <h1>Các phương pháp <span>Dự báo Định tính</span></h1>
+            <p>Sử dụng khi dữ liệu quá khứ không đủ, hoặc khi các yếu tố thị trường biến động mạnh mà các mô hình toán học không thể nắm bắt được.</p>
+        </div>
+
+        <!-- Theory Grid -->
+        <div class="grid-2">
+            <!-- 1.1 Executive -->
+            <div class="glass-panel">
+                <div class="card-icon" style="color: var(--accent-cyan);"><i data-lucide="briefcase"></i></div>
+                <h3 class="card-title">1.1. Lấy ý kiến Ban điều hành</h3>
+                <p class="card-desc">Một nhóm nhỏ các nhà quản lý cấp cao (Marketing, Kỹ thuật, Tài chính, Sản xuất) cùng ngồi lại, sử dụng kinh nghiệm, số liệu thống kê và đánh giá của cán bộ để đưa ra dự báo chung.</p>
+                <div class="tag">Ưu điểm: Nhanh, tổng hợp được cái nhìn đa chiều.</div>
+            </div>
+
+            <!-- 1.2 Sales Force -->
+            <div class="glass-panel">
+                <div class="card-icon" style="color: var(--accent-amber);"><i data-lucide="store"></i></div>
+                <h3 class="card-title">1.2. Lấy ý kiến Lực lượng bán hàng</h3>
+                <p class="card-desc">Mỗi nhân viên kinh doanh tự dự báo số lượng bán ra ở khu vực mình phụ trách. Các dự báo này được tổng hợp, thẩm định lại để đoán chắc tính hiện thực.</p>
+                <div class="tag">Ưu điểm: Người bán hàng hiểu rõ khách hàng nhất.</div>
+            </div>
+
+            <!-- 1.3 Market Research -->
+            <div class="glass-panel">
+                <div class="card-icon" style="color: var(--accent-emerald);"><i data-lucide="clipboard-list"></i></div>
+                <h3 class="card-title">1.3. Nghiên cứu thị trường người tiêu dùng</h3>
+                <p class="card-desc">Lấy ý kiến khách hàng hiện tại và tiềm năng bằng nhiều hình thức: điều tra, phỏng vấn trực tiếp, qua điện thoại, hoặc gửi phiếu điều tra đến tận nhà.</p>
+                <div class="tag">Ưu điểm: Hiểu rõ tâm lý, nhu cầu thực tế của người mua.</div>
+            </div>
+
+            <!-- 1.4 Delphi -->
+            <div class="glass-panel">
+                <div class="card-icon" style="color: var(--accent-violet);"><i data-lucide="network"></i></div>
+                <h3 class="card-title">1.4. Phân tích Delphi</h3>
+                <p class="card-desc">Lấy ý kiến các chuyên gia ở các vùng địa lý khác nhau. Họ trả lời ẩn danh qua nhiều vòng (gửi phiếu - tổng hợp - phản hồi lại) để đi đến đồng thuận mà không bị ảnh hưởng bởi người có uy thế.</p>
+                <div class="tag">Ưu điểm: Tránh thiên kiến cá nhân, độ tin cậy cao.</div>
+            </div>
+        </div>
+
+        <!-- HIGHLIGHTED TOOL SECTION -->
+        <div class="tool-wrapper">
+            <div class="tool-inner">
+                <div class="tool-header">
+                    <h2><i data-lucide="sparkles"></i> Trợ lý Gợi ý Phương pháp</h2>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Trả lời 3 câu hỏi để tìm ra phương pháp dự báo phù hợp nhất với doanh nghiệp bạn.</p>
+                </div>
+
+                <div class="tool-layout">
+                    <!-- Inputs -->
+                    <div>
+                        <div class="form-group">
+                            <label>1. Bạn cần dự báo trong khoảng thời gian nào?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="q1" value="short">
+                                    <div class="radio-text">Ngắn hạn (Dưới 6 tháng)<span class="radio-sub">Cần con số sát với thực tế bán hàng ngay lập tức.</span></div>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="q1" value="long">
+                                    <div class="radio-text">Trung và Dài hạn (1 - 3 năm)<span class="radio-sub">Cần tầm nhìn chiến lược, xu hướng thị trường.</span></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>2. Doanh nghiệp bạn có thế mạnh về nguồn lực nào nhất?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="q2" value="internal">
+                                    <div class="radio-text">Đội ngũ nội bộ (Quản lý/Nhân viên)<span class="radio-sub">Có sẵn dữ liệu bán hàng, kinh nghiệm thực chiến.</span></div>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="q2" value="external">
+                                    <div class="radio-text">Ngân sách & Thời gian<span class="radio-sub">Sẵn sàng chi tiền để khảo sát khách hàng hoặc mời chuyên gia.</span></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>3. Bạn lo ngại nhất điều gì khi dự báo?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="q3" value="bias">
+                                    <div class="radio-text">Sự thiên kiến (Bị ảnh hưởng bởi ý kiến sếp lớn)<span class="radio-sub">Muốn ý kiến độc lập, khách quan tuyệt đối.</span></div>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="q3" value="empathy">
+                                    <div class="radio-text">Không hiểu rõ khách hàng muốn gì<span class="radio-sub">Cần dữ liệu trực tiếp từ người tiêu dùng.</span></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn-calc" onclick="recommendMethod()"><i data-lucide="cpu"></i> Phân tích & Gợi ý</button>
+                    </div>
+
+                    <!-- Result Output -->
+                    <div class="result-box">
+                        <div class="empty-state" id="empty-state">
+                            <i data-lucide="help-circle"></i>
+                            <p>Chọn các tùy chọn bên trái và bấm nút để xem kết quả.</p>
+                        </div>
+
+                        <div class="recommendation" id="recommendation">
+                            <div class="rec-badge" id="rec-badge">Phương pháp đề xuất</div>
+                            <div class="rec-title" id="rec-title">Tên phương pháp</div>
+                            <div class="rec-desc" id="rec-desc">Giải thích lý do tại sao phương pháp này lại phù hợp với tình huống của bạn.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function recommendMethod() {
+            // Get values
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+
+            if (!q1 || !q2 || !q3) {
+                alert("Vui lòng trả lời đủ 3 câu hỏi để hệ thống phân tích!");
+                return;
+            }
+
+            const v1 = q1.value;
+            const v2 = q2.value;
+            const v3 = q3.value;
+
+            let title = "";
+            let desc = "";
+            let color = "";
+            let bgColor = "";
+
+            // Logic Engine
+            if (v1 === 'short' && v2 === 'internal') {
+                // Short term, internal focus
+                title = "1.2. Lấy ý kiến Lực lượng bán hàng";
+                desc = "Vì bạn cần dự báo ngắn hạn và có sẵn đội ngũ nội bộ, nhân viên bán hàng là những người sát sao với khách hàng nhất. Họ biết rõ khách hàng sắp mua gì, số lượng bao nhiêu. Việc tổng hợp ý kiến của họ sẽ cho ra con số thực tế nhất.";
+                color = "var(--accent-amber)";
+                bgColor = "rgba(251, 191, 36, 0.15)";
+            } 
+            else if (v3 === 'bias' || (v1 === 'long' && v2 === 'external')) {
+                // Worried about bias, or Long term with budget
+                title = "1.4. Phân tích Delphi";
+                desc = "Bạn cần một tầm nhìn dài hạn hoặc muốn tránh sự thiên kiến. Phương pháp Delphi mời các chuyên gia độc lập trả lời ẩn danh qua nhiều vòng. Điều này đảm bảo không ai bị ảnh hưởng bởi ý kiến của người khác (như sếp hay chuyên gia nổi tiếng), cho ra kết quả khách quan và có độ tin cậy cao nhất.";
+                color = "var(--accent-violet)";
+                bgColor = "rgba(139, 92, 246, 0.15)";
+            }
+            else if (v3 === 'empathy' || (v2 === 'external' && v1 === 'short')) {
+                // Need customer insight, have budget
+                title = "1.3. Nghiên cứu thị trường người tiêu dùng";
+                desc = "Bạn muốn thấu hiểu khách hàng và có ngân sách để làm điều đó. Việc gửi phiếu khảo sát, phỏng vấn trực tiếp sẽ giúp bạn thu thập dữ liệu sơ cấp cực kỳ giá trị về nhu cầu, thị hiếu và mức độ sẵn sàng chi tiêu của họ.";
+                color = "var(--accent-emerald)";
+                bgColor = "rgba(16, 185, 129, 0.15)";
+            }
+            else {
+                // Default: Executive
+                title = "1.1. Lấy ý kiến Ban điều hành doanh nghiệp";
+                desc = "Với tình huống của bạn, việc triệu tập một cuộc họp giữa các trưởng phòng (Marketing, Kinh doanh, Sản xuất) là cách nhanh nhất. Các nhà quản lý sẽ kết hợp số liệu quá khứ và đánh giá của họ để đưa ra một con số dự báo tổng thể, tiết kiệm chi phí và thời gian.";
+                color = "var(--accent-cyan)";
+                bgColor = "rgba(6, 182, 212, 0.15)";
+            }
+
+            // Update UI
+            document.getElementById('empty-state').style.display = 'none';
+            
+            const recBox = document.getElementById('recommendation');
+            recBox.classList.add('show');
+
+            const badge = document.getElementById('rec-badge');
+            badge.style.color = color;
+            badge.style.backgroundColor = bgColor;
+            badge.style.border = `1px solid ${color}`;
+
+            document.getElementById('rec-title').innerText = title;
+            document.getElementById('rec-desc').innerText = desc;
+        }
+    </script>
+</body>
+</html>
