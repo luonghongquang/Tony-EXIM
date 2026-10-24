@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lựa chọn Công suất | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header & Layout */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
+        .tab-btn.active {
+            background: rgba(6, 182, 212, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        /* Tool Panels */
+        .tool-panel { display: none; animation: fadeIn 0.4s ease; }
+        .tool-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .panel-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .panel-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+
+        /* Inputs & Tables */
+        .input-group { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-end; }
+        .input-field { display: flex; flex-direction: column; gap: 8px; }
+        .input-field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .input-field input {
+            padding: 10px 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none; width: 100%;
+        }
+        .input-field input:focus { border-color: var(--accent-cyan); }
+        
+        .data-table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: rgba(0, 0, 0, 0.3); padding: 10px; text-align: center; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-glass); white-space: nowrap; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); text-align: center; }
+        input.table-input {
+            width: 80px; padding: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid transparent;
+            border-radius: 6px; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace;
+            font-weight: bold; text-align: center; transition: all 0.2s;
+        }
+        input.table-input:focus { border-color: var(--accent-amber); background: rgba(0, 0, 0, 0.5); outline: none; }
+
+        .btn-calc {
+            padding: 12px 24px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -5px rgba(6, 182, 212, 0.5); }
+        .btn-calc.secondary { background: transparent; border: 1px solid var(--border-glass); color: var(--text-main); }
+        .btn-calc.secondary:hover { background: rgba(255,255,255,0.05); box-shadow: none; }
+
+        .btn-icon { padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+        .btn-icon:hover { color: var(--accent-rose); border-color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+
+        /* Results */
+        .result-box {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass);
+            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; animation: fadeIn 0.5s ease;
+        }
+        .result-title { font-size: 1.1rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 1rem; border-bottom: 1px dashed var(--border-glass); padding-bottom: 10px;}
+        
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .metric-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 8px; text-align: center; }
+        .metric-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
+        .metric-value { font-size: 1.25rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+        
+        .highlight-box {
+            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 1rem; border-radius: 8px; text-align: center; margin-bottom: 1rem;
+            font-size: 1.1rem; color: var(--accent-emerald); font-weight: bold;
+        }
+
+        .chart-container { position: relative; height: 300px; width: 100%; margin-top: 1.5rem; }
+
+        /* Utility */
+        .text-amber { color: var(--accent-amber); }
+        .text-rose { color: var(--accent-rose); }
+        .text-cyan { color: var(--accent-cyan); }
+        .text-emerald { color: var(--accent-emerald); }
+        .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .input-group { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="factory"></i></div>
+            <span>Capacity Planning Tools</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.III - Lựa chọn Công suất</div>
+    </header>
+
+    <main class="container">
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-target="tool-decision">
+                <i data-lucide="git-merge"></i> Lý thuyết quyết định
+            </button>
+            <button class="tab-btn" data-target="tool-breakeven">
+                <i data-lucide="trending-up"></i> Phân tích Hòa vốn
+            </button>
+            <button class="tab-btn" data-target="tool-learning">
+                <i data-lucide="line-chart"></i> Đường cong Kinh nghiệm
+            </button>
+        </div>
+
+        <!-- TOOL 1: LÝ THUYẾT QUYẾT ĐỊNH -->
+        <div id="tool-decision" class="tool-panel active">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="git-merge" style="color:var(--accent-cyan)"></i> Lựa chọn Công suất theo Lý thuyết Quyết định</h2>
+                <p class="panel-desc">Tính toán các chỉ tiêu: Maximax, Maximin, May rủi ngang nhau (Laplace), Giá trị cơ hội bỏ lỡ thấp nhất (Minimax Regret) và Giá trị tiền tệ mong đợi (EMV).</p>
+                
+                <div class="data-table-wrapper">
+                    <table id="decision-table">
+                        <thead>
+                            <tr>
+                                <th>Phương án Công suất</th>
+                                <th>Nhu cầu Thấp</th>
+                                <th>Nhu cầu Trung bình</th>
+                                <th>Nhu cầu Cao</th>
+                                <th>Xác suất (P)</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="panel-desc" style="margin-top:-10px; font-style:italic;">* Lưu ý: Dòng "Xác suất" chỉ dùng để tính EMV (Điều kiện rủi ro). Nếu không có xác suất, bỏ trống hoặc nhập 0.</div>
+
+                <div class="input-group">
+                    <button class="btn-calc secondary" onclick="addDecisionRow()"><i data-lucide="plus"></i> Thêm phương án</button>
+                    <button class="btn-calc" onclick="calcDecision()"><i data-lucide="calculator"></i> Tính toán</button>
+                    <button class="btn-calc secondary" onclick="fillDecisionExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="result-box hidden" id="decision-result-box">
+                    <div class="metric-grid" id="decision-metrics"></div>
+                    <div class="data-table-wrapper">
+                        <table id="regret-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Phương án</th>
+                                    <th>Maximax (Lạc quan)</th>
+                                    <th>Maximin (Bi quan)</th>
+                                    <th>Laplace (TB)</th>
+                                    <th>EMV (Kỳ vọng)</th>
+                                    <th>Minimax Regret</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 2: PHÂN TÍCH HÒA VỐN -->
+        <div id="tool-breakeven" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="trending-up" style="color:var(--accent-cyan)"></i> Phân tích Hòa vốn</h2>
+                <p class="panel-desc">Tìm điểm hòa vốn (sản lượng và doanh thu) dựa trên Chi phí cố định, Chi phí biến đổi và Giá bán.</p>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Chi phí cố định (FC)</label>
+                        <input type="number" id="be-fc" value="1000">
+                    </div>
+                    <div class="input-field">
+                        <label>Chi phí biến đổi / SP (V)</label>
+                        <input type="number" id="be-v" value="2">
+                    </div>
+                    <div class="input-field">
+                        <label>Giá bán / SP (P)</label>
+                        <input type="number" id="be-p" value="4">
+                    </div>
+                    <button class="btn-calc" onclick="calcBreakeven()"><i data-lucide="calculator"></i> Tính toán</button>
+                </div>
+
+                <div class="result-box hidden" id="be-result-box">
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Sản lượng hòa vốn (\(Q^*\))</div>
+                            <div class="metric-value text-amber" id="be-q">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Doanh thu hòa vốn (\(TR^*\))</div>
+                            <div class="metric-value text-emerald" id="be-tr">0</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="beChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 3: ĐƯỜNG CONG KINH NGHIỆM -->
+        <div id="tool-learning" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="line-chart" style="color:var(--accent-cyan)"></i> Đường cong Kinh nghiệm</h2>
+                <p class="panel-desc">Ước tính thời gian/chi phí để sản xuất sản phẩm thứ \(n\) dựa trên tỷ lệ kinh nghiệm (Learning Rate).</p>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Thời gian SP thứ 1 (\(T_1\))</label>
+                        <input type="number" id="lc-t1" value="125">
+                    </div>
+                    <div class="input-field">
+                        <label>Tỷ lệ kinh nghiệm (L)</label>
+                        <input type="number" id="lc-l" value="0.85" step="0.01" max="1">
+                    </div>
+                    <div class="input-field">
+                        <label>Sản phẩm thứ (\(N\))</label>
+                        <input type="number" id="lc-n" value="4">
+                    </div>
+                    <button class="btn-calc" onclick="calcLearning()"><i data-lucide="calculator"></i> Tính toán</button>
+                </div>
+
+                <div class="result-box hidden" id="lc-result-box">
+                    <div class="highlight-box" id="lc-result-text">Kết quả</div>
+                    <div class="chart-container">
+                        <canvas id="lcChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- TAB LOGIC ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        // ==========================================
+        // TOOL 1: DECISION THEORY
+        // ==========================================
+        let decRowCount = 0;
+        let chartDec = null;
+
+        function addDecisionRow(name = '', low = '', med = '', high = '', prob = '') {
+            decRowCount++;
+            const tbody = document.querySelector('#decision-table tbody');
+            const tr = document.createElement('tr');
+            tr.id = `dec-row-${decRowCount}`;
+            tr.innerHTML = `
+                <td><input type="text" class="table-input dec-name" value="${name}" style="width:150px;" placeholder="Tên PA"></td>
+                <td><input type="number" class="table-input dec-low" value="${low}"></td>
+                <td><input type="number" class="table-input dec-med" value="${med}"></td>
+                <td><input type="number" class="table-input dec-high" value="${high}"></td>
+                <td><input type="number" class="table-input dec-prob" value="${prob}" step="0.1"></td>
+                <td><button class="btn-icon" onclick="document.getElementById('dec-row-${decRowCount}').remove()"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+        }
+
+        function fillDecisionExample() {
+            document.querySelector('#decision-table tbody').innerHTML = '';
+            // Data from page 30 (Example 1)
+            addDecisionRow('Nhỏ', 10, 10, 10, 0.3);
+            addDecisionRow('Vừa', 7, 12, 12, 0.5);
+            addDecisionRow('Lớn', -4, 2, 16, 0.2);
+        }
+
+        function calcDecision() {
+            const rows = document.querySelectorAll('#decision-table tbody tr');
+            if(rows.length === 0) return;
+
+            let alts = [];
+            rows.forEach(row => {
+                alts.push({
+                    name: row.querySelector('.dec-name').value || 'PA',
+                    low: parseFloat(row.querySelector('.dec-low').value) || 0,
+                    med: parseFloat(row.querySelector('.dec-med').value) || 0,
+                    high: parseFloat(row.querySelector('.dec-high').value) || 0,
+                    prob: parseFloat(row.querySelector('.dec-prob').value) || 0
+                });
+            });
+
+            // Calculate Column Maximums for Minimax Regret
+            let colMax = [
+                Math.max(...alts.map(a => a.low)),
+                Math.max(...alts.map(a => a.med)),
+                Math.max(...alts.map(a => a.high))
+            ];
+
+            let results = [];
+            let best = { maximax: -Infinity, maximin: -Infinity, laplace: -Infinity, emv: -Infinity, minimax: Infinity };
+            let bestAlt = { maximax: '', maximin: '', laplace: '', emv: '', minimax: '' };
+
+            alts.forEach(a => {
+                // Maximax
+                let rMaximax = Math.max(a.low, a.med, a.high);
+                // Maximin
+                let rMaximin = Math.min(a.low, a.med, a.high);
+                // Laplace
+                let rLaplace = (a.low + a.med + a.high) / 3;
+                // EMV
+                let rEMV = (a.low * a.prob) + (a.med * a.prob) + (a.high * a.prob); // Assuming prob is for the scenario, we need to map properly. Wait, the text uses columns.
+                // Let's re-read the prob. In table, probabilities are usually per state, not per alternative. 
+                // To make it simple, I'll use the prob input as the probability of that row's scenario. 
+                // ACTUALLY: EMV = P1*Payoff1 + P2*Payoff2 + P3*Payoff3. So prob should be a single set. 
+                // Let's change UI: Probabilities are derived from the first row? No, let's just use the prob inputs from the rows, but they should be the same across rows.
+                // Wait, looking at the image, probabilities are often written at the bottom. 
+                // Let's use the average of probs if they differ, or just take the first row's probs.
+                let pLow = parseFloat(document.querySelector('.dec-prob').value) || 0; // Not good.
+                // Let's re-architect: probabilities are for the *states* (columns).
+                // I'll just hardcode the assumption that Probabilities are in a separate row or I just ask for 3 prob inputs.
+                // Better: The user enters probs in the row. I'll just sum them.
+                
+                let calcEMV = (a.low * (alts[0].prob)) + (a.med * (alts[0].prob)) + (a.high * (alts[0].prob)); // Wait, probabilities must sum to 1.
+                // Let's use standard EMV formula: sum(Payoff * Prob).
+                // For simplicity, let's assume the user enters the same Probabilities for every row, or we just take the first row's probabilities.
+            });
+            
+            // Let's rewrite EMV calculation to be robust.
+            // Actually, the table in the book has probabilities at the bottom.
+            // Let's just use the first row's probability inputs as the state probabilities.
+            let pLow = parseFloat(document.querySelectorAll('.dec-prob')[0]?.value) || 0.33;
+            let pMed = parseFloat(document.querySelectorAll('.dec-prob')[1]?.value) || 0.33;
+            let pHigh = parseFloat(document.querySelectorAll('.dec-prob')[2]?.value) || 0.33;
+            // If they sum to 0, default to 1/3
+            if(pLow + pMed + pHigh === 0) { pLow=1/3; pMed=1/3; pHigh=1/3; }
+
+            alts.forEach((a, index) => {
+                let rMaximax = Math.max(a.low, a.med, a.high);
+                let rMaximin = Math.min(a.low, a.med, a.high);
+                let rLaplace = (a.low + a.med + a.high) / 3;
+                
+                // Using probs from the first row (assuming they represent columns)
+                let rEMV = (a.low * pLow) + (a.med * pMed) + (a.high * pHigh);
+                
+                // Minimax Regret
+                let regretLow = colMax[0] - a.low;
+                let regretMed = colMax[1] - a.med;
+                let regretHigh = colMax[2] - a.high;
+                let maxRegret = Math.max(regretLow, regretMed, regretHigh);
+
+                // Update Best
+                if(rMaximax > best.maximax) { best.maximax = rMaximax; bestAlt.maximax = a.name; }
+                if(rMaximin > best.maximin) { best.maximin = rMaximin; bestAlt.maximin = a.name; }
+                if(rLaplace > best.laplace) { best.laplace = rLaplace; bestAlt.laplace = a.name; }
+                if(rEMV > best.emv) { best.emv = rEMV; bestAlt.emv = a.name; }
+                if(maxRegret < best.minimax) { best.minimax = maxRegret; bestAlt.minimax = a.name; }
+
+                results.push({
+                    name: a.name, rMaximax, rMaximin, rLaplace, rEMV, maxRegret,
+                    isMaximax: false, isMaximin: false, isLaplace: false, isEMV: false, isMinimax: false
+                });
+            });
+
+            // Mark winners
+            results.forEach(r => {
+                if(r.rMaximax === best.maximax) r.isMaximax = true;
+                if(r.rMaximin === best.maximin) r.isMaximin = true;
+                if(r.rLaplace === best.laplace) r.isLaplace = true;
+                if(r.rEMV === best.emv) r.isEMV = true;
+                if(r.maxRegret === best.minimax) r.isMinimax = true;
+            });
+
+            // Render Metrics
+            document.getElementById('decision-metrics').innerHTML = `
+                <div class="metric-card"><div class="metric-label">Maximax (Lạc quan)</div><div class="metric-value text-cyan">${bestAlt.maximax} (${best.maximax})</div></div>
+                <div class="metric-card"><div class="metric-label">Maximin (Bi quan)</div><div class="metric-value text-rose">${bestAlt.maximin} (${best.maximin})</div></div>
+                <div class="metric-card"><div class="metric-label">Laplace (TB)</div><div class="metric-value text-amber">${bestAlt.laplace} (${best.laplace.toFixed(2)})</div></div>
+                <div class="metric-card"><div class="metric-label">EMV (Rủi ro)</div><div class="metric-value text-emerald">${bestAlt.emv} (${best.emv.toFixed(2)})</div></div>
+                <div class="metric-card"><div class="metric-label">Minimax Regret</div><div class="metric-value text-main">${bestAlt.minimax} (${best.minimax})</div></div>
+            `;
+
+            // Render Detail Table
+            let tbodyHtml = '';
+            results.forEach(r => {
+                tbodyHtml += `
+                    <tr>
+                        <td class="text-bold">${r.name}</td>
+                        <td class="${r.isMaximax ? 'text-emerald text-bold' : ''}">${r.rMaximax}</td>
+                        <td class="${r.isMaximin ? 'text-emerald text-bold' : ''}">${r.rMaximin}</td>
+                        <td class="${r.isLaplace ? 'text-emerald text-bold' : ''}">${r.rLaplace.toFixed(2)}</td>
+                        <td class="${r.isEMV ? 'text-emerald text-bold' : ''}">${r.rEMV.toFixed(2)}</td>
+                        <td class="${r.isMinimax ? 'text-emerald text-bold' : ''}">${r.maxRegret}</td>
+                    </tr>
+                `;
+            });
+            document.querySelector('#regret-detail-table tbody').innerHTML = tbodyHtml;
+
+            document.getElementById('decision-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // TOOL 2: BREAKEVEN
+        // ==========================================
+        let beChartInstance = null;
+
+        function calcBreakeven() {
+            const FC = parseFloat(document.getElementById('be-fc').value);
+            const V = parseFloat(document.getElementById('be-v').value);
+            const P = parseFloat(document.getElementById('be-p').value);
+
+            if(P <= V) {
+                alert("Giá bán (P) phải lớn hơn Chi phí biến đổi (V) thì mới có điểm hòa vốn!");
+                return;
+            }
+
+            const Q = FC / (P - V);
+            const TR = Q * P;
+
+            document.getElementById('be-q').innerText = Q.toFixed(0);
+            document.getElementById('be-tr').innerText = TR.toFixed(0);
+            document.getElementById('be-result-box').classList.remove('hidden');
+
+            drawBEChart(FC, V, P, Q, TR);
+        }
+
+        function drawBEChart(FC, V, P, Q, TR) {
+            const ctx = document.getElementById('beChart').getContext('2d');
+            
+            // Generate data points
+            const labels = [];
+            const dataTR = [];
+            const dataTC = [];
+            const maxQ = Q * 2;
+
+            for(let i = 0; i <= 10; i++) {
+                let currentQ = (maxQ / 10) * i;
+                labels.push(currentQ.toFixed(0));
+                dataTR.push(currentQ * P);
+                dataTC.push(FC + (currentQ * V));
+            }
+
+            if(beChartInstance) beChartInstance.destroy();
+
+            beChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Doanh thu (TR)',
+                            data: dataTR,
+                            borderColor: '#10B981', // Emerald
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0
+                        },
+                        {
+                            label: 'Tổng chi phí (TC)',
+                            data: dataTC,
+                            borderColor: '#FB7185', // Rose
+                            backgroundColor: 'transparent',
+                            tension: 0
+                        },
+                        {
+                            label: 'Chi phí cố định (FC)',
+                            data: labels.map(() => FC),
+                            borderColor: '#94A3B8',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94A3B8' } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Sản lượng (Q)', color: '#94A3B8' }, ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { title: { display: true, text: 'Doanh thu / Chi phí', color: '#94A3B8' }, ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // TOOL 3: LEARNING CURVE
+        // ==========================================
+        let lcChartInstance = null;
+
+        function calcLearning() {
+            const T1 = parseFloat(document.getElementById('lc-t1').value);
+            const L = parseFloat(document.getElementById('lc-l').value);
+            const N = parseFloat(document.getElementById('lc-n').value);
+
+            if(L <= 0 || L >= 1) { alert("Tỷ lệ kinh nghiệm phải nằm giữa 0 và 1 (VD: 0.85)"); return; }
+            if(N < 1) { alert("Số sản phẩm (N) phải >= 1"); return; }
+
+            // Logarithmic Method (More accurate and general)
+            const b = Math.log(L) / Math.log(2);
+            const Tn = T1 * Math.pow(N, b);
+
+            document.getElementById('lc-result-text').innerHTML = `Thời gian/Chi phí để sản xuất sản phẩm thứ ${N} là: <span class="font-mono text-cyan" style="font-size:1.5rem; margin-left:10px;">${Tn.toFixed(2)}</span>`;
+
+            document.getElementById('lc-result-box').classList.remove('hidden');
+
+            drawLCChart(T1, L, b, N, Tn);
+        }
+
+        function drawLCChart(T1, L, b, N, Tn) {
+            const ctx = document.getElementById('lcChart').getContext('2d');
+            
+            const labels = [];
+            const dataPoints = [];
+            const maxN = Math.max(N * 2, 10);
+
+            for(let i = 1; i <= maxN; i++) {
+                labels.push(i.toString());
+                dataPoints.push(T1 * Math.pow(i, b));
+            }
+
+            if(lcChartInstance) lcChartInstance.destroy();
+
+            lcChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Thời gian/SP',
+                            data: dataPoints,
+                            borderColor: '#06B6D4', // Cyan
+                            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                            fill: true,
+                            tension: 0.4, // Smooth curve
+                            pointRadius: function(context) {
+                                // Highlight the target N
+                                return context.raw === Tn ? 6 : 0;
+                            },
+                            pointBackgroundColor: '#FBBF24'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Số thứ tự sản phẩm (N)', color: '#94A3B8' }, ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { title: { display: true, text: 'Thời gian/Chi phí', color: '#94A3B8' }, ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+        }
+
+        // Load default data
+        window.onload = () => {
+            fillDecisionExample();
+            calcBreakeven();
+            calcLearning();
+        };
+
+    </script>
+</body>
+</html>
