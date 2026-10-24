@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân tích Hòa vốn | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js for Live Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 3rem; animation: fadeIn 0.8s ease; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; color: transparent;
+        }
+        .hero p { color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .chapter-badge { 
+            display: inline-block; padding: 6px 16px; background: rgba(6, 182, 212, 0.1); 
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan); 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .section-title i { color: var(--accent-cyan); }
+
+        /* Theory Grid */
+        .theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .theory-card { background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); padding: 1.5rem; border-radius: 12px; }
+        .theory-card h3 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .theory-card p { font-size: 0.9rem; color: var(--text-muted); }
+        .formula-box { 
+            background: rgba(6, 182, 212, 0.1); border-left: 4px solid var(--accent-cyan); 
+            padding: 15px; border-radius: 0 8px 8px 0; margin: 15px 0; font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan); font-size: 1.1rem; text-align: center;
+        }
+
+        /* =========================================
+           HIGHLIGHTED TOOL SECTION
+           ========================================= */
+        .tool-wrapper {
+            padding: 3px; border-radius: 24px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet), var(--accent-rose));
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+            margin-bottom: 3rem;
+            animation: borderGlow 3s infinite alternate;
+        }
+        @keyframes borderGlow {
+            0% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+            100% { box-shadow: 0 0 50px rgba(139, 92, 246, 0.4); }
+        }
+        .tool-inner {
+            background: var(--bg-base); border-radius: 22px; padding: 2.5rem;
+            position: relative; overflow: hidden;
+        }
+        .tool-inner::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .tool-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
+        @media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+        /* Inputs */
+        .input-group { display: flex; flex-direction: column; gap: 1.5rem; }
+        .input-field { display: flex; flex-direction: column; gap: 8px; }
+        .input-field label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); display: flex; justify-content: space-between;}
+        .input-field label span { color: var(--accent-cyan); }
+        .input-field input {
+            padding: 12px 16px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none; font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .input-field input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(6,182,212,0.2); }
+
+        /* Results */
+        .result-panel { display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+        .res-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
+            padding: 1.5rem; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .res-label { font-size: 0.9rem; color: var(--text-muted); }
+        .res-value { font-size: 1.8rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+        .res-q .res-value { color: var(--accent-amber); text-shadow: 0 0 10px rgba(251,191,36,0.3); }
+        .res-tr .res-value { color: var(--accent-emerald); text-shadow: 0 0 10px rgba(16,185,129,0.3); }
+        
+        .warning-box {
+            background: rgba(251, 113, 133, 0.1); border: 1px solid var(--accent-rose);
+            color: var(--accent-rose); padding: 15px; border-radius: 8px; font-size: 0.9rem;
+            display: none; animation: fadeIn 0.3s;
+        }
+
+        /* Chart */
+        .chart-container { position: relative; height: 400px; width: 100%; margin-top: 2rem; }
+        
+        /* Multi-product theory */
+        .multi-product-box { margin-top: 2rem; padding-top: 2rem; border-top: 1px dashed var(--border-glass); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="activity"></i></div>
+            <span>Break-even Analysis</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.III - Mục 2 (Trang 33)</div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="chapter-badge">Phân tích Kinh tế trong Lựa chọn Công suất</div>
+            <h1>Phân tích <span>Hòa vốn</span></h1>
+            <p>Tìm ra mức công suất (sản lượng) mà tại đó doanh nghiệp có tổng chi phí đúng bằng tổng doanh thu. Đây là ngưỡng công suất tối thiểu bắt buộc phải đạt được để không bị lỗ.</p>
+        </div>
+
+        <!-- Theory Section -->
+        <div class="theory-grid">
+            <div class="theory-card">
+                <h3><i data-lucide="trending-down" size="18" style="color: var(--accent-rose);"></i> Chi phí cố định (FC)</h3>
+                <p>Là chi phí không phụ thuộc vào mức sản xuất (khấu hao máy móc, nhà xưởng, tiền thuê đất...). Đây là khoản tiền bạn phải trả dù sản xuất 0 sản phẩm.</p>
+            </div>
+            <div class="theory-card">
+                <h3><i data-lucide="repeat" size="18" style="color: var(--accent-amber);"></i> Chi phí biến đổi (V)</h3>
+                <p>Là chi phí thay đổi tỷ lệ thuận với số lượng sản phẩm làm ra (tiền lương theo sản phẩm, nguyên vật liệu...). Mỗi sản phẩm tạo ra đều tốn thêm chi phí này.</p>
+            </div>
+            <div class="theory-card">
+                <h3><i data-lucide="target" size="18" style="color: var(--accent-emerald);"></i> Điểm hòa vốn</h3>
+                <p>Doanh thu (TR) = Chi phí (TC). Từ đây trở đi (sản xuất nhiều hơn), doanh nghiệp bắt đầu có Lãi. Nếu sản xuất ít hơn, doanh nghiệp bị Lỗ.</p>
+            </div>
+        </div>
+
+        <!-- HIGHLIGHTED TOOL SECTION -->
+        <div class="tool-wrapper">
+            <div class="tool-inner">
+                <h2 class="section-title" style="justify-content: center; margin-bottom: 2rem;">
+                    <i data-lucide="calculator"></i> Công cụ tính Điểm Hòa vốn (Real-time)
+                </h2>
+
+                <div class="tool-layout">
+                    <!-- Inputs -->
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label>Tổng chi phí cố định / năm (FC) <span>($)</span></label>
+                            <input type="number" id="input-fc" value="1000" min="0">
+                        </div>
+                        <div class="input-field">
+                            <label>Chi phí biến đổi / 1 SP (V) <span>($)</span></label>
+                            <input type="number" id="input-v" value="2" min="0" step="0.1">
+                        </div>
+                        <div class="input-field">
+                            <label>Giá bán / 1 SP (P) <span>($)</span></label>
+                            <input type="number" id="input-p" value="4" min="0" step="0.1">
+                        </div>
+
+                        <div class="warning-box" id="warning-box">
+                            <i data-lucide="alert-triangle" size="16"></i> Cảnh báo: Giá bán (P) phải lớn hơn Chi phí biến đổi (V) thì mới có điểm hòa vốn!
+                        </div>
+
+                        <!-- Results Panel -->
+                        <div class="res-card res-q">
+                            <div class="res-label">
+                                <strong>Sản lượng hòa vốn (\(Q^*\))</strong><br>
+                                <span style="font-size: 0.8rem; font-family: var(--mono);">Công thức: \(FC / (P - V)\)</span>
+                            </div>
+                            <div class="res-value" id="res-q">500</div>
+                        </div>
+                        
+                        <div class="res-card res-tr">
+                            <div class="res-label">
+                                <strong>Doanh thu hòa vốn (\(TR^*\))</strong><br>
+                                <span style="font-size: 0.8rem; font-family: var(--mono);">Công thức: \(Q^* \times P\)</span>
+                            </div>
+                            <div class="res-value" id="res-tr">$2,000</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="chart-container">
+                        <canvas id="breakEvenChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Multi-product Theory -->
+                <div class="multi-product-box">
+                    <h3 style="font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 10px;"><i data-lucide="layers" size="18" style="display:inline; vertical-align:middle; margin-right:8px;"></i> Trường hợp doanh nghiệp sản xuất nhiều mặt hàng</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Khi doanh nghiệp có nhiều dòng sản phẩm, ta không thể tính sản lượng hòa vốn chung, mà phải tính <b>Doanh thu hòa vốn (\(TR^*\)</b>) dựa trên cơ cấu doanh thu (tỷ trọng \(W_i\)) của từng mặt hàng:</p>
+                    
+                    <div class="formula-box">
+                        TR* = FC / Σ [ (1 - Vi / Pi) * Wi ]
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.8rem;">
+                        *Trong đó: \(W_i\) là % doanh thu của mặt hàng \(i\) trong tổng doanh thu. \(V_i, P_i\) là chi phí biến đổi và giá bán của mặt hàng \(i\).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // ==========================================
+        // CHART & CALCULATION LOGIC
+        // ==========================================
+        let chartInstance = null;
+
+        const fcInput = document.getElementById('input-fc');
+        const vInput = document.getElementById('input-v');
+        const pInput = document.getElementById('input-p');
+        
+        const resQ = document.getElementById('res-q');
+        const resTR = document.getElementById('res-tr');
+        const warningBox = document.getElementById('warning-box');
+
+        // Format Currency
+        const formatMoney = (val) => {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+        };
+
+        function updateAnalysis() {
+            const FC = parseFloat(fcInput.value) || 0;
+            const V = parseFloat(vInput.value) || 0;
+            const P = parseFloat(pInput.value) || 0;
+
+            // Validation
+            if (P <= V) {
+                warningBox.style.display = 'block';
+                resQ.innerText = "N/A";
+                resTR.innerText = "N/A";
+                return; // Don't draw chart if invalid
+            } else {
+                warningBox.style.display = 'none';
+            }
+
+            // Calculations
+            const Q_star = FC / (P - V);
+            const TR_star = Q_star * P;
+
+            // Update UI numbers
+            resQ.innerText = Math.ceil(Q_star).toLocaleString('en-US'); // Round up for units
+            resTR.innerText = formatMoney(TR_star);
+
+            // Draw / Update Chart
+            renderChart(FC, V, P, Q_star);
+        }
+
+        function renderChart(FC, V, P, Q_star) {
+            const ctx = document.getElementById('breakEvenChart').getContext('2d');
+            
+            // Set x-axis max to 2 * Q_star (or 100 if Q_star is 0) to show a good view
+            const maxQ = Q_star > 0 ? Math.ceil(Q_star * 2) : 100;
+            
+            // Generate 10 data points for straight lines
+            const labels = [];
+            const dataTR = [];
+            const dataTC = [];
+            const dataFC = [];
+
+            for (let i = 0; i <= 10; i++) {
+                let q = Math.round((maxQ / 10) * i);
+                labels.push(q);
+                dataTR.push(q * P);
+                dataTC.push(FC + (q * V));
+                dataFC.push(FC);
+            }
+
+            // The break-even point dataset (single dot)
+            const bePoint = [{
+                x: Math.ceil(Q_star),
+                y: TR_star
+            }];
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Tổng doanh thu (TR)',
+                            data: dataTR,
+                            borderColor: '#10B981', // Emerald
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Tổng chi phí (TC)',
+                            data: dataTC,
+                            borderColor: '#FB7185', // Rose
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Chi phí cố định (FC)',
+                            data: dataFC,
+                            borderColor: '#94A3B8', // Slate
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Điểm Hòa Vốn',
+                            data: bePoint,
+                            type: 'scatter',
+                            backgroundColor: '#FBBF24',
+                            borderColor: '#FFF',
+                            borderWidth: 2,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            pointStyle: 'rectRot' // Diamond shape
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#94A3B8', font: { family: 'Inter' } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#F8FAFC',
+                            bodyColor: '#F8FAFC',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatMoney(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Sản lượng (Q)', color: '#94A3B8' },
+                            ticks: { color: '#94A3B8' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Doanh thu / Chi phí ($)', color: '#94A3B8' },
+                            ticks: { 
+                                color: '#94A3B8',
+                                callback: function(value) {
+                                    return formatMoney(value);
+                                }
+                            },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Attach event listeners for real-time updates
+        fcInput.addEventListener('input', updateAnalysis);
+        vInput.addEventListener('input', updateAnalysis);
+        pInput.addEventListener('input', updateAnalysis);
+
+        // Initial render
+        window.onload = () => {
+            updateAnalysis();
+        };
+
+    </script>
+</body>
+</html>
