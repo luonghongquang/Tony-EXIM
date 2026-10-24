@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân Tích Tương Quan - Scatter Diagram (Tùy biến tên)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+        .table-container::-webkit-scrollbar-track { background: #f1f1f1; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Input Styling */
+        input {
+            transition: all 0.2s;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        /* Hiệu ứng gạch chân cho input tên biến */
+        .variable-input {
+            border-bottom: 2px dashed #cbd5e1;
+            transition: border-color 0.3s;
+        }
+        .variable-input:hover { border-bottom-color: #6366f1; }
+        .variable-input:focus { border-bottom-color: #6366f1; border-bottom-style: solid; box-shadow: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-12">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-3">
+                    <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                    Phân Tích Tương Quan
+                </h1>
+                <p class="text-slate-300 mt-1 text-sm md:text-base">Biểu đồ phân tán & Hệ số tương quan Pearson</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            
+            <!-- Cột Trái: Bảng Nhập Liệu & Kết Luận -->
+            <div class="xl:col-span-5 flex flex-col gap-6 fade-in">
+                
+                <!-- Bảng Nhập Liệu -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[550px]">
+                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Bảng Dữ Liệu (Có thể sửa)
+                        </h2>
+                        <span class="text-[11px] uppercase font-bold bg-indigo-100 text-indigo-700 px-2 py-1 rounded" title="Copy 3 cột từ Excel (Tên, X, Y) và Paste vào đây">Paste Excel</span>
+                    </div>
+                    
+                    <div class="px-4 py-2 bg-white border-b border-slate-200 flex gap-2">
+                        <button onclick="addRow()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-lg transition-colors text-sm">+ Thêm dòng</button>
+                        <button onclick="loadSampleData()" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium py-1.5 px-3 rounded-lg transition-colors text-sm">Tải lại mẫu</button>
+                    </div>
+
+                    <div class="flex-1 overflow-auto table-container relative bg-slate-50/50" id="tableContainer">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-slate-600 uppercase bg-slate-100 sticky top-0 z-10 shadow-sm">
+                                <tr>
+                                    <th class="px-3 py-2 w-10 text-center">#</th>
+                                    <th class="px-2 py-2 w-28">Tên Hàng</th>
+                                    <!-- Header X và Y có thể click để sửa -->
+                                    <th class="px-2 py-2 text-center text-blue-700 relative group">
+                                        <input type="text" id="headerX" value="Tốc độ (X)" onchange="updateVarName('X', this.value)" class="variable-input w-full bg-transparent text-center font-bold text-blue-700 text-xs uppercase py-1 px-1 rounded-sm">
+                                    </th>
+                                    <th class="px-2 py-2 text-center text-emerald-700 relative group">
+                                        <input type="text" id="headerY" value="Lỗi (Y)" onchange="updateVarName('Y', this.value)" class="variable-input w-full bg-transparent text-center font-bold text-emerald-700 text-xs uppercase py-1 px-1 rounded-sm">
+                                    </th>
+                                    <th class="px-2 py-2 w-8 text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Data rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kết Luận -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex-1">
+                    <div class="bg-slate-50 px-5 py-3 border-b border-slate-200">
+                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Kết Quả Phân Tích
+                        </h2>
+                    </div>
+                    <div id="resultPanel" class="p-5">
+                        <!-- Results -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Phải: Biểu đồ -->
+            <div class="xl:col-span-7 fade-in" style="animation-delay: 0.1s;">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 h-full flex flex-col min-h-[600px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-slate-800">Biểu Đồ Phân Tán</h2>
+                        <div class="flex gap-4 text-sm font-medium">
+                            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Điểm dữ liệu</div>
+                            <div class="flex items-center gap-1.5"><span class="w-6 h-0.5 bg-red-500"></span> Trendline</div>
+                        </div>
+                    </div>
+                    <div class="relative w-full flex-1">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- QUẢN LÝ TRẠNG THÁI ---
+        let labelX = "Tốc độ máy (v/p)";
+        let labelY = "Tỷ lệ phế phẩm (%)";
+        
+        // Dữ liệu mẫu: Có tên hàng, X, Y
+        const SAMPLE_DATA = [
+            { name: "Lô 1", x: 100, y: 2.1 },
+            { name: "Lô 2", x: 120, y: 2.8 },
+            { name: "Lô 3", x: 140, y: 2.5 }, // Nhiễu
+            { name: "Lô 4", x: 160, y: 4.0 },
+            { name: "Lô 5", x: 180, y: 4.5 },
+            { name: "Lô 6", x: 200, y: 6.2 }, // Nhiễu
+            { name: "Lô 7", x: 220, y: 6.0 },
+            { name: "Lô 8", x: 240, y: 7.5 },
+            { name: "Lô 9", x: 260, y: 8.8 },
+            { name: "Lô 10", x: 280, y: 8.5 },
+            { name: "Lô 11", x: 300, y: 10.1 },
+            { name: "Lô 12", x: 320, y: 11.5 },
+            { name: "Lô 13", x: 340, y: 11.2 },
+            { name: "Lô 14", x: 360, y: 13.0 },
+            { name: "Lô 15", x: 380, y: 14.5 }
+        ];
+
+        let data = [];
+        let myChart = null;
+
+        // --- KHỞI TẠO ---
+        function loadSampleData() {
+            data = JSON.parse(JSON.stringify(SAMPLE_DATA)); // Deep copy
+            labelX = "Tốc độ máy (v/p)";
+            labelY = "Tỷ lệ phế phẩm (%)";
+            document.getElementById('headerX').value = labelX;
+            document.getElementById('headerY').value = labelY;
+            renderTable();
+            analyzeAndDraw();
+        }
+
+        // --- RENDER BẢNG ---
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            let html = '';
+            
+            data.forEach((row, index) => {
+                html += `
+                <tr class="bg-white border-b hover:bg-indigo-50/30 transition-colors group">
+                    <td class="px-3 py-1.5 text-center text-slate-400 text-xs font-semibold">${index + 1}</td>
+                    <td class="px-2 py-1.5">
+                        <input type="text" value="${row.name}" 
+                            onchange="updateRowName(${index}, this.value)"
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-indigo-400 rounded px-1.5 py-1 text-sm font-medium text-slate-600 truncate">
+                    </td>
+                    <td class="px-2 py-1.5">
+                        <input type="number" step="any" value="${row.x}" 
+                            onchange="updateCell(${index}, 'x', this.value)"
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 rounded px-2 py-1 text-center font-bold text-blue-900">
+                    </td>
+                    <td class="px-2 py-1.5">
+                        <input type="number" step="any" value="${row.y}" 
+                            onchange="updateCell(${index}, 'y', this.value)"
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-emerald-500 rounded px-2 py-1 text-center font-bold text-emerald-900">
+                    </td>
+                    <td class="px-2 py-1.5 text-center">
+                        <button onclick="removeRow(${index})" class="text-slate-300 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50 opacity-0 group-hover:opacity-100">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // --- CẬP NHẬT DỮ LIỆU ---
+        function updateVarName(axis, value) {
+            if (axis === 'X') labelX = value || "Biến X";
+            if (axis === 'Y') labelY = value || "Biến Y";
+            analyzeAndDraw();
+        }
+
+        function updateRowName(index, value) {
+            data[index].name = value || `Mẫu ${index + 1}`;
+            analyzeAndDraw(); // Chỉ cần cập nhật biểu đồ để tooltip hiển thị đúng
+        }
+
+        function updateCell(index, key, value) {
+            let num = parseFloat(value);
+            if (isNaN(num)) num = 0;
+            data[index][key] = num;
+            analyzeAndDraw();
+        }
+
+        function addRow() {
+            let lastX = data.length > 0 ? data[data.length-1].x : 0;
+            let lastY = data.length > 0 ? data[data.length-1].y : 0;
+            data.push({ name: `Mẫu ${data.length + 1}`, x: lastX + 10, y: lastY });
+            renderTable();
+            analyzeAndDraw();
+        }
+
+        function removeRow(index) {
+            if (data.length > 3) {
+                data.splice(index, 1);
+                renderTable();
+                analyzeAndDraw();
+            } else {
+                alert("Cần ít nhất 3 cặp dữ liệu để phân tích.");
+            }
+        }
+
+        // --- SỰ KIỆN PASTE TỪ EXCEL ---
+        document.getElementById('tableContainer').addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+            
+            const rows = pasteData.trim().split(/\r?\n/);
+            let newData = [];
+            
+            rows.forEach((row, i) => {
+                const cols = row.split(/\t|,/); 
+                if (cols.length >= 2) {
+                    let name = "";
+                    let x, y;
+
+                    // Kiểm tra xem cột đầu tiên có phải là số không (để xác định có cột Tên hay không)
+                    let col0 = parseFloat(cols[0].trim().replace(',', '.'));
+                    
+                    if (isNaN(col0) && cols.length >= 3) {
+                        // Có cột Tên (Text, Number, Number)
+                        name = cols[0].trim();
+                        x = parseFloat(cols[1].trim().replace(',', '.'));
+                        y = parseFloat(cols[2].trim().replace(',', '.'));
+                    } else if (!isNaN(col0) && cols.length >= 2) {
+                        // Chỉ có 2 cột (Number, Number)
+                        name = `Mẫu ${i + 1}`;
+                        x = col0;
+                        y = parseFloat(cols[1].trim().replace(',', '.'));
+                    }
+
+                    if (!isNaN(x) && !isNaN(y) && x !== undefined && y !== undefined) {
+                        newData.push({ name: name, x: x, y: y });
+                    }
+                }
+            });
+
+            if (newData.length >= 3) {
+                data = newData;
+                renderTable();
+                analyzeAndDraw();
+            } else {
+                alert("Định dạng dán không hợp lệ hoặc không đủ dữ liệu (Cần ít nhất 3 dòng). Vui lòng dán 2 hoặc 3 cột từ Excel.");
+            }
+        });
+
+        // --- THUẬT TOÁN TÍNH TƯƠNG QUAN ---
+        function calculateRegression(data) {
+            const n = data.length;
+            if (n < 3) return null; 
+
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+            
+            data.forEach(p => {
+                sumX += p.x;
+                sumY += p.y;
+                sumXY += p.x * p.y;
+                sumX2 += p.x * p.x;
+                sumY2 += p.y * p.y;
+            });
+
+            const meanX = sumX / n;
+            const meanY = sumY / n;
+            const varX = (sumX2 / n) - (meanX * meanX);
+            const varY = (sumY2 / n) - (meanY * meanY);
+            
+            if (varX === 0 || varY === 0) return null; 
+
+            const stdX = Math.sqrt(varX);
+            const stdY = Math.sqrt(varY);
+            const cov = (sumXY / n) - (meanX * meanY);
+            
+            const r = cov / (stdX * stdY);
+            const a = cov / varX; // Slope
+            const b = meanY - a * meanX; // Intercept
+
+            return { r, a, b };
+        }
+
+        function getCorrelationText(r) {
+            const absR = Math.abs(r);
+            let type = "KHÔNG", level = "", colorClass = "", advice = "";
+
+            if (absR >= 0.9) {
+                type = r > 0 ? "THUẬN" : "NGHỊCH";
+                level = "Rất mạnh (Gần như hoàn toàn)";
+                colorClass = "text-indigo-700 bg-indigo-50 border-indigo-200";
+                advice = `Mối quan hệ tuyến tính cực kỳ chặt chẽ. Có thể dễ dàng dự báo "${labelY}" khi biết "${labelX}". Hãy kiểm soát chặt chẽ "${labelX}" để ổn định "${labelY}".`;
+            } else if (absR >= 0.7) {
+                type = r > 0 ? "THUẬN" : "NGHỊCH";
+                level = "Mạnh (Rất lớn)";
+                colorClass = "text-blue-700 bg-blue-50 border-blue-200";
+                advice = `Mối quan hệ tuyến tính rõ rệt. Việc thay đổi "${labelX}" sẽ ảnh hưởng lớn đến "${labelY}". Cần phân tích nhân quả để tối ưu hóa.`;
+            } else if (absR >= 0.5) {
+                type = r > 0 ? "THUẬN" : "NGHỊCH";
+                level = "Trung bình khá (Lớn)";
+                colorClass = "text-emerald-700 bg-emerald-50 border-emerald-200";
+                advice = `Có mối tương quan đáng kể. Tuy nhiên "${labelY}" còn chịu ảnh hưởng của các yếu tố nhiễu khác. Cần thu thập thêm dữ liệu hoặc xem xét đa biến.`;
+            } else if (absR >= 0.3) {
+                type = r > 0 ? "THUẬN" : "NGHỊCH";
+                level = "Trung bình";
+                colorClass = "text-yellow-700 bg-yellow-50 border-yellow-200";
+                advice = "Mối quan hệ không thực sự rõ ràng. Không nên chỉ dựa vào biến này để dự đoán biến kia.";
+            } else if (absR >= 0.1) {
+                type = r > 0 ? "THUẬN" : "NGHỊCH";
+                level = "Yếu";
+                colorClass = "text-orange-700 bg-orange-50 border-orange-200";
+                advice = "Mối quan hệ rất lỏng lẻo. Hầu như không có sự phụ thuộc tuyến tính giữa hai biến.";
+            } else {
+                level = "Không tương quan (Rất yếu)";
+                colorClass = "text-slate-700 bg-slate-50 border-slate-200";
+                advice = `Không tìm thấy mối liên hệ tuyến tính nào giữa "${labelX}" và "${labelY}".`;
+            }
+
+            return { type, level, colorClass, advice };
+        }
+
+        // --- VẼ BIỂU ĐỒ & IN KẾT QUẢ ---
+        function analyzeAndDraw() {
+            const stats = calculateRegression(data);
+            const resultPanel = document.getElementById('resultPanel');
+
+            if (!stats) {
+                resultPanel.innerHTML = `<p class="text-slate-500 text-center py-4">Dữ liệu không hợp lệ hoặc không đủ để tính toán.</p>`;
+                if (myChart) myChart.destroy();
+                return;
+            }
+
+            const { r, a, b } = stats;
+            const corr = getCorrelationText(r);
+            const rFormatted = r.toFixed(4);
+            const equation = `Y = ${a.toFixed(3)}X ${b >= 0 ? '+' : '-'} ${Math.abs(b).toFixed(3)}`;
+
+            // 1. Cập nhật Text Kết quả
+            resultPanel.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end border-b pb-3">
+                        <span class="text-slate-600 font-semibold">Hệ số tương quan (r):</span>
+                        <span class="text-4xl font-black ${r > 0 ? 'text-blue-600' : (r < 0 ? 'text-red-600' : 'text-slate-600')}">${rFormatted}</span>
+                    </div>
+                    
+                    <div class="p-4 rounded-xl border ${corr.colorClass}">
+                        <p class="text-sm font-bold text-slate-500 mb-1">Kết luận:</p>
+                        <h3 class="text-lg font-black mb-2 uppercase">Tương quan ${corr.type}</h3>
+                        <p class="text-sm font-bold mb-2">Mức độ: ${corr.level}</p>
+                        <p class="text-sm leading-relaxed mt-2 pt-2 border-t border-current/20">
+                            <strong>Khuyên nghị:</strong> ${corr.advice}
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex justify-between items-center">
+                        <p class="text-xs text-slate-500 font-bold uppercase">Phương trình hồi quy:</p>
+                        <p class="font-mono text-sm font-bold text-slate-800">${equation}</p>
+                    </div>
+                </div>
+            `;
+
+            // 2. Chuẩn bị dữ liệu Chart.js
+            const chartDataPoints = data.map(p => ({x: p.x, y: p.y, name: p.name}));
+            
+            const xValues = data.map(p => p.x);
+            const minX = Math.min(...xValues);
+            const maxX = Math.max(...xValues);
+            
+            const trendlineData = [
+                { x: minX, y: a * minX + b },
+                { x: maxX, y: a * maxX + b }
+            ];
+
+            // 3. Cập nhật/Vẽ lại Chart
+            const ctx = document.getElementById('scatterChart').getContext('2d');
+            
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Điểm dữ liệu',
+                            data: chartDataPoints,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: '#2563eb',
+                            borderWidth: 1.5,
+                            pointRadius: 6,
+                            pointHoverRadius: 9,
+                            order: 1
+                        },
+                        {
+                            label: 'Đường xu hướng (Trendline)',
+                            data: trendlineData,
+                            type: 'line',
+                            borderColor: 'rgba(239, 68, 68, 0.9)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false,
+                            order: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 500 },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true, font: { family: 'Inter', size: 13, weight: '600' }, padding: 20 }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { family: 'Inter', size: 14 },
+                            bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                title: function(context) {
+                                    // Lấy tên hàng từ raw data
+                                    return context[0].raw.name;
+                                },
+                                label: function(context) {
+                                    return [
+                                        `${labelX}: ${context.parsed.x}`,
+                                        `${labelY}: ${context.parsed.y}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: labelX, // Cập nhật tên trục X động
+                                font: { family: 'Inter', weight: 'bold', size: 14 },
+                                color: '#1e40af' // Xanh đậm
+                            },
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: 'Inter' } }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: labelY, // Cập nhật tên trục Y động
+                                font: { family: 'Inter', weight: 'bold', size: 14 },
+                                color: '#047857' // Xanh lá đậm
+                            },
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: 'Inter' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Khởi chạy
+        window.onload = () => {
+            loadSampleData();
+        };
+    </script>
+</body>
+</html>
