@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Định vị Doanh nghiệp | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
+        .tab-btn.active {
+            background: rgba(6, 182, 212, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        /* Tool Panels */
+        .tool-panel { display: none; animation: fadeIn 0.4s ease; }
+        .tool-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .panel-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .panel-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+
+        /* Inputs & Tables */
+        .input-group { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-end; }
+        .input-field { display: flex; flex-direction: column; gap: 8px; }
+        .input-field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .input-field input {
+            padding: 10px 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none;
+        }
+        .input-field input:focus { border-color: var(--accent-cyan); }
+        
+        .data-table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: rgba(0, 0, 0, 0.3); padding: 10px; text-align: left; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-glass); white-space: nowrap; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); white-space: nowrap; }
+        input[type="number"].table-input, input[type="text"].table-input {
+            width: 100px; padding: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid transparent;
+            border-radius: 6px; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace;
+            font-weight: bold; text-align: center; transition: all 0.2s;
+        }
+        input[type="text"].table-input { color: var(--text-main); font-family: 'Inter', sans-serif; font-weight: 500; text-align: left; }
+        input.table-input:focus { border-color: var(--accent-amber); background: rgba(0, 0, 0, 0.5); outline: none; }
+
+        .btn-calc {
+            padding: 12px 24px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -5px rgba(6, 182, 212, 0.5); }
+        .btn-calc.secondary { background: transparent; border: 1px solid var(--border-glass); color: var(--text-main); }
+        .btn-calc.secondary:hover { background: rgba(255,255,255,0.05); box-shadow: none; }
+
+        .btn-icon { padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); border-radius: 6px; cursor: pointer; color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .btn-icon:hover { color: var(--accent-rose); border-color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+
+        /* Results */
+        .result-box {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass);
+            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+        }
+        .final-result { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .highlight-num {
+            font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700;
+            color: var(--accent-cyan); text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+            background: rgba(6, 182, 212, 0.1); padding: 4px 12px; border-radius: 6px;
+        }
+        
+        .chart-container { position: relative; height: 350px; width: 100%; margin-top: 1.5rem; }
+
+        /* Utility */
+        .text-amber { color: var(--accent-amber); }
+        .text-rose { color: var(--accent-rose); }
+        .text-cyan { color: var(--accent-cyan); }
+        .text-emerald { color: var(--accent-emerald); }
+        .text-bold { font-weight: bold; }
+        .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .input-group { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="map-pin"></i></div>
+            <span>Location Strategy Tools</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.IV - Định vị Doanh nghiệp</div>
+    </header>
+
+    <main class="container">
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-target="tool-cog">
+                <i data-lucide="crosshair"></i> Phương pháp Tọa độ trung tâm
+            </button>
+            <button class="tab-btn" data-target="tool-wsm">
+                <i data-lucide="list-checks"></i> Phương pháp Trọng số giản đơn
+            </button>
+        </div>
+
+        <!-- TOOL 1: TỌA ĐỘ TRUNG TÂM -->
+        <div id="tool-cog" class="tool-panel active">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="crosshair" style="color:var(--accent-cyan)"></i> Phương pháp Tọa độ trung tâm</h2>
+                <p class="panel-desc">
+                    Tìm vị trí trung tâm tối ưu dựa trên tọa độ và khối lượng vận chuyển.<br>
+                    Công thức: \(X_{tt} = \frac{\sum X_i Q_i}{\sum Q_i}\) và \(Y_{tt} = \frac{\sum Y_i Q_i}{\sum Q_i}\)
+                </p>
+                
+                <div class="data-table-wrapper">
+                    <table id="cog-table">
+                        <thead>
+                            <tr>
+                                <th>Địa điểm (Cơ sở)</th>
+                                <th>Tọa độ X (\(X_i\))</th>
+                                <th>Tọa độ Y (\(Y_i\))</th>
+                                <th>Khối lượng (\(Q_i\))</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="input-group">
+                    <button class="btn-calc secondary" onclick="addCogRow()"><i data-lucide="plus"></i> Thêm địa điểm</button>
+                    <button class="btn-calc" onclick="calcCOG()"><i data-lucide="calculator"></i> Tính toán & Vẽ biểu đồ</button>
+                    <button class="btn-calc secondary" onclick="fillCOGExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="result-box hidden" id="cog-result-box">
+                    <div class="final-result">
+                        Tọa độ trung tâm tối ưu: 
+                        <span class="highlight-num">X = <span id="cog-x">0</span></span>
+                        <span class="highlight-num">Y = <span id="cog-y">0</span></span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="cogChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 2: TRỌNG SỐ GIẢN ĐƠN -->
+        <div id="tool-wsm" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="list-checks" style="color:var(--accent-cyan)"></i> Phương pháp Trọng số giản đơn</h2>
+                <p class="panel-desc">Đánh giá và chọn địa điểm dựa trên việc cho điểm các nhân tố. Địa điểm có tổng điểm cao nhất là tối ưu.</p>
+                
+                <div class="data-table-wrapper">
+                    <table id="wsm-table">
+                        <thead>
+                            <tr>
+                                <th>Nhân tố ảnh hưởng</th>
+                                <th>Trọng số (\(W_i\))</th>
+                                <th>Điểm Địa điểm A</th>
+                                <th>Điểm Địa điểm B</th>
+                                <th>Điểm Địa điểm C</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="input-group">
+                    <button class="btn-calc secondary" onclick="addWsmRow()"><i data-lucide="plus"></i> Thêm nhân tố</button>
+                    <button class="btn-calc" onclick="calcWSM()"><i data-lucide="calculator"></i> Tính điểm</button>
+                    <button class="btn-calc secondary" onclick="fillWSMExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="result-box hidden" id="wsm-result-box">
+                    <div class="data-table-wrapper">
+                        <table id="wsm-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Địa điểm</th>
+                                    <th>Tổng điểm (có trọng số)</th>
+                                    <th>Kết luận</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- TAB LOGIC ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        // ==========================================
+        // TOOL 1: CENTER OF GRAVITY (TỌA ĐỘ TRUNG TÂM)
+        // ==========================================
+        let cogChartInstance = null;
+        let cogRowCount = 0;
+
+        function addCogRow(name = '', x = '', y = '', q = '') {
+            cogRowCount++;
+            const tbody = document.querySelector('#cog-table tbody');
+            const tr = document.createElement('tr');
+            tr.id = `cog-row-${cogRowCount}`;
+            tr.innerHTML = `
+                <td><input type="text" class="table-input cog-name" value="${name}" placeholder="VD: Cơ sở A"></td>
+                <td><input type="number" class="table-input cog-x" value="${x}"></td>
+                <td><input type="number" class="table-input cog-y" value="${y}"></td>
+                <td><input type="number" class="table-input cog-q" value="${q}"></td>
+                <td><button class="btn-icon" onclick="document.getElementById('cog-row-${cogRowCount}').remove()"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+        }
+
+        function fillCOGExample() {
+            document.querySelector('#cog-table tbody').innerHTML = '';
+            addCogRow('A', 30, 120, 2000);
+            addCogRow('B', 90, 110, 1000);
+            addCogRow('C', 130, 130, 1000);
+            addCogRow('D', 60, 40, 2000);
+        }
+
+        function calcCOG() {
+            const rows = document.querySelectorAll('#cog-table tbody tr');
+            let locations = [];
+            let sumXQ = 0, sumYQ = 0, sumQ = 0;
+
+            rows.forEach(row => {
+                const name = row.querySelector('.cog-name').value || 'N/A';
+                const x = parseFloat(row.querySelector('.cog-x').value) || 0;
+                const y = parseFloat(row.querySelector('.cog-y').value) || 0;
+                const q = parseFloat(row.querySelector('.cog-q').value) || 0;
+
+                locations.push({ name, x, y, q });
+                sumXQ += x * q;
+                sumYQ += y * q;
+                sumQ += q;
+            });
+
+            if(sumQ === 0) { alert("Khối lượng Q không được bằng 0!"); return; }
+
+            const centerX = sumXQ / sumQ;
+            const centerY = sumYQ / sumQ;
+
+            document.getElementById('cog-x').innerText = centerX.toFixed(2);
+            document.getElementById('cog-y').innerText = centerY.toFixed(2);
+            document.getElementById('cog-result-box').classList.remove('hidden');
+
+            drawCOGChart(locations, centerX, centerY);
+        }
+
+        function drawCOGChart(locations, centerX, centerY) {
+            const ctx = document.getElementById('cogChart').getContext('2d');
+            
+            const existingPoints = locations.map(loc => ({ x: loc.x, y: loc.y, label: loc.name }));
+            const centerPoint = [{ x: centerX, y: centerY, label: 'Trung tâm' }];
+
+            if(cogChartInstance) cogChartInstance.destroy();
+
+            cogChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Cơ sở hiện tại',
+                            data: existingPoints,
+                            backgroundColor: '#FBBF24',
+                            borderColor: '#FBBF24',
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'Kho trung tâm (Tối ưu)',
+                            data: centerPoint,
+                            backgroundColor: '#06B6D4',
+                            borderColor: '#fff',
+                            borderWidth: 2,
+                            pointRadius: 10,
+                            pointStyle: 'rectRot' // Hình thoi
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94A3B8' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.raw.label || '';
+                                    if (label) return label + ': (' + context.raw.x + ', ' + context.raw.y + ')';
+                                    return '(' + context.raw.x + ', ' + context.raw.y + ')';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Tọa độ X', color: '#94A3B8' }, ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { title: { display: true, text: 'Tọa độ Y', color: '#94A3B8' }, ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // TOOL 2: WEIGHTED SCORING MODEL (TRỌNG SỐ GIẢN ĐƠN)
+        // ==========================================
+        let wsmRowCount = 0;
+
+        function addWsmRow(factor = '', w = '', a = '', b = '', c = '') {
+            wsmRowCount++;
+            const tbody = document.querySelector('#wsm-table tbody');
+            const tr = document.createElement('tr');
+            tr.id = `wsm-row-${wsmRowCount}`;
+            tr.innerHTML = `
+                <td><input type="text" class="table-input wsm-factor" value="${factor}" placeholder="Tên nhân tố"></td>
+                <td><input type="number" class="table-input wsm-weight" step="0.1" value="${w}"></td>
+                <td><input type="number" class="table-input wsm-a" value="${a}"></td>
+                <td><input type="number" class="table-input wsm-b" value="${b}"></td>
+                <td><input type="number" class="table-input wsm-c" value="${c}"></td>
+                <td><button class="btn-icon" onclick="document.getElementById('wsm-row-${wsmRowCount}').remove()"><i data-lucide="trash-2" style="width:16px"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+        }
+
+        function fillWSMExample() {
+            document.querySelector('#wsm-table tbody').innerHTML = '';
+            addWsmRow('Thuận đường', 0.1, 60, 80, 80);
+            addWsmRow('Yên tĩnh', 0.1, 80, 85, 90);
+            addWsmRow('Chi phí thuê địa điểm', 0.5, 80, 70, 76);
+            addWsmRow('Mức độ ùn tắc giao thông', 0.3, 80, 85, 90);
+        }
+
+        function calcWSM() {
+            const rows = document.querySelectorAll('#wsm-table tbody tr');
+            let totalA = 0, totalB = 0, totalC = 0;
+            let sumWeights = 0;
+
+            rows.forEach(row => {
+                const w = parseFloat(row.querySelector('.wsm-weight').value) || 0;
+                const a = parseFloat(row.querySelector('.wsm-a').value) || 0;
+                const b = parseFloat(row.querySelector('.wsm-b').value) || 0;
+                const c = parseFloat(row.querySelector('.wsm-c').value) || 0;
+
+                totalA += a * w;
+                totalB += b * w;
+                totalC += c * w;
+                sumWeights += w;
+            });
+
+            // Tìm max
+            const scores = [
+                { name: 'Địa điểm A', score: totalA },
+                { name: 'Địa điểm B', score: totalB },
+                { name: 'Địa điểm C', score: totalC }
+            ];
+
+            const maxScore = Math.max(...scores.map(s => s.score));
+
+            let detailHtml = '';
+            scores.forEach(s => {
+                const isWinner = s.score === maxScore;
+                const rowClass = isWinner ? 'text-emerald text-bold' : 'text-muted';
+                const note = isWinner ? '✅ Tối ưu nhất' : '';
+                
+                detailHtml += `
+                    <tr>
+                        <td class="${rowClass}">${s.name}</td>
+                        <td class="font-mono ${rowClass}">${s.score.toFixed(2)}</td>
+                        <td class="${rowClass}">${note}</td>
+                    </tr>
+                `;
+            });
+
+            document.querySelector('#wsm-detail-table tbody').innerHTML = detailHtml;
+            document.getElementById('wsm-result-box').classList.remove('hidden');
+        }
+
+        // Load default data
+        window.onload = () => {
+            fillCOGExample();
+            fillWSMExample();
+        };
+
+    </script>
+</body>
+</html>
