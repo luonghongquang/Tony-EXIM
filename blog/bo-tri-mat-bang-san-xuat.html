@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bố trí Mặt bằng Sản xuất | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+            --accent-violet: #8B5CF6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 3rem; animation: fadeIn 0.8s ease; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; color: transparent;
+        }
+        .hero p { color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .chapter-badge { 
+            display: inline-block; padding: 6px 16px; background: rgba(6, 182, 212, 0.1); 
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan); 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Grid Layouts */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+        /* Glass Panels */
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.4);
+        }
+
+        .section-title {
+            font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .section-title i { color: var(--accent-cyan); }
+
+        /* Card Content */
+        .card-icon {
+            width: 50px; height: 50px; border-radius: 14px; display: flex; 
+            align-items: center; justify-content: center; margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass);
+        }
+        .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); }
+        .card-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem; }
+        
+        .pros-cons { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem; }
+        .pro { color: var(--accent-emerald); display: flex; align-items: flex-start; gap: 6px; }
+        .con { color: var(--accent-rose); display: flex; align-items: flex-start; gap: 6px; }
+        .pro i, .con i { margin-top: 3px; flex-shrink: 0; }
+
+        /* Visual Diagrams (CSS drawn) */
+        .diagram-container {
+            height: 150px; background: rgba(0,0,0,0.2); border-radius: 12px;
+            margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; border: 1px dashed var(--border-glass);
+        }
+        
+        /* Product Layout Diagram */
+        .diag-product { display: flex; gap: 10px; align-items: center; }
+        .diag-node { width: 30px; height: 30px; background: rgba(6, 182, 212, 0.2); border: 1px solid var(--accent-cyan); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--accent-cyan); }
+        .diag-arrow { color: var(--text-muted); font-size: 16px; }
+
+        /* Process Layout Diagram */
+        .diag-process { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .diag-process .diag-node { width: 40px; height: 40px; border-radius: 50%; background: rgba(251, 191, 36, 0.1); border-color: var(--accent-amber); color: var(--accent-amber); }
+
+        /* Fixed Position Diagram */
+        .diag-fixed { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
+        .diag-center { width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border: 1px solid var(--accent-emerald); color: var(--accent-emerald); border-radius: 8px; display: flex; align-items: center; justify-content: center; z-index: 2; }
+        .diag-orbit { position: absolute; width: 100%; height: 100%; border: 1px dashed var(--text-muted); border-radius: 50%; animation: spin 10s linear infinite; }
+        .diag-orbit::before { content: ''; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; background: var(--accent-violet); border-radius: 50%; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Cellular Diagram */
+        .diag-cell { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px; border: 2px solid var(--accent-violet); border-radius: 12px; }
+        .diag-cell .diag-node { width: 20px; height: 20px; border-radius: 50%; background: rgba(139, 92, 246, 0.2); border-color: var(--accent-violet); color: var(--accent-violet); }
+
+        /* Quiz Section */
+        .quiz-container { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(11, 17, 32, 0.9)); }
+        .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent-cyan); }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-btn {
+            padding: 12px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); text-align: left; cursor: pointer;
+            transition: all 0.2s; font-size: 0.95rem;
+        }
+        .quiz-btn:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--accent-cyan); }
+        .quiz-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--accent-emerald); color: var(--accent-emerald); }
+        .quiz-btn.wrong { background: rgba(251, 113, 133, 0.2); border-color: var(--accent-rose); color: var(--accent-rose); }
+        .quiz-feedback { margin-top: 15px; font-size: 0.95rem; display: none; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.3); }
+        .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+
+        /* Navigation Pills */
+        .nav-pills { display: flex; gap: 10px; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+        .nav-pill {
+            padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; font-weight: 500;
+            color: var(--text-muted); border: 1px solid var(--border-glass); text-decoration: none;
+            transition: all 0.3s;
+        }
+        .nav-pill:hover { color: var(--accent-cyan); border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
+
+        .tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="layout-dashboard"></i></div>
+            <span>Layout Planning Hub</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.IV - Mục III (Trang 50-57)</div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="chapter-badge">Quản trị Sản xuất & Tác nghiệp</div>
+            <h1>Bố trí <span>Mặt bằng Sản xuất</span></h1>
+            <p>Là quá trình tổ chức, sắp xếp, định dạng về mặt không gian máy móc thiết bị, các khu vực làm việc nhằm tối thiểu hóa chi phí vận chuyển, giảm thời gian sản xuất và đảm bảo an toàn.</p>
+        </div>
+
+        <div class="nav-pills">
+            <a href="#principles" class="nav-pill">Nguyên tắc cơ bản</a>
+            <a href="#layouts" class="nav-pill">4 Hình thức Bố trí</a>
+            <a href="#quiz" class="nav-pill">Trắc nghiệm tình huống</a>
+        </div>
+
+        <!-- Section 1: Principles -->
+        <div id="principles" style="margin-bottom: 4rem;">
+            <h2 class="section-title"><i data-lucide="shield-check"></i> Nguyên tắc Bố trí</h2>
+            <div class="grid-3">
+                <div class="glass-panel">
+                    <div class="card-icon" style="color: var(--accent-cyan);"><i data-lucide="workflow"></i></div>
+                    <h3 class="card-title">Tuân thủ quy trình công nghệ</h3>
+                    <p class="card-desc">Sắp xếp thứ tự các bộ phận theo trình tự sản xuất. Sản phẩm đi qua bộ phận nào trước thì đặt gần kho nguyên liệu hơn. Hai bộ phận trao đổi sản phẩm trực tiếp nên đặt cạnh nhau.</p>
+                </div>
+                <div class="glass-panel">
+                    <div class="card-icon" style="color: var(--accent-amber);"><i data-lucide="maximize"></i></div>
+                    <h3 class="card-title">Đảm bảo khả năng mở rộng</h3>
+                    <p class="card-desc">Doanh nghiệp có thể tăng sản lượng hoặc đa dạng hóa sản phẩm trong tương lai. Vì vậy, ngay từ khi chọn địa điểm và bố trí, cần dự kiến không gian mở rộng.</p>
+                </div>
+                <div class="glass-panel">
+                    <div class="card-icon" style="color: var(--accent-rose);"><i data-lucide="hard-hat"></i></div>
+                    <h3 class="card-title">Đảm bảo an toàn</h3>
+                    <p class="card-desc">Tính đến an toàn cho người lao động, máy móc. Tuân thủ quy định chống ồn, bụi, rung, cháy nổ. Đảm bảo thông gió và chiếu sáng tự nhiên.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Layout Types -->
+        <div id="layouts" style="margin-bottom: 4rem;">
+            <h2 class="section-title"><i data-lucide="layout-template"></i> Các hình thức Bố trí Mặt bằng</h2>
+            
+            <div class="grid-2">
+                <!-- 1. Product Layout -->
+                <div class="glass-panel">
+                    <div class="diagram-container">
+                        <div class="diag-product">
+                            <div class="diag-node">Máy 1</div>
+                            <i data-lucide="arrow-right" class="diag-arrow"></i>
+                            <div class="diag-node">Máy 2</div>
+                            <i data-lucide="arrow-right" class="diag-arrow"></i>
+                            <div class="diag-node">Máy 3</div>
+                            <i data-lucide="arrow-right" class="diag-arrow"></i>
+                            <div class="diag-node" style="background: rgba(6, 182, 212, 0.5); color: #fff;">Kho TP</div>
+                        </div>
+                    </div>
+                    <h3 class="card-title">1. Bố trí theo Sản phẩm (Product Layout)</h3>
+                    <p class="card-desc">Máy móc được sắp xếp theo dòng chảy liên tục của sản phẩm. Phù hợp với sản xuất hàng loạt, khối lượng lớn, sản phẩm ít thay đổi.</p>
+                    <div class="pros-cons">
+                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Giảm thời gian vận chuyển, tồn kho thấp.</div>
+                        <div class="con"><i data-lucide="x-circle" size="14"></i> Kém linh hoạt, dễ bị gián đoạn nếu 1 máy hỏng.</div>
+                    </div>
+                </div>
+
+                <!-- 2. Process Layout -->
+                <div class="glass-panel">
+                    <div class="diagram-container">
+                        <div class="diag-process">
+                            <div class="diag-node">Tiện</div>
+                            <div class="diag-node">Phay</div>
+                            <div class="diag-node">Khoan</div>
+                            <div class="diag-node">Mài</div>
+                        </div>
+                    </div>
+                    <h3 class="card-title">2. Bố trí theo Quá trình (Process Layout)</h3>
+                    <p class="card-desc">Tập trung các máy móc có cùng chức năng vào một khu vực. Sản phẩm di chuyển linh hoạt giữa các khu vực theo quy trình riêng.</p>
+                    <div class="pros-cons">
+                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Rất linh hoạt, dễ dàng thay đổi sản phẩm.</div>
+                        <div class="con"><i data-lucide="x-circle" size="14"></i> Chi phí vận chuyển cao, thời gian chờ đợi lớn.</div>
+                    </div>
+                </div>
+
+                <!-- 3. Fixed Position Layout -->
+                <div class="glass-panel">
+                    <div class="diagram-container">
+                        <div class="diag-fixed">
+                            <div class="diag-orbit"></div>
+                            <div class="diag-center">Sản phẩm</div>
+                        </div>
+                    </div>
+                    <h3 class="card-title">3. Bố trí theo Vị trí cố định</h3>
+                    <p class="card-desc">Sản phẩm được đặt cố định tại một chỗ (do quá nặng, cồng kềnh). Máy móc, thiết bị và công nhân sẽ được di chuyển đến để làm việc.</p>
+                    <div class="pros-cons">
+                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Áp dụng cho dự án đặc thù (đóng tàu, xây dựng).</div>
+                        <div class="con"><i data-lucide="x-circle" size="14"></i> Khó khăn trong quản lý thiết bị, an toàn lao động.</div>
+                    </div>
+                </div>
+
+                <!-- 4. Cellular Layout -->
+                <div class="glass-panel">
+                    <div class="diagram-container">
+                        <div class="diag-cell">
+                            <div class="diag-node">M1</div>
+                            <div class="diag-node">M2</div>
+                            <div class="diag-node">M4</div>
+                            <div class="diag-node">M3</div>
+                        </div>
+                    </div>
+                    <h3 class="card-title">4. Bố trí Hỗn hợp / Dạng Tế bào</h3>
+                    <p class="card-desc">Lai ghép giữa Product và Process. Máy móc được nhóm thành các "Cell" nhỏ (chữ U) để sản xuất một họ sản phẩm có đặc tính tương tự nhau.</p>
+                    <div class="pros-cons">
+                        <div class="pro"><i data-lucide="check-circle-2" size="14"></i> Dòng chảy mượt, giảm thời gian chuẩn bị, linh hoạt.</div>
+                        <div class="con"><i data-lucide="x-circle" size="14"></i> Khó cân bằng năng suất giữa các tế bào.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Interactive Quiz -->
+        <div id="quiz" class="glass-panel quiz-container">
+            <h2 class="section-title"><i data-lucide="brain-circuit"></i> Trắc nghiệm: Bạn đã hiểu rõ?</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Hãy chọn hình thức bố trí mặt bằng phù hợp nhất cho tình huống dưới đây.</p>
+            
+            <div class="quiz-question" id="quiz-question">Đang tải câu hỏi...</div>
+            <div class="quiz-options" id="quiz-options">
+                <!-- Generated by JS -->
+            </div>
+            <div class="quiz-feedback" id="quiz-feedback"></div>
+            <button class="btn-calc secondary" id="quiz-next-btn" style="margin-top: 15px; display: none;" onclick="nextQuestion()"><i data-lucide="refresh-cw"></i> Câu hỏi tiếp theo</button>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // ==========================================
+        // QUIZ LOGIC
+        // ==========================================
+        const quizData = [
+            {
+                question: "Bệnh viện là một ví dụ điển hình của hình thức bố trí mặt bằng nào?",
+                options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí theo vị trí cố định", "Bố trí dạng tế bào"],
+                correct: 1, // Index of 'Bố trí theo quá trình'
+                explanation: "Bệnh viện được tổ chức theo khoa/phòng chức năng (Khoa Nội, Khoa Ngoại, Xét nghiệm...). Bệnh nhân di chuyển đến các khu vực khác nhau để khám chữa bệnh, giống như bố trí theo quá trình trong sản xuất."
+            },
+            {
+                question: "Một nhà máy lắp ráp ô tô với dây chuyền chạy liên tục qua các trạm làm việc nên áp dụng bố trí mặt bằng nào?",
+                options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí theo vị trí cố định", "Bố trí hỗn hợp"],
+                correct: 0, // Index of 'Bố trí theo sản phẩm'
+                explanation: "Lắp ráp ô tô có khối lượng lớn, quy trình chuẩn hóa. Việc bố trí máy móc theo một dòng chảy cố định (dây chuyền) giúp tối ưu hóa thời gian và chi phí di chuyển."
+            },
+            {
+                question: "Việc đóng một con tàu biển lớn tại nhà máy đóng tàu thường áp dụng hình thức bố trí nào?",
+                options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí theo vị trí cố định", "Hệ thống sản xuất linh hoạt"],
+                correct: 2, // Index of 'Bố trí theo vị trí cố định'
+                explanation: "Con tàu quá lớn và nặng để di chuyển. Do đó, sản phẩm (con tàu) được đặt cố định, còn máy móc, công nhân và nguyên vật liệu phải di chuyển đến xung quanh nó."
+            },
+            {
+                question: "Nhóm các máy móc khác nhau (máy tiện, máy phay) vào một khu vực nhỏ hình chữ U để sản xuất một họ sản phẩm tương tự là đặc điểm của:",
+                options: ["Bố trí theo sản phẩm", "Bố trí theo quá trình", "Bố trí dạng tế bào (Cellular)", "Bố trí vị trí cố định"],
+                correct: 2, // Index of 'Bố trí dạng tế bào'
+                explanation: "Đây chính xác là định nghĩa của bố trí dạng tế bào (Cellular Layout) - một dạng bố trí hỗn hợp giúp tăng tính linh hoạt nhưng vẫn đảm bảo dòng chảy mượt mà."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizAnswered = false;
+
+        function loadQuestion() {
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-question').innerText = q.question;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.remove('show');
+            document.getElementById('quiz-next-btn').style.display = 'none';
+            quizAnswered = false;
+            lucide.createIcons();
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            if(quizAnswered) return;
+            quizAnswered = true;
+
+            const q = quizData[currentQuizIndex];
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const allBtns = document.querySelectorAll('.quiz-btn');
+
+            if (selectedIndex === q.correct) {
+                btnElement.classList.add('correct');
+                feedbackBox.innerHTML = `<span style="color:var(--accent-emerald); font-weight:bold;">Chính xác!</span> ${q.explanation}`;
+            } else {
+                btnElement.classList.add('wrong');
+                allBtns[q.correct].classList.add('correct');
+                feedbackBox.innerHTML = `<span style="color:var(--accent-rose); font-weight:bold;">Sai rồi!</span> ${q.explanation}`;
+            }
+
+            // Disable all buttons
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+            feedbackBox.classList.add('show');
+            
+            const nextBtn = document.getElementById('quiz-next-btn');
+            nextBtn.style.display = 'inline-flex';
+            if(currentQuizIndex === quizData.length - 1) {
+                nextBtn.innerHTML = '<i data-lucide="check-circle"></i> Hoàn thành';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            if(currentQuizIndex >= quizData.length) {
+                currentQuizIndex = 0; // Reset or show completion message
+            }
+            loadQuestion();
+        }
+
+        // Init Quiz
+        window.onload = () => {
+            loadQuestion();
+        };
+
+    </script>
+</body>
+</html>
