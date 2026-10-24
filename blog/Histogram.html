@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biểu Đồ Phân Bố (Histogram) & Năng Lực Quá Trình</title>
+    <title>Phân Tích Phân Bố Đa Biến (Histogram)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Slate 50 */
+            background-color: #f8fafc;
         }
         
         .fade-in {
@@ -26,21 +26,38 @@
         }
 
         /* Custom Scrollbar */
-        .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+        .table-container::-webkit-scrollbar { width: 8px; height: 8px; }
         .table-container::-webkit-scrollbar-track { background: #f1f1f1; }
-        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        /* Sticky Table Columns (Ghim cột đầu tiên và Header) */
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+        }
+        thead .sticky-col {
+            z-index: 30;
+            background-color: #f1f5f9;
+        }
+        tr:hover .sticky-col {
+            background-color: #f8fafc;
+        }
+
         /* Input Styling */
-        input, textarea {
+        input {
             transition: all 0.2s ease;
         }
-        input:focus, textarea:focus {
+        input:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
         }
         
+        /* Hiệu ứng gạch chân cho ô nhập tên */
         .variable-input {
             border-bottom: 2px dashed #cbd5e1;
             transition: border-color 0.3s;
@@ -57,9 +74,9 @@
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-3">
                     <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    Biểu Đồ Phân Bố (Histogram)
+                    Phân Tích Phân Bố Đa Biến
                 </h1>
-                <p class="text-blue-100 mt-1 text-sm md:text-base opacity-90">Phân tích hình dáng phân bố & Năng lực quá trình (Cp, Cpk)</p>
+                <p class="text-blue-100 mt-1 text-sm md:text-base opacity-90">Nhập ma trận dữ liệu, xem biểu đồ Histogram và đánh giá năng lực quá trình</p>
             </div>
         </div>
     </header>
@@ -67,108 +84,103 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
             
-            <!-- Cột Trái: Vùng Nhập Liệu & Thông Số -->
-            <div class="xl:col-span-4 flex flex-col gap-6 fade-in">
-                
-                <!-- Form Nhập Liệu -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200">
+            <!-- Cột Trái: Bảng Ma Trận Dữ Liệu -->
+            <div class="xl:col-span-6 flex flex-col gap-6 fade-in">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[750px]">
+                    <div class="bg-slate-50 px-5 py-3 border-b border-slate-200 flex justify-between items-center">
                         <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            Nhập Dữ Liệu
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Ma Trận Dữ Liệu Thô
                         </h2>
+                        <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded font-bold" id="countBadge">30 mẫu</span>
                     </div>
                     
-                    <div class="p-5 space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Tên đặc tính đo lường:</label>
-                            <input type="text" id="variableName" value="Độ dày sản phẩm (mm)" onchange="updateDashboard()" class="variable-input w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-blue-700">
-                        </div>
+                    <div class="px-4 py-2 bg-white border-b border-slate-200 flex gap-2">
+                        <button onclick="addRow()" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-1.5 px-3 rounded-lg transition-colors text-sm shadow-sm border border-blue-200">+ Thêm Hàng</button>
+                        <button onclick="addColumn()" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium py-1.5 px-3 rounded-lg transition-colors text-sm shadow-sm border border-indigo-200">+ Thêm Biến</button>
+                        <button onclick="loadSampleData()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-3 rounded-lg transition-colors text-sm shadow-sm border border-slate-300">Tải Lại Mẫu</button>
+                    </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nhập chuỗi giá trị (cách nhau bởi dấu phẩy):</label>
-                            <textarea id="rawDataInput" rows="4" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:bg-white" placeholder="VD: 4.9, 5.0, 5.1..."></textarea>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button onclick="processRawData()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm shadow-md">
-                                Phân Tích Dữ Liệu
-                            </button>
-                            <button onclick="loadSampleData()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-3 rounded-lg transition-colors text-sm shadow-sm border border-slate-300">
-                                Tải Dữ Liệu Mẫu
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cài đặt giới hạn kỹ thuật (USL/LSL) -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-slate-50 px-5 py-3 border-b border-slate-200">
-                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Giới hạn kỹ thuật (Tùy chọn)</h2>
-                    </div>
-                    <div class="p-4 grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Giới hạn dưới (LSL):</label>
-                            <input type="number" step="any" id="inputLSL" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-center focus:bg-white" placeholder="VD: 4.8">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Giới hạn trên (USL):</label>
-                            <input type="number" step="any" id="inputUSL" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-center focus:bg-white" placeholder="VD: 5.5">
-                        </div>
-                        <p class="col-span-2 text-[11px] text-slate-500 italic mt-1">*Nhập LSL và USL để tính chỉ số năng lực quá trình Cp, Cpk.</p>
-                    </div>
-                </div>
-
-                <!-- Bảng Dữ Liệu (Thay thế cho bảng 2 cột) -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex-1 flex flex-col max-h-[350px]">
-                    <div class="bg-slate-50 px-5 py-3 border-b border-slate-200 flex justify-between items-center">
-                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Bảng Dữ Liệu Thô</h2>
-                        <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded font-bold" id="countBadge">0 mẫu</span>
-                    </div>
-                    <div class="flex-1 overflow-auto table-container p-2 relative">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-xs text-slate-500 uppercase bg-slate-50 sticky top-0 z-10">
-                                <tr>
-                                    <th class="px-3 py-2 w-12 text-center">#</th>
-                                    <th class="px-3 py-2 text-center text-blue-700" id="tableHeaderCol">Giá trị đo</th>
-                                </tr>
+                    <div class="flex-1 overflow-auto table-container relative">
+                        <table class="w-full text-sm text-left border-collapse">
+                            <thead class="text-xs text-slate-600 uppercase bg-slate-100 sticky top-0 z-20 shadow-sm" id="tableHead">
+                                <!-- Header sẽ được tạo bởi JS -->
                             </thead>
                             <tbody id="tableBody">
-                                <!-- Data rows -->
+                                <!-- Body sẽ được tạo bởi JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
 
-            <!-- Cột Phải: Biểu đồ & Kết quả -->
-            <div class="xl:col-span-8 flex flex-col gap-6 fade-in" style="animation-delay: 0.1s;">
+            <!-- Cột Phải: Biểu đồ & Thống kê -->
+            <div class="xl:col-span-6 flex flex-col gap-6 fade-in" style="animation-delay: 0.1s;">
                 
                 <!-- Biểu đồ -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold text-slate-800" id="chartTitle">Biểu Đồ Phân Bố</h2>
-                        <div class="flex gap-4 text-xs font-semibold">
-                            <div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500"></span> Tần suất</div>
-                            <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-red-500"></span> Phân bố chuẩn</div>
-                        </div>
+                        <select id="activeColSelect" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm font-semibold rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2" onchange="updateDashboard()">
+                            <!-- Dropdown chọn biến -->
+                        </select>
                     </div>
-                    <div class="relative w-full h-[380px]">
+                    <div class="relative w-full h-[300px]">
                         <canvas id="histogramChart"></canvas>
+                    </div>
+                    
+                    <!-- Cài đặt giới hạn kỹ thuật cho biến đang chọn -->
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Giới hạn dưới (LSL):</label>
+                            <input type="number" step="any" id="inputLSL" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:bg-white" placeholder="Nhập LSL" onchange="updateDashboard()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Giới hạn trên (USL):</label>
+                            <input type="number" step="any" id="inputUSL" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:bg-white" placeholder="Nhập USL" onchange="updateDashboard()">
+                        </div>
                     </div>
                 </div>
 
-                <!-- Kết quả phân tích -->
+                <!-- Tổng hợp các biến (Chạy đồng thời) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 px-5 py-3 border-b border-slate-200">
+                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Tổng Hợp Các Biến (Tự động cập nhật song song)
+                        </h2>
+                    </div>
+                    <div class="overflow-auto max-h-[220px]">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-100 text-slate-600 text-xs uppercase sticky top-0 z-10 shadow-sm">
+                                <tr>
+                                    <th class="p-3">Tên biến</th>
+                                    <th class="p-3 text-center">Mean</th>
+                                    <th class="p-3 text-center">Std Dev</th>
+                                    <th class="p-3 text-center">Min - Max</th>
+                                    <th class="p-3 text-center">Cpk*</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryTableBody">
+                                <!-- Data -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-slate-50 px-3 py-2 border-t border-slate-200 text-[11px] text-slate-500 italic">
+                        * Cpk chỉ tính cho biến đang được chọn ở biểu đồ (nếu có nhập LSL/USL).
+                    </div>
+                </div>
+
+                <!-- Kết quả phân tích chi tiết -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex-1">
-                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200">
-                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Đánh Giá Năng Lực Quá Trình
+                    <div class="bg-slate-50 px-5 py-3 border-b border-slate-200">
+                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Đánh Giá Phân Bố & Năng Lực Quá Trình
                         </h2>
                     </div>
                     <div id="resultPanel" class="p-5">
-                        <!-- Nội dung kết quả -->
+                        <!-- Result -->
                     </div>
                 </div>
 
@@ -177,119 +189,258 @@
     </main>
 
     <script>
-        // --- DỮ LIỆU MẪU (Phân bố lệch phải - Right Skewed) ---
-        // 30 giá trị độ dày. Đa số tập trung ở 4.9 - 5.1, kéo đuôi về 6.0+
-        const SAMPLE_RAW = "4.90, 5.00, 5.10, 5.00, 5.20, 4.80, 5.10, 5.00, 5.30, 4.90, 5.00, 5.20, 5.10, 4.90, 5.00, 5.10, 5.40, 5.20, 5.00, 4.90, 5.10, 5.50, 5.30, 5.20, 5.60, 5.00, 5.10, 5.80, 6.00, 6.20";
-        const SAMPLE_LSL = 4.70;
-        const SAMPLE_USL = 5.60;
+        // --- KHỞI TẠO DỮ LIỆU MẪU ---
+        let colNames = [];
+        let rowNames = [];
+        let matrix = [];
 
-        let currentData = [];
-        let myChart = null;
+        function generateSampleData() {
+            colNames = ["Độ dày (mm)", "Chiều dài (cm)", "Khối lượng (g)"];
+            rowNames = [];
+            matrix = [];
+            
+            for (let i = 1; i <= 30; i++) {
+                rowNames.push(`Mẫu ${i}`);
+                
+                // Cột 1: Độ dày (Lệch phải - Right Skewed)
+                let t = 5.0 + (Math.random() * 0.4 - 0.2);
+                if (Math.random() > 0.8) t += Math.random() * 1.0; // Đuôi kéo dài về bên phải
+                
+                // Cột 2: Chiều dài (Phân bố chuẩn - Normal)
+                let l = 10.0 + (Math.random() * 0.4 - 0.2);
+                
+                // Cột 3: Khối lượng (Lệch trái - Left Skewed)
+                let w = 50 + (Math.random() * 2 - 1);
+                if (Math.random() > 0.8) w -= Math.random() * 4; // Đuôi kéo dài về bên trái
 
-        // --- XỬ LÝ DỮ LIỆU ĐẦU VÀO ---
-        function loadSampleData() {
-            document.getElementById('rawDataInput').value = SAMPLE_RAW;
-            document.getElementById('inputLSL').value = SAMPLE_LSL;
-            document.getElementById('inputUSL').value = SAMPLE_USL;
-            document.getElementById('variableName').value = "Độ dày sản phẩm (mm)";
-            processRawData();
+                matrix.push([
+                    parseFloat(t.toFixed(2)), 
+                    parseFloat(l.toFixed(2)), 
+                    parseFloat(w.toFixed(2))
+                ]);
+            }
         }
 
-        function processRawData() {
-            const rawText = document.getElementById('rawDataInput').value;
-            // Tách bằng dấu phẩy, khoảng trắng, hoặc xuống dòng
-            const parsed = rawText.split(/[\s,]+/).map(v => parseFloat(v.replace(',', '.'))).filter(v => !isNaN(v));
+        let myChart = null;
+
+        // --- RENDER BẢNG MA TRẬN ---
+        function renderTable() {
+            const thead = document.getElementById('tableHead');
+            const tbody = document.getElementById('tableBody');
+            const select = document.getElementById('activeColSelect');
             
-            if (parsed.length < 5) {
-                alert("Vui lòng nhập ít nhất 5 giá trị số hợp lệ để vẽ biểu đồ phân bố.");
-                return;
+            // Lưu lựa chọn hiện tại của dropdown
+            let currentSelection = select.value;
+
+            // 1. Render Header (Cột)
+            let theadHtml = `<tr>
+                <th class="sticky-col px-3 py-2 border-b border-slate-300 w-32 min-w-[120px] text-center z-30 bg-slate-100">
+                    Tên Hàng / Cột
+                </th>`;
+            
+            colNames.forEach((name, index) => {
+                theadHtml += `<th class="px-2 py-2 border-b border-slate-300 min-w-[120px] text-center">
+                    <div class="flex items-center gap-1">
+                        <input type="text" value="${name}" onchange="updateColName(${index}, this.value)" 
+                            class="variable-input w-full bg-transparent text-center font-bold text-blue-700 text-xs py-1 px-1 rounded-sm" title="Click để đổi tên biến">
+                        ${colNames.length > 1 ? `<button onclick="removeColumn(${index})" class="text-red-400 hover:text-red-600 font-bold px-1 text-lg leading-none" title="Xóa biến này">&times;</button>` : ''}
+                    </div>
+                </th>`;
+            });
+            theadHtml += `</tr>`;
+            thead.innerHTML = theadHtml;
+
+            // 2. Render Body (Hàng)
+            let tbodyHtml = '';
+            matrix.forEach((row, rIndex) => {
+                tbodyHtml += `<tr class="bg-white border-b hover:bg-slate-50 transition-colors">`;
+                
+                // Tên hàng (Ghim bên trái)
+                tbodyHtml += `<td class="sticky-col px-2 py-1 border-r border-slate-200">
+                    <div class="flex items-center gap-1">
+                        <input type="text" value="${rowNames[rIndex]}" onchange="updateRowName(${rIndex}, this.value)" 
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-indigo-400 rounded px-1 py-1 text-sm font-medium text-slate-600 truncate" title="Click để đổi tên hàng">
+                        ${matrix.length > 3 ? `<button onclick="removeRow(${rIndex})" class="text-red-400 hover:text-red-600 font-bold px-1 text-lg leading-none" title="Xóa hàng này">&times;</button>` : ''}
+                    </div>
+                </td>`;
+                
+                // Dữ liệu ô
+                row.forEach((val, cIndex) => {
+                    tbodyHtml += `<td class="px-2 py-1">
+                        <input type="number" step="any" value="${val}" onchange="updateCell(${rIndex}, ${cIndex}, this.value)" 
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 rounded px-2 py-1 text-center font-medium text-slate-800">
+                    </td>`;
+                });
+                
+                tbodyHtml += `</tr>`;
+            });
+            tbody.innerHTML = tbodyHtml;
+
+            // 3. Render Dropdown chọn biến
+            let selectHtml = '';
+            colNames.forEach((name, index) => {
+                selectHtml += `<option value="${index}" ${index == currentSelection ? 'selected' : ''}>${name}</option>`;
+            });
+            select.innerHTML = selectHtml;
+            
+            document.getElementById('countBadge').innerText = `${matrix.length} mẫu`;
+        }
+
+        // --- XỬ LÝ SỰ KIỆN BẢNG ---
+        function updateCell(r, c, value) {
+            let num = parseFloat(value);
+            if (!isNaN(num)) {
+                matrix[r][c] = num;
+                updateDashboard(); // Tính toán lại ngay
             }
-            
-            currentData = parsed;
+        }
+
+        function updateColName(index, value) {
+            colNames[index] = value || `Biến ${index + 1}`;
+            renderTable(); // Render lại để cập nhật dropdown
+            updateDashboard();
+        }
+
+        function updateRowName(index, value) {
+            rowNames[index] = value || `Hàng ${index + 1}`;
+            // Chỉ cập nhật state, không cần render lại toàn bộ bảng để tránh mất focus
+        }
+
+        function addRow() {
+            rowNames.push(`Mẫu ${rowNames.length + 1}`);
+            matrix.push(new Array(colNames.length).fill(0));
             renderTable();
             updateDashboard();
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            const countBadge = document.getElementById('countBadge');
-            const tableHeaderCol = document.getElementById('tableHeaderCol');
-            
-            countBadge.innerText = `${currentData.length} mẫu`;
-            tableHeaderCol.innerText = document.getElementById('variableName').value || "Giá trị đo";
-            
-            let html = '';
-            currentData.forEach((val, index) => {
-                html += `
-                <tr class="bg-white border-b hover:bg-slate-50 transition-colors">
-                    <td class="px-3 py-1.5 text-center text-slate-400 text-xs">${index + 1}</td>
-                    <td class="px-3 py-1.5">
-                        <input type="number" step="any" value="${val}" 
-                            onchange="updateCell(${index}, this.value)"
-                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 rounded px-2 py-1 text-center font-semibold text-blue-900">
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
+        function removeRow(index) {
+            if (matrix.length > 3) {
+                matrix.splice(index, 1);
+                rowNames.splice(index, 1);
+                renderTable();
+                updateDashboard();
+            } else {
+                alert("Cần ít nhất 3 mẫu để vẽ biểu đồ phân bố.");
+            }
         }
 
-        function updateCell(index, value) {
-            let num = parseFloat(value);
-            if (!isNaN(num)) {
-                currentData[index] = num;
-                // Cập nhật lại chuỗi thô
-                document.getElementById('rawDataInput').value = currentData.join(', ');
+        function addColumn() {
+            const name = prompt("Nhập tên biến mới:", `Biến ${colNames.length + 1}`);
+            if (name) {
+                colNames.push(name);
+                matrix.forEach(row => row.push(0));
+                renderTable();
                 updateDashboard();
             }
         }
 
-        // --- THUẬT TOÁN THỐNG KÊ & TẠO BINS ---
-        function calculateStatistics(data) {
-            const n = data.length;
-            if (n === 0) return null;
+        function removeColumn(index) {
+            if (colNames.length > 1) {
+                colNames.splice(index, 1);
+                matrix.forEach(row => row.splice(index, 1));
+                renderTable();
+                updateDashboard();
+            } else {
+                alert("Cần ít nhất 1 biến để phân tích.");
+            }
+        }
 
-            // 1. Tính Min, Max, Range
+        function loadSampleData() {
+            generateSampleData();
+            renderTable();
+            document.getElementById('inputLSL').value = '';
+            document.getElementById('inputUSL').value = '';
+            updateDashboard();
+        }
+
+        // --- CẬP NHẬT DASHBOARD ---
+        function updateDashboard() {
+            updateSummaryTable();
+            drawChart();
+        }
+
+        // Cập nhật bảng tổng hợp tất cả các biến
+        function updateSummaryTable() {
+            const tbody = document.getElementById('summaryTableBody');
+            const activeColIndex = parseInt(document.getElementById('activeColSelect').value) || 0;
+            const lsl = parseFloat(document.getElementById('inputLSL').value);
+            const usl = parseFloat(document.getElementById('inputUSL').value);
+
+            let html = '';
+            colNames.forEach((name, cIndex) => {
+                const data = matrix.map(row => row[cIndex]).filter(v => !isNaN(v));
+                if (data.length > 0) {
+                    const n = data.length;
+                    const mean = data.reduce((a, b) => a + b, 0) / n;
+                    const variance = data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1);
+                    const sd = Math.sqrt(variance);
+                    const min = Math.min(...data);
+                    const max = Math.max(...data);
+                    
+                    let cpkStr = "-";
+                    let cpkClass = "text-slate-400";
+                    // Chỉ tính Cpk cho biến đang được chọn trên biểu đồ để tránh nhầm lẫn
+                    if (cIndex === activeColIndex && !isNaN(lsl) && !isNaN(usl) && usl > lsl) {
+                        const cpkU = (usl - mean) / (3 * sd);
+                        const cpkL = (mean - lsl) / (3 * sd);
+                        const cpk = Math.min(cpkU, cpkL);
+                        cpkStr = cpk.toFixed(2);
+                        if (cpk >= 1.33) cpkClass = "text-green-600 font-bold";
+                        else if (cpk >= 1.0) cpkClass = "text-yellow-600 font-bold";
+                        else cpkClass = "text-red-600 font-bold";
+                    }
+
+                    const isActive = cIndex === activeColIndex ? "bg-blue-50 border-l-4 border-blue-500" : "";
+                    html += `
+                        <tr class="border-b last:border-0 hover:bg-slate-50 transition-colors ${isActive}">
+                            <td class="p-3 font-semibold text-slate-700">${name}</td>
+                            <td class="p-3 text-center">${mean.toFixed(3)}</td>
+                            <td class="p-3 text-center">${sd.toFixed(3)}</td>
+                            <td class="p-3 text-center text-xs text-slate-500">${min.toFixed(2)} - ${max.toFixed(2)}</td>
+                            <td class="p-3 text-center ${cpkClass}">${cpkStr}</td>
+                        </tr>
+                    `;
+                }
+            });
+            tbody.innerHTML = html;
+        }
+
+        // Vẽ biểu đồ Histogram cho biến đang chọn
+        function drawChart() {
+            const cIndex = parseInt(document.getElementById('activeColSelect').value) || 0;
+            const activeName = colNames[cIndex] || "Biến";
+            document.getElementById('chartTitle').innerText = `Biểu Đồ Phân Bố: ${activeName}`;
+
+            const data = matrix.map(row => row[cIndex]).filter(v => !isNaN(v));
+            
+            if (data.length < 5) {
+                if (myChart) myChart.destroy();
+                return;
+            }
+
+            // 1. Tính toán thống kê cơ bản
+            const n = data.length;
             const min = Math.min(...data);
             const max = Math.max(...data);
             const range = max - min;
-
-            // 2. Tính Số tổ (K) và Độ rộng tổ (h) theo tài liệu (K xấp xỉ căn bậc 2 của n)
+            
+            // 2. Tính số tổ (K) và độ rộng (h) theo tài liệu
             let k = Math.ceil(Math.sqrt(n));
             let h = range / k;
-            
-            // Làm tròn h cho đẹp (VD: 0.05, 0.1, 0.2...)
+            // Làm tròn h
             const magnitude = Math.pow(10, Math.floor(Math.log10(h)));
             h = Math.ceil(h / magnitude) * magnitude;
             if (h === 0) h = 1;
+            k = Math.ceil(range / h);
 
-            // 3. Tính Mean và Standard Deviation (Sample)
-            const sum = data.reduce((a, b) => a + b, 0);
-            const mean = sum / n;
-            const squaredDiffs = data.map(value => Math.pow(value - mean, 2));
-            const variance = squaredDiffs.reduce((a, b) => a + b, 0) / (n - 1);
-            const stdDev = Math.sqrt(variance);
-
-            // 4. Tính Median (để xác định độ lệch)
-            const sorted = [...data].sort((a, b) => a - b);
-            const mid = Math.floor(n / 2);
-            const median = n % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-
-            return { min, max, range, k, h, mean, stdDev, median, n, sorted };
-        }
-
-        function createBins(data, min, h, k) {
+            // 3. Tạo các tổ (Bins)
             let bins = [];
-            let lower = min - (h / 2); // Bắt đầu từ giữa lề trái để tâm tổ là min
-
+            let lower = min - (h / 2);
             for (let i = 0; i < k; i++) {
                 let upper = lower + h;
                 let count = data.filter(v => v >= lower && v < upper).length;
+                if (i === k - 1) count = data.filter(v => v >= lower && v <= upper).length;
                 
-                // Xử lý giá trị max nằm ở biên
-                if (i === k - 1) {
-                    count = data.filter(v => v >= lower && v <= upper).length;
-                }
-
                 bins.push({
                     lower: lower,
                     upper: upper,
@@ -299,42 +450,22 @@
                 });
                 lower = upper;
             }
-            return bins;
-        }
 
-        // --- VẼ BIỂU ĐỒ VÀ PHÂN TÍCH ---
-        function updateDashboard() {
-            const variableName = document.getElementById('variableName').value || "Đặc tính";
-            document.getElementById('tableHeaderCol').innerText = variableName;
-            document.getElementById('chartTitle').innerText = `Biểu Đồ Phân Bố: ${variableName}`;
-
-            const stats = calculateStatistics(currentData);
-            if (!stats) return;
-
-            const bins = createBins(currentData, stats.min, stats.h, stats.k);
             const binLabels = bins.map(b => b.label);
             const binCounts = bins.map(b => b.count);
 
-            // --- Tạo dữ liệu cho Đường cong phân bố chuẩn (Normal Curve) ---
-            // Công thức: y = (n * h) / (stdDev * sqrt(2*pi)) * exp(-(x-mean)^2 / (2*stdDev^2))
-            const curveData = [];
-            const points = 100;
-            const step = (stats.max - stats.min + stats.h) / points;
-            const startX = stats.min - (stats.h/2);
-            
-            const multiplier = (stats.n * stats.h) / (stats.stdDev * Math.sqrt(2 * Math.PI));
+            // 4. Tính đường cong phân bố chuẩn (Normal Curve)
+            const mean = data.reduce((a, b) => a + b, 0) / n;
+            const variance = data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1);
+            const stdDev = Math.sqrt(variance);
 
-            for (let x = startX; x <= stats.max + stats.h; x += step) {
-                let exponent = -Math.pow(x - stats.mean, 2) / (2 * Math.pow(stats.stdDev, 2));
-                let y = multiplier * Math.exp(exponent);
-                curveData.push({x: x, y: y});
-            }
+            // Công thức nội suy mật độ để khớp với diện tích cột
+            const multiplier = (n * h) / (stdDev * Math.sqrt(2 * Math.PI));
+            const curveY = bins.map(bin => {
+                return multiplier * Math.exp(-Math.pow(bin.mid - mean, 2) / (2 * Math.pow(stdDev, 2)));
+            });
 
-            // --- Lấy USL, LSL ---
-            const lsl = parseFloat(document.getElementById('inputLSL').value);
-            const usl = parseFloat(document.getElementById('inputUSL').value);
-
-            // --- Vẽ Chart.js ---
+            // 5. Vẽ Chart.js
             const ctx = document.getElementById('histogramChart').getContext('2d');
             if (myChart) myChart.destroy();
 
@@ -349,25 +480,19 @@
                             backgroundColor: 'rgba(59, 130, 246, 0.7)',
                             borderColor: 'rgba(37, 99, 235, 1)',
                             borderWidth: 1,
-                            // Quan trọng để cột liền kề (Histogram style)
                             barPercentage: 1.0,
-                            categoryPercentage: 1.0, 
+                            categoryPercentage: 1.0, // Cột liền kề nhau (Histogram)
                             order: 2
                         },
                         {
                             type: 'line',
                             label: 'Phân bố chuẩn',
-                            data: curveData,
+                            data: curveY,
                             borderColor: '#ef4444',
                             borderWidth: 2,
                             pointRadius: 0,
                             tension: 0.4,
                             fill: false,
-                            // Căn chỉnh trục X cho đường cong khớp với tâm cột
-                            parsing: {
-                                xAxisKey: 'x',
-                                yAxisKey: 'y'
-                            },
                             order: 1
                         }
                     ]
@@ -377,96 +502,66 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { display: false }, // Ẩn legend mặc định vì đã có custom legend
+                        legend: { display: false },
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.9)',
                             titleFont: { family: 'Inter', size: 13 },
                             bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
                             padding: 10,
                             callbacks: {
-                                title: function(context) {
-                                    if(context[0].datasetIndex === 0) {
-                                        return `Khoảng: ${context[0].label}`;
-                                    }
-                                    return `Phân bố lý thuyết`;
-                                },
+                                title: function(context) { return `Khoảng: ${context[0].label}`; },
                                 label: function(context) {
-                                    if(context.datasetIndex === 0) {
-                                        return `Tần suất: ${context.parsed.y}`;
-                                    }
-                                    return `Mật độ: ${context.parsed.y.toFixed(2)}`;
+                                    if (context.datasetIndex === 0) return `Tần suất: ${context.parsed.y}`;
+                                    return `Mật độ lý thuyết: ${context.parsed.y.toFixed(2)}`;
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            type: 'linear', // Cần dùng linear để vẽ đường cong đè lên bar
-                            offset: true, // Giữ cột bar ở giữa các nhãn
                             grid: { display: false },
-                            ticks: { 
-                                font: { family: 'Inter', size: 11 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            },
-                            title: {
-                                display: true,
-                                text: variableName,
-                                font: { family: 'Inter', weight: 'bold', size: 13 }
-                            }
+                            ticks: { font: { family: 'Inter', size: 11 }, maxRotation: 45, minRotation: 45 },
+                            title: { display: true, text: activeName, font: { family: 'Inter', weight: 'bold' } }
                         },
                         y: {
                             beginAtZero: true,
                             grid: { color: '#f1f5f9' },
-                            ticks: { font: { family: 'Inter' } },
-                            title: {
-                                display: true,
-                                text: 'Tần suất',
-                                font: { family: 'Inter', weight: 'bold', size: 13 }
-                            }
+                            title: { display: true, text: 'Tần suất', font: { family: 'Inter', weight: 'bold' } }
                         }
                     }
                 }
             });
 
-            // --- Phân Tích & Hiển Thị Kết Quả ---
-            renderAnalysis(stats, bins, lsl, usl, variableName);
+            // 6. Cập nhật Text phân tích
+            updateAnalysisText(n, mean, stdDev, min, max, h, k, data);
         }
 
-        function renderAnalysis(stats, bins, lsl, usl, variableName) {
-            const { mean, stdDev, median, n, k, h } = stats;
-            
-            // 1. Phân tích độ lệch (Skewness)
+        // Đánh giá độ lệch và năng lực quá trình
+        function updateAnalysisText(n, mean, stdDev, min, max, h, k, data) {
+            const sorted = [...data].sort((a,b)=>a-b);
+            const mid = Math.floor(n / 2);
+            const median = n % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+
             let skewType = "Đối xứng (Dạng chuông lý tưởng)";
-            let skewColor = "text-green-700 bg-green-50 border-green-200";
-            let skewAdvice = "Phân bố cân đối, tập trung ở giữa. Quá trình đang ổn định.";
+            let color = "text-green-700 bg-green-50 border-green-200";
+            let advice = "Phân bố cân đối, tập trung ở giữa. Quá trình đang ổn định.";
             
-            // So sánh Mean và Median để xác định độ lệch
+            // So sánh Mean và Median để xác định độ lệch (Skewness)
             if (mean > median + (0.05 * stdDev)) {
                 skewType = "Lệch Phải (Right-Skewed)";
-                skewColor = "text-orange-700 bg-orange-50 border-orange-200";
-                skewAdvice = `Đuôi phân bố kéo dài về phía giá trị lớn. Có thể có các yếu tố bất thường làm tăng ${variableName} (VD: máy móc bị mài mòn, nguyên liệu không đồng đều, lỗi thao tác).`;
+                color = "text-orange-700 bg-orange-50 border-orange-200";
+                advice = `Đuôi phân bố kéo dài về phía giá trị lớn. Có thể do máy móc bị mài mòn, nguyên liệu không đều, hoặc lỗi thao tác làm tăng giá trị đo.`;
             } else if (mean < median - (0.05 * stdDev)) {
                 skewType = "Lệch Trái (Left-Skewed)";
-                skewColor = "text-blue-700 bg-blue-50 border-blue-200";
-                skewAdvice = `Đuôi phân bố kéo dài về phía giá trị nhỏ. Có thể do giới hạn vật lý (không thể âm) hoặc lỗi hệ thống làm giảm ${variableName}.`;
+                color = "text-blue-700 bg-blue-50 border-blue-200";
+                advice = `Đuôi phân bố kéo dài về phía giá trị nhỏ. Có thể do giới hạn vật lý (không thể âm) hoặc lỗi hệ thống làm giảm giá trị đo.`;
             }
 
-            // Kiểm tra đa đỉnh (Bi-modal) sơ bộ
-            let maxCount = Math.max(...bins.map(b => b.count));
-            let peaks = bins.filter(b => b.count === maxCount).length;
-            if (bins.filter(b => b.count > maxCount * 0.8).length > 1 && bins.length > 5) {
-                // Nếu có 2 vùng tần suất cao cách xa nhau
-                let highBins = bins.map((b, i) => b.count > maxCount * 0.7 ? i : -1).filter(i => i !== -1);
-                if (highBins.length > 1 && (highBins[highBins.length-1] - highBins[0] > 2)) {
-                    skewType = "Đa đỉnh (Có thể lẫn 2 nguồn dữ liệu)";
-                    skewColor = "text-red-700 bg-red-50 border-red-200";
-                    skewAdvice = "Biểu đồ có từ 2 đỉnh trở lên. Cần kiểm tra xem có sự trộn lẫn giữa các ca làm việc, máy móc hoặc lô nguyên liệu khác nhau không.";
-                }
-            }
-
-            // 2. Đánh giá Năng lực quá trình (Cp, Cpk)
+            // Năng lực quá trình (Cp, Cpk)
             let capabilityHtml = "";
+            const lsl = parseFloat(document.getElementById('inputLSL').value);
+            const usl = parseFloat(document.getElementById('inputUSL').value);
+
             if (!isNaN(lsl) && !isNaN(usl) && usl > lsl) {
                 const cp = (usl - lsl) / (6 * stdDev);
                 const cpkU = (usl - mean) / (3 * stdDev);
@@ -481,7 +576,7 @@
 
                 capabilityHtml = `
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-4">
-                        <h4 class="font-bold text-slate-800 mb-3 text-sm uppercase">Chỉ số năng lực quá trình (LSL: ${lsl}, USL: ${usl})</h4>
+                        <h4 class="font-bold text-slate-800 mb-2 text-sm uppercase">Chỉ số năng lực (LSL: ${lsl}, USL: ${usl})</h4>
                         <div class="grid grid-cols-3 gap-2 text-center">
                             <div class="bg-white p-2 rounded border border-slate-200">
                                 <p class="text-xs text-slate-500 mb-1">Cp</p>
@@ -496,50 +591,50 @@
                                 <p class="text-xs font-bold ${cpColor} leading-tight">${cpStatus}</p>
                             </div>
                         </div>
-                        ${cpk < 1.33 ? `<p class="text-xs text-red-600 mt-2 font-medium">⚠️ Có sản phẩm nằm ngoài giới hạn cho phép. Cần cải tiến quá trình!</p>` : ''}
+                        ${cpk < 1.33 ? `<p class="text-xs text-red-600 mt-2 font-medium">⚠️ Có sản phẩm nằm ngoài giới hạn cho phép. Cần cải tiến!</p>` : ''}
                     </div>
                 `;
             } else {
-                capabilityHtml = `<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-4 text-center text-sm text-slate-500 italic">Chưa nhập đủ LSL và USL để đánh giá năng lực quá trình.</div>`;
+                capabilityHtml = `<div class="bg-slate-50 p-3 rounded-xl border border-slate-200 mt-4 text-center text-sm text-slate-500 italic">Nhập LSL/USL để xem chỉ số năng lực quá trình.</div>`;
             }
 
-            // 3. Render HTML
-            const resultPanel = document.getElementById('resultPanel');
-            resultPanel.innerHTML = `
+            document.getElementById('resultPanel').innerHTML = `
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-center shadow-sm">
                         <p class="text-xs text-slate-500 font-medium mb-1">Số mẫu (n)</p>
                         <p class="text-xl font-bold text-slate-800">${n}</p>
                     </div>
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-center shadow-sm">
-                        <p class="text-xs text-slate-500 font-medium mb-1">Trung bình (Mean)</p>
+                        <p class="text-xs text-slate-500 font-medium mb-1">Mean</p>
                         <p class="text-xl font-bold text-blue-600">${mean.toFixed(3)}</p>
                     </div>
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-center shadow-sm">
-                        <p class="text-xs text-slate-500 font-medium mb-1">Độ lệch chuẩn (s)</p>
+                        <p class="text-xs text-slate-500 font-medium mb-1">Std Dev (s)</p>
                         <p class="text-xl font-bold text-indigo-600">${stdDev.toFixed(3)}</p>
                     </div>
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-center shadow-sm">
-                        <p class="text-xs text-slate-500 font-medium mb-1">Số tổ (K) - Độ rộng (h)</p>
+                        <p class="text-xs text-slate-500 font-medium mb-1">Tổ (K) - Rộng (h)</p>
                         <p class="text-xl font-bold text-slate-800">${k} - ${h.toFixed(3)}</p>
                     </div>
                 </div>
 
-                <div class="p-4 rounded-xl border ${skewColor}">
+                <div class="p-4 rounded-xl border ${color}">
                     <h3 class="font-bold text-lg mb-1 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Hình dáng phân bố: ${skewType}
                     </h3>
-                    <p class="text-sm opacity-90 mt-1"><strong>Nhận xét:</strong> ${skewAdvice}</p>
+                    <p class="text-sm opacity-90 mt-1"><strong>Nhận xét:</strong> ${advice}</p>
                 </div>
 
                 ${capabilityHtml}
             `;
         }
 
-        // Khởi chạy
+        // Khởi chạy khi tải trang
         window.onload = () => {
-            loadSampleData();
+            generateSampleData();
+            renderTable();
+            updateDashboard();
         };
     </script>
 </body>
