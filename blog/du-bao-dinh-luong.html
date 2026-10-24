@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự báo Định lượng | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+            --accent-violet: #8B5CF6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 2rem; animation: fadeIn 0.8s ease; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; color: transparent;
+        }
+        .hero p { color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .chapter-badge { 
+            display: inline-block; padding: 6px 16px; background: rgba(6, 182, 212, 0.1); 
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan); 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tabs Navigation */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
+        .tab-btn.active {
+            background: rgba(6, 182, 212, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        /* Tool Panels */
+        .tool-panel { display: none; animation: fadeIn 0.4s ease; }
+        .tool-panel.active { display: block; }
+
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .panel-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .panel-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+        .formula-highlight { 
+            background: rgba(6, 182, 212, 0.1); border-left: 3px solid var(--accent-cyan); 
+            padding: 10px 15px; border-radius: 0 8px 8px 0; font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan); margin-bottom: 1.5rem; font-size: 1.05rem;
+        }
+
+        /* Inputs & Tables */
+        .input-group { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; align-items: flex-end; }
+        .input-field { display: flex; flex-direction: column; gap: 8px; }
+        .input-field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .input-field input {
+            padding: 10px 14px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none; width: 120px;
+        }
+        .input-field input:focus { border-color: var(--accent-cyan); }
+        
+        .data-table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: rgba(0, 0, 0, 0.3); padding: 10px; text-align: center; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border-glass); white-space: nowrap; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); text-align: center; }
+        input.table-input {
+            width: 80px; padding: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid transparent;
+            border-radius: 6px; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace;
+            font-weight: bold; text-align: center; transition: all 0.2s;
+        }
+        input.table-input:focus { border-color: var(--accent-amber); background: rgba(0, 0, 0, 0.5); outline: none; }
+        input.table-input.weight-input { color: var(--accent-cyan); width: 60px; }
+
+        .btn-calc {
+            padding: 12px 24px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -5px rgba(6, 182, 212, 0.5); }
+        .btn-calc.secondary { background: transparent; border: 1px solid var(--border-glass); color: var(--text-main); }
+        .btn-calc.secondary:hover { background: rgba(255,255,255,0.05); box-shadow: none; }
+
+        .btn-icon { padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+        .btn-icon:hover { color: var(--accent-rose); border-color: var(--accent-rose); background: rgba(251, 113, 133, 0.1); }
+
+        /* Results */
+        .result-box {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass);
+            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+        }
+        .final-result { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .highlight-num {
+            font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700;
+            color: var(--accent-emerald); text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 6px;
+        }
+        
+        .chart-container { position: relative; height: 300px; width: 100%; margin-top: 1.5rem; }
+
+        /* Utility */
+        .text-amber { color: var(--accent-amber); }
+        .text-rose { color: var(--accent-rose); }
+        .text-cyan { color: var(--accent-cyan); }
+        .text-emerald { color: var(--accent-emerald); }
+        .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .input-group { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="trending-up"></i></div>
+            <span>Quantitative Forecasting Tools</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.II - Mục II.2 (Trang 15-20)</div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="chapter-badge">Phương pháp Dự báo dựa trên Mô hình Toán học</div>
+            <h1>Các phương pháp <span>Dự báo Định lượng</span></h1>
+            <p>Sử dụng dữ liệu quá khứ và các mô hình toán học để dự đoán nhu cầu trong tương lai. Dưới đây là 6 công cụ tính toán tự động cho từng phương pháp.</p>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-target="tool-sma">
+                <i data-lucide="move-right"></i> 2.1. BQ di động giản đơn
+            </button>
+            <button class="tab-btn" data-target="tool-wma">
+                <i data-lucide="scale"></i> 2.2. BQ di động có trọng số
+            </button>
+            <button class="tab-btn" data-target="tool-es">
+                <i data-lucide="activity"></i> 2.3.1. San bằng số mũ
+            </button>
+            <button class="tab-btn" data-target="tool-tes">
+                <i data-lucide="git-branch"></i> 2.3.2. SB mũ có xu hướng
+            </button>
+            <button class="tab-btn" data-target="tool-trend">
+                <i data-lucide="line-chart"></i> 2.4. Hoạch định xu hướng
+            </button>
+            <button class="tab-btn" data-target="tool-season">
+                <i data-lucide="calendar"></i> 2.5. Chỉ số mùa vụ
+            </button>
+        </div>
+
+        <!-- TOOL 1: BÌNH QUÂN DI ĐỘNG GIẢN ĐƠN -->
+        <div id="tool-sma" class="tool-panel active">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="move-right" style="color:var(--accent-cyan)"></i> 2.1. Bình quân di động giản đơn</h2>
+                <p class="panel-desc">Dự báo dựa trên trung bình cộng của <b>n</b> giai đoạn gần nhất.</p>
+                <div class="formula-highlight">F_t = (Σ A_i) / n</div>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Số giai đoạn quan sát (n)</label>
+                        <input type="number" id="sma-n" value="3" min="1" max="20">
+                    </div>
+                    <button class="btn-calc" onclick="calcSMA()"><i data-lucide="calculator"></i> Tính toán</button>
+                    <button class="btn-calc secondary" onclick="fillSMAExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="sma-table">
+                        <thead><tr><th>Tháng</th><th>Nhu cầu thực tế (A_i)</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="result-box hidden" id="sma-result-box">
+                    <div class="final-result">
+                        Dự báo cho giai đoạn tiếp theo (F_t): <span class="highlight-num" id="sma-result">0</span>
+                    </div>
+                    <div id="sma-details" class="font-mono text-sm" style="color: var(--text-muted);"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 2: BÌNH QUÂN DI ĐỘNG CÓ TRỌNG SỐ -->
+        <div id="tool-wma" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="scale" style="color:var(--accent-cyan)"></i> 2.2. Bình quân di động có trọng số</h2>
+                <p class="panel-desc">Gán trọng số (H_i) cho từng giai đoạn để thể hiện mức độ quan trọng của dữ liệu quá khứ.</p>
+                <div class="formula-highlight">F_t = (Σ A_i * H_i) / (Σ H_i)</div>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Số giai đoạn (n)</label>
+                        <input type="number" id="wma-n" value="3" min="1" max="10" onchange="updateWmaWeights()">
+                    </div>
+                    <button class="btn-calc" onclick="calcWMA()"><i data-lucide="calculator"></i> Tính toán</button>
+                    <button class="btn-calc secondary" onclick="fillWMAExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div id="wma-weights-container" style="display:flex; gap:15px; margin-bottom:15px; flex-wrap:wrap; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px;">
+                    <!-- Weights inputs generated by JS -->
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="wma-table">
+                        <thead><tr><th>Tháng</th><th>Nhu cầu thực tế (A_i)</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="result-box hidden" id="wma-result-box">
+                    <div class="final-result">
+                        Dự báo giai đoạn tiếp theo: <span class="highlight-num" id="wma-result">0</span>
+                    </div>
+                    <div id="wma-details" class="font-mono text-sm" style="color: var(--text-muted); margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 3: SAN BẰNG SỐ MŨ GIẢN ĐƠN -->
+        <div id="tool-es" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="activity" style="color:var(--accent-cyan)"></i> 2.3.1. San bằng số mũ giản đơn</h2>
+                <p class="panel-desc">Dự báo dựa trên sự kết hợp giữa dự báo kỳ trước và sai số thực tế kỳ trước, có sử dụng hệ số α.</p>
+                <div class="formula-highlight">F_t = F_{t-1} + α * (A_{t-1} - F_{t-1})</div>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Hệ số san bằng (α)</label>
+                        <input type="number" id="es-alpha" value="0.5" min="0" max="1" step="0.1">
+                    </div>
+                    <div class="input-field">
+                        <label>Dự báo giai đoạn 1 (F_1)</label>
+                        <input type="number" id="es-f1" value="2200">
+                    </div>
+                    <button class="btn-calc" onclick="calcES()"><i data-lucide="calculator"></i> Tính toán</button>
+                    <button class="btn-calc secondary" onclick="fillESExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="es-table">
+                        <thead><tr><th>Tháng</th><th>Nhu cầu (A_i)</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="result-box hidden" id="es-result-box">
+                    <div class="final-result">
+                        Dự báo giai đoạn tiếp theo: <span class="highlight-num" id="es-result">0</span>
+                    </div>
+                    <div class="final-result" style="font-size: 0.9rem;">
+                        Độ lệch tuyệt đối bình quân (MAD): <span style="font-family:var(--mono); color:var(--accent-amber); font-weight:bold;" id="es-mad">0</span>
+                    </div>
+                    <div class="data-table-wrapper" style="margin-top:1rem; max-height: 250px; overflow-y: auto;">
+                        <table id="es-detail-table" style="font-size: 0.85rem;">
+                            <thead><tr><th>Tháng</th><th>A_i</th><th>F_i</th><th>AD = |A_i - F_i|</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 4: SAN BẰNG SỐ MŨ CÓ ĐIỀU CHỈNH XU HƯỚNG -->
+        <div id="tool-tes" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="git-branch" style="color:var(--accent-cyan)"></i> 2.3.2. San bằng số mũ có điều chỉnh xu hướng</h2>
+                <p class="panel-desc">Khắc phục nhược điểm của san bằng giản đơn khi dữ liệu có xu hướng biến động rõ rệt.</p>
+                <div class="formula-highlight">
+                    F_t = F_{t-1} + α(A_{t-1} - F_{t-1})<br>
+                    T_t = T_{t-1} + β(F_t - F_{t-1} - T_{t-1})<br>
+                    FIT_t = F_t + T_t
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Alpha (α)</label>
+                        <input type="number" id="tes-alpha" value="0.8" step="0.1">
+                    </div>
+                    <div class="input-field">
+                        <label>Beta (β)</label>
+                        <input type="number" id="tes-beta" value="0.5" step="0.1">
+                    </div>
+                    <div class="input-field">
+                        <label>Dự báo F_1</label>
+                        <input type="number" id="tes-f1" value="2200">
+                    </div>
+                    <div class="input-field">
+                        <label>Xu hướng T_1</label>
+                        <input type="number" id="tes-t1" value="0">
+                    </div>
+                    <button class="btn-calc" onclick="calcTES()"><i data-lucide="calculator"></i> Tính toán</button>
+                    <button class="btn-calc secondary" onclick="fillTESExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="tes-table">
+                        <thead><tr><th>Tháng</th><th>Nhu cầu (A_i)</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="result-box hidden" id="tes-result-box">
+                    <div class="final-result" style="margin-bottom:1rem;">
+                        Dự báo giai đoạn tiếp theo (FIT): <span class="highlight-num text-emerald" id="tes-result">0</span>
+                    </div>
+                    <div class="data-table-wrapper" style="max-height: 300px; overflow-y: auto;">
+                        <table id="tes-detail-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr><th>Tháng</th><th>A_i</th><th>F_i</th><th>T_i</th><th>FIT_i</th><th>AD</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 5: HOẠCH ĐỊNH XU HƯỚNG -->
+        <div id="tool-trend" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="line-chart" style="color:var(--accent-cyan)"></i> 2.4. Hoạch định xu hướng</h2>
+                <p class="panel-desc">Dự báo dựa trên phương trình đường thẳng hồi quy tuyến tính y = a + bt (Phương pháp bình phương tối thiểu).</p>
+                <div class="formula-highlight">y_t = a + b*t</div>
+                
+                <div class="input-group">
+                    <button class="btn-calc" onclick="calcTrend()"><i data-lucide="calculator"></i> Tính toán & Vẽ biểu đồ</button>
+                    <button class="btn-calc secondary" onclick="fillTrendExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="trend-table">
+                        <thead><tr><th>Thời gian (t)</th><th>Nhu cầu thực tế (y_i)</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="result-box hidden" id="trend-result-box">
+                    <div class="final-result">
+                        Phương trình xu hướng: y = <span id="trend-a" class="text-amber">0</span> + <span id="trend-b" class="text-amber">0</span> * t
+                    </div>
+                    <div class="final-result">
+                        Dự báo giai đoạn tiếp theo: <span class="highlight-num" id="trend-result">0</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOL 6: CHỈ SỐ MÙA VỤ -->
+        <div id="tool-season" class="tool-panel">
+            <div class="glass-panel">
+                <h2 class="panel-title"><i data-lucide="calendar" style="color:var(--accent-cyan)"></i> 2.5. Chỉ số Mùa vụ</h2>
+                <p class="panel-desc">Tính toán tính chu kỳ của dữ liệu quá khứ để phân bổ nhu cầu dự báo tổng thể cho từng quý/tháng.</p>
+                <div class="formula-highlight">S_i = D_i / Σ D_i ;  F_st = F_t * S_i</div>
+                
+                <div class="input-group">
+                    <div class="input-field">
+                        <label>Dự báo tổng năm tới</label>
+                        <input type="number" id="season-forecast" value="2280">
+                    </div>
+                    <button class="btn-calc" onclick="calcSeason()"><i data-lucide="calculator"></i> Tính toán</button>
+                    <button class="btn-calc secondary" onclick="fillSeasonExample()"><i data-lucide="lightbulb"></i> Điền ví dụ (SGK)</button>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="season-table">
+                        <thead>
+                            <tr><th>Quý</th><th>Năm 1</th><th>Năm 2</th><th>Năm 3</th><th>Năm 4</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="result-box hidden" id="season-result-box">
+                    <div class="data-table-wrapper">
+                        <table id="season-detail-table" style="font-size: 0.9rem;">
+                            <thead>
+                                <tr><th>Quý</th><th>Tổng nhu cầu</th><th>Chỉ số mùa vụ (S_i)</th><th>Dự báo phân bổ</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // --- TAB LOGIC ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        // --- HELPER FUNCTIONS ---
+        function generateInputTable(tableId, count) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>Tháng ${i}</td>
+                        <td><input type="number" class="table-input data-${tableId}" data-index="${i-1}" value=""></td>
+                    </tr>
+                `;
+            }
+        }
+
+        function getData(tableId) {
+            const inputs = document.querySelectorAll(`.data-${tableId}`);
+            let data = [];
+            inputs.forEach(input => data.push(parseFloat(input.value) || 0));
+            return data;
+        }
+
+        // ==========================================
+        // 1. TOOL SMA
+        // ==========================================
+        generateInputTable('sma-table', 8);
+        function fillSMAExample() {
+            const data = [15, 20, 26, 18, 32, 30, 25, 20]; // SGK trang 15
+            document.querySelectorAll('.data-sma-table').forEach((input, idx) => input.value = data[idx]);
+            document.getElementById('sma-n').value = 3;
+        }
+        function calcSMA() {
+            const data = getData('sma-table');
+            const n = parseInt(document.getElementById('sma-n').value);
+            if(n > data.length) { alert("n không được lớn hơn số dữ liệu!"); return; }
+            const lastN = data.slice(-n);
+            const sum = lastN.reduce((a, b) => a + b, 0);
+            const result = sum / n;
+            document.getElementById('sma-result').innerText = result.toFixed(2);
+            document.getElementById('sma-details').innerHTML = `Tính toán: (${lastN.join(' + ')}) / ${n} = ${result.toFixed(2)}`;
+            document.getElementById('sma-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // 2. TOOL WMA
+        // ==========================================
+        generateInputTable('wma-table', 8);
+        
+        function updateWmaWeights() {
+            const n = parseInt(document.getElementById('wma-n').value);
+            const container = document.getElementById('wma-weights-container');
+            container.innerHTML = '<label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); width:100%;">Trọng số (từ xa đến gần):</label>';
+            for(let i=1; i<=n; i++) {
+                container.innerHTML += `
+                    <div class="input-field">
+                        <label>GĐ ${i}</label>
+                        <input type="number" class="weight-input" id="wma-w-${i}" value="${(1/n).toFixed(2)}" step="0.1">
+                    </div>
+                `;
+            }
+        }
+        updateWmaWeights(); // Init
+
+        function fillWMAExample() {
+            const data = [15, 20, 26, 18, 32, 30, 25, 20]; // SGK trang 16
+            document.querySelectorAll('.data-wma-table').forEach((input, idx) => input.value = data[idx]);
+            document.getElementById('wma-n').value = 3;
+            updateWmaWeights();
+            // Trọng số ví dụ SGK: 0.2, 0.3, 0.5
+            document.getElementById('wma-w-1').value = 0.2;
+            document.getElementById('wma-w-2').value = 0.3;
+            document.getElementById('wma-w-3').value = 0.5;
+        }
+
+        function calcWMA() {
+            const data = getData('wma-table');
+            const n = parseInt(document.getElementById('wma-n').value);
+            if(n > data.length) { alert("n không được lớn hơn số dữ liệu!"); return; }
+            
+            const lastN = data.slice(-n);
+            let sumWeighted = 0;
+            let sumWeights = 0;
+            let detailStr = [];
+
+            for(let i=0; i<n; i++) {
+                const w = parseFloat(document.getElementById(`wma-w-${i+1}`).value) || 0;
+                sumWeighted += lastN[i] * w;
+                sumWeights += w;
+                detailStr.push(`(${lastN[i]} * ${w})`);
+            }
+
+            const result = sumWeighted / (sumWeights || 1);
+            
+            document.getElementById('wma-result').innerText = result.toFixed(2);
+            document.getElementById('wma-details').innerHTML = `
+                Tử số: ${detailStr.join(' + ')} = ${sumWeighted.toFixed(2)}<br>
+                Mẫu số (tổng trọng số): ${sumWeights.toFixed(2)}<br>
+                Kết quả: ${sumWeighted.toFixed(2)} / ${sumWeights.toFixed(2)} = ${result.toFixed(2)}
+            `;
+            document.getElementById('wma-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // 3. TOOL ES (Simple)
+        // ==========================================
+        generateInputTable('es-table', 6);
+        function fillESExample() {
+            const data = [2000, 2100, 1500, 1400, 1300, 1600]; // SGK trang 16
+            document.querySelectorAll('.data-es-table').forEach((input, idx) => input.value = data[idx]);
+            document.getElementById('es-f1').value = 2200;
+            document.getElementById('es-alpha').value = 0.8;
+        }
+        function calcES() {
+            const data = getData('es-table');
+            const alpha = parseFloat(document.getElementById('es-alpha').value);
+            let prevF = parseFloat(document.getElementById('es-f1').value);
+            let detailHtml = '';
+            let sumAD = 0;
+
+            for(let i = 0; i < data.length; i++) {
+                const A = data[i];
+                const AD = Math.abs(A - prevF);
+                sumAD += AD;
+
+                detailHtml += `<tr><td>${i+1}</td><td class="text-amber">${A}</td><td>${prevF.toFixed(2)}</td><td class="text-rose">${AD.toFixed(2)}</td></tr>`;
+                
+                // F(t+1) = Ft + alpha*(At - Ft)
+                prevF = prevF + alpha * (A - prevF);
+            }
+
+            const mad = sumAD / data.length;
+            document.getElementById('es-result').innerText = prevF.toFixed(2);
+            document.getElementById('es-mad').innerText = mad.toFixed(2);
+            document.querySelector('#es-detail-table tbody').innerHTML = detailHtml;
+            document.getElementById('es-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // 4. TOOL TES (Trend-Adjusted)
+        // ==========================================
+        generateInputTable('tes-table', 6);
+        function fillTESExample() {
+            const data = [2000, 2100, 1500, 1400, 1300, 1600]; // SGK trang 17
+            document.querySelectorAll('.data-tes-table').forEach((input, idx) => input.value = data[idx]);
+            document.getElementById('tes-alpha').value = 0.8;
+            document.getElementById('tes-beta').value = 0.5;
+            document.getElementById('tes-f1').value = 2200;
+            document.getElementById('tes-t1').value = 0;
+        }
+
+        function calcTES() {
+            const data = getData('tes-table');
+            const alpha = parseFloat(document.getElementById('tes-alpha').value);
+            const beta = parseFloat(document.getElementById('tes-beta').value);
+            
+            let F = parseFloat(document.getElementById('tes-f1').value);
+            let T = parseFloat(document.getElementById('tes-t1').value);
+            
+            let detailHtml = '';
+            
+            for(let i = 0; i < data.length; i++) {
+                const A = data[i];
+                const FIT = F + T;
+                const AD = Math.abs(A - FIT);
+
+                detailHtml += `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td class="text-amber">${A}</td>
+                        <td>${F.toFixed(2)}</td>
+                        <td>${T.toFixed(2)}</td>
+                        <td class="text-emerald font-bold">${FIT.toFixed(2)}</td>
+                        <td class="text-rose">${AD.toFixed(2)}</td>
+                    </tr>
+                `;
+
+                // Calculate for next period
+                const nextF = F + alpha * (A - F);
+                const nextT = T + beta * (nextF - F - T);
+                
+                F = nextF;
+                T = nextT;
+            }
+
+            // The forecast for the next period (after the last data point)
+            const finalFIT = F + T;
+
+            document.getElementById('tes-result').innerText = finalFIT.toFixed(2);
+            document.querySelector('#tes-detail-table tbody').innerHTML = detailHtml;
+            document.getElementById('tes-result-box').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // 5. TOOL TREND
+        // ==========================================
+        generateInputTable('trend-table', 6);
+        let myChart = null;
+
+        function fillTrendExample() {
+            const data = [8, 10, 9, 11, 10, 13]; // SGK trang 19
+            document.querySelectorAll('.data-trend-table').forEach((input, idx) => input.value = data[idx]);
+        }
+
+        function calcTrend() {
+            const data = getData('trend-table');
+            const n = data.length;
+            let sumT = 0, sumY = 0, sumTY = 0, sumT2 = 0;
+
+            for(let i = 0; i < n; i++) {
+                const t = i + 1;
+                const y = data[i];
+                sumT += t; sumY += y; sumTY += t * y; sumT2 += t * t;
+            }
+
+            const b = (n * sumTY - sumT * sumY) / (n * sumT2 - sumT * sumT);
+            const a = (sumY - b * sumT) / n;
+            const nextY = a + b * (n + 1);
+
+            document.getElementById('trend-a').innerText = a.toFixed(2);
+            document.getElementById('trend-b').innerText = b.toFixed(2);
+            document.getElementById('trend-result').innerText = nextY.toFixed(2);
+            document.getElementById('trend-result-box').classList.remove('hidden');
+            drawChart(data, a, b, n + 1, nextY);
+        }
+
+        function drawChart(data, a, b, nextT, nextY) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            const labels = [], actualData = [], trendData = [];
+
+            for(let i = 0; i < data.length; i++) {
+                labels.push(`T${i+1}`); actualData.push(data[i]); trendData.push(a + b * (i+1));
+            }
+            labels.push(`T${nextT}`); actualData.push(null); trendData.push(nextY);
+
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Thực tế', data: actualData, borderColor: '#FBBF24', backgroundColor: '#FBBF24', tension: 0.1, pointRadius: 5 },
+                        { label: 'Xu hướng', data: trendData, borderColor: '#06B6D4', borderDash: [5, 5], tension: 0, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94A3B8' } } },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // 6. TOOL SEASON
+        // ==========================================
+        function initSeasonTable() {
+            const tbody = document.querySelector('#season-table tbody');
+            tbody.innerHTML = '';
+            for(let q = 1; q <= 4; q++) {
+                let row = `<tr><td>Quý ${q}</td>`;
+                for(let y = 1; y <= 4; y++) {
+                    row += `<td><input type="number" class="table-input season-input" data-q="${q}" data-y="${y}" value=""></td>`;
+                }
+                row += `</tr>`;
+                tbody.innerHTML += row;
+            }
+        }
+        initSeasonTable();
+
+        function fillSeasonExample() {
+            const data = [
+                [200, 220, 230, 230], [850, 860, 865, 865],
+                [630, 750, 650, 630], [430, 850, 425, 435]
+            ]; // SGK trang 20
+            document.querySelectorAll('.season-input').forEach(input => {
+                const q = parseInt(input.dataset.q) - 1, y = parseInt(input.dataset.y) - 1;
+                input.value = data[q][y];
+            });
+            document.getElementById('season-forecast').value = 2280;
+        }
+
+        function calcSeason() {
+            const inputs = document.querySelectorAll('.season-input');
+            let quartersData = [[], [], [], []];
+            inputs.forEach(input => {
+                const q = parseInt(input.dataset.q) - 1;
+                quartersData[q].push(parseFloat(input.value) || 0);
+            });
+
+            let totalOverall = 0, quarterTotals = [];
+            for(let q = 0; q < 4; q++) {
+                const sum = quartersData[q].reduce((a, b) => a + b, 0);
+                quarterTotals.push(sum); totalOverall += sum;
+            }
+
+            const totalForecast = parseFloat(document.getElementById('season-forecast').value);
+            let detailHtml = '';
+
+            for(let q = 0; q < 4; q++) {
+                const sIndex = quarterTotals[q] / totalOverall;
+                const forecast = sIndex * totalForecast;
+                detailHtml += `<tr><td>Quý ${q+1}</td><td class="text-amber">${quarterTotals[q]}</td><td class="font-mono">${sIndex.toFixed(2)}</td><td class="highlight-num" style="font-size:1rem; padding:2px 8px;">${forecast.toFixed(0)}</td></tr>`;
+            }
+
+            document.querySelector('#season-detail-table tbody').innerHTML = detailHtml + `
+                <tr style="border-top: 2px solid var(--border-glass); font-weight: bold;">
+                    <td>Tổng</td><td class="text-amber">${totalOverall}</td><td>1.00</td><td>${totalForecast}</td>
+                </tr>
+            `;
+            document.getElementById('season-result-box').classList.remove('hidden');
+        }
+
+        // Load default data on start
+        window.onload = () => {
+            fillSMAExample();
+            fillWMAExample();
+            fillESExample();
+            fillTESExample();
+            fillTrendExample();
+            fillSeasonExample();
+        };
+
+    </script>
+</body>
+</html>
