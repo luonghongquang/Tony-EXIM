@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đường cong Kinh nghiệm | Tony EXIM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #0B1120;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --accent-cyan: #06B6D4;
+            --accent-blue: #3B82F6;
+            --accent-amber: #FBBF24;
+            --accent-rose: #FB7185;
+            --accent-emerald: #10B981;
+            --accent-violet: #8B5CF6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(11, 17, 32, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; }
+        .logo-icon { color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2); }
+        
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 2rem; width: 100%;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 3rem; animation: fadeIn 0.8s ease; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; color: transparent;
+        }
+        .hero p { color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .chapter-badge { 
+            display: inline-block; padding: 6px 16px; background: rgba(6, 182, 212, 0.1); 
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan); 
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Theory Grid */
+        .theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .theory-card { 
+            background: var(--bg-panel); border: 1px solid var(--border-glass); 
+            padding: 1.5rem; border-radius: 16px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .theory-card h3 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .theory-card p { font-size: 0.9rem; color: var(--text-muted); }
+        
+        .formula-box { 
+            background: rgba(6, 182, 212, 0.1); border-left: 4px solid var(--accent-cyan); 
+            padding: 15px; border-radius: 0 8px 8px 0; margin: 15px 0; font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan); font-size: 1.1rem; text-align: center;
+        }
+
+        /* =========================================
+           HIGHLIGHTED TOOL SECTION
+           ========================================= */
+        .tool-wrapper {
+            padding: 3px; border-radius: 24px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet), var(--accent-rose));
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+            margin-bottom: 3rem;
+            animation: borderGlow 3s infinite alternate;
+        }
+        @keyframes borderGlow {
+            0% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+            100% { box-shadow: 0 0 50px rgba(139, 92, 246, 0.4); }
+        }
+        .tool-inner {
+            background: var(--bg-base); border-radius: 22px; padding: 2.5rem;
+            position: relative; overflow: hidden;
+        }
+        .tool-inner::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .tool-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
+        @media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+        /* Inputs */
+        .input-group { display: flex; flex-direction: column; gap: 1.5rem; }
+        .input-field { display: flex; flex-direction: column; gap: 8px; }
+        .input-field label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); display: flex; justify-content: space-between;}
+        .input-field label span { color: var(--accent-cyan); }
+        .input-field input, .input-field select {
+            padding: 12px 16px; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-glass);
+            border-radius: 8px; color: var(--text-main); font-family: 'JetBrains Mono', monospace; outline: none; font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .input-field input:focus, .input-field select:focus { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(6,182,212,0.2); }
+        
+        .input-field select option { background: var(--bg-base); color: var(--text-main); }
+
+        /* Results */
+        .result-panel { display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+        .res-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
+            padding: 1.5rem; border-radius: 12px; display: flex; flex-direction: column; gap: 5px;
+        }
+        .res-label { font-size: 0.9rem; color: var(--text-muted); }
+        .res-value { font-size: 2rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; color: var(--accent-emerald); text-shadow: 0 0 10px rgba(16,185,129,0.3); }
+        
+        .formula-detail {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--accent-amber);
+            background: rgba(251, 191, 36, 0.1); padding: 10px; border-radius: 8px; margin-top: 10px;
+            word-break: break-all;
+        }
+
+        /* Chart */
+        .chart-container { position: relative; height: 350px; width: 100%; margin-top: 1rem; }
+        
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="trending-down"></i></div>
+            <span>Learning Curve Analysis</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Ch.III - Mục 3 (Trang 35-36)</div>
+    </header>
+
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="chapter-badge">Hiệu ứng của Kinh nghiệm trong Sản xuất</div>
+            <h1>Đường cong <span>Kinh nghiệm</span></h1>
+            <p>Khi sản xuất càng nhiều, tay nghề người lao động càng cao, thao tác thuần thục hơn, giúp chi phí hoặc thời gian để sản xuất ra một đơn vị sản phẩm sau thấp hơn đơn vị trước đó.</p>
+        </div>
+
+        <!-- Theory Section -->
+        <div class="theory-grid">
+            <div class="theory-card">
+                <h3><i data-lucide="percent" size="18" style="color: var(--accent-amber);"></i> Tỷ lệ kinh nghiệm (L)</h3>
+                <p>Thống kê cho thấy cứ mỗi lần <b>công suất tăng gấp đôi</b> (số lượng sản phẩm tích lũy tăng gấp đôi), thời gian/chi phí để làm ra sản phẩm tiếp theo sẽ giảm đi theo một tỷ lệ phần trăm nhất định. Ví dụ: Tỷ lệ 85% nghĩa là làm sản phẩm thứ 2 sẽ chỉ tốn 85% thời gian so với sản phẩm thứ 1.</p>
+            </div>
+            <div class="theory-card">
+                <h3><i data-lucide="calculator" size="18" style="color: var(--accent-cyan);"></i> 3.1. Thời gian thực hiện (Gấp đôi)</h3>
+                <p>Áp dụng khi số thứ tự sản phẩm là lũy thừa của 2 (2, 4, 8, 16...).<br>
+                <span class="font-mono" style="color:var(--accent-cyan)">\(T_n = T_1 \times L^n\)</span> (với \(n\) là số lần gấp đôi).</p>
+            </div>
+            <div class="theory-card">
+                <h3><i data-lucide="function-square" size="18" style="color: var(--accent-violet);"></i> 3.2. Phương pháp Loga</h3>
+                <p>Phương pháp tổng quát, áp dụng chính xác cho <b>mọi sản phẩm</b> bất kỳ (sản phẩm thứ 3, 5, 10...).<br>
+                <span class="font-mono" style="color:var(--accent-violet)">\(T_n = T_1 \times N^b\)</span>, với \(b = \frac{\log(L)}{\log(2)}\).</p>
+            </div>
+        </div>
+
+        <!-- HIGHLIGHTED TOOL SECTION -->
+        <div class="tool-wrapper">
+            <div class="tool-inner">
+                <h2 style="font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: 2rem; color: #fff;">
+                    <i data-lucide="sliders" style="display:inline; vertical-align:middle; color:var(--accent-cyan); margin-right:8px;"></i>
+                    Công cụ Mô phỏng Đường cong
+                </h2>
+
+                <div class="tool-layout">
+                    <!-- Inputs -->
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label>Thời gian/Chi phí SP thứ 1 (\(T_1\))</label>
+                            <input type="number" id="input-t1" value="125" min="1">
+                        </div>
+                        <div class="input-field">
+                            <label>Tỷ lệ kinh nghiệm (\(L\))</label>
+                            <select id="input-l">
+                                <option value="0.95">95% (Rất chậm)</option>
+                                <option value="0.90">90% (Chậm)</option>
+                                <option value="0.85" selected>85% (Tiêu chuẩn)</option>
+                                <option value="0.80">80% (Nhanh)</option>
+                                <option value="0.75">75% (Rất nhanh)</option>
+                            </select>
+                        </div>
+                        <div class="input-field">
+                            <label>Sản phẩm mục tiêu cần tính (\(N\))</label>
+                            <input type="number" id="input-n" value="4" min="1">
+                        </div>
+
+                        <!-- Results Panel -->
+                        <div class="res-card">
+                            <div class="res-label">
+                                Thời gian/Chi phí để sản xuất sản phẩm thứ <span id="label-n" style="color:#fff; font-weight:bold;">4</span>:
+                            </div>
+                            <div class="res-value" id="res-tn">90.31</div>
+                            <div class="formula-detail" id="formula-detail">
+                                b = log(0.85) / log(2) = -0.234<br>
+                                T4 = 125 * 4^(-0.234) = 90.31
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // ==========================================
+        // CHART & CALCULATION LOGIC
+        // ==========================================
+        let chartInstance = null;
+
+        const t1Input = document.getElementById('input-t1');
+        const lInput = document.getElementById('input-l');
+        const nInput = document.getElementById('input-n');
+        
+        const resTn = document.getElementById('res-tn');
+        const labelN = document.getElementById('label-n');
+        const formulaDetail = document.getElementById('formula-detail');
+
+        function updateAnalysis() {
+            const T1 = parseFloat(t1Input.value) || 1;
+            const L = parseFloat(lInput.value) || 0.85;
+            const N = parseInt(nInput.value) || 1;
+
+            // Calculation: Logarithmic method
+            const b = Math.log(L) / Math.log(2);
+            const Tn = T1 * Math.pow(N, b);
+
+            // Update UI
+            labelN.innerText = N;
+            resTn.innerText = Tn.toFixed(2);
+            
+            formulaDetail.innerHTML = `
+                b = log(${L}) / log(2) = ${b.toFixed(3)}<br>
+                T<sub>${N}</sub> = ${T1} &times; ${N}<sup>${b.toFixed(3)}</sup> = ${Tn.toFixed(2)}
+            `;
+
+            // Draw Chart
+            renderChart(T1, L, b, N, Tn);
+        }
+
+        function renderChart(T1, L, b, targetN, targetTn) {
+            const ctx = document.getElementById('learningChart').getContext('2d');
+            
+            // Max N for x-axis (show twice the target N or at least 10)
+            const maxN = Math.max(targetN * 2, 10);
+            
+            const labels = [];
+            const dataPoints = [];
+
+            for (let i = 1; i <= maxN; i++) {
+                labels.push(i);
+                dataPoints.push(T1 * Math.pow(i, b));
+            }
+
+            // Highlight target point
+            const targetPoint = [{
+                x: targetN,
+                y: targetTn
+            }];
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Thời gian/Chi phí dự kiến',
+                            data: dataPoints,
+                            borderColor: '#06B6D4', // Cyan
+                            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4, // Smooth curve
+                            pointRadius: 0 // Hide points for smooth curve
+                        },
+                        {
+                            label: `Sản phẩm mục tiêu (N=${targetN})`,
+                            data: targetPoint,
+                            type: 'scatter',
+                            backgroundColor: '#FBBF24', // Amber
+                            borderColor: '#FFF',
+                            borderWidth: 2,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            pointStyle: 'circle'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#94A3B8', font: { family: 'Inter' } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#F8FAFC',
+                            bodyColor: '#F8FAFC',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label && context.datasetIndex === 0) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Số thứ tự sản phẩm (N)', color: '#94A3B8' },
+                            ticks: { color: '#94A3B8', maxTicksLimit: 15 },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Thời gian / Chi phí', color: '#94A3B8' },
+                            ticks: { color: '#94A3B8' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Attach event listeners for real-time updates
+        t1Input.addEventListener('input', updateAnalysis);
+        lInput.addEventListener('change', updateAnalysis);
+        nInput.addEventListener('input', updateAnalysis);
+
+        // Initial render
+        window.onload = () => {
+            updateAnalysis();
+        };
+
+    </script>
+</body>
+</html>
