@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Phân Tích Lỗi Theo Thời Gian (c-chart)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate 50 */
+        }
+        
+        /* Animation cho các card */
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tùy chỉnh thanh cuộn cho bảng */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Hiệu ứng cho input */
+        input[type="number"] {
+            transition: all 0.2s ease;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            background-color: #fff;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-12">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-indigo-700 via-blue-700 to-blue-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-3">
+                    <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Phân Tích Lỗi Sản Xuất (c-chart)
+                </h1>
+                <p class="text-blue-100 mt-1 text-sm md:text-base opacity-90">Theo dõi biến động số lượng khuyết tật theo thời gian - Quy luật 3 Sigma</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            
+            <!-- Cột Trái: Bảng Nhập Liệu -->
+            <div class="xl:col-span-5 flex flex-col gap-6 fade-in">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Ma Trận Dữ Liệu Lỗi
+                        </h2>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="flex gap-2 mb-4">
+                            <button onclick="addRow()" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2 px-3 rounded-lg transition-colors flex justify-center items-center gap-1.5 btn-hover text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> Thêm Loại Lỗi
+                            </button>
+                            <button onclick="addColumn()" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium py-2 px-3 rounded-lg transition-colors flex justify-center items-center gap-1.5 btn-hover text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Thêm Ngày
+                            </button>
+                        </div>
+
+                        <div class="table-container overflow-auto max-h-[500px] border border-slate-200 rounded-lg relative shadow-inner">
+                            <table class="w-full text-sm text-left" id="dataTable">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0 z-10 shadow-sm" id="tableHead">
+                                    <!-- Header -->
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Body -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-5 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                            <label class="text-sm font-semibold text-indigo-900 mb-2 block">Chọn đối tượng để phân tích:</label>
+                            <select id="analysisTarget" class="bg-white border border-indigo-300 text-slate-800 text-sm font-medium rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 shadow-sm" onchange="updateDashboard()">
+                                <!-- Options -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột Phải: Biểu đồ và Đánh giá -->
+            <div class="xl:col-span-7 flex flex-col gap-6 fade-in" style="animation-delay: 0.1s;">
+                
+                <!-- Thống số thẻ -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-blue-50 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <div class="relative z-10">
+                            <p class="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Trung Bình Lỗi (c̄)</p>
+                            <p class="text-2xl font-black text-blue-600" id="valCL">--</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-red-50 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <div class="relative z-10">
+                            <p class="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Giới Hạn Trên (UCL)</p>
+                            <p class="text-2xl font-black text-red-500" id="valUCL">--</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-orange-50 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <div class="relative z-10">
+                            <p class="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Giới Hạn Dưới (LCL)</p>
+                            <p class="text-2xl font-black text-orange-500" id="valLCL">--</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-slate-50 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <div class="relative z-10">
+                            <p class="text-xs text-slate-500 font-bold mb-1 uppercase tracking-wider">Tổng Lỗi / Số Mẫu</p>
+                            <p class="text-2xl font-black text-slate-700" id="valTotal">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold text-slate-800" id="chartTitle">Biểu Đồ Kiểm Soát (c-chart)</h2>
+                        <span class="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded-md">Quy luật 3σ</span>
+                    </div>
+                    <div class="relative w-full h-[350px]">
+                        <canvas id="controlChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Đánh giá & Lời khuyên -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Đánh Giá & Lời Khuyên Khắc Phục
+                    </h2>
+                    <div id="analysisResult" class="space-y-3">
+                        <!-- Nội dung đánh giá -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- KHỞI TẠO DỮ LIỆU MẪU ---
+        // Cột: Thời gian (Ngày 1 -> Ngày 10)
+        let columnNames = ["Ngày 1", "Ngày 2", "Ngày 3", "Ngày 4", "Ngày 5", "Ngày 6", "Ngày 7", "Ngày 8", "Ngày 9", "Ngày 10"];
+        
+        // Hàng: Các loại lỗi
+        let rowNames = ["Trầy xước", "Nứt vỡ", "Móp méo", "Lỗi màu sơn", "Lỗi lắp ráp"];
+        
+        // Dữ liệu: Ma trận [Hàng][Cột] - Số lượng lỗi
+        // Thiết kế cố tình: Đa số các ngày lỗi rải rác từ 1-5.
+        // Ngày 5: Tổng lỗi tăng vọt do "Nứt vỡ" lên 15 (Vượt UCL).
+        // Ngày 9: "Lỗi màu sơn" tăng đột biến 12.
+        let tableData = [
+            [2, 3, 1, 4, 5, 2, 3, 2, 4, 1], // Trầy xước
+            [1, 0, 2, 1, 15, 2, 1, 0, 3, 1], // Nứt vỡ (Điểm bất thường ở Ngày 5)
+            [0, 1, 1, 2, 3, 1, 0, 1, 2, 0], // Móp méo
+            [3, 2, 4, 2, 4, 3, 2, 3, 12, 2], // Lỗi màu sơn (Điểm bất thường ở Ngày 9)
+            [1, 1, 0, 1, 2, 1, 1, 0, 1, 1]  // Lỗi lắp ráp
+        ];
+
+        let myChart = null;
+
+        // --- CÁC HÀM XỬ LÝ BẢNG ---
+        function renderTable() {
+            const thead = document.getElementById('tableHead');
+            const tbody = document.getElementById('tableBody');
+            const targetSelect = document.getElementById('analysisTarget');
+            
+            // Render Header
+            let headHTML = `<tr>
+                <th scope="col" class="px-4 py-3 min-w-[140px] sticky left-0 bg-slate-100 z-20 border-r border-slate-200">Loại Lỗi \\ Thời Gian</th>`;
+            columnNames.forEach((name, index) => {
+                headHTML += `<th scope="col" class="px-3 py-3 text-center min-w-[80px] relative group">
+                    ${name}
+                    ${columnNames.length > 1 ? `<button onclick="removeColumn(${index})" class="absolute top-1 right-1 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity" title="Xóa ngày">&times;</button>` : ''}
+                </th>`;
+            });
+            headHTML += `<th scope="col" class="px-2 py-3 w-12 text-center">Xóa</th></tr>`;
+            thead.innerHTML = headHTML;
+
+            // Render Body
+            let bodyHTML = '';
+            tableData.forEach((row, rowIndex) => {
+                bodyHTML += `<tr class="bg-white border-b hover:bg-slate-50 transition-colors group-row">`;
+                // Cột tên lỗi (có thể sửa được)
+                bodyHTML += `<td class="px-2 py-2 sticky left-0 bg-white border-r border-slate-200 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                    <input type="text" value="${rowNames[rowIndex]}" onchange="updateRowName(${rowIndex}, this.value)" 
+                        class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-indigo-500 rounded px-2 py-1 font-semibold text-slate-700 text-sm">
+                </td>`;
+                
+                columnNames.forEach((_, colIndex) => {
+                    let val = row[colIndex] !== undefined && row[colIndex] !== null ? row[colIndex] : 0;
+                    // Highlight ô nếu giá trị lớn (cảnh báo đỏ nhạt)
+                    let bgClass = val >= 10 ? 'bg-red-50 text-red-700 font-bold' : 'text-slate-700';
+                    bodyHTML += `<td class="px-2 py-2">
+                        <input type="number" min="0" value="${val}" onchange="updateCell(${rowIndex}, ${colIndex}, this.value)" 
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-indigo-500 rounded px-2 py-1 text-center font-medium ${bgClass}">
+                    </td>`;
+                });
+                
+                bodyHTML += `<td class="px-2 py-2 text-center">
+                    <button onclick="removeRow(${rowIndex})" class="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </td>`;
+                bodyHTML += `</tr>`;
+            });
+            tbody.innerHTML = bodyHTML;
+
+            // Render Dropdown chọn đối tượng
+            let currentVal = targetSelect.value;
+            let selectHTML = `<option value="TOTAL" class="font-bold text-indigo-700">▶ TỔNG SỐ LỖI THEO THỜI GIAN</option>`;
+            selectHTML += `<optgroup label="--- Phân tích theo từng loại lỗi ---">`;
+            rowNames.forEach((name, index) => {
+                selectHTML += `<option value="ROW_${index}">${name}</option>`;
+            });
+            selectHTML += `</optgroup>`;
+            targetSelect.innerHTML = selectHTML;
+            
+            // Khôi phục giá trị đã chọn trước đó
+            if (currentVal && targetSelect.querySelector(`option[value="${currentVal}"]`)) {
+                targetSelect.value = currentVal;
+            }
+        }
+
+        function updateCell(row, col, value) {
+            let numValue = value === '' ? 0 : parseInt(value);
+            if (numValue < 0) numValue = 0;
+            tableData[row][col] = numValue;
+            renderTable(); // Render lại để cập nhật màu sắc ô nếu cần
+            updateDashboard(); 
+        }
+
+        function updateRowName(row, value) {
+            rowNames[row] = value || `Lỗi ${row + 1}`;
+            renderTable(); // Cập nhật lại dropdown
+            updateDashboard();
+        }
+
+        function addRow() {
+            const newRow = new Array(columnNames.length).fill(0); 
+            tableData.push(newRow);
+            rowNames.push(`Loại lỗi ${rowNames.length + 1}`);
+            renderTable();
+            updateDashboard();
+        }
+
+        function removeRow(index) {
+            if (tableData.length > 1) {
+                tableData.splice(index, 1);
+                rowNames.splice(index, 1);
+                renderTable();
+                // Reset dropdown nếu xóa mất option đang chọn
+                document.getElementById('analysisTarget').value = 'TOTAL';
+                updateDashboard();
+            } else {
+                alert("Cần ít nhất 1 loại lỗi để phân tích.");
+            }
+        }
+
+        function addColumn() {
+            const colName = prompt("Nhập tên thời gian mới (VD: Ngày 11, Tuần 3...):", `Ngày ${columnNames.length + 1}`);
+            if (colName) {
+                columnNames.push(colName);
+                tableData.forEach(row => row.push(0)); 
+                renderTable();
+                updateDashboard();
+            }
+        }
+
+        function removeColumn(colIndex) {
+            if (columnNames.length > 2) {
+                columnNames.splice(colIndex, 1);
+                tableData.forEach(row => row.splice(colIndex, 1));
+                renderTable();
+                updateDashboard();
+            } else {
+                alert("Cần ít nhất 2 mốc thời gian để vẽ biểu đồ.");
+            }
+        }
+
+        // --- TÍNH TOÁN THỐNG KÊ C-CHART ---
+        function calculateCChart(data) {
+            const n = data.length;
+            if (n === 0) return null;
+
+            // 1. Tính trung bình cộng (c-bar)
+            const sum = data.reduce((a, b) => a + b, 0);
+            const mean = sum / n;
+
+            // 2. Tính UCL và LCL cho biểu đồ c (Dữ liệu đếm)
+            // Công thức: c-bar ± 3 * sqrt(c-bar)
+            const sigma = Math.sqrt(mean);
+            const UCL = mean + (3 * sigma);
+            let LCL = mean - (3 * sigma);
+            
+            // Giới hạn dưới của số lượng lỗi không thể âm
+            if (LCL < 0) LCL = 0;
+
+            return {
+                mean: mean,
+                sigma: sigma,
+                UCL: UCL,
+                LCL: LCL,
+                sum: sum,
+                n: n
+            };
+        }
+
+        // --- PHÂN TÍCH VÀ ĐƯA LỜI KHUYÊN ---
+        function analyzeProcess(data, stats, labelName) {
+            const { mean, UCL, LCL } = stats;
+            let issues = [];
+            let status = "Ổn định";
+            let colorClass = "text-green-700 bg-green-50 border-green-200";
+
+            // 1. Tìm điểm vượt giới hạn
+            data.forEach((val, index) => {
+                if (val > UCL) {
+                    issues.push(`<b>${columnNames[index]}</b> có số lượng lỗi là <b>${val}</b> (Vượt quá UCL = ${UCL.toFixed(2)}).`);
+                } else if (val < LCL) {
+                    issues.push(`<b>${columnNames[index]}</b> có số lượng lỗi là <b>${val}</b> (Thấp hơn LCL = ${LCL.toFixed(2)}).`);
+                }
+            });
+
+            // 2. Tìm chuỗi 7 điểm liên tiếp nằm 1 phía đường trung tâm
+            let aboveCount = 0, belowCount = 0;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] > mean) {
+                    aboveCount++; belowCount = 0;
+                } else if (data[i] < mean) {
+                    belowCount++; aboveCount = 0;
+                } else {
+                    aboveCount = 0; belowCount = 0;
+                }
+                
+                if (aboveCount === 7) {
+                    issues.push(`Phát hiện <b>7 ${columnNames[0] ? 'mốc thời gian' : 'điểm'}</b> liên tiếp có số lỗi TRÊN mức trung bình (kết thúc tại ${columnNames[i]}). Quá trình đang bị lệch.`);
+                }
+                if (belowCount === 7) {
+                    issues.push(`Phát hiện <b>7 mốc thời gian</b> liên tiếp có số lỗi DƯỚI mức trung bình (kết thúc tại ${columnNames[i]}). Quá trình đang bị lệch.`);
+                }
+            }
+
+            if (issues.length > 0) {
+                status = "Có Bất Thường";
+                colorClass = "text-red-700 bg-red-50 border-red-200 shadow-sm";
+            }
+
+            // Nội dung HTML đánh giá
+            let html = `
+                <div class="p-5 rounded-xl border ${colorClass}">
+                    <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                        ${status === 'Ổn định' 
+                            ? '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' 
+                            : '<svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>'}
+                        Trạng thái: ${status} - Đang phân tích [${labelName}]
+                    </h3>
+            `;
+
+            if (issues.length > 0) {
+                html += `<div class="space-y-2 text-slate-800">`;
+                html += `<ul class="list-disc pl-5 space-y-1 text-sm font-medium">`;
+                issues.forEach(issue => {
+                    html += `<li>${issue}</li>`;
+                });
+                html += `</ul>`;
+                
+                html += `<div class="mt-4 pt-3 border-t border-red-200/50">
+                    <p class="font-bold text-slate-900 mb-2 flex items-center gap-2"><span class="text-xl">💡</span> Hướng Giải Quyết:</p>
+                    <ul class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+                        <li><b>Kiểm tra ngay lập tức:</b> Rà soát lại các lô hàng sản xuất vào thời điểm bị cảnh báo (${issues.length > 0 ? 'các mốc nêu trên' : ''}).</li>
+                        <li><b>Tìm nguyên nhân gốc rễ:</b> Sử dụng <b>Biểu đồ nhân quả (Xương cá)</b> kết hợp <b>5 Why</b> để xem xét các yếu tố: Máy móc (hỏng hóc, cài đặt sai), Con người (tay nghề, thay ca), Nguyên vật liệu (lô mới, độ ẩm), Phương pháp (quy trình thay đổi).</li>
+                        <li><b>Hành động khắc phục:</b> Loại bỏ nguyên nhân gốc rễ, đào tạo lại công nhân hoặc hiệu chỉnh thiết bị. Theo dõi chặt chẽ các lô tiếp theo.</li>
+                    </ul>
+                </div>`;
+                html += `</div>`;
+            } else {
+                html += `<p class="text-sm text-slate-700 font-medium">Tất cả dữ liệu đều nằm trong vùng kiểm soát (từ ${stats.LCL.toFixed(2)} đến ${stats.UCL.toFixed(2)}). Không phát hiện xu hướng bất thường. Quá trình sản xuất đang được duy trì ổn định. Hãy tiếp tục giám sát!</p>`;
+            }
+            
+            html += `</div>`;
+            document.getElementById('analysisResult').innerHTML = html;
+        }
+
+        // --- VẼ BIỂU ĐỒ ---
+        function renderChart(data, stats, labels) {
+            const ctx = document.getElementById('controlChart').getContext('2d');
+            const { mean, UCL, LCL } = stats;
+
+            const uclLine = new Array(data.length).fill(UCL);
+            const lclLine = new Array(data.length).fill(LCL);
+            const clLine = new Array(data.length).fill(mean);
+
+            // Tô đỏ các điểm vượt ngưỡng
+            const pointBgColors = data.map(val => {
+                if (val > UCL || val < LCL) return '#ef4444'; // Đỏ
+                return '#3b82f6'; // Xanh dương
+            });
+            
+            const pointRadii = data.map(val => {
+                if (val > UCL || val < LCL) return 7; // To hơn
+                return 5;
+            });
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Số lượng lỗi',
+                            data: data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: '#3b82f6',
+                            borderWidth: 2,
+                            pointBackgroundColor: pointBgColors,
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: pointRadii,
+                            pointHoverRadius: 9,
+                            tension: 0.1,
+                            zIndex: 10,
+                            fill: false
+                        },
+                        {
+                            label: 'UCL',
+                            data: uclLine,
+                            borderColor: '#ef4444',
+                            borderWidth: 2,
+                            borderDash: [6, 4],
+                            pointRadius: 0,
+                            fill: false,
+                            zIndex: 5
+                        },
+                        {
+                            label: 'Đường trung bình (c̄)',
+                            data: clLine,
+                            borderColor: '#10b981',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: false,
+                            zIndex: 5
+                        },
+                        {
+                            label: 'LCL',
+                            data: lclLine,
+                            borderColor: '#f59e0b',
+                            borderWidth: 2,
+                            borderDash: [6, 4],
+                            pointRadius: 0,
+                            fill: false,
+                            zIndex: 5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 10,
+                                font: { family: 'Inter', size: 12, weight: '600' },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { family: 'Inter', size: 14, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 14 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y;
+                                        if(context.datasetIndex === 0) label += ' lỗi';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số lượng khuyết tật',
+                                font: { family: 'Inter', weight: 'bold' }
+                            },
+                            grid: {
+                                color: '#e2e8f0',
+                            },
+                            ticks: {
+                                font: { family: 'Inter' },
+                                stepSize: 2
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Thời gian',
+                                font: { family: 'Inter', weight: 'bold' }
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: { family: 'Inter' }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+
+        // --- HÀM CẬP NHẬT CHÍNH ---
+        function updateDashboard() {
+            const targetSelect = document.getElementById('analysisTarget');
+            const targetValue = targetSelect.value;
+            const chartTitle = document.getElementById('chartTitle');
+            
+            let dataToAnalyze = [];
+            let labels = [...columnNames];
+            let labelName = "";
+
+            // 1. Trích xuất dữ liệu dựa trên lựa chọn
+            if (targetValue === 'TOTAL') {
+                // Cộng dồn các hàng theo từng cột
+                for (let col = 0; col < columnNames.length; col++) {
+                    let colSum = 0;
+                    for (let row = 0; row < tableData.length; row++) {
+                        colSum += tableData[row][col] || 0;
+                    }
+                    dataToAnalyze.push(colSum);
+                }
+                labelName = "TỔNG SỐ LỖI";
+                chartTitle.innerText = `Biểu Đồ Kiểm Soát: Tổng Số Lỗi Theo Thời Gian`;
+            } else {
+                // Phân tích một hàng cụ thể
+                const rowIndex = parseInt(targetValue.split('_')[1]);
+                dataToAnalyze = [...tableData[rowIndex]];
+                labelName = rowNames[rowIndex].toUpperCase();
+                chartTitle.innerText = `Biểu Đồ Kiểm Soát: Lỗi ${rowNames[rowIndex]}`;
+            }
+
+            if (dataToAnalyze.length === 0) return;
+
+            // 2. Tính toán thống kê c-chart
+            const stats = calculateCChart(dataToAnalyze);
+            if (!stats) return;
+
+            // 3. Cập nhật thẻ thông số
+            document.getElementById('valCL').innerText = stats.mean.toFixed(2);
+            document.getElementById('valUCL').innerText = stats.UCL.toFixed(2);
+            document.getElementById('valLCL').innerText = stats.LCL.toFixed(2);
+            document.getElementById('valTotal').innerText = `${stats.sum} / ${stats.n}`;
+
+            // 4. Vẽ biểu đồ
+            renderChart(dataToAnalyze, stats, labels);
+
+            // 5. Phân tích và in lời khuyên
+            analyzeProcess(dataToAnalyze, stats, labelName);
+        }
+
+        // Khởi chạy
+        window.onload = () => {
+            renderTable();
+            updateDashboard();
+        };
+
+    </script>
+</body>
+</html>
