@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phân Tích Biểu Đồ Pareto (Tự Động Co Giãn Trục)</title>
+    <title>Phân Tích Biểu Đồ Pareto (Tự Động Co Giãn & Phân Tích Chi Tiết)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js Core -->
@@ -75,7 +75,6 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <!-- KHU VỰC BIỂU ĐỒ VÀ TƯƠNG TÁC -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
             
             <!-- Cột Trái: Bảng Dữ Liệu -->
@@ -134,6 +133,7 @@
                     </div>
                 </div>
 
+                <!-- Vùng phân tích động (Sẽ hiện danh sách chi tiết) -->
                 <div class="glass-panel rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
                     <div id="analysisPanel" class="p-6"></div>
                 </div>
@@ -198,13 +198,13 @@
 
     <script>
         // --- KHỞI TẠO DỮ LIỆU MẪU ---
-        let rowNames = ["Lệch màu", "Chỉ dư, xén dơ", "Lệch chi tiết", "Mất nét, lem, lệch", "Độ dày, vật không đúng tiêu chuẩn"];
-        let rowValues = [80, 35, 15, 12, 5]; 
+        let rowNames = ["Mất nét, lem, lệch", "Lệch chi tiết", "Lệch màu", "Chỉ dư, xén dơ", "Độ dày, vật không đúng tiêu chuẩn"];
+        let rowValues = [200, 140, 80, 40, 20]; // Tổng = 480
         let myChart = null;
 
         function loadSampleData() {
-            rowNames = ["Lệch màu", "Chỉ dư, xén dơ", "Lệch chi tiết", "Mất nét, lem, lệch", "Độ dày, vật không đúng tiêu chuẩn"];
-            rowValues = [80, 35, 15, 12, 5];
+            rowNames = ["Mất nét, lem, lệch", "Lệch chi tiết", "Lệch màu", "Chỉ dư, xén dơ", "Độ dày, vật không đúng tiêu chuẩn"];
+            rowValues = [200, 140, 80, 40, 20];
             renderTable();
             updateDashboard();
         }
@@ -368,22 +368,16 @@
             });
 
             // --- THUẬT TOÁN TỰ ĐỘNG CO GIÃN TRỤC TRÁI THEO TỔNG SỐ LỖI ---
-            // 1. Lấy tổng số lỗi (biến `total` đã được tính ở trên)
-            // 2. Làm tròn lên hàng chục gần nhất (VD: 235 -> 240, 147 -> 150)
             let maxYLeft = Math.ceil(total / 10) * 10;
-            
-            // Nếu tổng bằng 0 thì set mặc định để không lỗi biểu đồ
             if (maxYLeft === 0) maxYLeft = 10; 
 
-            // Tự động tính bước nhảy (stepSize) để trục hiển thị đẹp
             let stepSizeLeft = 10;
             if (maxYLeft > 200) stepSizeLeft = 20;
             if (maxYLeft > 500) stepSizeLeft = 50;
             if (maxYLeft > 1000) stepSizeLeft = 100;
 
-            const maxYRight = 120; // Trục % cố định max 120%
+            const maxYRight = 120; 
             
-            // Neo điểm đầu tiên lên đỉnh cột lớn nhất
             const lineDataToDraw = cumulativePercents.map((pct, i) => {
                 if (i === 0) return counts[0] * (maxYRight / maxYLeft);
                 return pct;
@@ -455,13 +449,9 @@
                             display: true,
                             position: 'left',
                             beginAtZero: true,
-                            max: maxYLeft, // Sử dụng giá trị động (Tổng số lỗi làm tròn chục)
+                            max: maxYLeft,
                             grid: { color: '#f1f5f9' },
-                            ticks: { 
-                                font: { family: 'Inter' }, 
-                                stepSize: stepSizeLeft, 
-                                color: '#94a3b8' 
-                            }
+                            ticks: { font: { family: 'Inter' }, stepSize: stepSizeLeft, color: '#94a3b8' }
                         },
                         y1: {
                             type: 'linear',
@@ -486,11 +476,40 @@
             renderAnalysis(cumulativePercents, labels, counts, total);
         }
 
+        // --- HÀM PHÂN TÍCH CHI TIẾT (ĐÃ CẬP NHẬT) ---
         function renderAnalysis(cumPercents, labels, counts, total) {
             const panel = document.getElementById('analysisPanel');
+            
+            // Tìm index của loại lỗi đầu tiên chạm hoặc vượt mốc 80%
             let idx80 = cumPercents.findIndex(v => v >= 80);
             if (idx80 === -1) idx80 = cumPercents.length - 1;
+
+            // Lấy danh sách các lỗi nằm trong vùng <= 80% (bao gồm cả lỗi làm vượt mốc)
+            let focusItems = [];
+            for (let i = 0; i <= idx80; i++) {
+                focusItems.push({
+                    name: labels[i],
+                    count: counts[i],
+                    percent: ((counts[i] / total) * 100).toFixed(1)
+                });
+            }
+
             let firstItemPct = ((counts[0] / total) * 100).toFixed(1);
+
+            // Tạo HTML cho danh sách các lỗi
+            let listHtml = focusItems.map((item, index) => `
+                <li class="flex justify-between items-center py-2 border-b border-amber-200/50 last:border-0">
+                    <div class="flex items-center gap-2">
+                        <span class="flex items-center justify-center w-5 h-5 rounded-full bg-amber-200 text-amber-800 text-[10px] font-bold">${index + 1}</span>
+                        <span class="font-semibold text-slate-800 text-sm">${item.name}</span>
+                    </div>
+                    <span class="text-xs text-slate-600 bg-white px-2 py-1 rounded-md shadow-sm border border-slate-100">
+                        <b class="text-amber-700">${item.count}</b> lỗi 
+                        <span class="text-slate-400 mx-1">|</span> 
+                        ${item.percent}%
+                    </span>
+                </li>
+            `).join('');
 
             panel.innerHTML = `
                 <div class="p-5 rounded-2xl border border-amber-200 bg-amber-50/50 relative overflow-hidden">
@@ -499,11 +518,20 @@
                         <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Phân Tích Vùng Trọng Yếu
                     </h3>
-                    <p class="text-sm text-slate-700 leading-relaxed mb-3">
-                        <b>Điểm bắt đầu:</b> Đường tích lũy (màu đỏ) được neo chính xác từ đỉnh của cột lớn nhất (<b>"${labels[0]}"</b>), tương ứng với mốc <b>${firstItemPct}%</b> trên trục phần trăm.
+                    <p class="text-sm text-slate-700 leading-relaxed mb-4">
+                        <b>Điểm bắt đầu:</b> Đường tích lũy (màu đỏ) được neo chính xác từ đỉnh của cột lớn nhất (<b>"${labels[0]}"</b>), tương ứng với mốc <b>${firstItemPct}%</b>.
                     </p>
-                    <p class="text-sm text-slate-700 leading-relaxed">
-                        Theo quy tắc 80/20, đường đứt nét vàng cho thấy chỉ với <b>${idx80 + 1} loại lỗi</b> đầu tiên đã chiếm tới <b class="text-amber-700">${cumPercents[idx80].toFixed(1)}%</b> tổng số lỗi. Đây là những nguyên nhân cốt lõi cần ưu tiên xử lý.
+                    
+                    <p class="text-sm font-bold text-slate-800 mb-2">
+                        🎯 Cần tập trung phân tích và cải thiện ${idx80 + 1} loại lỗi sau (gây ra ${cumPercents[idx80].toFixed(1)}% ảnh hưởng):
+                    </p>
+                    
+                    <ul class="bg-white rounded-xl p-3 border border-amber-100 shadow-sm mb-4">
+                        ${listHtml}
+                    </ul>
+                    
+                    <p class="text-xs text-slate-500 italic bg-amber-100/50 p-2 rounded-lg">
+                        * Lời khuyên: Hãy ưu tiên nguồn lực để giải quyết dứt điểm các loại lỗi trên. Việc giảm thiểu chúng sẽ mang lại hiệu quả cải tiến chất lượng cao nhất.
                     </p>
                 </div>
             `;
