@@ -3,124 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biểu Đồ Pareto - Cắt Chính Xác Giao Điểm 80%</title>
+    <title>Phân Tích Biểu Đồ Pareto (Tự Động Co Giãn Trục)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js Core -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6; 
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
-        .table-container::-webkit-scrollbar-track { background: #f1f1f1; }
-        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .table-container::-webkit-scrollbar-track { background: transparent; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .sticky-col { position: sticky; left: 0; z-index: 10; background-color: #ffffff; border-right: 1px solid #e2e8f0; }
-        thead .sticky-col { z-index: 30; background-color: #f1f5f9; }
-        tr:hover .sticky-col { background-color: #f8fafc; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sticky-col { 
+            position: sticky; 
+            left: 0; 
+            z-index: 10; 
+            background-color: #ffffff; 
+            border-right: 1px solid #e2e8f0; 
+            box-shadow: 4px 0 8px -4px rgba(0,0,0,0.05);
+        }
+        thead .sticky-col { z-index: 30; background-color: #f8fafc; }
+        tr:hover .sticky-col { background-color: #f1f5f9; transition: background-color 0.2s ease; }
 
         input { transition: all 0.2s ease; }
-        input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        input:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+        .percent-text { color: #10b981; font-weight: 700; }
         
-        .percent-text { color: #059669; font-weight: 700; }
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
-<body class="text-slate-800 antialiased pb-12">
+<body class="text-slate-800 antialiased pb-16">
 
-    <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg sticky top-0 z-50">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-3">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    Biểu Đồ Pareto Tương Tác
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3 text-slate-800">
+                    <div class="p-2 bg-blue-100 rounded-xl">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    Phân Tích Pareto
                 </h1>
-                <p class="text-slate-300 mt-1 text-sm md:text-base">Đường cắt dọc tự động nội suy theo giao điểm 80%</p>
+                <p class="text-slate-500 mt-1 text-sm font-medium ml-12">Quy tắc 80/20: Xác định vùng trọng yếu cần ưu tiên</p>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        <!-- KHU VỰC BIỂU ĐỒ VÀ TƯƠNG TÁC -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
             
             <!-- Cột Trái: Bảng Dữ Liệu -->
-            <div class="xl:col-span-5 flex flex-col gap-6 fade-in">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[550px]">
-                    <div class="bg-slate-50 px-5 py-4 border-b border-slate-200">
-                        <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                            Bảng Dữ Liệu Lỗi
+            <div class="xl:col-span-5 flex flex-col fade-in">
+                <div class="glass-panel rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col h-[550px]">
+                    <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white/50">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                            Bảng Dữ Liệu
                         </h2>
                     </div>
                     
-                    <div class="px-4 py-3 bg-white border-b border-slate-200 flex gap-2">
-                        <button onclick="addRow()" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-1.5 px-2 rounded-lg text-sm transition-colors border border-blue-200">+ Thêm Dòng</button>
-                        <button onclick="loadSampleData()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-1.5 px-2 rounded-lg text-sm transition-colors border border-slate-300">Tải Lại Mẫu</button>
+                    <div class="px-6 py-4 bg-white/30 border-b border-slate-100 flex gap-3">
+                        <button onclick="addRow()" class="flex-1 btn-primary text-white font-semibold py-2 px-3 rounded-xl text-sm flex justify-center items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Thêm Dòng
+                        </button>
+                        <button onclick="loadSampleData()" class="flex-1 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-2 px-3 rounded-xl text-sm border border-slate-200 transition-colors shadow-sm flex justify-center items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Tải Lại Mẫu
+                        </button>
                     </div>
 
-                    <div class="flex-1 overflow-auto table-container relative bg-white">
+                    <div class="flex-1 overflow-auto table-container relative bg-white/60">
                         <table class="w-full text-sm text-left border-collapse">
-                            <thead class="text-xs text-slate-600 uppercase bg-slate-100 sticky top-0 z-20 shadow-sm">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-50/80 sticky top-0 z-20 backdrop-blur-sm shadow-sm">
                                 <tr>
-                                    <th class="sticky-col px-3 py-3 border-b w-44 z-30 text-center">Loại Lỗi</th>
-                                    <th class="px-2 py-3 border-b w-24 text-center text-blue-700">Số lượng</th>
-                                    <th class="px-2 py-3 border-b w-20 text-center text-emerald-700">Tỷ lệ</th>
-                                    <th class="px-2 py-3 border-b w-10 text-center"></th>
+                                    <th class="sticky-col px-4 py-4 w-48 font-bold">Loại Lỗi</th>
+                                    <th class="px-3 py-4 w-24 text-center font-bold text-blue-600">Số lượng</th>
+                                    <th class="px-3 py-4 w-24 text-center font-bold text-emerald-600">Tỷ lệ</th>
+                                    <th class="px-2 py-4 w-12 text-center"></th>
                                 </tr>
                             </thead>
-                            <tbody id="tableBody"></tbody>
+                            <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Cột Phải: Biểu Đồ -->
+            <!-- Cột Phải: Biểu Đồ & Phân Tích -->
             <div class="xl:col-span-7 flex flex-col gap-6 fade-in" style="animation-delay: 0.1s;">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                    <!-- Chú thích -->
-                    <div class="flex justify-center gap-8 items-center mb-4 mt-2">
-                        <div class="flex items-center gap-2">
-                            <span class="w-6 h-3 bg-[#4b7bec] rounded-sm"></span>
-                            <span class="font-bold text-sm text-slate-700">Số lỗi</span>
+                <div class="glass-panel p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                    <div class="flex justify-center gap-8 items-center mb-6">
+                        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-100">
+                            <span class="w-3 h-3 bg-[#4b7bec] rounded-sm"></span>
+                            <span class="font-bold text-xs text-slate-600 uppercase tracking-wide">Số lỗi</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-6 h-1 bg-[#dc2626] rounded-full relative">
-                                <span class="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#f97316] rounded-full border-2 border-white"></span>
+                        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-100">
+                            <span class="w-4 h-1 bg-[#dc2626] rounded-full relative">
+                                <span class="absolute -top-[3px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#f97316] rounded-full border-2 border-white"></span>
                             </span>
-                            <span class="font-bold text-sm text-slate-700">Tỉ lệ phần trăm tích lũy</span>
+                            <span class="font-bold text-xs text-slate-600 uppercase tracking-wide">Tỉ lệ % tích lũy</span>
                         </div>
                     </div>
                     
-                    <!-- Vùng vẽ biểu đồ -->
-                    <div class="relative w-full h-[450px]">
+                    <div class="relative w-full h-[400px]">
                         <canvas id="paretoChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Vùng phân tích -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div id="analysisPanel" class="p-5"></div>
+                <div class="glass-panel rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+                    <div id="analysisPanel" class="p-6"></div>
                 </div>
             </div>
         </div>
+
+        <!-- KHU VỰC LÝ THUYẾT -->
+        <section class="fade-in glass-panel rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-12 relative overflow-hidden" style="animation-delay: 0.2s;">
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+            
+            <div class="text-center mb-12 relative z-10">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 uppercase tracking-tight">Cẩm Nang Về Biểu Đồ Pareto</h2>
+                <p class="text-slate-500 mt-2 text-sm md:text-base font-medium">Trích lục từ tài liệu "7 Công Cụ Kiểm Soát Chất Lượng"</p>
+                <div class="w-20 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 relative z-10">
+                <div class="bg-white/80 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black">1</span>
+                        Nguồn Gốc & Quy Luật 80/20
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                        Biểu đồ Pareto được xây dựng trên <b>quy luật Pareto</b> do nhà quản trị doanh nghiệp <b>Joseph M. Juran</b> đề xuất, dựa trên phát hiện của nhà Kinh tế học <b>Vilfredo Pareto</b> (ông nhận thấy 20% dân số Ý sở hữu 80% tài sản của nước này). 
+                    </p>
+                    <p class="text-sm text-slate-600 leading-relaxed bg-blue-50 p-3 rounded-lg border border-blue-100">
+                        Quy luật 80/20 cho rằng: <b>80% vấn đề trong công việc phát sinh từ 20% nguyên nhân chủ đạo.</b> Trong quản lý chất lượng, điều này có nghĩa là phần lớn các khuyết tật sản phẩm thường bắt nguồn từ một vài loại lỗi cốt lõi.
+                    </p>
+                </div>
+
+                <div class="bg-white/80 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-black">2</span>
+                        Hai Loại Biểu Đồ Pareto
+                    </h3>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex gap-2">
+                            <span class="text-emerald-500 mt-0.5">✔</span>
+                            <div><b class="text-slate-800">Pareto theo hiện tượng:</b> Phát hiện ra đâu là vấn đề chính (Ví dụ: các khuyết tật, sai lỗi, chi phí lãng phí, tai nạn lao động...).</div>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-emerald-500 mt-0.5">✔</span>
+                            <div><b class="text-slate-800">Pareto theo nguyên nhân:</b> Phát hiện đâu là nguyên nhân chính của vấn đề (Ví dụ: Con người, Máy móc, Nguyên vật liệu, Phương pháp).</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl relative z-10">
+                <h3 class="text-md font-bold text-amber-800 mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Lưu ý quan trọng khi lập biểu đồ Pareto:
+                </h3>
+                <ul class="list-disc pl-5 text-sm text-amber-900 space-y-2 font-medium">
+                    <li>Hạng mục <b>"Dạng khác"</b> phải luôn được đặt ở <b>cuối dòng</b> (bên phải biểu đồ) mặc dù số lượng của nó có thể lớn hơn một số dạng khuyết tật cụ thể khác.</li>
+                    <li>Tỉ lệ phần trăm tổng thể của hạng mục <b>"Dạng khác" không nên quá lớn</b> (chỉ nên dao động từ 10% - 15%). Nếu vượt quá, chứng tỏ bạn đã phân loại lỗi chưa đủ chi tiết, cần tách nhỏ hơn nữa.</li>
+                    <li>Biểu đồ Pareto giúp trực quan hóa mức độ cải tiến đạt được sau khi thực hiện các hoạt động khắc phục (bằng cách so sánh biểu đồ trước và sau cải tiến).</li>
+                </ul>
+            </div>
+        </section>
     </main>
 
     <script>
-        let rowNames = ["Chỉ dư, xén dơ", "Lệch chi tiết", "Mất nét, lem, lệch", "Lệch màu", "Độ dày, vật không đúng tiêu chuẩn"];
-        let rowValues = [35, 15, 12, 5, 4]; // Sử dụng bộ dữ liệu giống hình bạn gửi để test
+        // --- KHỞI TẠO DỮ LIỆU MẪU ---
+        let rowNames = ["Lệch màu", "Chỉ dư, xén dơ", "Lệch chi tiết", "Mất nét, lem, lệch", "Độ dày, vật không đúng tiêu chuẩn"];
+        let rowValues = [80, 35, 15, 12, 5]; 
         let myChart = null;
 
         function loadSampleData() {
-            rowNames = ["Chỉ dư, xén dơ", "Lệch chi tiết", "Mất nét, lem, lệch", "Lệch màu", "Độ dày, vật không đúng tiêu chuẩn"];
-            rowValues = [35, 15, 12, 5, 4];
+            rowNames = ["Lệch màu", "Chỉ dư, xén dơ", "Lệch chi tiết", "Mất nét, lem, lệch", "Độ dày, vật không đúng tiêu chuẩn"];
+            rowValues = [80, 35, 15, 12, 5];
             renderTable();
             updateDashboard();
         }
 
+        // --- HIỂN THỊ BẢNG ---
         function renderTable() {
             const tbody = document.getElementById('tableBody');
             const total = rowValues.reduce((a, b) => a + b, 0);
@@ -130,20 +219,22 @@
                 let pct = total > 0 ? ((rowValues[index] / total) * 100).toFixed(1) : 0;
                 
                 html += `
-                <tr class="bg-white border-b hover:bg-slate-50 transition-colors group">
-                    <td class="sticky-col px-2 py-2 border-r">
+                <tr class="bg-white hover:bg-slate-50 transition-colors group">
+                    <td class="sticky-col px-4 py-3 border-r border-slate-100">
                         <input type="text" value="${name}" onchange="updateRowName(${index}, this.value)" 
-                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 rounded px-1 py-1 text-sm font-medium text-slate-700">
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-indigo-400 rounded-lg px-2 py-1.5 text-sm font-semibold text-slate-700">
                     </td>
-                    <td class="px-2 py-2">
+                    <td class="px-3 py-3">
                         <input type="number" min="0" value="${rowValues[index]}" onchange="updateValue(${index}, this.value)" 
-                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 rounded px-2 py-1 text-center font-bold text-slate-800">
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:bg-white focus:border-indigo-400 rounded-lg px-2 py-1.5 text-center font-bold text-slate-800">
                     </td>
-                    <td class="px-2 py-2 text-center percent-text text-sm">
+                    <td class="px-3 py-3 text-center percent-text text-sm bg-emerald-50/30">
                         ${pct}%
                     </td>
-                    <td class="px-2 py-2 text-center">
-                        <button onclick="removeRow(${index})" class="text-red-400 hover:text-red-600 font-bold text-lg leading-none opacity-0 group-hover:opacity-100 transition-opacity">&times;</button>
+                    <td class="px-2 py-3 text-center">
+                        <button onclick="removeRow(${index})" class="text-slate-300 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
                     </td>
                 </tr>`;
             });
@@ -177,7 +268,7 @@
             }
         }
 
-        // --- CUSTOM PLUGIN: TÍNH TOÁN NỘI SUY ĐỂ CẮT CHÍNH XÁC ---
+        // --- CUSTOM PLUGIN: VẼ ĐƯỜNG CẮT 80% VÀ NHÃN ---
         const paretoCustomPlugin = {
             id: 'paretoCustomElements',
             afterDatasetsDraw: (chart) => {
@@ -190,56 +281,34 @@
 
                 if (!metaLine || metaLine.data.length < 2) return;
 
-                // 1. HÌNH VUÔNG XANH TẠI ĐIỂM NEO ĐẦU TIÊN
-                const firstPoint = metaLine.data[0];
-                if (firstPoint) {
-                    const boxSize = 30;
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.strokeStyle = '#22c55e';
-                    ctx.lineWidth = 2.5;
-                    ctx.strokeRect(firstPoint.x - boxSize / 2, firstPoint.y - boxSize / 2, boxSize, boxSize);
-                    ctx.restore();
-                }
-
-                // 2. TÌM GIAO ĐIỂM NỘI SUY VỚI MỐC 80%
+                // 1. TÌM GIAO ĐIỂM NỘI SUY VỚI MỐC 80%
                 let xIntersect = -1;
-                
-                // Duyệt mảng để tìm 2 điểm bao quanh mốc 80%
                 for (let i = 1; i < displayPercents.length; i++) {
-                    let y1 = displayPercents[i - 1]; // % của cột trước
-                    let y2 = displayPercents[i];     // % của cột hiện tại
+                    let y1 = displayPercents[i - 1]; 
+                    let y2 = displayPercents[i];     
                     
                     if (y1 < 80 && y2 >= 80) {
-                        // Công thức nội suy tuyến tính để tìm tọa độ X chính xác
-                        // Tỷ lệ khoảng cách từ điểm 1 đến mốc 80
                         let ratio = (80 - y1) / (y2 - y1); 
-                        
-                        // Tọa độ pixel X của 2 tâm cột
                         let x1Pixel = metaLine.data[i - 1].x;
                         let x2Pixel = metaLine.data[i].x;
-                        
-                        // Tính tọa độ X của giao điểm
                         xIntersect = x1Pixel + ratio * (x2Pixel - x1Pixel);
                         break;
                     }
                 }
 
-                // 3. VẼ ĐƯỜNG ĐỨT NÉT TẠI GIAO ĐIỂM
+                // 2. VẼ ĐƯỜNG ĐỨT NÉT (Từ phải sang trái)
                 const y80Pixel = yAxisRight.getPixelForValue(80);
 
                 if (xIntersect !== -1) {
                     ctx.save();
                     ctx.beginPath();
-                    ctx.setLineDash([6, 4]); 
-                    ctx.strokeStyle = '#facc15'; // Vàng
+                    ctx.setLineDash([5, 4]); 
+                    ctx.strokeStyle = '#eab308'; // Vàng
                     ctx.lineWidth = 2;
                     
-                    // Đường ngang xuyên suốt biểu đồ
                     ctx.moveTo(chartArea.right, y80Pixel); 
-                    ctx.lineTo(chartArea.left, y80Pixel);
+                    ctx.lineTo(xIntersect, y80Pixel);
                     
-                    // Đường dọc cắt xuống từ đúng giao điểm XIntersect
                     ctx.moveTo(xIntersect, y80Pixel);
                     ctx.lineTo(xIntersect, chartArea.bottom);
                     
@@ -247,10 +316,10 @@
                     ctx.restore();
                 }
 
-                // 4. VẼ NHÃN % VÀ ĐƯỜNG GIÓNG
+                // 3. VẼ NHÃN %
                 ctx.save();
-                ctx.fillStyle = '#374151'; 
-                ctx.font = '600 12px Inter';
+                ctx.fillStyle = '#4b5563'; 
+                ctx.font = '700 12px Inter';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
 
@@ -259,8 +328,8 @@
                     const x = point.x;
                     const y = point.y;
                     
-                    const labelX = x + 15;
-                    const labelY = y - 30;
+                    const labelX = x + 10;
+                    const labelY = y - 25;
 
                     ctx.beginPath();
                     ctx.strokeStyle = '#9ca3af'; 
@@ -268,15 +337,20 @@
                     ctx.setLineDash([]); 
                     ctx.moveTo(x, y);
                     ctx.lineTo(labelX, labelY);
-                    ctx.lineTo(labelX + 30, labelY);
+                    ctx.lineTo(labelX + 25, labelY);
                     ctx.stroke();
 
+                    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                    ctx.fillRect(labelX, labelY - 16, 35, 16);
+                    
+                    ctx.fillStyle = '#374151';
                     ctx.fillText(Math.round(val) + '%', labelX + 2, labelY - 8);
                 });
                 ctx.restore();
             }
         };
 
+        // --- VẼ BIỂU ĐỒ ---
         function updateDashboard() {
             let dataObj = rowNames.map((name, i) => ({ name, value: rowValues[i] }));
             dataObj.sort((a, b) => b.value - a.value);
@@ -293,10 +367,23 @@
                 return cumulativePercent;
             });
 
-            const maxYLeft = 100; 
-            const maxYRight = 120; 
+            // --- THUẬT TOÁN TỰ ĐỘNG CO GIÃN TRỤC TRÁI THEO TỔNG SỐ LỖI ---
+            // 1. Lấy tổng số lỗi (biến `total` đã được tính ở trên)
+            // 2. Làm tròn lên hàng chục gần nhất (VD: 235 -> 240, 147 -> 150)
+            let maxYLeft = Math.ceil(total / 10) * 10;
             
-            // Neo điểm đầu tiên lên đỉnh cột
+            // Nếu tổng bằng 0 thì set mặc định để không lỗi biểu đồ
+            if (maxYLeft === 0) maxYLeft = 10; 
+
+            // Tự động tính bước nhảy (stepSize) để trục hiển thị đẹp
+            let stepSizeLeft = 10;
+            if (maxYLeft > 200) stepSizeLeft = 20;
+            if (maxYLeft > 500) stepSizeLeft = 50;
+            if (maxYLeft > 1000) stepSizeLeft = 100;
+
+            const maxYRight = 120; // Trục % cố định max 120%
+            
+            // Neo điểm đầu tiên lên đỉnh cột lớn nhất
             const lineDataToDraw = cumulativePercents.map((pct, i) => {
                 if (i === 0) return counts[0] * (maxYRight / maxYLeft);
                 return pct;
@@ -314,6 +401,7 @@
                             label: 'Số lỗi',
                             data: counts,
                             backgroundColor: '#4b7bec',
+                            borderRadius: 4,
                             barPercentage: 0.6,
                             categoryPercentage: 0.8,
                             yAxisID: 'y',
@@ -328,7 +416,7 @@
                             borderWidth: 3,
                             pointBackgroundColor: '#f97316',
                             pointBorderColor: '#ffffff',
-                            pointBorderWidth: 1.5,
+                            pointBorderWidth: 2,
                             pointRadius: 5,
                             pointHoverRadius: 7,
                             tension: 0, 
@@ -340,14 +428,15 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: { padding: { top: 40, right: 40, left: 10 } },
+                    layout: { padding: { top: 40, right: 20, left: 10 } },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleFont: { family: 'Inter', size: 13 },
-                            bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
-                            padding: 10,
+                            titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 14 },
+                            padding: 12,
+                            cornerRadius: 8,
                             callbacks: {
                                 label: function(context) {
                                     if (context.datasetIndex === 0) return ` Số lượng: ${context.parsed.y}`;
@@ -359,16 +448,20 @@
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { font: { family: 'Inter', size: 12 }, color: '#4b5563', maxRotation: 0, autoSkip: false }
+                            ticks: { font: { family: 'Inter', size: 12, weight: '500' }, color: '#64748b', maxRotation: 0, autoSkip: false }
                         },
                         y: {
                             type: 'linear',
                             display: true,
                             position: 'left',
                             beginAtZero: true,
-                            max: maxYLeft,
-                            grid: { color: '#f3f4f6' },
-                            ticks: { font: { family: 'Inter' }, stepSize: 20, color: '#6b7280' }
+                            max: maxYLeft, // Sử dụng giá trị động (Tổng số lỗi làm tròn chục)
+                            grid: { color: '#f1f5f9' },
+                            ticks: { 
+                                font: { family: 'Inter' }, 
+                                stepSize: stepSizeLeft, 
+                                color: '#94a3b8' 
+                            }
                         },
                         y1: {
                             type: 'linear',
@@ -381,7 +474,7 @@
                                 callback: function(value) { return value + "%"; },
                                 font: { family: 'Inter' },
                                 stepSize: 20,
-                                color: '#6b7280'
+                                color: '#94a3b8'
                             }
                         }
                     }
@@ -397,20 +490,20 @@
             const panel = document.getElementById('analysisPanel');
             let idx80 = cumPercents.findIndex(v => v >= 80);
             if (idx80 === -1) idx80 = cumPercents.length - 1;
-            let focusNames = labels.slice(0, idx80 + 1);
             let firstItemPct = ((counts[0] / total) * 100).toFixed(1);
 
             panel.innerHTML = `
-                <div class="p-4 rounded-xl border border-yellow-200 bg-yellow-50">
-                    <h3 class="font-bold text-lg mb-2 text-yellow-800 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Phân Tích & Vùng Trọng Yếu
+                <div class="p-5 rounded-2xl border border-amber-200 bg-amber-50/50 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-400"></div>
+                    <h3 class="font-bold text-lg mb-2 text-amber-900 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Phân Tích Vùng Trọng Yếu
                     </h3>
                     <p class="text-sm text-slate-700 leading-relaxed mb-3">
-                        Đường cắt dọc màu vàng được tính toán động bằng phương pháp nội suy, luôn đi qua chính xác giao điểm của đường tích lũy và mốc 80%, bất kể dữ liệu thay đổi thế nào.
+                        <b>Điểm bắt đầu:</b> Đường tích lũy (màu đỏ) được neo chính xác từ đỉnh của cột lớn nhất (<b>"${labels[0]}"</b>), tương ứng với mốc <b>${firstItemPct}%</b> trên trục phần trăm.
                     </p>
                     <p class="text-sm text-slate-700 leading-relaxed">
-                        Theo quy tắc 80/20, chỉ với <b>${idx80 + 1} loại lỗi</b> đầu tiên đã chiếm tới <b class="text-yellow-700">${cumPercents[idx80].toFixed(1)}%</b> tổng số lỗi. Đây là vùng trọng yếu cần ưu tiên khắc phục.
+                        Theo quy tắc 80/20, đường đứt nét vàng cho thấy chỉ với <b>${idx80 + 1} loại lỗi</b> đầu tiên đã chiếm tới <b class="text-amber-700">${cumPercents[idx80].toFixed(1)}%</b> tổng số lỗi. Đây là những nguyên nhân cốt lõi cần ưu tiên xử lý.
                     </p>
                 </div>
             `;
