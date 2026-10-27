@@ -209,7 +209,7 @@
                 </div>
                 <!-- Class 2 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-green-500 flex gap-4">
-                    <img src="./assets/images/ChemLabels/UN2(2).webp" alt="Class 2" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/22c55e/white?text=2'">
+                    <img src="./assets/images/ChemLabels/UN2_2.webp" alt="Class 2" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/22c55e/white?text=2'">
                     <div>
                         <h3 class="text-xl font-bold">Lớp 2: Khí</h3>
                         <p class="text-gray-600 text-sm mt-2 mb-3">Khí dễ cháy (2.1), Khí không cháy/không độc (2.2), Khí độc (2.3).</p>
@@ -227,7 +227,7 @@
                 </div>
                 <!-- Class 4 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-orange-500 flex gap-4">
-                    <img src="./assets/images/ChemLabels/UN4(2).webp" alt="Class 4" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/f97316/white?text=4'">
+                    <img src="./assets/images/ChemLabels/UN4_2.webp" alt="Class 4" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/f97316/white?text=4'">
                     <div>
                         <h3 class="text-xl font-bold">Lớp 4: Rắn Dễ Cháy</h3>
                         <p class="text-gray-600 text-sm mt-2 mb-3">Chất rắn dễ cháy, tự bốc cháy (4.2), tạo khí cháy gặp nước (4.3).</p>
@@ -293,12 +293,12 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 justify-items-center">
                 <!-- GHS Icons mapping using real images -->
                 <div class="text-center flex flex-col items-center">
-                    <img src="./assets/images/ChemLabels/ChemLabels/UN.FIRE.webp" alt="Dễ cháy" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <img src="./assets/images/ChemLabels/UN.FIRE.webp" alt="Dễ cháy" class="w-20 h-20 object-contain hover:scale-110 transition">
                     <h4 class="font-bold text-sm mt-3">Chất Dễ Cháy</h4>
                     <p class="text-xs text-gray-500 mt-1">Lớp 3, 4.1</p>
                 </div>
                 <div class="text-center flex flex-col items-center">
-                    <img src="./assets/images/ChemLabels/ChemLabels/UN.BOOM.webp" alt="Chất nổ" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <img src="./assets/images/ChemLabels/UN.BOOM.webp" alt="Chất nổ" class="w-20 h-20 object-contain hover:scale-110 transition">
                     <h4 class="font-bold text-sm mt-3">Chất Nổ</h4>
                     <p class="text-xs text-gray-500 mt-1">Lớp 1</p>
                 </div>
@@ -318,7 +318,7 @@
                     <p class="text-xs text-gray-500 mt-1">Lớp 6.1</p>
                 </div>
                 <div class="text-center flex flex-col items-center">
-                    <img src="./assets/images/ChemLabels/DG6.2_Infectious_substances.svg" alt="Lây nhiễm" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <img src="./assets/images/ChemLabels/DG6_2_Infectious_substances.svg" alt="Lây nhiễm" class="w-20 h-20 object-contain hover:scale-110 transition">
                     <h4 class="font-bold text-sm mt-3">Lây Nhiễm</h4>
                     <p class="text-xs text-gray-500 mt-1">Lớp 6.2</p>
                 </div>
@@ -338,7 +338,7 @@
                     <p class="text-xs text-gray-500 mt-1">Lớp 9 / Độc nhẹ</p>
                 </div>
                 <div class="text-center flex flex-col items-center">
-                    <img src="./assets/images/ChemLabels/UN.transport_pictogram_-_pollution.webp" alt="Nguy hại môi trường" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <img src="./assets/images/ChemLabels/UN_transport_pictogram_-_pollution.webp" alt="Nguy hại môi trường" class="w-20 h-20 object-contain hover:scale-110 transition">
                     <h4 class="font-bold text-sm mt-3">Nguy Hại Môi Trường</h4>
                     <p class="text-xs text-gray-500 mt-1">Lớp 9</p>
                 </div>
@@ -750,7 +750,7 @@
             }
         ];
 
-        // GHS Icon Mapping using Local Images
+        // GHS Icon Mapping using Local Images (Đã sửa lại đường dẫn chính xác 100% theo cấu trúc thư mục)
         const ghsIcons = {
             'flammable': { src: './assets/images/ChemLabels/UN.FIRE.webp', label: 'Dễ cháy' },
             'explosive': { src: './assets/images/ChemLabels/UN.BOOM.webp', label: 'Chất nổ' },
@@ -761,8 +761,8 @@
             'radiation': { src: './assets/images/ChemLabels/DG7_Radioactive_material.svg', label: 'Phóng xạ' },
             'health_hazard': { src: './assets/images/ChemLabels/UN.webp', label: 'Nguy hại sức khỏe' },
             'irritant': { src: './assets/images/ChemLabels/UN.DANGEROUS.webp', label: 'Kích ứng' },
-            'environment': { src: './assets/images/ChemLabels/UN.transport_pictogram_-_pollution.webp', label: 'Nguy hại môi trường' },
-            'exclamation': { src: './assets/imagesChemLabels/UN.DANGEROUS.webp', label: 'Cảnh báo chung' },
+            'environment': { src: './assets/images/ChemLabels/UN_transport_pictogram_-_pollution.webp', label: 'Nguy hại môi trường' },
+            'exclamation': { src: './assets/images/ChemLabels/UN.DANGEROUS.webp', label: 'Cảnh báo chung' },
             'water_reactive': { src: './assets/images/ChemLabels/UN4_4.webp', label: 'Phản ứng với nước' }
         };
 
@@ -904,7 +904,6 @@
         window.printCard = function(chem) {
             const printWindow = window.open('', '', 'height=600,width=800');
             printWindow.document.write('<html><head><title>In Nhãn Hóa Chất - ' + chem.name + '</title>');
-            // Print window doesn't load external Tailwind easily, so we use basic CSS + local images
             printWindow.document.write('<style>');
             printWindow.document.write(`
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; color: #0F172A; }
@@ -938,7 +937,6 @@
 
             chem.ghs.forEach(g => {
                 const ghs = ghsIcons[g];
-                // Trong môi trường in, đường dẫn tương đối có thể lỗi nếu base URL khác, nhưng thường hoạt động tốt.
                 printWindow.document.write(`
                     <img src="${ghs.src}" alt="${ghs.label}" class="ghs-img">
                 `);
