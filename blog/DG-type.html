@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Tra Cứu & Phân Loại Hóa Chất Nguy Hiểm - Nghị Định 161/2024/NĐ-CP</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            navy: '#0F172A',
+                            teal: '#0284C7',
+                            light: '#F8FAFC',
+                            gray: '#E2E8F0'
+                        },
+                        danger: '#EF4444',
+                        warning: '#F97316'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome for Icons (Dùng cho UI thay vì nhãn hóa chất) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Image Sizing for Hazard Labels */
+        .hazard-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            transition: transform 0.2s;
+        }
+        .hazard-img:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Hide scrollbar for cleaner look in filters */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Animation for search results */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Print Settings */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-section, #print-section * {
+                visibility: visible;
+            }
+            #print-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-brand-light text-brand-navy font-sans antialiased">
+
+    <!-- HEADER -->
+    <header class="bg-brand-navy text-white sticky top-0 z-50 shadow-md no-print">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-danger p-2 rounded-lg">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight uppercase">Hóa Chất & An Toàn</h1>
+                    <p class="text-xs text-gray-300">Tuân thủ Nghị định 161/2024/NĐ-CP</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex gap-6 text-sm font-medium">
+                <a href="#lookup-tool" class="hover:text-brand-teal transition">Tra cứu</a>
+                <a href="#phan-loai" class="hover:text-brand-teal transition">Phân loại 9 Nhóm</a>
+                <a href="#ghs" class="hover:text-brand-teal transition">Hình đồ GHS</a>
+                <a href="#quy-dinh" class="hover:text-brand-teal transition">Thẩm quyền cấp phép</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO & INTERACTIVE TOOL -->
+    <section id="lookup-tool" class="bg-brand-navy text-white py-12 relative overflow-hidden no-print">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#0284C7 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-8">
+                <span class="bg-brand-teal/20 text-brand-teal px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block border border-brand-teal/30">Công cụ tương tác</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Tra Cứu Phân Loại & Nhãn Hóa Chất Nguy Hiểm</h2>
+                <p class="text-gray-300">Tìm kiếm nhanh theo Tên (Tiếng Việt/Anh), Mã UN hoặc Nhóm nguy hiểm. Dữ liệu được chuẩn hóa theo ADR/IMO và Nghị định 161/2024/NĐ-CP.</p>
+            </div>
+
+            <!-- Search Box -->
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-2 md:p-4 mb-8">
+                <div class="flex flex-col md:flex-row gap-3">
+                    <div class="relative flex-grow">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="searchInput" placeholder="Nhập tên hóa chất (VD: Axit Sulfuric), Mã UN (VD: UN1830) hoặc Nhóm (VD: 8)..." 
+                            class="w-full pl-11 pr-4 py-3 bg-brand-light rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-teal text-brand-navy font-medium placeholder-gray-400 transition">
+                    </div>
+                    <button onclick="clearSearch()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-6 py-3 rounded-xl font-medium transition">
+                        Xóa
+                    </button>
+                </div>
+                
+                <!-- Filters -->
+                <div class="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                    <button class="filter-btn active bg-brand-navy text-white px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="all">Tất cả (9 Nhóm)</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="1">Lớp 1: Chất nổ</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="2">Lớp 2: Khí</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="3">Lớp 3: Lỏng dễ cháy</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="4">Lớp 4: Rắn dễ cháy</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="5">Lớp 5: Oxy hóa</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="6">Lớp 6: Độc hại</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="7">Lớp 7: Phóng xạ</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="8">Lớp 8: Ăn mòn</button>
+                    <button class="filter-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition" data-class="9">Lớp 9: Nguy hại khác</button>
+                </div>
+            </div>
+
+            <!-- Results Area -->
+            <div id="resultsContainer" class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- JS will populate this -->
+            </div>
+            <div id="noResults" class="hidden text-center text-gray-400 py-10">
+                <i class="fa-solid fa-flask-slash text-5xl mb-4 opacity-50"></i>
+                <p class="text-lg">Không tìm thấy kết quả phù hợp.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN ARTICLE CONTENT -->
+    <main class="container mx-auto px-4 py-16 space-y-24 max-w-6xl">
+        
+        <!-- SECTION 1: OVERVIEW -->
+        <section id="tong-quan" class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-6 text-brand-navy border-l-4 border-brand-teal pl-4">1. Tổng Quan Về Hóa Chất & Hóa Chất Thí Nghiệm</h2>
+                <div class="prose text-gray-600 leading-relaxed space-y-4">
+                    <p><strong>Hóa chất</strong> là những chất có thành phần hóa học xác định, được sử dụng rộng rãi trong sản xuất công nghiệp, nông nghiệp, y tế và đặc biệt là trong các phòng thí nghiệm nghiên cứu.</p>
+                    <p>Trong lĩnh vực thí nghiệm, hóa chất thường được phân loại theo <strong>độ tinh khiết</strong>:</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong>AR (Analytical Reagent - PA):</strong> Độ tinh khiết cao nhất, dùng cho phân tích định lượng, định tính chính xác.</li>
+                        <li><strong>CP (Chemically Pure):</strong> Độ tinh khiết khá cao, dùng cho các thí nghiệm phổ thông.</li>
+                        <li><strong>Tech Grade (Công nghiệp):</strong> Độ tinh khiết thấp hơn, dùng cho sản xuất công nghiệp, xử lý nước, tẩy rửa.</li>
+                    </ul>
+                    <div class="bg-blue-50 border-l-4 border-brand-teal p-4 mt-4 text-sm text-brand-navy rounded-r-lg">
+                        <i class="fa-solid fa-circle-info text-brand-teal mr-2"></i> <strong>Lưu ý:</strong> Bất kể độ tinh khiết nào, hóa chất thí nghiệm luôn tiềm ẩn rủi ro về cháy nổ, độc hại và ăn mòn. Việc lưu giữ và bảo quản phải tuân thủ nghiêm ngặt bảng tương thích hóa chất.
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
+                <img src="https://khoahocvic.com/wp-content/uploads/2023/05/hoa-chat-thi-nghiem-la-gi.jpg" alt="Hóa chất thí nghiệm" class="rounded-xl w-full h-80 object-cover mb-4" onerror="this.src='https://placehold.co/600x400/e2e8f0/0f172a?text=Hoa+Chat+Thi+Nghiem'">
+                <p class="text-center text-sm text-gray-500 italic">Hóa chất thí nghiệm yêu cầu quy trình bảo quản khắt khe</p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 9 HAZARD CLASSES -->
+        <section id="phan-loai">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-brand-navy">2. Hệ Thống Phân Loại 9 Nhóm Hàng Nguy Hiểm</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Theo Nghị định 161/2024/NĐ-CP (có hiệu lực từ 01/01/2025), hàng hóa nguy hiểm được phân thành 9 loại chính dựa trên tính chất hóa lý và mức độ rủi ro.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Class 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-danger flex gap-4">
+                    <img src="./assets/images/UN1.4.webp" alt="Class 1" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/EF4444/white?text=1'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 1: Chất Nổ</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất và vật phẩm có nguy cơ nổ rộng, bắn tóe. (Gồm 6 nhóm phụ).</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công An</span>
+                    </div>
+                </div>
+                <!-- Class 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-green-500 flex gap-4">
+                    <img src="./assets/images/UN2(2).webp" alt="Class 2" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/22c55e/white?text=2'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 2: Khí</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Khí dễ cháy (2.1), Khí không cháy/không độc (2.2), Khí độc (2.3).</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công An</span>
+                    </div>
+                </div>
+                <!-- Class 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-red-500 flex gap-4">
+                    <img src="./assets/images/UN3.webp" alt="Class 3" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/ef4444/white?text=3'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 3: Lỏng Dễ Cháy</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất lỏng dễ cháy và chất nổ lỏng khử nhạy (Xăng, Axeton...).</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công An</span>
+                    </div>
+                </div>
+                <!-- Class 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-orange-500 flex gap-4">
+                    <img src="./assets/images/UN4(2).webp" alt="Class 4" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/f97316/white?text=4'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 4: Rắn Dễ Cháy</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất rắn dễ cháy, tự bốc cháy (4.2), tạo khí cháy gặp nước (4.3).</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công An</span>
+                    </div>
+                </div>
+                <!-- Class 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-yellow-500 flex gap-4">
+                    <img src="./assets/images/UN5.1.webp" alt="Class 5" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/eab308/white?text=5'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 5: Chất Oxy Hóa</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất oxy hóa (5.1) và Peroxide hữu cơ (5.2). Dễ bắt cháy mạnh.</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công Thương</span>
+                    </div>
+                </div>
+                <!-- Class 6 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-gray-800 flex gap-4">
+                    <img src="./assets/images/UN.TOXIC1.webp" alt="Class 6" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/1f2937/white?text=6'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 6: Độc & Lây Nhiễm</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất độc (6.1) và Chất gây nhiễm bệnh (6.2). Ảnh hưởng sức khỏe.</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công An / Y Tế</span>
+                    </div>
+                </div>
+                <!-- Class 7 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-purple-600 flex gap-4">
+                    <img src="./assets/images/DG7_Radioactive_material.svg" alt="Class 7" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/9333ea/white?text=7'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 7: Phóng Xạ</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Vật liệu phóng xạ, kiện hàng miễn trừ, chất phóng xạ hoạt độ thấp.</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Tuân thủ Luật NLNT</span>
+                    </div>
+                </div>
+                <!-- Class 8 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-teal-600 flex gap-4">
+                    <img src="./assets/images/DG8_Corrosives.svg" alt="Class 8" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/0d9488/white?text=8'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 8: Chất Ăn Mòn</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất phá hủy mô sống hoặc làm hỏng phương tiện (Axit, Kiềm).</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công Thương</span>
+                    </div>
+                </div>
+                <!-- Class 9 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition border-t-4 border-slate-500 flex gap-4">
+                    <img src="./assets/images/DG9_Miscellaneous.svg" alt="Class 9" class="w-16 h-16 object-contain" onerror="this.src='https://placehold.co/100x100/64748b/white?text=9'">
+                    <div>
+                        <h3 class="text-xl font-bold">Lớp 9: Nguy Hại Khác</h3>
+                        <p class="text-gray-600 text-sm mt-2 mb-3">Chất nguy hiểm khác (Pin lithium, phụ gia nhiên liệu...).</p>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-medium">Cấp phép: Bộ Công An</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: GHS -->
+        <section id="ghs" class="bg-white rounded-3xl p-8 md:p-12 shadow-lg border border-gray-100">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-4 text-brand-navy">3. Hình Đồ Cảnh Báo GHS & Nhãn Dán</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">Hệ thống hài hòa toàn cầu về phân loại và ghi nhãn hóa chất (GHS) sử dụng biểu tượng hình thoi viền đỏ, nền trắng để cảnh báo tính chất nguy hiểm.</p>
+            </div>
+
+            <!-- Updated GHS grid with real images -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 justify-items-center">
+                <!-- GHS Icons mapping using real images -->
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.FIRE.webp" alt="Dễ cháy" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Chất Dễ Cháy</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 3, 4.1</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.BOOM.webp" alt="Chất nổ" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Chất Nổ</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 1</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.FIRE1.webp" alt="Oxy hóa" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Oxy Hóa</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 5.1</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.GAS.webp" alt="Khí nén" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Khí Nén</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 2</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.TOXIC1.webp" alt="Độc tính cấp" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Độc Tính Cấp</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 6.1</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/DG6.2_Infectious_substances.svg" alt="Lây nhiễm" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Lây Nhiễm</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 6.2</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.TOXIC.webp" alt="Ăn mòn" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Ăn Mòn</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 8</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/DG7_Radioactive_material.svg" alt="Phóng xạ" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Phóng Xạ</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 7</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.DANGEROUS.webp" alt="Kích ứng" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Kích Ứng / Cảnh Báo</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 9 / Độc nhẹ</p>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <img src="./assets/images/UN.transport_pictogram_-_pollution.webp" alt="Nguy hại môi trường" class="w-20 h-20 object-contain hover:scale-110 transition">
+                    <h4 class="font-bold text-sm mt-3">Nguy Hại Môi Trường</h4>
+                    <p class="text-xs text-gray-500 mt-1">Lớp 9</p>
+                </div>
+            </div>
+
+            <div class="mt-10 bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                <h4 class="font-bold text-warning mb-2 flex items-center gap-2"><i class="fa-solid fa-circle-exclamation"></i> Từ cảnh báo (Signal Word)</h4>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <strong class="text-danger uppercase">DANGER (Nguy hiểm):</strong> Dùng cho các mức độ rủi ro nghiêm trọng nhất (Ví dụ: Chất gây ung thư, độc cấp tính gây tử vong, ăn mòn mạnh).
+                    </div>
+                    <div>
+                        <strong class="text-warning uppercase">WARNING (Cảnh báo):</strong> Dùng cho các mức độ rủi ro thấp hơn (Ví dụ: Kích ứng da, độc nhẹ).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: LEGAL & AUTHORITY -->
+        <section id="quy-dinh">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold mb-4 text-brand-navy">4. Điểm Mới Về Thẩm Quyền Cấp Phép Vận Chuyển (Nghị định 161/2024/NĐ-CP)</h2>
+                <p class="text-gray-600">Có hiệu lực từ ngày 01/01/2025, Nghị định 161/2024/NĐ-CP thay thế các quy định cũ, phân định rõ ràng trách nhiệm quản lý hàng hóa nguy hiểm cho các Bộ, Ngành nhằm tăng cường hiệu quả quản lý nhà nước.</p>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-brand-navy text-white">
+                            <th class="p-4 font-semibold w-1/4">Cơ quan cấp phép</th>
+                            <th class="p-4 font-semibold w-1/2">Loại hàng hóa nguy hiểm phụ trách</th>
+                            <th class="p-4 font-semibold w-1/4">Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 text-sm">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-bold text-brand-teal">Bộ Công An</td>
+                            <td class="p-4">Loại 1 (Chất nổ), Loại 2 (Khí), Loại 3 (Lỏng dễ cháy), Loại 4 (Rắn dễ cháy), Loại 9 (Nguy hiểm khác). <em>(Trừ hóa chất bảo vệ thực vật)</em></td>
+                            <td class="p-4 text-gray-500">Quản lý an ninh trật tự, PCCC</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-bold text-brand-teal">Bộ Công Thương</td>
+                            <td class="p-4">Loại 5 (Chất Oxy hóa, Peroxide hữu cơ), Loại 8 (Chất ăn mòn).</td>
+                            <td class="p-4 text-gray-500">Quản lý hóa chất công nghiệp</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-bold text-brand-teal">Bộ Quốc Phòng</td>
+                            <td class="p-4">Các tổ chức, doanh nghiệp thuộc phạm vi quản lý của Bộ Quốc phòng (hoặc được BQP thuê vận chuyển).</td>
+                            <td class="p-4 text-gray-500">Mục đích quốc phòng, an ninh</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-bold text-brand-teal">UBND Cấp Tỉnh</td>
+                            <td class="p-4">Hóa chất bảo vệ thực vật (cho tổ chức/cá nhân có trụ sở chính hoặc chi nhánh tại địa phương).</td>
+                            <td class="p-4 text-gray-500">Phân cấp quản lý địa phương</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-bold text-brand-teal">Bộ Khoa học & Công nghệ</td>
+                            <td class="p-4">Loại 7 (Chất phóng xạ - Thực hiện theo Nghị định riêng về năng lượng nguyên tử).</td>
+                            <td class="p-4 text-gray-500">Quản lý an toàn bức xạ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-2 gap-4">
+                <div class="bg-brand-navy text-white p-6 rounded-xl">
+                    <h4 class="font-bold mb-2 flex items-center gap-2"><i class="fa-regular fa-clock text-brand-teal"></i> Thời hạn Giấy phép</h4>
+                    <p class="text-sm text-gray-300">Theo Điều 13 Nghị định 161/2024/NĐ-CP, thời hạn của giấy phép vận chuyển hàng hóa nguy hiểm tối đa không quá <strong class="text-white">24 tháng</strong> và không vượt quá niên hạn sử dụng của phương tiện.</p>
+                </div>
+                <div class="bg-red-50 border border-red-100 p-6 rounded-xl">
+                    <h4 class="font-bold mb-2 flex items-center gap-2 text-danger"><i class="fa-solid fa-ban"></i> Hành trình bị cấm</h4>
+                    <p class="text-sm text-gray-700">Tuyệt đối không cấp phép vận chuyển các chất dễ cháy, nổ (thuốc nổ, xăng dầu, khí đốt...) qua các công trình hầm có chiều dài từ <strong class="text-danger">100m trở lên</strong> (Điều 11 Nghị định 161).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: CHECKLIST -->
+        <section id="an-toan" class="bg-brand-navy text-white rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 text-9xl text-white opacity-5"><i class="fa-solid fa-clipboard-check"></i></div>
+            <h2 class="text-3xl font-bold mb-8 relative z-10">5. Checklist An Toàn & Xử Lý Sự Cố Tràn Đổ</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 relative z-10">
+                <!-- Checklist -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-brand-teal mb-4 border-b border-gray-700 pb-2">Trước & Trong Khi Vận Chuyển</h3>
+                    
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" class="mt-1 w-5 h-5 text-brand-teal rounded focus:ring-brand-teal bg-gray-800 border-gray-600">
+                        <span class="text-gray-300 group-hover:text-white transition">Đóng gói đúng quy cách, bao bì chịu được va chạm và không rò rỉ (Điều 6 NĐ 161).</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" class="mt-1 w-5 h-5 text-brand-teal rounded focus:ring-brand-teal bg-gray-800 border-gray-600">
+                        <span class="text-gray-300 group-hover:text-white transition">Dán nhãn hàng hóa, biểu trưng nguy hiểm và báo hiệu nguy hiểm (Màu cam) đầy đủ.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" class="mt-1 w-5 h-5 text-brand-teal rounded focus:ring-brand-teal bg-gray-800 border-gray-600">
+                        <span class="text-gray-300 group-hover:text-white transition">Lái xe/Người áp tải đã có Giấy chứng nhận hoàn thành tập huấn an toàn hóa chất.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" class="mt-1 w-5 h-5 text-brand-teal rounded focus:ring-brand-teal bg-gray-800 border-gray-600">
+                        <span class="text-gray-300 group-hover:text-white transition">Phương tiện có đầy đủ Giấy phép vận chuyển còn hiệu lực, thiết bị PCCC, BHLĐ.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" class="mt-1 w-5 h-5 text-brand-teal rounded focus:ring-brand-teal bg-gray-800 border-gray-600">
+                        <span class="text-gray-300 group-hover:text-white transition">Thực hiện đúng lịch trình, tuyến đường đã được phê duyệt trên Giấy phép.</span>
+                    </label>
+                </div>
+
+                <!-- Emergency Response -->
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-semibold text-danger mb-4 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Quy trình Ứng Cứu Sự Cố</h3>
+                    <ol class="list-decimal pl-5 space-y-3 text-sm text-gray-300">
+                        <li><strong class="text-white">Dừng xe & Cảnh báo:</strong> Tấp xe vào lề, bật đèn cảnh báo, đặt biển báo tam giác, cách ly khu vực (ít nhất 50m).</li>
+                        <li><strong class="text-white">Đánh giá tình hình:</strong> Xác định loại hóa chất rò rỉ (dựa vào mã UN trên xe) và hướng gió.</li>
+                        <li><strong class="text-white">Bảo hộ cá nhân:</strong> Đeo mặt nạ phòng độc, găng tay, đồ bảo hộ chuyên dụng trước khi tiếp cận.</li>
+                        <li><strong class="text-white">Ngăn chặn lan rộng:</strong> Sử dụng vật liệu thấm hút (cát, đất, bột đá) để chặn dòng chảy, không dùng nước nếu hóa chất phản ứng với nước.</li>
+                        <li><strong class="text-white">Báo cáo khẩn cấp:</strong> Gọi cho Cảnh sát PCCC (114), Cơ quan ứng cứu môi trường địa phương và người vận tải/chủ hàng.</li>
+                    </ol>
+                    <div class="mt-4 pt-4 border-t border-gray-700 text-xs text-gray-400">
+                        * Người lái xe/áp tải phải lập biên bản, báo cáo UBND cấp xã nơi gần nhất (Điều 30 NĐ 161).
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-navy text-white py-8 border-t border-gray-800 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-3 mb-4">
+                <i class="fa-solid fa-shield-halved text-brand-teal text-2xl"></i>
+                <span class="text-xl font-bold uppercase tracking-wider">Chemical Safety & Logistics Hub</span>
+            </div>
+            <p class="text-gray-400 text-sm mb-4">Nền tảng tra cứu và cập nhật kiến thức pháp luật về Hóa chất nguy hiểm.</p>
+            <div class="flex justify-center gap-4 text-gray-500 text-sm mb-4">
+                <a href="#" class="hover:text-white transition">Nghị định 161/2024/NĐ-CP</a>
+                <span>|</span>
+                <a href="#" class="hover:text-white transition">Cục Hóa Chất - Bộ Công Thương</a>
+                <span>|</span>
+                <a href="#" class="hover:text-white transition">Tiêu chuẩn GHS</a>
+            </div>
+            <p class="text-xs text-gray-600">&copy; 2024 Bản quyền thuộc về Tác giả. Dữ liệu tra cứu chỉ mang tính chất tham khảo, vui lòng đối chiếu với văn bản pháp luật hiện hành.</p>
+        </div>
+    </footer>
+
+    <!-- MOCK DATA & JAVASCRIPT LOGIC -->
+    <script>
+        // Data Array (Mock Data - based on Decree 161 and ADR)
+        const chemicalData = [
+            {
+                id: 'H2SO4',
+                name: 'Axit Sulfuric',
+                enName: 'Sulfuric Acid',
+                formula: 'H2SO4',
+                un: 'UN1830',
+                class: '8',
+                ghs: ['corrosive', 'health_hazard'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Bồn inox, can nhựa chuyên dụng, chai thủy tinh. Đậy kín, để nơi khô ráo, tránh xa kim loại và kiềm.',
+                emergency: 'Trung hòa bằng vôi bột, đá vôi. Không dùng nước trực tiếp vào axit đậm đặc gây phản ứng tỏa nhiệt mạnh. Sơ cứu: Rửa vùng da bị dính bằng nhiều nước sạch ít nhất 15 phút.'
+            },
+            {
+                id: 'NaOH',
+                name: 'Natri Hydroxit (Xút)',
+                enName: 'Sodium Hydroxide',
+                formula: 'NaOH',
+                un: 'UN1823',
+                class: '8',
+                ghs: ['corrosive'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Bao PP, phuy sắt, bồn inox. Để nơi khô ráo, tránh ẩm vì hút ẩm mạnh.',
+                emergency: 'Quét dọn bằng cát khô. Rửa sạch khu vực bằng nhiều nước. Sơ cứu: Rửa bằng nước sạch, cởi bỏ quần áo nhiễm bẩn.'
+            },
+            {
+                id: 'Xăng',
+                name: 'Xăng / Xăng Ron 95',
+                enName: 'Gasoline / Petrol',
+                formula: 'Hỗn hợp hydrocacbon',
+                un: 'UN1203',
+                class: '3',
+                ghs: ['flammable', 'health_hazard', 'environment'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Bồn chứa chuyên dụng bằng thép, xe bồn. Bảo quản nơi thoáng mát, tránh nguồn nhiệt và tia lửa điện.',
+                emergency: 'Cấm lửa. Ngăn chặn nguồn cháy. Dùng bọt chữa cháy, bột chữa cháy, không dùng nước phun trực tiếp. Sơ cứu: Hít phải hơi -> đưa ra nơi thoáng khí.'
+            },
+            {
+                id: 'Axeton',
+                name: 'Axeton',
+                enName: 'Acetone',
+                formula: 'C3H6O',
+                un: 'UN1090',
+                class: '3',
+                ghs: ['flammable', 'irritant'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Can nhựa, phuy sắt tráng kẽm. Chứa trong thùng kín, tránh ánh sáng trực tiếp.',
+                emergency: 'Dùng cát hoặc đất để thấm hút. Chữa cháy bằng bột, bọt hoặc CO2. Hơi axeton dễ bay hơi và gây chóng mặt.'
+            },
+            {
+                id: 'Axetylen',
+                name: 'Khí Axetylen',
+                enName: 'Acetylene',
+                formula: 'C2H2',
+                un: 'UN1001',
+                class: '2',
+                ghs: ['flammable'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Chai thép chuyên dụng chứa axeton tẩm trong vật liệu xốp. Bảo quản đứng, tránh ngã đổ.',
+                emergency: 'Ngắt nguồn khí nếu an toàn. Không dập tắt ngọn lửa khí đang cháy trừ khi chặn được nguồn cấp khí. Dùng nước phun sương làm mát các chai xung quanh.'
+            },
+            {
+                id: 'Oxy',
+                name: 'Khí Oxy',
+                enName: 'Oxygen',
+                formula: 'O2',
+                un: 'UN1072',
+                class: '2',
+                ghs: ['oxidizer', 'gas_cylinder'],
+                signal: 'WARNING',
+                permit: 'Bộ Công An',
+                packaging: 'Chai thép nén, chai composite. Van chai phải có nắp bảo vệ.',
+                emergency: 'Không để dầu mỡ tiếp xúc với van chai oxy. Nguy cơ cháy nổ rất cao nếu oxy gặp chất hữu cơ. Đóng van, di chuyển chai ra nơi thoáng nếu rò rỉ.'
+            },
+            {
+                id: 'Amoni Nitrat',
+                name: 'Amoni Nitrat (Đạm SA)',
+                enName: 'Ammonium Nitrate',
+                formula: 'NH4NO3',
+                un: 'UN1942',
+                class: '5',
+                ghs: ['oxidizer', 'irritant'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Bao PP dệt hoặc bao giấy kraft. Lưu trữ riêng biệt, không để lẫn với chất hữu cơ dễ cháy.',
+                emergency: 'Tránh xa vật liệu dễ cháy, nhiệt độ cao. Phản ứng phân hủy tỏa nhiệt mạnh. Chữa cháy bằng nước với lượng lớn.'
+            },
+            {
+                id: 'Clo',
+                name: 'Khí Clo',
+                enName: 'Chlorine',
+                formula: 'Cl2',
+                un: 'UN1017',
+                class: '2',
+                ghs: ['toxic', 'oxidizer', 'corrosive'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Chai thép đặc biệt, không được để nơi rò rỉ clo ra môi trường.',
+                emergency: 'Cực kỳ độc hại. Di tản người khỏi khu vực. Đeo mặt nạ phòng độc, đồ bảo hộ hóa học. Chữa cháy: Phun nước làm mát thùng chứa.'
+            },
+            {
+                id: 'Oxy già',
+                name: 'Hydrogen Peroxide (Oxy già 50%)',
+                enName: 'Hydrogen Peroxide',
+                formula: 'H2O2',
+                un: 'UN2014',
+                class: '5',
+                ghs: ['oxidizer', 'corrosive'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Bồn nhựa HDPE, can nhựa. Thoát khí van an toàn do dễ phân hủy tạo khí oxy.',
+                emergency: 'Dùng nước pha loãng. Bảo quản tránh ánh sáng, nhiệt độ cao. Không dùng các thiết bị kim loại thông thường (gây xúc tác phân hủy).'
+            },
+            {
+                id: 'Axit Clohydric',
+                name: 'Axit Clohydric (HCl)',
+                enName: 'Hydrochloric Acid',
+                formula: 'HCl',
+                un: 'UN1789',
+                class: '8',
+                ghs: ['corrosive', 'toxic'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Bồn nhựa, chai thủy tinh, can nhựa. Bay hơi mạnh tạo khí độc.',
+                emergency: 'Có thể dùng nước để pha loãng. Trung hòa bằng kiềm yếu (như vôi). Trang bị mặt nạ lọc khí axit.'
+            },
+            {
+                id: 'Metanol',
+                name: 'Metanol (Cồn công nghiệp)',
+                enName: 'Methanol',
+                formula: 'CH3OH',
+                un: 'UN1230',
+                class: '3',
+                ghs: ['flammable', 'toxic'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Bồn, phuy, can chuyên dụng. Rất độc nếu nuốt, hít hoặc ngấm qua da.',
+                emergency: 'Đám cháy metanol khó nhìn thấy bằng mắt thường. Dập lửa bằng cồn bọt hoặc nước phun sương. Không uống (gây mù, tử vong).'
+            },
+            {
+                id: 'TNT',
+                name: 'Thuốc nổ TNT',
+                enName: 'Trinitrotoluene',
+                formula: 'C7H5N3O6',
+                un: 'UN0209',
+                class: '1',
+                ghs: ['explosive', 'toxic'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An (Quản lý đặc biệt)',
+                packaging: 'Hòm gỗ chuyên dụng, có ngăn cách. Quản lý vô cùng nghiêm ngặt.',
+                emergency: 'Chỉ lực lượng chuyên trách PCCC và Công binh xử lý. Di tản khu vực rộng lớn.'
+            },
+            {
+                id: 'Pin Lithium',
+                name: 'Pin Lithium-Ion',
+                enName: 'Lithium Ion Batteries',
+                formula: 'Li-ion',
+                un: 'UN3480',
+                class: '9',
+                ghs: ['flammable', 'exclamation'],
+                signal: 'WARNING',
+                permit: 'Bộ Công An (Nếu vận chuyển số lượng lớn)',
+                packaging: 'Bao bì chống sốc, cách điện cực, không để chập mạch.',
+                emergency: 'Pin cháy không thể dập tắt hoàn toàn bằng bình CO2. Cần dùng cát hoặc nước để làm mát ngăn chặn lan truyền nhiệt. Tránh hít khói độc.'
+            },
+            {
+                id: 'Thuốc trừ sâu',
+                name: 'Thuốc bảo vệ thực vật (Thuốc trừ sâu)',
+                enName: 'Pesticides',
+                formula: 'Hỗn hợp hữu cơ',
+                un: 'UN2902',
+                class: '6',
+                ghs: ['toxic', 'environment'],
+                signal: 'DANGER',
+                permit: 'Sở NN&PTNT / UBND Tỉnh',
+                packaging: 'Chai nhựa/lọ thủy tinh có nắp khóa an toàn. Dán nhãn cảnh báo độc.',
+                emergency: 'Trang bị BHLĐ đầy đủ. Không đổ ra môi trường. Thu gom đất nhiễm độc. Gọi cấp cứu 115 nếu nhiễm độc.'
+            },
+            {
+                id: 'Kali Pemanganat',
+                name: 'Kali Pemanganat (Thuốc tím)',
+                enName: 'Potassium Permanganate',
+                formula: 'KMnO4',
+                un: 'UN1490',
+                class: '5',
+                ghs: ['oxidizer', 'irritant', 'environment'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Can nhựa, chai thủy tinh. Chất oxy hóa mạnh, dễ bắt lửa với chất hữu cơ.',
+                emergency: 'Dập cháy bằng nước. Không dùng bình chữa cháy CO2 trực tiếp vào hóa chất (có thể phản ứng).'
+            },
+            {
+                id: 'Formaldehyde',
+                name: 'Formaldehyde (Formalin)',
+                enName: 'Formaldehyde',
+                formula: 'CH2O',
+                un: 'UN2209',
+                class: '8',
+                ghs: ['corrosive', 'toxic', 'health_hazard'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Can nhựa, chai thủy tinh. Dung dịch 37-40% gây ung thư (nhóm 1).',
+                emergency: 'Hít phải gây kích ứng đường hô hấp mạnh. Trung hòa bằng amoniac loãng hoặc bisulfit natri. Rửa nhiều nước.'
+            },
+            {
+                id: 'Amoniac',
+                name: 'Khí Amoniac / Dung dịch Amoniac',
+                enName: 'Ammonia',
+                formula: 'NH3',
+                un: 'UN1005',
+                class: '2',
+                ghs: ['toxic', 'corrosive', 'gas_cylinder'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An (Đối với khí nén)',
+                packaging: 'Chai thép, bồn chứa áp lực. Mùi khai nồng nặc, độc đường hô hấp.',
+                emergency: 'Dùng nước phun sương để giảm nồng độ khí. Đeo mặt nạ lọc khí amoniac hoặc bình dưỡng khí.'
+            },
+            {
+                id: 'Axit Flohydric',
+                name: 'Axit Flohydric (HF)',
+                enName: 'Hydrofluoric Acid',
+                formula: 'HF',
+                un: 'UN1790',
+                class: '8',
+                ghs: ['corrosive', 'toxic'],
+                signal: 'DANGER',
+                permit: 'Bộ Công Thương',
+                packaging: 'Bình nhựa PTFE/Teflon (ăn mòn thủy tinh).',
+                emergency: 'Cực kỳ nguy hiểm, ăn mòn xương. Sơ cứu: Rửa bằng nước, sau đó bôi gel Canxi Gluconate. Đi cấp cứu NGAY LẬP TỨC.'
+            },
+            {
+                id: 'Bột Nhôm',
+                name: 'Bột Nhôm (Aluminium Powder)',
+                enName: 'Aluminium Powder',
+                formula: 'Al',
+                un: 'UN1396',
+                class: '4',
+                ghs: ['flammable', 'water_reactive'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Bao kín, tránh ẩm. Khi gặp nước sinh ra khí hydro dễ cháy nổ.',
+                emergency: 'Chữa cháy bằng cát khô, bột graphite. Tuyệt đối không dùng nước hoặc bọt chữa cháy thông thường.'
+            },
+            {
+                id: 'Dung môi Toluen',
+                name: 'Toluen',
+                enName: 'Toluene',
+                formula: 'C7H8',
+                un: 'UN1294',
+                class: '3',
+                ghs: ['flammable', 'health_hazard'],
+                signal: 'DANGER',
+                permit: 'Bộ Công An',
+                packaging: 'Phuy sắt, can nhựa. Hít nhiều hơi có thể gây tổn thương hệ thần kinh.',
+                emergency: 'Thấm hút bằng cát. Chữa cháy bằng bọt, bột, CO2. Thông gió khu vực rò rỉ.'
+            }
+        ];
+
+        // GHS Icon Mapping using Local Images
+        const ghsIcons = {
+            'flammable': { src: './assets/images/ChemLabels/UN.FIRE.webp', label: 'Dễ cháy' },
+            'explosive': { src: './assets/images/ChemLabels/UN.BOOM.webp', label: 'Chất nổ' },
+            'oxidizer': { src: './assets/images/ChemLabels/UN.FIRE1.webp', label: 'Oxy hóa' },
+            'gas_cylinder': { src: './assets/images/ChemLabels/UN.GAS.webp', label: 'Khí nén' },
+            'toxic': { src: './assets/images/ChemLabels/UN.TOXIC1.webp', label: 'Độc hại' },
+            'corrosive': { src: './assets/images/ChemLabels/UN.TOXIC.webp', label: 'Ăn mòn' },
+            'radiation': { src: './assets/images/ChemLabels/DG7_Radioactive_material.svg', label: 'Phóng xạ' },
+            'health_hazard': { src: './assets/images/ChemLabels/UN.webp', label: 'Nguy hại sức khỏe' },
+            'irritant': { src: './assets/images/ChemLabels/UN.DANGEROUS.webp', label: 'Kích ứng' },
+            'environment': { src: './assets/images/ChemLabels/UN.transport_pictogram_-_pollution.webp', label: 'Nguy hại môi trường' },
+            'exclamation': { src: './assets/images/ChemLabels/UN.DANGEROUS.webp', label: 'Cảnh báo chung' },
+            'water_reactive': { src: './assets/images/ChemLabels/UN4(4).webp', label: 'Phản ứng với nước' }
+        };
+
+        const resultsContainer = document.getElementById('resultsContainer');
+        const noResults = document.getElementById('noResults');
+        const searchInput = document.getElementById('searchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        
+        let currentClassFilter = 'all';
+
+        // Function to render GHS Images
+        function renderGHS(ghsArray) {
+            return ghsArray.map(g => {
+                const ghs = ghsIcons[g];
+                if(!ghs) return '';
+                return `
+                    <img src="${ghs.src}" alt="${ghs.label}" class="hazard-img" title="${ghs.label}" onerror="this.src='https://placehold.co/100x100/EF4444/white?text=GHS'">
+                `;
+            }).join('');
+        }
+
+        // Function to render cards
+        function renderResults(data) {
+            resultsContainer.innerHTML = '';
+            
+            if(data.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+
+            data.forEach(chem => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 animate-fade-in flex flex-col';
+                
+                // Color based on class
+                let classColor = 'bg-brand-teal';
+                if(chem.class === '1' || chem.class === '3') classColor = 'bg-danger';
+                if(chem.class === '2' || chem.class === '5') classColor = 'bg-warning';
+                if(chem.class === '8') classColor = 'bg-teal-600';
+                if(chem.class === '7') classColor = 'bg-purple-600';
+
+                card.innerHTML = `
+                    <div class="${classColor} h-2 w-full"></div>
+                    <div class="p-5 flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">${chem.un}</span>
+                            <span class="text-xs font-bold text-white ${classColor} px-2 py-1 rounded">Lớp ${chem.class}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-brand-navy mb-1 leading-tight">${chem.name}</h3>
+                        <p class="text-sm text-gray-500 mb-3">${chem.enName} | <span class="font-mono text-brand-teal font-medium">${chem.formula}</span></p>
+                        
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            ${renderGHS(chem.ghs)}
+                        </div>
+
+                        <div class="mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider ${chem.signal === 'DANGER' ? 'text-danger' : 'text-warning'}">
+                                <i class="fa-solid fa-circle-exclamation mr-1"></i> ${chem.signal}
+                            </span>
+                        </div>
+
+                        <div class="space-y-2 text-sm text-gray-600 mb-4 border-t border-gray-100 pt-3">
+                            <p><strong class="text-brand-navy"><i class="fa-solid fa-file-signature text-gray-400 w-4"></i> Cấp phép:</strong> ${chem.permit}</p>
+                            <p><strong class="text-brand-navy"><i class="fa-solid fa-box text-gray-400 w-4"></i> Lưu trữ:</strong> ${chem.packaging}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 border-t border-gray-100 mt-auto">
+                        <div class="text-sm text-gray-600">
+                            <p class="mb-1"><strong class="text-danger">Ứng cứu:</strong> ${chem.emergency}</p>
+                        </div>
+                        <button onclick='printCard(${JSON.stringify(chem)})' class="mt-3 w-full bg-white border border-gray-300 hover:bg-gray-100 text-brand-navy font-semibold py-2 px-4 rounded-lg transition flex justify-center items-center gap-2 no-print">
+                            <i class="fa-solid fa-print"></i> In / Xuất Nhãn
+                        </button>
+                    </div>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        // Filter Logic
+        function filterData() {
+            const query = searchInput.value.toLowerCase().trim();
+            
+            const filtered = chemicalData.filter(chem => {
+                const matchQuery = chem.name.toLowerCase().includes(query) || 
+                                   chem.enName.toLowerCase().includes(query) || 
+                                   chem.un.toLowerCase().includes(query) ||
+                                   chem.formula.toLowerCase().includes(query) ||
+                                   chem.class === query;
+                                   
+                const matchClass = currentClassFilter === 'all' || chem.class === currentClassFilter;
+                
+                return matchQuery && matchClass;
+            });
+
+            renderResults(filtered);
+        }
+
+        // Search Input Event
+        searchInput.addEventListener('input', filterData);
+
+        // Filter Buttons Event
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update UI
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-brand-navy', 'text-white');
+                    b.classList.add('bg-gray-100', 'text-gray-700');
+                });
+                
+                const target = e.currentTarget;
+                target.classList.remove('bg-gray-100', 'text-gray-700');
+                target.classList.add('active', 'bg-brand-navy', 'text-white');
+                
+                // Update State & Filter
+                currentClassFilter = target.getAttribute('data-class');
+                filterData();
+            });
+        });
+
+        // Clear Search
+        window.clearSearch = function() {
+            searchInput.value = '';
+            currentClassFilter = 'all';
+            filterBtns.forEach(b => {
+                b.classList.remove('active', 'bg-brand-navy', 'text-white');
+                b.classList.add('bg-gray-100', 'text-gray-700');
+                if(b.getAttribute('data-class') === 'all') {
+                    b.classList.add('active', 'bg-brand-navy', 'text-white');
+                }
+            });
+            renderResults(chemicalData);
+            searchInput.focus();
+        }
+
+        // Print Card Function
+        window.printCard = function(chem) {
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>In Nhãn Hóa Chất - ' + chem.name + '</title>');
+            // Print window doesn't load external Tailwind easily, so we use basic CSS + local images
+            printWindow.document.write('<style>');
+            printWindow.document.write(`
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; color: #0F172A; }
+                .card { border: 2px solid #E2E8F0; border-radius: 10px; padding: 20px; max-width: 600px; margin: 0 auto; }
+                .header { text-align: center; border-bottom: 2px solid #0284C7; padding-bottom: 10px; margin-bottom: 20px; }
+                .header h1 { margin: 0; color: #0284C7; text-transform: uppercase; }
+                .ghs-container { display: flex; gap: 10px; margin: 15px 0; justify-content: center; flex-wrap: wrap; }
+                .ghs-img { width: 80px; height: 80px; object-fit: contain; }
+                .info-row { margin-bottom: 10px; display: flex; }
+                .info-label { font-weight: bold; width: 150px; }
+                .info-value { flex: 1; }
+                .danger { color: #EF4444; font-weight: bold; font-size: 1.2rem; text-align: center; margin: 10px 0;}
+            `);
+            printWindow.document.write('</style></head><body>');
+            
+            printWindow.document.write(`
+                <div class="card">
+                    <div class="header">
+                        <h1>PHIẾU THÔNG TIN AN TOÀN HÓA CHẤT</h1>
+                        <p>Trích xuất theo Nghị định 161/2024/NĐ-CP</p>
+                    </div>
+                    <div class="info-row"><div class="info-label">Tên hóa chất:</div><div class="info-value"><strong>${chem.name}</strong></div></div>
+                    <div class="info-row"><div class="info-label">Tên tiếng Anh:</div><div class="info-value">${chem.enName}</div></div>
+                    <div class="info-row"><div class="info-label">Công thức / Mã UN:</div><div class="info-value">${chem.formula} / ${chem.un}</div></div>
+                    <div class="info-row"><div class="info-label">Phân loại:</div><div class="info-value">Lớp ${chem.class}</div></div>
+                    
+                    <div class="danger">TỪ CẢNH BÁO: ${chem.signal}</div>
+                    
+                    <div class="ghs-container">
+            `);
+
+            chem.ghs.forEach(g => {
+                const ghs = ghsIcons[g];
+                // Trong môi trường in, đường dẫn tương đối có thể lỗi nếu base URL khác, nhưng thường hoạt động tốt.
+                printWindow.document.write(`
+                    <img src="${ghs.src}" alt="${ghs.label}" class="ghs-img">
+                `);
+            });
+
+            printWindow.document.write(`
+                    </div>
+                    <div class="info-row"><div class="info-label">Cơ quan cấp phép:</div><div class="info-value">${chem.permit}</div></div>
+                    <div class="info-row"><div class="info-label">Đóng gói & Lưu trữ:</div><div class="info-value">${chem.packaging}</div></div>
+                    <div class="info-row"><div class="info-label">Biện pháp ứng cứu:</div><div class="info-value">${chem.emergency}</div></div>
+                    <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: #64748B;">
+                        <p>Mọi thông tin chỉ mang tính chất tham khảo. Tuân thủ nghiêm ngặt quy định PCCC & Môi trường.</p>
+                    </div>
+                </div>
+            `);
+            
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
+        // Initial Render
+        renderResults(chemicalData);
+
+    </script>
+</body>
+</html>
