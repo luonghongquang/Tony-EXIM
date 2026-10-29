@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ Cân bằng chuyền & Sản lượng mục tiêu</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Tùy chỉnh thanh cuộn cho bảng */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Hiệu ứng chuyển động cho con số thay đổi */
+        .value-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Loại bỏ mũi tên tăng giảm của input number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-indigo-950 text-white shadow-lg mb-8">
+        <div class="container mx-auto px-4 py-4 flex items-center gap-4">
+            <div class="bg-indigo-600 p-2.5 rounded-lg shadow-inner">
+                <i class="fa-solid fa-scale-balanced text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">Line Balancing & Target Output</h1>
+                <p class="text-xs text-indigo-300">Hệ thống tính toán sản lượng và phân bổ nhân sự</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 max-w-6xl">
+        
+        <!-- Layout Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            
+            <!-- CỘT TRÁI: NHẬP LIỆU VÀ BẢNG CÔNG ĐOẠN -->
+            <div class="xl:col-span-2 space-y-6">
+                
+                <!-- Thông số chung -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-500"></i> Thông số chung
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Ca làm việc (Giờ)</label>
+                            <div class="relative">
+                                <input type="number" id="shiftHours" value="8" min="1" step="0.5"
+                                    class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-lg font-bold rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">Giờ</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Tổng lao động (Người)</label>
+                            <div class="relative">
+                                <input type="number" id="totalWorkers" value="90" min="1"
+                                    class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-lg font-bold rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">Người</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danh sách công đoạn -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-list-ol text-indigo-500"></i> Danh sách Công đoạn
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Nhập thời gian (giây) cho từng công đoạn để tính toán.</p>
+                        </div>
+                        <button onclick="addStage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-plus"></i> Thêm
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto custom-scrollbar max-h-[500px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-100 sticky top-0 z-10 text-slate-600 text-xs uppercase tracking-wider shadow-sm">
+                                <tr>
+                                    <th class="px-4 py-3 font-semibold w-1/3">Tên công đoạn</th>
+                                    <th class="px-4 py-3 font-semibold w-1/4">Thời gian (Giây)</th>
+                                    <th class="px-4 py-3 font-semibold text-center bg-blue-50 text-blue-800 w-1/4">Người cần bố trí</th>
+                                    <th class="px-4 py-3 font-semibold text-center w-12">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stageTableBody" class="divide-y divide-slate-100">
+                                <!-- Nội dung được render bằng JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: KẾT QUẢ (DASHBOARD) -->
+            <div class="xl:col-span-1">
+                <div class="sticky top-6 space-y-6">
+                    
+                    <!-- Card Sản lượng mục tiêu (Nổi bật nhất) -->
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-700 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-10 text-8xl">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-emerald-100 font-semibold uppercase tracking-wider text-sm mb-1">Sản lượng mục tiêu</h3>
+                        <div class="flex items-baseline gap-2">
+                            <span id="targetOutput" class="text-6xl font-black value-transition drop-shadow-md">0</span>
+                            <span class="text-xl font-medium text-emerald-100">SP/Chuyền</span>
+                        </div>
+                        <p class="text-xs text-emerald-200 mt-3 bg-emerald-800/30 inline-block px-2 py-1 rounded"><i class="fa-solid fa-circle-info mr-1"></i> Được tính dựa trên tổng thời gian và nhân sự.</p>
+                    </div>
+
+                    <!-- Các chỉ số khác -->
+                    <div class="grid grid-cols-1 gap-4">
+                        
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">Tổng thời gian 1 SP</h3>
+                                <div class="flex items-baseline gap-1">
+                                    <span id="totalTime" class="text-3xl font-bold text-slate-800 value-transition">0</span>
+                                    <span class="text-sm text-slate-500 font-medium">giây</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">Năng suất LĐBQ</h3>
+                                <div class="flex items-baseline gap-1">
+                                    <span id="productivity" class="text-3xl font-bold text-slate-800 value-transition">0</span>
+                                    <span class="text-sm text-slate-500 font-medium">SP/Người/Giờ</span>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                <strong class="text-indigo-600">Mẹo Cân bằng:</strong> Cột <span class="text-blue-600 font-semibold">"Người cần bố trí"</span> hiển thị số thập phân (VD: 5.4). Bạn hãy làm tròn lên (6 người) cho công đoạn nghẽn và giảm bớt ở công đoạn nhàn rỗi để tối ưu năng suất.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. STATE QUẢN LÝ DỮ LIỆU
+        let stages = [
+            { id: generateId(), name: 'Công đoạn 1', time: 0 },
+            { id: generateId(), name: 'Công đoạn 2', time: 0 }
+        ];
+
+        // Hàm tạo ID ngẫu nhiên
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        // 2. DOM ELEMENTS
+        const shiftHoursInput = document.getElementById('shiftHours');
+        const totalWorkersInput = document.getElementById('totalWorkers');
+        const tableBody = document.getElementById('stageTableBody');
+        
+        const targetOutputEl = document.getElementById('targetOutput');
+        const totalTimeEl = document.getElementById('totalTime');
+        const productivityEl = document.getElementById('productivity');
+
+        // 3. RENDER GIAO DIỆN BẢNG CÔNG ĐOẠN
+        function renderTable() {
+            tableBody.innerHTML = '';
+            
+            if (stages.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-400 text-sm">Chưa có công đoạn nào. Vui lòng bấm "Thêm".</td></tr>`;
+                calculate();
+                return;
+            }
+
+            stages.forEach((stage, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors group";
+                tr.innerHTML = `
+                    <td class="px-4 py-2">
+                        <input type="text" value="${stage.name}" 
+                            oninput="updateStage('${stage.id}', 'name', this.value)"
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-indigo-500 focus:bg-white rounded px-2 py-1.5 text-sm font-medium text-slate-700 focus:outline-none transition-all"
+                            placeholder="Nhập tên...">
+                    </td>
+                    <td class="px-4 py-2">
+                        <input type="number" value="${stage.time > 0 ? stage.time : ''}" min="0" step="0.1"
+                            oninput="updateStage('${stage.id}', 'time', this.value)"
+                            class="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded px-3 py-1.5 text-sm font-bold text-slate-700 focus:outline-none transition-all"
+                            placeholder="0">
+                    </td>
+                    <td class="px-4 py-2 text-center bg-blue-50/50">
+                        <span id="worker-cell-${stage.id}" class="text-base font-bold text-blue-600 value-transition">0</span>
+                        <span class="text-[10px] text-slate-500 block">người</span>
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                        <button onclick="removeStage('${stage.id}')" class="text-slate-400 hover:text-rose-500 hover:bg-rose-50 p-2 rounded-lg transition-colors" title="Xóa">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            calculate();
+        }
+
+        // 4. CẬP NHẬT DỮ LIỆU KHI GÕ
+        function updateStage(id, field, value) {
+            const stage = stages.find(s => s.id === id);
+            if (stage) {
+                if (field === 'time') {
+                    stage[field] = Math.max(0, parseFloat(value) || 0); // Chặn số âm
+                } else {
+                    stage[field] = value;
+                }
+                calculate(); // Tính lại ngay lập tức
+            }
+        }
+
+        // 5. THÊM / XÓA CÔNG ĐOẠN
+        function addStage() {
+            stages.push({
+                id: generateId(),
+                name: `Công đoạn ${stages.length + 1}`,
+                time: 0
+            });
+            renderTable();
+        }
+
+        function removeStage(id) {
+            stages = stages.filter(s => s.id !== id);
+            renderTable();
+        }
+
+        // 6. CORE LOGIC: TÍNH TOÁN CÂN BẰNG CHUYỀN
+        function calculate() {
+            // Lấy thông số chung
+            const shiftHours = Math.max(0, parseFloat(shiftHoursInput.value) || 0);
+            const totalWorkers = Math.max(0, parseInt(totalWorkersInput.value) || 0);
+            const totalSecondsAvailable = shiftHours * 3600; // Tổng số giây có được trong ca
+
+            // Tính tổng thời gian 1 sản phẩm
+            const totalTimePerProduct = stages.reduce((sum, stage) => sum + stage.time, 0);
+            
+            // Hiển thị tổng thời gian
+            totalTimeEl.innerText = totalTimePerProduct.toLocaleString('en-US', { maximumFractionDigits: 1 });
+
+            // TRÁNH LỖI CHIA CHO 0
+            if (totalTimePerProduct === 0 || shiftHours === 0) {
+                targetOutputEl.innerText = '0';
+                productivityEl.innerText = '0.00';
+                
+                // Reset số người cần bố trí về 0
+                stages.forEach(stage => {
+                    const cell = document.getElementById(`worker-cell-${stage.id}`);
+                    if (cell) cell.innerText = '0.0';
+                });
+                return;
+            }
+
+            // 1. Tính Sản lượng mục tiêu của chuyền
+            // Công thức: ((Ca * 3600) / Tổng thời gian 1 SP) * Tổng số lao động
+            let targetOutput = (totalSecondsAvailable / totalTimePerProduct) * totalWorkers;
+            targetOutput = Math.round(targetOutput); // Làm tròn số nguyên
+            targetOutputEl.innerText = targetOutput.toLocaleString('en-US');
+
+            // 2. Tính Năng suất LĐBQ người/giờ
+            // Công thức: (Ca * 3600) / Tổng thời gian 1 SP / Ca
+            const productivity = (totalSecondsAvailable / totalTimePerProduct) / shiftHours;
+            productivityEl.innerText = productivity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // 3. Tính số người cần bố trí cho từng công đoạn
+            // Công thức: (Thời gian công đoạn / Tổng thời gian) * Tổng lao động
+            stages.forEach(stage => {
+                const workerNeeded = (stage.time / totalTimePerProduct) * totalWorkers;
+                const cell = document.getElementById(`worker-cell-${stage.id}`);
+                if (cell) {
+                    cell.innerText = workerNeeded.toFixed(1); // Làm tròn 1 chữ số thập phân
+                }
+            });
+        }
+
+        // 7. KHỞI TẠO SỰ KIỆN & CHẠY LẦN ĐẦU
+        shiftHoursInput.addEventListener('input', calculate);
+        totalWorkersInput.addEventListener('input', calculate);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+        });
+
+    </script>
+</body>
+</html>
