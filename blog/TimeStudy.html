@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Study - Stopwatch Tool</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font định dạng số đơn cách (Monospace) cho đồng hồ -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* CSS cho đồng hồ điện tử */
+        .digital-clock {
+            font-family: 'Share Tech Mono', monospace;
+            text-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Tùy chỉnh thanh cuộn */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        /* Tắt mũi tên tăng giảm của input number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* Hiệu ứng nút bấm */
+        .btn-scale:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-lg mb-6">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-indigo-600 p-2.5 rounded-lg shadow-inner">
+                    <i class="fa-solid fa-stopwatch text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Time Study Analysis</h1>
+                    <p class="text-xs text-slate-400">Stopwatch Method & Standard Time Calculation</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 max-w-6xl">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- CỘT TRÁI: NHẬP LIỆU & ĐO THỜI GIAN (Chiếm 7/12) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Cài đặt thông số chung -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 border-b pb-2">
+                        <i class="fa-solid fa-sliders text-indigo-500"></i> Thông số Công đoạn
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-1">Tên Công Đoạn (Hiện tại)</label>
+                            <input type="text" id="taskName" value="Lắp ráp thân xe" 
+                                class="w-full bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-lg px-3 py-2 text-sm font-bold focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder-slate-400">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-1">Hệ số Tốc độ (Rating)</label>
+                            <div class="relative">
+                                <input type="number" id="ratingFactor" value="100" min="50" max="150" step="5"
+                                    class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold text-indigo-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-1">Hệ số Nới lỏng (Allowance)</label>
+                            <div class="relative">
+                                <input type="number" id="allowanceFactor" value="15" min="0" max="50" step="1"
+                                    class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold text-indigo-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Đồng hồ bấm giây -->
+                <div class="bg-slate-900 p-8 rounded-2xl shadow-lg text-center relative overflow-hidden">
+                    <!-- Hiệu ứng nền -->
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-400 via-slate-900 to-slate-900"></div>
+                    
+                    <div class="relative z-10">
+                        <p class="text-slate-400 text-sm font-medium mb-2 uppercase tracking-widest">Thời gian chu kỳ hiện tại</p>
+                        <div id="stopwatchDisplay" class="digital-clock text-6xl md:text-7xl font-bold text-emerald-400 mb-6">
+                            00.00
+                        </div>
+                        
+                        <div class="flex justify-center gap-4">
+                            <button id="btnStart" onclick="toggleTimer()" class="btn-scale bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors flex items-center gap-2 w-36 justify-center">
+                                <i class="fa-solid fa-play"></i> START
+                            </button>
+                            
+                            <button id="btnRecord" onclick="recordCycle()" class="btn-scale bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-colors flex items-center gap-2 opacity-50 cursor-not-allowed w-36 justify-center" disabled>
+                                <i class="fa-solid fa-check"></i> GHI NHẬN
+                            </button>
+
+                            <button onclick="resetTimer()" class="btn-scale bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-colors flex items-center justify-center" title="Đặt lại về 0">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bảng dữ liệu các chu kỳ -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-list-ol text-indigo-500"></i> Dữ liệu đo (Cycles)
+                        </h2>
+                        <span class="bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded text-xs" id="cycleCount">0 chu kỳ</span>
+                    </div>
+                    <div class="max-h-72 overflow-y-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-white sticky top-0 shadow-sm text-xs text-slate-500 uppercase">
+                                <tr>
+                                    <th class="px-3 py-2 w-12 text-center">STT</th>
+                                    <th class="px-3 py-2">Tên Công Đoạn</th>
+                                    <th class="px-3 py-2 text-right">Thời gian (s)</th>
+                                    <th class="px-3 py-2 text-center w-12">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cycleTableBody" class="divide-y divide-slate-100 text-sm">
+                                <!-- Render JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CỘT PHẢI: KẾT QUẢ (Chiếm 5/12) -->
+            <div class="lg:col-span-5">
+                <div class="sticky top-6 space-y-6">
+                    
+                    <!-- Các chỉ số trung gian -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Thời gian Quan sát TB (OT)</p>
+                                <p class="text-xs text-slate-400">Observed Time (Tất cả CĐ)</p>
+                            </div>
+                            <div class="text-right">
+                                <span id="resultOT" class="text-2xl font-bold text-slate-800">0.00</span>
+                                <span class="text-sm text-slate-500">s</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Thời gian Cơ bản (NT)</p>
+                                <p class="text-xs text-slate-400">Normal (Basic) Time</p>
+                            </div>
+                            <div class="text-right">
+                                <span id="resultNT" class="text-2xl font-bold text-blue-600">0.00</span>
+                                <span class="text-sm text-slate-500">s</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KẾT QUẢ CHÍNH: STANDARD TIME -->
+                    <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+                        <div class="absolute -right-6 -top-6 text-9xl opacity-10">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        
+                        <div class="relative z-10 text-center">
+                            <h3 class="text-indigo-200 font-bold uppercase tracking-widest text-sm mb-2">Thời gian Chuẩn</h3>
+                            <p class="text-xs text-indigo-300 mb-4">Standard Time (ST)</p>
+                            
+                            <div class="flex items-baseline justify-center gap-2">
+                                <span id="resultST" class="text-7xl font-black digital-clock drop-shadow-lg">0.00</span>
+                                <span class="text-2xl font-medium text-indigo-200">s</span>
+                            </div>
+                            
+                            <div class="mt-6 bg-indigo-900/50 p-3 rounded-lg border border-indigo-700/50 text-xs text-indigo-200 inline-block">
+                                Công thức: ST = (OT × Rating) × (1 + Allowance)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ghi chú / Cảnh báo -->
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex gap-3 text-sm text-amber-800">
+                        <i class="fa-solid fa-circle-info mt-1 text-amber-500"></i>
+                        <p>Bạn có thể thay đổi <strong>Tên Công Đoạn</strong> ở trên để đo tiếp đoạn khác. Bảng kết quả sẽ lưu lại đầy đủ lịch sử.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. STATE QUẢN LÝ
+        // Mảng lưu trữ: { taskName: string, time: number }
+        let cycles = []; 
+        let timerInterval;
+        let startTime = 0;
+        let elapsedTime = 0; // Tính bằng milliseconds
+        let isRunning = false;
+
+        // DOM Elements
+        const displayEl = document.getElementById('stopwatchDisplay');
+        const btnStart = document.getElementById('btnStart');
+        const btnRecord = document.getElementById('btnRecord');
+        const taskNameInput = document.getElementById('taskName');
+        
+        const tableBody = document.getElementById('cycleTableBody');
+        const cycleCountEl = document.getElementById('cycleCount');
+
+        const ratingInput = document.getElementById('ratingFactor');
+        const allowanceInput = document.getElementById('allowanceFactor');
+
+        const resultOT = document.getElementById('resultOT');
+        const resultNT = document.getElementById('resultNT');
+        const resultST = document.getElementById('resultST');
+
+        // 2. STOPWATCH LOGIC
+        function formatTime(ms) {
+            return (ms / 1000).toFixed(2);
+        }
+
+        function updateDisplay() {
+            displayEl.innerText = formatTime(elapsedTime);
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                // STOP
+                clearInterval(timerInterval);
+                isRunning = false;
+                btnStart.innerHTML = '<i class="fa-solid fa-play"></i> START';
+                btnStart.classList.replace('bg-rose-500', 'bg-emerald-500');
+                btnStart.classList.replace('hover:bg-rose-600', 'hover:bg-emerald-600');
+                
+                // Enable nút Ghi nhận
+                btnRecord.disabled = false;
+                btnRecord.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                // START / RESUME
+                startTime = performance.now() - elapsedTime;
+                timerInterval = setInterval(() => {
+                    elapsedTime = performance.now() - startTime;
+                    updateDisplay();
+                }, 10);
+                
+                isRunning = true;
+                btnStart.innerHTML = '<i class="fa-solid fa-pause"></i> STOP';
+                btnStart.classList.replace('bg-emerald-500', 'bg-rose-500');
+                btnStart.classList.replace('hover:bg-emerald-600', 'hover:bg-rose-600');
+
+                // Disable nút Ghi nhận khi đang chạy
+                btnRecord.disabled = true;
+                btnRecord.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            elapsedTime = 0;
+            updateDisplay();
+            
+            btnStart.innerHTML = '<i class="fa-solid fa-play"></i> START';
+            btnStart.classList.replace('bg-rose-500', 'bg-emerald-500');
+            btnStart.classList.replace('hover:bg-rose-600', 'hover:bg-emerald-600');
+
+            btnRecord.disabled = true;
+            btnRecord.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function recordCycle() {
+            if (elapsedTime === 0) return;
+
+            // Lấy tên công đoạn hiện tại
+            const currentTaskName = taskNameInput.value.trim() || 'Chưa đặt tên';
+            const timeInSeconds = elapsedTime / 1000;
+            
+            // Lưu vào mảng object
+            cycles.push({
+                taskName: currentTaskName,
+                time: timeInSeconds
+            });
+            
+            // Reset đồng hồ sau khi ghi nhận
+            resetTimer();
+            
+            // Cập nhật UI
+            renderTable();
+            calculate();
+        }
+
+        // 3. RENDER TABLE & CALCULATIONS
+        function renderTable() {
+            tableBody.innerHTML = '';
+            cycleCountEl.innerText = `${cycles.length} chu kỳ`;
+
+            if (cycles.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-400 text-sm">Chưa có dữ liệu. Hãy bấm START để đo.</td></tr>`;
+                return;
+            }
+
+            cycles.forEach((cycle, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors group";
+                tr.innerHTML = `
+                    <td class="px-3 py-2 text-center text-slate-500 font-medium">${index + 1}</td>
+                    <td class="px-3 py-2 text-slate-700 font-medium truncate max-w-[150px]" title="${cycle.taskName}">${cycle.taskName}</td>
+                    <td class="px-3 py-2 text-right font-bold text-slate-800 font-mono">${cycle.time.toFixed(2)}</td>
+                    <td class="px-3 py-2 text-center">
+                        <button onclick="deleteCycle(${index})" class="text-slate-300 hover:text-rose-500 transition-colors p-1" title="Xóa chu kỳ này">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function deleteCycle(index) {
+            cycles.splice(index, 1);
+            renderTable();
+            calculate();
+        }
+
+        // 4. CORE LOGIC (TIME STUDY FORMULAS)
+        function calculate() {
+            const rating = parseFloat(ratingInput.value) || 0;
+            const allowance = parseFloat(allowanceInput.value) || 0;
+
+            if (cycles.length === 0) {
+                resultOT.innerText = '0.00';
+                resultNT.innerText = '0.00';
+                resultST.innerText = '0.00';
+                return;
+            }
+
+            // 1. Observed Time (OT) = Trung bình cộng của TẤT CẢ các chu kỳ
+            const sum = cycles.reduce((acc, curr) => acc + curr.time, 0);
+            const ot = sum / cycles.length;
+            
+            // 2. Normal Time (NT) = OT * (Rating / 100)
+            const nt = ot * (rating / 100);
+
+            // 3. Standard Time (ST) = NT * (1 + Allowance / 100)
+            const st = nt * (1 + (allowance / 100));
+
+            // Cập nhật DOM
+            resultOT.innerText = ot.toFixed(2);
+            resultNT.innerText = nt.toFixed(2);
+            resultST.innerText = st.toFixed(2);
+        }
+
+        // 5. SỰ KIỆN LẮNG NGHE
+        ratingInput.addEventListener('input', calculate);
+        allowanceInput.addEventListener('input', calculate);
+
+        // Phím tắt (Space để Start/Stop, Enter để Record)
+        document.addEventListener('keydown', (e) => {
+            // Ngăn chặn cuộn trang khi bấm Space (nếu không đang focus vào input)
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                toggleTimer();
+            }
+            // Bấm Enter để ghi nhận
+            if (e.code === 'Enter' && e.target.tagName !== 'INPUT' && !btnRecord.disabled) {
+                e.preventDefault();
+                recordCycle();
+            }
+        });
+
+        // Khởi tạo
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            calculate();
+        });
+
+    </script>
+</body>
+</html>
