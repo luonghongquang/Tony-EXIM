@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion Analysis - Therbligs & Hand Chart</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        
+        /* Tùy chỉnh thanh cuộn */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        /* Tắt mũi tên tăng giảm của input number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* Hiệu ứng làm nổi bật thao tác lãng phí */
+        .therblig-ineffective {
+            background-color: #fef2f2; /* bg-red-50 */
+            border-color: #fecaca; /* border-red-200 */
+            color: #b91c1c; /* text-red-700 */
+        }
+        .therblig-effective {
+            background-color: #f0fdf4; /* bg-green-50 */
+            border-color: #bbf7d0; /* border-green-200 */
+            color: #15803d; /* text-green-700 */
+        }
+
+        /* Prose styling cho bài viết */
+        .prose-custom p { margin-bottom: 1rem; line-height: 1.75; color: #475569; }
+        .prose-custom ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #475569; }
+        .prose-custom li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center max-w-7xl">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2 rounded-lg shadow-inner">
+                    <i class="fa-solid fa-hands text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wide">Motion Analysis Guide</h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Phân tích Động tác & Therbligs</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex gap-4 text-sm font-medium">
+                <a href="#theory" class="hover:text-indigo-400 transition">Lý thuyết</a>
+                <a href="#tool" class="hover:text-indigo-400 transition">Công cụ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-7xl space-y-12">
+
+        <!-- PHẦN 1: BÀI VIẾT GIỚI THIỆU -->
+        <section class="text-center max-w-4xl mx-auto mb-12">
+            <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block">Kỹ thuật Công nghiệp</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">Nghệ thuật Loại bỏ Lãng phí: Phân tích Động tác (Therbligs)</h1>
+            <p class="text-lg text-slate-600 mb-8">Làm thế nào để một công nhân có thể làm ra nhiều sản phẩm hơn mà không tốn thêm một giọt mồ hôi nào? Câu trả lời nằm ở việc tối ưu hóa từng cử động nhỏ nhất của đôi tay.</p>
+        </section>
+
+        <!-- PHẦN 2: LÝ THUYẾT CỐT LÕI -->
+        <section id="theory" class="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+            <div class="prose-custom">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Therblig là gì?</h2>
+                <p>Được phát triển bởi Frank và Lillian Gilbreth, <strong>Therblig</strong> (đảo ngược chữ Gilbreth) là 18 động tác cơ bản nhất của con người trong quá trình làm việc. Mọi quy trình lắp ráp phức tạp đều được cấu thành từ những viên gạch nhỏ bé này.</p>
+                <p>Chúng được chia làm 2 nhóm chính:</p>
+                <ul>
+                    <li><strong class="text-emerald-600">Hiệu quả (Effective):</strong> Những động tác tạo ra giá trị gia tăng trực tiếp cho sản phẩm (Ví dụ: Nắm, Mang đi, Lắp ráp).</li>
+                    <li><strong class="text-rose-600">Lãng phí (Ineffective):</strong> Những động tác không tạo ra giá trị, gây mệt mỏi và kéo dài thời gian (Ví dụ: Chờ đợi, Giữ).</li>
+                </ul>
+            </div>
+            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                <h3 class="text-lg font-bold text-indigo-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-chart-line text-indigo-600"></i> Giá trị của Công cụ này (Left/Right Hand Chart)</h3>
+                <p class="text-sm text-indigo-800 mb-3">Công cụ bên dưới giúp bạn vẽ <strong>Biểu đồ Tay Trái - Tay Phải</strong>. Nó trả lời câu hỏi: <em>"Trong lúc tay trái đang làm việc, tay phải đang làm gì?"</em></p>
+                <ul class="text-sm text-indigo-800 space-y-2 list-disc pl-4">
+                    <li>Phát hiện tình trạng <strong>"Một tay làm, một tay chờ"</strong>.</li>
+                    <li>Đo lường chính xác % thời gian lãng phí của từng bên tay.</li>
+                    <li>Cung cấp dữ liệu để thiết kế lại khuôn gá (Jig) hoặc bố trí lại vật tư để cả 2 tay cùng hoạt động.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PHẦN 3: CÔNG CỤ TƯƠNG TÁC -->
+        <section id="tool" class="space-y-6 pt-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Công cụ Phân tích Động tác Tương tác</h2>
+                <p class="text-sm text-slate-500 mt-2">Thay đổi thông số để thấy sự thay đổi của các chỉ số Real-time.</p>
+            </div>
+
+            <!-- Quản lý Therbligs Động -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-sm text-slate-600">
+                    <i class="fa-solid fa-circle-info text-blue-500 mr-2"></i> Bạn có thể thêm các động tác mới vào danh sách Dropdown.
+                </div>
+                <form onsubmit="handleAddTherblig(event)" class="flex flex-wrap items-center gap-2">
+                    <input type="text" id="newTherbligName" placeholder="Tên động tác mới..." required
+                        class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500 w-48">
+                    <select id="newTherbligType" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500">
+                        <option value="effective">Hiệu quả (Xanh)</option>
+                        <option value="ineffective">Lãng phí (Đỏ)</option>
+                    </select>
+                    <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold py-1.5 px-4 rounded-lg transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Thêm
+                    </button>
+                </form>
+            </div>
+
+            <!-- SUMMARY DASHBOARD -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-slate-500">
+                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tổng thời gian chu kỳ</p>
+                    <div class="flex items-baseline gap-1">
+                        <span id="totalTimeDisplay" class="text-3xl font-black text-slate-800">0.0</span>
+                        <span class="text-sm text-slate-500 font-medium">giây</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 h-full w-24 bg-blue-50/50 flex items-center justify-center">
+                        <i class="fa-solid fa-hand-back-fist text-4xl text-blue-200"></i>
+                    </div>
+                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tỷ lệ Lãng phí (Tay Trái)</p>
+                    <div class="flex items-baseline gap-2">
+                        <span id="leftIdlePct" class="text-3xl font-black text-rose-600">0.0</span>
+                        <span class="text-sm font-medium text-slate-400">%</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-1">Idle: <strong id="leftIdleTime" class="text-rose-500">0s</strong> / <span id="leftTotalTime">0s</span></p>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-emerald-500 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 h-full w-24 bg-emerald-50/50 flex items-center justify-center">
+                        <i class="fa-solid fa-hand-fist text-4xl text-emerald-200"></i>
+                    </div>
+                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tỷ lệ Lãng phí (Tay Phải)</p>
+                    <div class="flex items-baseline gap-2">
+                        <span id="rightIdlePct" class="text-3xl font-black text-rose-600">0.0</span>
+                        <span class="text-sm font-medium text-slate-400">%</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-1">Idle: <strong id="rightIdleTime" class="text-rose-500">0s</strong> / <span id="rightTotalTime">0s</span></p>
+                </div>
+            </div>
+
+            <!-- MAIN CHART -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-table-columns text-indigo-600"></i> Biểu đồ Tay Trái - Tay Phải
+                        </h2>
+                    </div>
+                    <button onclick="addStep()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-plus"></i> Thêm Bước
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto custom-scrollbar max-h-[600px]">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead class="bg-white sticky top-0 z-10 shadow-sm text-xs text-slate-500 uppercase">
+                            <tr>
+                                <th class="px-4 py-3 font-bold w-12 text-center border-r border-slate-100 bg-slate-50">#</th>
+                                <th colspan="2" class="px-4 py-3 font-bold text-center border-r border-slate-200 text-blue-700 bg-blue-50/50">
+                                    <i class="fa-solid fa-hand-back-fist mr-1"></i> TAY TRÁI
+                                </th>
+                                <th colspan="2" class="px-4 py-3 font-bold text-center border-r border-slate-200 text-emerald-700 bg-emerald-50/50">
+                                    <i class="fa-solid fa-hand-fist mr-1"></i> TAY PHẢI
+                                </th>
+                                <th class="px-2 py-3 w-12 text-center"></th>
+                            </tr>
+                            <tr class="bg-slate-50 text-[10px] text-slate-500">
+                                <th class="border-r border-slate-200"></th>
+                                <th class="px-3 py-2 text-center border-r border-slate-200">Động tác</th>
+                                <th class="px-3 py-2 text-center border-r border-slate-200 w-24">Thời gian (s)</th>
+                                <th class="px-3 py-2 text-center border-r border-slate-200">Động tác</th>
+                                <th class="px-3 py-2 text-center border-r border-slate-200 w-24">Thời gian (s)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="chartTableBody" class="divide-y divide-slate-100 text-sm">
+                            <!-- Render JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. CẤU HÌNH THERBLIGS BAN ĐẦU (Có thể thêm bằng UI)
+        let therbligs = [
+            { id: 'reach', name: 'Đưa tay không (Reach)', type: 'effective' },
+            { id: 'move', name: 'Mang đi (Move)', type: 'effective' },
+            { id: 'grasp', name: 'Nắm (Grasp)', type: 'effective' },
+            { id: 'use', name: 'Sử dụng (Use)', type: 'effective' },
+            { id: 'assemble', name: 'Lắp ráp (Assemble)', type: 'effective' },
+            { id: 'release', name: 'Thả (Release)', type: 'effective' },
+            { id: 'hold', name: 'Giữ (Hold)', type: 'ineffective' },
+            { id: 'delay', name: 'Trì hoãn (Delay)', type: 'ineffective' }
+        ];
+
+        // 2. STATE
+        let steps = [
+            { id: generateId(), leftTh: 'reach', leftTime: 1.2, rightTh: 'hold', rightTime: 1.2 },
+            { id: generateId(), leftTh: 'grasp', leftTime: 0.8, rightTh: 'delay', rightTime: 0.8 },
+            { id: generateId(), leftTh: 'move', leftTime: 2.5, rightTh: 'grasp', rightTime: 2.5 },
+            { id: generateId(), leftTh: 'hold', leftTime: 3.0, rightTh: 'assemble', rightTime: 3.0 }
+        ];
+
+        // 3. DOM ELEMENTS
+        const tableBody = document.getElementById('chartTableBody');
+        
+        const totalTimeDisplay = document.getElementById('totalTimeDisplay');
+        const leftIdlePct = document.getElementById('leftIdlePct');
+        const leftIdleTime = document.getElementById('leftIdleTime');
+        const leftTotalTime = document.getElementById('leftTotalTime');
+        const rightIdlePct = document.getElementById('rightIdlePct');
+        const rightIdleTime = document.getElementById('rightIdleTime');
+        const rightTotalTime = document.getElementById('rightTotalTime');
+
+        // 4. HELPERS
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        function getTherbligConfig(id) {
+            return therbligs.find(t => t.id === id) || { name: 'N/A', type: 'effective' };
+        }
+
+        // 5. XỬ LÝ THÊM THERBLIG MỚI
+        function handleAddTherblig(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('newTherbligName');
+            const typeInput = document.getElementById('newTherbligType');
+            
+            const newName = nameInput.value.trim();
+            const newType = typeInput.value;
+
+            if (!newName) return;
+
+            // Tạo ID từ tên (loại bỏ dấu, khoảng trắng)
+            const newId = 'custom_' + newName.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + Math.floor(Math.random()*1000);
+
+            therbligs.push({
+                id: newId,
+                name: newName,
+                type: newType
+            });
+
+            // Reset form
+            nameInput.value = '';
+            
+            // Render lại bảng để cập nhật Dropdown
+            renderTable();
+            alert(`Đã thêm động tác: ${newName}`);
+        }
+
+        // 6. RENDER BẢNG
+        function renderTable() {
+            tableBody.innerHTML = '';
+
+            if (steps.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">Chưa có dữ liệu. Vui lòng thêm bước.</td></tr>`;
+                calculateSummary();
+                return;
+            }
+
+            steps.forEach((step, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors group";
+
+                // Hàm tạo thẻ Select động từ mảng therbligs
+                const createSelect = (hand, currentThId) => {
+                    let options = '';
+                    therbligs.forEach(t => {
+                        const isSelected = currentThId === t.id ? 'selected' : '';
+                        options += `<option value="${t.id}" ${isSelected}>${t.name}</option>`;
+                    });
+                    return `
+                        <select onchange="updateStep('${step.id}', '${hand}Th', this.value)"
+                            class="w-full border border-slate-300 rounded px-2 py-1.5 text-xs font-medium focus:outline-none focus:border-indigo-500 transition-colors bg-white">
+                            ${options}
+                        </select>
+                    `;
+                };
+
+                // Xác định class màu cho ô Select (Dựa trên loại động tác)
+                const getSelectClass = (thId) => {
+                    const config = getTherbligConfig(thId);
+                    return config.type === 'ineffective' ? 'therblig-ineffective' : 'therblig-effective';
+                };
+
+                tr.innerHTML = `
+                    <td class="px-2 py-2 text-center text-slate-400 font-bold border-r border-slate-100 bg-slate-50/50">${index + 1}</td>
+                    
+                    <!-- TAY TRÁI -->
+                    <td class="px-3 py-2 border-r border-slate-200">
+                        <div class="${getSelectClass(step.leftTh)} border rounded-md p-0.5 transition-colors duration-300">
+                            ${createSelect('left', step.leftTh)}
+                        </div>
+                    </td>
+                    <td class="px-3 py-2 border-r border-slate-200">
+                        <input type="number" value="${step.leftTime}" min="0" step="0.1"
+                            oninput="updateStep('${step.id}', 'leftTime', this.value)"
+                            class="w-full text-center bg-white border border-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded px-2 py-1 text-sm font-bold text-slate-700 focus:outline-none transition-all">
+                    </td>
+                    
+                    <!-- TAY PHẢI -->
+                    <td class="px-3 py-2 border-r border-slate-200">
+                        <div class="${getSelectClass(step.rightTh)} border rounded-md p-0.5 transition-colors duration-300">
+                             ${createSelect('right', step.rightTh)}
+                        </div>
+                    </td>
+                    <td class="px-3 py-2 border-r border-slate-200">
+                        <input type="number" value="${step.rightTime}" min="0" step="0.1"
+                            oninput="updateStep('${step.id}', 'rightTime', this.value)"
+                            class="w-full text-center bg-white border border-slate-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded px-2 py-1 text-sm font-bold text-slate-700 focus:outline-none transition-all">
+                    </td>
+
+                    <!-- XÓA -->
+                    <td class="px-2 py-2 text-center">
+                        <button onclick="removeStep('${step.id}')" class="text-slate-300 hover:text-rose-500 p-1 rounded transition-colors" title="Xóa bước">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            calculateSummary();
+        }
+
+        // 7. UPDATE DATA
+        function updateStep(id, field, value) {
+            const step = steps.find(s => s.id === id);
+            if (step) {
+                if (field.includes('Time')) {
+                    step[field] = Math.max(0, parseFloat(value) || 0);
+                } else {
+                    step[field] = value;
+                }
+                // Render lại để cập nhật màu sắc
+                renderTable();
+            }
+        }
+
+        function addStep() {
+            steps.push({
+                id: generateId(),
+                leftTh: 'reach',
+                leftTime: 1.0,
+                rightTh: 'reach',
+                rightTime: 1.0
+            });
+            renderTable();
+            
+            // Cuộn xuống dòng mới
+            const tableContainer = document.querySelector('.overflow-x-auto');
+            tableContainer.scrollTop = tableContainer.scrollHeight;
+        }
+
+        function removeStep(id) {
+            steps = steps.filter(s => s.id !== id);
+            renderTable();
+        }
+
+        // 8. CALCULATE SUMMARY (CORE LOGIC)
+        function calculateSummary() {
+            let totalL = 0;
+            let totalR = 0;
+            let idleL = 0;
+            let idleR = 0;
+
+            steps.forEach(step => {
+                totalL += step.leftTime;
+                totalR += step.rightTime;
+
+                // Lấy config động tác để check xem có phải Ineffective không
+                const leftConfig = getTherbligConfig(step.leftTh);
+                if (leftConfig.type === 'ineffective') {
+                    idleL += step.leftTime;
+                }
+
+                const rightConfig = getTherbligConfig(step.rightTh);
+                if (rightConfig.type === 'ineffective') {
+                    idleR += step.rightTime;
+                }
+            });
+
+            // Tổng thời gian chu kỳ là thời gian của tay lâu hơn
+            const maxTotalTime = Math.max(totalL, totalR);
+
+            // Cập nhật DOM
+            totalTimeDisplay.innerText = maxTotalTime.toFixed(1);
+            
+            leftTotalTime.innerText = totalL.toFixed(1) + 's';
+            rightTotalTime.innerText = totalR.toFixed(1) + 's';
+
+            leftIdleTime.innerText = idleL.toFixed(1) + 's';
+            rightIdleTime.innerText = idleR.toFixed(1) + 's';
+
+            let pctL = totalL > 0 ? (idleL / totalL) * 100 : 0;
+            let pctR = totalR > 0 ? (idleR / totalR) * 100 : 0;
+
+            leftIdlePct.innerText = pctL.toFixed(1);
+            rightIdlePct.innerText = pctR.toFixed(1);
+
+            // Đổi màu % Lãng phí nếu > 30%
+            leftIdlePct.className = pctL > 30 ? 'text-3xl font-black text-rose-600' : 'text-3xl font-black text-emerald-600';
+            rightIdlePct.className = pctR > 30 ? 'text-3xl font-black text-rose-600' : 'text-3xl font-black text-emerald-600';
+        }
+
+        // 9. INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+        });
+
+    </script>
+</body>
+</html>
