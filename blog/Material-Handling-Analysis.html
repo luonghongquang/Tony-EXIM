@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Handling & Spaghetti Diagram Analysis</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Tùy chỉnh thanh cuộn */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        /* Tắt mũi tên tăng giảm của input number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        
+        /* Hiệu ứng cho cột biểu đồ */
+        .bar-chart {
+            transition: height 0.4s ease-in-out, background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-lg mb-6">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center max-w-7xl">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-500 p-2 rounded-lg shadow-inner">
+                    <i class="fa-solid fa-route text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Material Handling Analysis</h1>
+                    <p class="text-xs text-slate-400">Spaghetti Diagram & Transport Waste Optimization</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 max-w-7xl space-y-6">
+        
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- CỘT TRÁI: NHẬP LIỆU VÀ BẢNG (Chiếm 7/12) -->
+            <div class="xl:col-span-7 space-y-6">
+                
+                <!-- Bảng dữ liệu vận chuyển -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-list-ul text-emerald-600"></i> Danh sách Tuyến đường
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Nhập dữ liệu để tính điểm lãng phí (Pareto).</p>
+                        </div>
+                        <button onclick="addRoute()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-plus"></i> Thêm Tuyến
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto custom-scrollbar max-h-[600px]">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead class="bg-slate-100 sticky top-0 z-10 text-[11px] text-slate-600 uppercase tracking-wider shadow-sm">
+                                <tr>
+                                    <th class="px-2 py-2 font-semibold w-24">Điểm Đi</th>
+                                    <th class="px-2 py-2 font-semibold w-24">Điểm Đến</th>
+                                    <th class="px-2 py-2 font-semibold text-center w-16">Lần/Ngày</th>
+                                    <th class="px-2 py-2 font-semibold text-center w-20">K.cách (m)</th>
+                                    <th class="px-2 py-2 font-semibold text-center w-20">T.lượng (kg)</th>
+                                    <th class="px-2 py-2 font-semibold text-center w-28">Thiết bị</th>
+                                    <th class="px-2 py-2 font-semibold text-center bg-orange-100 text-orange-800 w-20" title="Điểm lãng phí">Score</th>
+                                    <th class="px-2 py-2 w-8"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="routeTableBody" class="divide-y divide-slate-100 text-sm">
+                                <!-- Render JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Hướng dẫn công thức -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs text-slate-600 flex gap-3">
+                    <i class="fa-solid fa-calculator text-slate-400 text-lg"></i>
+                    <div>
+                        <p class="font-bold text-slate-800 mb-1">Cách tính Điểm Lãng Phí (Score):</p>
+                        <p>Score = Tổng quãng đường (m/ngày) × Hệ số trọng lượng × Hệ số thiết bị.</p>
+                        <p class="mt-1 text-slate-500 italic">* Hệ số thiết bị: Xe nâng (x1), Xe đẩy (x1.5), Khuân vác (x2) - Khuân vác tốn sức nhất nên điểm phạt cao nhất.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CỘT PHẢI: KẾT QUẢ & BIỂU ĐỒ (Chiếm 5/12) -->
+            <div class="xl:col-span-5 space-y-6">
+                
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tổng quãng đường</p>
+                        <div class="flex items-baseline gap-1">
+                            <span id="totalDistance" class="text-2xl font-black text-blue-700">0</span>
+                            <span class="text-xs text-slate-500">m/ngày</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500">
+                        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tổng khối lượng</p>
+                        <div class="flex items-baseline gap-1">
+                            <span id="totalWeight" class="text-2xl font-black text-purple-700">0</span>
+                            <span class="text-xs text-slate-500">kg/ngày</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-rose-500 col-span-2">
+                        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tuyến lãng phí nhất (Pareto #1)</p>
+                        <div class="flex items-center justify-between">
+                            <span id="topWasteRoute" class="text-sm font-bold text-rose-600 truncate mr-2">N/A</span>
+                            <span id="topWasteScore" class="text-sm font-black text-white bg-rose-500 px-2 py-1 rounded">0 pts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ Top 5 Pareto -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-bar text-emerald-500"></i> Top 5 Tuyến Lãng Phí
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">Dựa trên Điểm số rủi ro (Score).</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart Area -->
+                    <div class="relative h-64 w-full border-b-2 border-slate-300 flex items-end justify-around gap-2 px-2 pb-0 chart-grid-bg" id="chartContainer">
+                        <!-- Các cột sẽ được JS render vào đây -->
+                    </div>
+                    <!-- Trục X Labels -->
+                    <div class="h-8 w-full flex justify-around gap-2 px-2 mt-1" id="chartLabels">
+                        <!-- Render bằng JS -->
+                    </div>
+                </div>
+
+                <!-- Cảnh báo tối ưu hóa -->
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex gap-3 text-sm text-amber-800" id="alertBox" style="display:none;">
+                    <i class="fa-solid fa-lightbulb mt-0.5 text-amber-500 text-lg"></i>
+                    <div>
+                        <p class="font-bold mb-1">Gợi ý cải tiến (Kaizen):</p>
+                        <p id="alertMessage">Hãy xem xét thay đổi Layout xưởng, gộp các điểm đến gần nhau, hoặc chuyển sang thiết bị vận chuyển có công suất cao hơn để giảm điểm lãng phí.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. STATE & CẤU HÌNH
+        const equipmentTypes = {
+            forklift: { label: 'Xe nâng', factor: 1.0, icon: 'fa-truck-pickup' },
+            cart: { label: 'Xe đẩy', factor: 1.5, icon: 'fa-cart-flatbed' },
+            manual: { label: 'Khuân vác', factor: 2.0, icon: 'fa-person-carry' }
+        };
+
+        let routes = [
+            { id: generateId(), from: 'Kho A', to: 'Chuyền 1', freq: 20, dist: 50, weight: 10, equip: 'manual' },
+            { id: generateId(), from: 'Kho B', to: 'Chuyền 2', freq: 15, dist: 120, weight: 50, equip: 'cart' },
+            { id: generateId(), from: 'Kho A', to: 'Chuyền 3', freq: 8, dist: 200, weight: 100, equip: 'forklift' },
+            { id: generateId(), from: 'Khu vực Lắp ráp', to: 'Kho Thành phẩm', freq: 10, dist: 80, weight: 20, equip: 'cart' },
+            { id: generateId(), from: 'Kho C', to: 'Chuyền 2', freq: 12, dist: 30, weight: 5, equip: 'manual' }
+        ];
+
+        // 2. DOM ELEMENTS
+        const tableBody = document.getElementById('routeTableBody');
+        const chartContainer = document.getElementById('chartContainer');
+        const chartLabels = document.getElementById('chartLabels');
+        
+        const totalDistanceEl = document.getElementById('totalDistance');
+        const totalWeightEl = document.getElementById('totalWeight');
+        const topWasteRouteEl = document.getElementById('topWasteRoute');
+        const topWasteScoreEl = document.getElementById('topWasteScore');
+        const alertBox = document.getElementById('alertBox');
+
+        // 3. HELPERS
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        // 4. RENDER BẢNG NHẬP LIỆU
+        function renderTable() {
+            tableBody.innerHTML = '';
+
+            if (routes.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-400 text-sm">Chưa có tuyến đường nào. Vui lòng bấm "Thêm Tuyến".</td></tr>`;
+                calculateAndRender();
+                return;
+            }
+
+            // Sắp xếp mảng để hiển thị (Pareto) trước khi render
+            // Lưu ý: Chúng ta không sort mảng gốc để tránh nhảy dòng khi đang nhập, 
+            // mà chỉ sort mảng kết quả khi tính toán.
+            
+            routes.forEach((route) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors group";
+                
+                // Tạo options thiết bị
+                const equipOptions = Object.entries(equipmentTypes).map(([key, val]) => 
+                    `<option value="${key}" ${route.equip === key ? 'selected' : ''}>${val.label}</option>`
+                ).join('');
+
+                tr.innerHTML = `
+                    <td class="px-2 py-2">
+                        <input type="text" value="${route.from}" 
+                            oninput="updateRoute('${route.id}', 'from', this.value)"
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-500 focus:bg-white rounded px-2 py-1 text-sm font-medium focus:outline-none transition-all">
+                    </td>
+                    <td class="px-2 py-2">
+                        <input type="text" value="${route.to}" 
+                            oninput="updateRoute('${route.id}', 'to', this.value)"
+                            class="w-full bg-transparent border border-transparent hover:border-slate-300 focus:border-blue-500 focus:bg-white rounded px-2 py-1 text-sm font-medium focus:outline-none transition-all">
+                    </td>
+                    <td class="px-2 py-2">
+                        <input type="number" value="${route.freq}" min="0"
+                            oninput="updateRoute('${route.id}', 'freq', this.value)"
+                            class="w-full text-center bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-1 py-1 text-sm font-bold text-slate-700 focus:outline-none transition-all">
+                    </td>
+                    <td class="px-2 py-2">
+                        <input type="number" value="${route.dist}" min="0"
+                            oninput="updateRoute('${route.id}', 'dist', this.value)"
+                            class="w-full text-center bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-1 py-1 text-sm font-bold text-slate-700 focus:outline-none transition-all">
+                    </td>
+                    <td class="px-2 py-2">
+                        <input type="number" value="${route.weight}" min="0"
+                            oninput="updateRoute('${route.id}', 'weight', this.value)"
+                            class="w-full text-center bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-1 py-1 text-sm font-bold text-slate-700 focus:outline-none transition-all">
+                    </td>
+                    <td class="px-2 py-2">
+                        <select onchange="updateRoute('${route.id}', 'equip', this.value)"
+                            class="w-full bg-slate-50 border border-slate-200 rounded px-1 py-1 text-xs font-medium focus:outline-none focus:border-blue-500">
+                            ${equipOptions}
+                        </select>
+                    </td>
+                    <td class="px-2 py-2 text-center bg-orange-50/50">
+                        <span id="score-cell-${route.id}" class="text-sm font-bold text-orange-600">0</span>
+                    </td>
+                    <td class="px-2 py-2 text-center">
+                        <button onclick="removeRoute('${route.id}')" class="text-slate-300 hover:text-rose-500 p-1 rounded transition-colors" title="Xóa">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            calculateAndRender();
+        }
+
+        // 5. CẬP NHẬT DỮ LIỆU
+        function updateRoute(id, field, value) {
+            const route = routes.find(r => r.id === id);
+            if (route) {
+                if (['freq', 'dist', 'weight'].includes(field)) {
+                    route[field] = Math.max(0, parseFloat(value) || 0);
+                } else {
+                    route[field] = value;
+                }
+                calculateAndRender();
+            }
+        }
+
+        function addRoute() {
+            routes.push({
+                id: generateId(),
+                from: 'Điểm A',
+                to: 'Điểm B',
+                freq: 10,
+                dist: 50,
+                weight: 10,
+                equip: 'cart'
+            });
+            renderTable();
+            // Cuộn xuống dòng mới
+            const tableContainer = document.querySelector('.overflow-x-auto');
+            tableContainer.scrollTop = tableContainer.scrollHeight;
+        }
+
+        function removeRoute(id) {
+            routes = routes.filter(r => r.id !== id);
+            renderTable();
+        }
+
+        // 6. CORE LOGIC (TÍNH TOÁN & PARETO)
+        function calculateAndRender() {
+            let totalDistance = 0;
+            let totalWeight = 0;
+            
+            // Mảng chứa kết quả sau khi tính toán
+            let calculatedRoutes = routes.map(route => {
+                // Tổng quãng đường = Số lần * Khoảng cách
+                const dailyDistance = route.freq * route.dist;
+                // Tổng khối lượng = Số lần * Trọng lượng
+                const dailyWeight = route.freq * route.weight;
+                
+                // Hệ số thiết bị
+                const equipFactor = equipmentTypes[route.equip].factor;
+
+                // Tính điểm lãng phí (Score)
+                // Công thức: Quãng đường * (1 + Trọng lượng / 100) * Hệ số thiết bị
+                // (Chia 100 cho trọng lượng để cân bằng, tránh việc trọng lượng quá lớn làm méo điểm số)
+                const score = Math.round(dailyDistance * (1 + dailyWeight / 100) * equipFactor);
+
+                totalDistance += dailyDistance;
+                totalWeight += dailyWeight;
+
+                return { ...route, dailyDistance, dailyWeight, score };
+            });
+
+            // Cập nhật điểm Score vào bảng
+            calculatedRoutes.forEach(r => {
+                const cell = document.getElementById(`score-cell-${r.id}`);
+                if (cell) {
+                    cell.innerText = r.score.toLocaleString('vi-VN');
+                }
+            });
+
+            // Cập nhật Summary
+            totalDistanceEl.innerText = totalDistance.toLocaleString('vi-VN');
+            totalWeightEl.innerText = totalWeight.toLocaleString('vi-VN');
+
+            // 7. SẮP XẾP PARETO (Lãng phí nhất lên đầu)
+            calculatedRoutes.sort((a, b) => b.score - a.score);
+
+            if (calculatedRoutes.length > 0) {
+                const topRoute = calculatedRoutes[0];
+                topWasteRouteEl.innerText = `${topRoute.from} → ${topRoute.to}`;
+                topWasteScoreEl.innerText = `${topRoute.score.toLocaleString('vi-VN')} pts`;
+            } else {
+                topWasteRouteEl.innerText = 'N/A';
+                topWasteScoreEl.innerText = '0 pts';
+            }
+
+            // Hiển thị cảnh báo nếu điểm lãng phí cao
+            if (calculatedRoutes.length > 0 && calculatedRoutes[0].score > 1000) {
+                alertBox.style.display = 'flex';
+            } else {
+                alertBox.style.display = 'none';
+            }
+
+            // 8. VẼ BIỂU ĐỒ TOP 5
+            renderChart(calculatedRoutes.slice(0, 5));
+        }
+
+        // 9. RENDER CHART (HTML/CSS)
+        function renderChart(top5) {
+            // Xóa cũ
+            chartContainer.innerHTML = '';
+            chartLabels.innerHTML = '';
+
+            if (top5.length === 0) return;
+
+            // Tìm Score lớn nhất để làm scale
+            const maxScore = Math.max(...top5.map(r => r.score));
+            const scaleMax = maxScore > 0 ? maxScore * 1.1 : 1; // Cộng 10% padding
+
+            top5.forEach((route, index) => {
+                const heightPercent = (route.score / scaleMax) * 100;
+                
+                // Màu sắc: Top 1 đỏ, Top 2 cam, Top 3 vàng, còn lại xám
+                let colorClass = "bg-slate-400";
+                if (index === 0) colorClass = "bg-rose-500";
+                else if (index === 1) colorClass = "bg-orange-500";
+                else if (index === 2) colorClass = "bg-amber-400";
+                
+                // Wrapper
+                const wrapper = document.createElement('div');
+                wrapper.className = "flex flex-col items-center justify-end h-full w-full max-w-[60px] relative group z-0";
+                
+                // Text hiển thị Score
+                const valText = document.createElement('div');
+                valText.className = `text-[11px] font-bold text-slate-700 mb-1 absolute -top-5 w-full text-center`;
+                valText.innerText = route.score.toLocaleString('vi-VN');
+
+                // Cột
+                const bar = document.createElement('div');
+                bar.className = `bar-chart w-full rounded-t-md ${colorClass} shadow-sm`;
+                bar.style.height = `${heightPercent}%`;
+                
+                wrapper.appendChild(valText);
+                wrapper.appendChild(bar);
+                chartContainer.appendChild(wrapper);
+
+                // Label dưới chân cột (Điểm đi -> Điểm đến)
+                const label = document.createElement('div');
+                label.className = "w-full max-w-[80px] text-center text-[10px] font-semibold text-slate-600 truncate px-1";
+                label.title = `${route.from} → ${route.to}`;
+                label.innerHTML = `<span class="block truncate">${route.from}</span><span class="block truncate text-slate-400">↓</span><span class="block truncate">${route.to}</span>`;
+                chartLabels.appendChild(label);
+            });
+        }
+
+        // 10. INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+        });
+
+    </script>
+</body>
+</html>
