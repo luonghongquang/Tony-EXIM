@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Tính Toán Định Mức BOM - Sofa</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Tùy chỉnh thanh cuộn */
+        .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+        .table-container::-webkit-scrollbar-track { background: transparent; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* CSS cho input dạng inline */
+        .inline-input {
+            width: 100%;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 6px 8px;
+            transition: all 0.2s;
+            font-variant-numeric: tabular-nums;
+        }
+        .inline-input:hover { border-color: #cbd5e1; background-color: #f8fafc; }
+        .inline-input:focus { outline: none; border-color: #4f46e5; background-color: #eef2ff; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .input-number-large { font-variant-numeric: tabular-nums; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white shadow-md mb-8">
+        <div class="container mx-auto px-4 py-5 flex items-center gap-4">
+            <div class="bg-indigo-700 p-2.5 rounded-lg">
+                <i class="fa-solid fa-couch text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">BOM & MRP Calculator</h1>
+                <p class="text-xs text-indigo-200">Quản lý định mức sản xuất Ghế Sofa</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 max-w-7xl space-y-8">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- CỘT TRÁI -->
+            <div class="lg:col-span-7 space-y-8">
+                
+                <!-- PHẦN 1 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-100 px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-indigo-600"></i> 1. Bảng Thiết Lập Định Mức
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">Click vào ô để chỉnh sửa.</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm">
+                            <span class="text-sm font-semibold text-slate-600">Số ghế gốc:</span>
+                            <input type="text" id="baseSofaInput" value="750" 
+                                oninput="handleBaseSofaInput(event)" onblur="formatBaseSofa(this)"
+                                class="w-32 text-center font-bold text-indigo-600 text-lg bg-transparent focus:outline-none border-b-2 border-indigo-300 focus:border-indigo-600 transition-colors input-number-large">
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto table-container">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-4 py-3 font-semibold w-1/3">Tên Nguyên Liệu</th>
+                                    <th class="px-4 py-3 font-semibold text-right w-32">Tổng NVL Cần</th>
+                                    <th class="px-4 py-3 font-semibold text-center w-20">Đơn vị</th>
+                                    <th class="px-4 py-3 font-semibold text-right bg-indigo-50 text-indigo-800">Định mức</th>
+                                </tr>
+                            </thead>
+                            <tbody id="normsTableBody" class="divide-y divide-slate-100">
+                                <!-- Render JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PHẦN 2 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-100 px-6 py-4 border-b border-slate-200">
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked text-emerald-600"></i> 2. Kiểm Tra Tồn Kho & Nhu Cầu Mua
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1">Nhập số lượng tồn kho (hỗ trợ số lớn).</p>
+                    </div>
+                    
+                    <div class="bg-emerald-50 border-b border-emerald-100 px-6 py-4 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-emerald-800 uppercase tracking-wide">Số ghế tối đa có thể SX</p>
+                            <p class="text-xs text-emerald-600 mt-1" id="bottleneckText">Đang chờ nhập liệu...</p>
+                        </div>
+                        <div class="text-right">
+                            <span id="maxSofaResult" class="text-3xl font-black text-emerald-600 input-number-large">0</span>
+                            <span class="text-sm font-bold text-emerald-600 block">Cái</span>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto table-container">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-4 py-3 font-semibold w-1/3">Nguyên Liệu</th>
+                                    <th class="px-4 py-3 font-semibold text-center w-40">Tồn Kho</th>
+                                    <th class="px-4 py-3 font-semibold text-right w-32 bg-rose-50 text-rose-800">Nhu cầu (Mua)</th>
+                                    <th class="px-4 py-3 font-semibold text-right w-24">Dư Thừa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockTableBody" class="divide-y divide-slate-100">
+                                <!-- Render JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CỘT PHẢI -->
+            <div class="lg:col-span-5">
+                <div class="bg-indigo-900 text-white rounded-xl shadow-xl overflow-hidden sticky top-6">
+                    <div class="px-6 py-6 border-b border-indigo-800">
+                        <h3 class="font-bold flex items-center gap-2 text-lg">
+                            <i class="fa-solid fa-industry text-indigo-300"></i> 3. Tính NVL Cần Chuẩn Bị
+                        </h3>
+                        
+                        <div class="mt-5 relative">
+                            <label class="block text-xs font-semibold text-indigo-200 uppercase tracking-wider mb-2">Mục tiêu Sản xuất</label>
+                            <div class="flex items-center relative">
+                                <input type="text" id="targetSofaInput" value="750" 
+                                    oninput="handleTargetSofaInput(event)" onblur="formatTargetSofa(this)"
+                                    class="w-full bg-indigo-950 text-white font-bold text-3xl border-2 border-indigo-700 rounded-lg px-4 py-4 pr-16 focus:border-indigo-400 focus:ring-0 transition-colors input-number-large">
+                                <span class="absolute right-5 text-indigo-300 font-bold text-lg">Cái</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <h4 class="text-sm font-semibold text-indigo-200 uppercase tracking-wider mb-4 border-b border-indigo-800 pb-2">Danh Sách Vật Tư Cần Xuất</h4>
+                        <ul id="requirementsList" class="space-y-4">
+                            <!-- Render JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- 1. STATE ---
+        let state = {
+            baseSofaQty: 750, 
+            targetSofaQty: 750, 
+            materials: [
+                { id: 'chan_ghe', name: 'Chân ghế', baseQty: 1334, unit: 'cái', norm: 0, stock: 0, icon: 'fa-shoe-prints' },
+                { id: 'bo_khung', name: 'Bộ khung', baseQty: 750, unit: 'bộ', norm: 0, stock: 0, icon: 'fa-border-all' },
+                { id: 'tam_go', name: 'Tấm gỗ', baseQty: 910, unit: 'tấm', norm: 0, stock: 0, icon: 'fa-layer-group' },
+                { id: 'oc_vit', name: 'Ốc vít', baseQty: 10000, unit: 'con', norm: 0, stock: 0, icon: 'fa-screwdriver-wrench' },
+                { id: 'vai', name: 'Vải', baseQty: 7000, unit: 'mét', norm: 0, stock: 0, icon: 'fa-scroll' },
+                { id: 'thung_carton', name: 'Thùng carton', baseQty: 800, unit: 'thùng', norm: 0, stock: 0, icon: 'fa-box' }
+            ]
+        };
+
+        // --- 2. TIỆN ÍCH SỐ HỌC ---
+        const formatNum = (num, decimals = 2) => Number(num.toFixed(decimals)).toLocaleString('vi-VN');
+        
+        const formatInputNumber = (value) => {
+            if (value === '' || value === null) return '';
+            const num = parseFloat(value.toString().replace(/,/g, '').replace(/\./g, ''));
+            if (isNaN(num)) return '';
+            return num.toLocaleString('vi-VN', { maximumFractionDigits: 3 });
+        };
+
+        const parseInputNumber = (value) => {
+            if (!value) return 0;
+            // Xóa dấu phẩy/chấm phân cách hàng nghìn, thay bằng dấu chấm thập phân nếu có
+            let cleanValue = value.toString().replace(/\./g, '').replace(/,/g, '.');
+            return parseFloat(cleanValue) || 0;
+        };
+
+        // --- 3. TÍNH TOÁN LOGIC ---
+        function updateNorms() {
+            state.materials.forEach(m => {
+                m.norm = m.baseQty / state.baseSofaQty;
+            });
+        }
+
+        function calculateMaxSofa() {
+            if (state.materials.some(m => m.stock === 0)) {
+                return { max: 0, bottleneck: null };
+            }
+
+            let minSofa = Infinity;
+            let bottleneckMaterial = null;
+
+            state.materials.forEach(m => {
+                const possibleSofas = Math.floor(m.stock / m.norm);
+                if (possibleSofas < minSofa) {
+                    minSofa = possibleSofas;
+                    bottleneckMaterial = m;
+                }
+            });
+
+            return { max: minSofa === Infinity ? 0 : minSofa, bottleneck: bottleneckMaterial };
+        }
+
+        // --- 4. RENDER GIAO DIỆN ---
+
+        // Render Bảng 1
+        function renderNormsTable() {
+            const tbody = document.getElementById('normsTableBody');
+            tbody.innerHTML = state.materials.map((m, index) => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-2">
+                        <input type="text" class="inline-input font-medium text-slate-700" 
+                            value="${m.name}" onchange="updateMaterial(${index}, 'name', this.value)">
+                    </td>
+                    <td class="px-4 py-2">
+                        <input type="text" class="inline-input text-right text-slate-600 font-semibold" 
+                            value="${formatInputNumber(m.baseQty)}" 
+                            oninput="handleTableInput(event, ${index}, 'baseQty')"
+                            onblur="formatTableBlur(this, ${index}, 'baseQty')">
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                        <input type="text" class="inline-input text-center text-slate-500" 
+                            value="${m.unit}" onchange="updateMaterial(${index}, 'unit', this.value)">
+                    </td>
+                    <td class="px-4 py-2 text-right font-bold text-indigo-600 bg-indigo-50/50 text-base input-number-large" id="norm-cell-${index}">
+                        ${formatNum(m.norm, 3)}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Bảng 2 (Tách biệt hàm này để không ảnh hưởng đến ô input)
+        function renderStockTable() {
+            const tbody = document.getElementById('stockTableBody');
+            const maxSofaInfo = calculateMaxSofa();
+
+            // Cập nhật Header
+            document.getElementById('maxSofaResult').innerText = maxSofaInfo.max.toLocaleString('vi-VN');
+            if (maxSofaInfo.max === 0) {
+                document.getElementById('bottleneckText').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Vui lòng nhập Tồn kho > 0.`;
+            } else {
+                document.getElementById('bottleneckText').innerHTML = `Nút thắt: <strong>${maxSofaInfo.bottleneck.name}</strong>`;
+            }
+
+            tbody.innerHTML = state.materials.map((m, index) => {
+                const reqForMax = maxSofaInfo.max * m.norm;
+                const leftover = Math.max(0, m.stock - reqForMax);
+                const reqForTarget = Math.ceil(state.targetSofaQty * m.norm);
+                const needToBuy = Math.max(0, reqForTarget - m.stock);
+
+                const needToBuyClass = needToBuy > 0 ? 'text-rose-600 font-bold bg-rose-50/50' : 'text-slate-400';
+                const leftoverClass = leftover > 0 ? 'text-emerald-600 font-semibold' : 'text-slate-400';
+
+                return `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-2">
+                        <div class="font-medium text-slate-700">${m.name}</div>
+                        <div class="text-[10px] text-slate-400">Cần ${formatNum(m.norm, 2)} ${m.unit}/ghế</div>
+                    </td>
+                    <td class="px-4 py-2">
+                        <!-- Ô input được gắn ID riêng để không bị render lại -->
+                        <input type="text" 
+                            id="stock-input-${index}"
+                            value="${m.stock > 0 ? formatInputNumber(m.stock) : ''}" 
+                            placeholder="0"
+                            oninput="handleStockInput(event, ${index})"
+                            onblur="formatStockBlur(this, ${index})"
+                            class="w-full text-center border border-slate-300 rounded-md py-2 px-3 text-sm font-bold text-slate-700 focus:outline-none focus:border-indigo-500 transition-colors input-number-large">
+                    </td>
+                    <td class="px-4 py-2 text-right ${needToBuyClass} text-base input-number-large" id="need-buy-cell-${index}">
+                        ${needToBuy > 0 ? `+ ${needToBuy.toLocaleString('vi-VN')}` : '0'}
+                    </td>
+                    <td class="px-4 py-2 text-right ${leftoverClass} text-base input-number-large" id="leftover-cell-${index}">
+                        ${m.stock > 0 ? `${formatNum(leftover, 1)}` : '-'}
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // Render Phần 3
+        function renderRequirements() {
+            const list = document.getElementById('requirementsList');
+            const target = state.targetSofaQty;
+
+            list.innerHTML = state.materials.map(m => {
+                const reqQty = target * m.norm;
+                const isDiscrete = m.unit !== 'mét'; 
+                const finalQty = isDiscrete ? Math.ceil(reqQty) : reqQty;
+                const shortage = Math.max(0, finalQty - m.stock);
+
+                return `
+                <li class="flex justify-between items-center bg-indigo-950/60 p-3 rounded-lg border border-indigo-800/60">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-indigo-800 p-1.5 rounded text-indigo-300 text-xs w-6 h-6 flex items-center justify-center">
+                            <i class="fa-solid ${m.icon}"></i>
+                        </div>
+                        <span class="text-sm font-medium text-indigo-100">${m.name}</span>
+                    </div>
+                    <div class="text-right">
+                        <div>
+                            <span class="text-lg font-bold ${shortage > 0 ? 'text-rose-400' : 'text-emerald-400'} input-number-large">${finalQty.toLocaleString('vi-VN')}</span>
+                            <span class="text-xs text-indigo-300 ml-1">${m.unit}</span>
+                        </div>
+                        ${shortage > 0 ? `<div class="text-[10px] text-rose-400 mt-0.5 font-semibold">Thiếu: ${shortage.toLocaleString('vi-VN')}</div>` : ''}
+                    </div>
+                </li>
+                `;
+            }).join('');
+        }
+
+        // --- 5. CẬP NHẬT DOM TRỰC TIẾP (KHÔNG RENDER LẠI BẢNG) ---
+        
+        // Hàm này chỉ tính toán và cập nhật nội dung các ô Text, giữ nguyên thẻ Input
+        function updateCalculationsOnly() {
+            const maxSofaInfo = calculateMaxSofa();
+            
+            // Cập nhật header
+            document.getElementById('maxSofaResult').innerText = maxSofaInfo.max.toLocaleString('vi-VN');
+            if (maxSofaInfo.max === 0) {
+                document.getElementById('bottleneckText').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Vui lòng nhập Tồn kho > 0.`;
+            } else {
+                document.getElementById('bottleneckText').innerHTML = `Nút thắt: <strong>${maxSofaInfo.bottleneck.name}</strong>`;
+            }
+
+            // Cập nhật từng dòng trong bảng 2
+            state.materials.forEach((m, index) => {
+                const reqForMax = maxSofaInfo.max * m.norm;
+                const leftover = Math.max(0, m.stock - reqForMax);
+                const reqForTarget = Math.ceil(state.targetSofaQty * m.norm);
+                const needToBuy = Math.max(0, reqForTarget - m.stock);
+
+                // Cập nhật ô Nhu cầu mua
+                const needBuyCell = document.getElementById(`need-buy-cell-${index}`);
+                if(needBuyCell) {
+                    needBuyCell.innerText = needToBuy > 0 ? `+ ${needToBuy.toLocaleString('vi-VN')}` : '0';
+                    needBuyCell.className = `px-4 py-2 text-right text-base input-number-large ${needToBuy > 0 ? 'text-rose-600 font-bold bg-rose-50/50' : 'text-slate-400'}`;
+                }
+
+                // Cập nhật ô Dư thừa
+                const leftoverCell = document.getElementById(`leftover-cell-${index}`);
+                if(leftoverCell) {
+                    leftoverCell.innerText = m.stock > 0 ? `${formatNum(leftover, 1)}` : '-';
+                    leftoverCell.className = `px-4 py-2 text-right text-base input-number-large ${leftover > 0 ? 'text-emerald-600 font-semibold' : 'text-slate-400'}`;
+                }
+            });
+
+            // Render lại Phần 3 (vì nó không chứa input)
+            renderRequirements();
+        }
+
+        // --- 6. XỬ LÝ SỰ KIỆN NHẬP LIỆU ---
+
+        // Khi đang gõ vào ô Tồn kho
+        window.handleStockInput = function(event, index) {
+            let rawValue = event.target.value;
+            let parsedValue = parseInputNumber(rawValue);
+            
+            // Chỉ cập nhật state, KHÔNG gọi renderStockTable()
+            state.materials[index].stock = parsedValue;
+            
+            // Tính toán và cập nhật các ô kết quả
+            updateCalculationsOnly();
+        };
+
+        // Khi click ra khỏi ô Tồn kho -> Format dấu phẩy
+        window.formatStockBlur = function(inputElement, index) {
+            let parsedValue = parseInputNumber(inputElement.value);
+            if (parsedValue > 0) {
+                inputElement.value = formatInputNumber(parsedValue);
+            } else {
+                inputElement.value = '';
+            }
+        };
+
+        // Tương tự cho bảng Định mức (Bảng 1)
+        window.handleTableInput = function(event, index, field) {
+            let rawValue = event.target.value;
+            let parsedValue = parseInputNumber(rawValue);
+            state.materials[index][field] = parsedValue;
+            
+            // Cập nhật lại định mức ngay lập tức
+            updateNorms();
+            
+            // Cập nhật lại text của cột Định mức
+            const normCell = document.getElementById(`norm-cell-${index}`);
+            if(normCell) {
+                normCell.innerText = formatNum(state.materials[index].norm, 3);
+            }
+            
+            // Cập nhật lại toàn bộ phần tính toán bên dưới
+            updateCalculationsOnly();
+        };
+
+        window.formatTableBlur = function(inputElement, index, field) {
+            let parsedValue = parseInputNumber(inputElement.value);
+            if (parsedValue > 0) {
+                inputElement.value = formatInputNumber(parsedValue);
+            }
+        };
+
+        // Xử lý ô Số ghế gốc
+        window.handleBaseSofaInput = function(event) {
+            let parsedValue = parseInputNumber(event.target.value);
+            if (parsedValue > 0) {
+                state.baseSofaQty = parsedValue;
+                updateNorms();
+                
+                // Cập nhật lại toàn bộ cột định mức trong bảng 1
+                state.materials.forEach((m, index) => {
+                    const normCell = document.getElementById(`norm-cell-${index}`);
+                    if(normCell) normCell.innerText = formatNum(m.norm, 3);
+                });
+                
+                updateCalculationsOnly();
+            }
+        };
+
+        window.formatBaseSofa = function(inputElement) {
+            let parsedValue = parseInputNumber(inputElement.value);
+            if (parsedValue > 0) {
+                inputElement.value = formatInputNumber(parsedValue);
+            } else {
+                inputElement.value = '750'; // Fallback
+                state.baseSofaQty = 750;
+                updateNorms();
+                updateCalculationsOnly();
+            }
+        };
+
+        // Xử lý ô Mục tiêu sản xuất
+        window.handleTargetSofaInput = function(event) {
+            let parsedValue = parseInputNumber(event.target.value);
+            state.targetSofaQty = parsedValue;
+            updateCalculationsOnly();
+        };
+
+        window.formatTargetSofa = function(inputElement) {
+            let parsedValue = parseInputNumber(inputElement.value);
+            if (parsedValue > 0) {
+                inputElement.value = formatInputNumber(parsedValue);
+            }
+        };
+
+        // Hàm cập nhật Tên/Đơn vị
+        window.updateMaterial = function(index, field, value) {
+            state.materials[index][field] = value;
+            renderStockTable(); // Render lại bảng 2 vì tên thay đổi
+            renderNormsTable(); // Render lại bảng 1
+        };
+
+        // --- 7. KHỞI TẠO ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNorms();
+            renderNormsTable();
+            renderStockTable();
+            renderRequirements();
+        });
+
+    </script>
+</body>
+</html>
