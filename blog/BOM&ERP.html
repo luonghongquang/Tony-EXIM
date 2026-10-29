@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý BOM & Tính Toán MRP Động</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            navy: '#0F172A',
+                            blue: '#1E3A8A',
+                            light: '#F8FAFC',
+                            gray: '#E2E8F0'
+                        },
+                        accent: '#F59E0B',
+                        success: '#10B981'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Tùy chỉnh input để trông giống văn bản nhưng vẫn dễ chỉnh sửa */
+        .editable-input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .editable-input:hover {
+            border-color: #CBD5E1;
+            background-color: #F8FAFC;
+        }
+        .editable-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            background-color: #EFF6FF;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        
+        .table-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .table-scroll::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-brand-light text-brand-navy font-sans antialiased">
+
+    <!-- HEADER -->
+    <header class="bg-brand-navy text-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-accent p-2 rounded-lg text-brand-navy">
+                    <i class="fa-solid fa-industry text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight uppercase">BOM & MRP</h1>
+                    <p class="text-xs text-gray-300">Quản trị Sản xuất Hiện đại</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex gap-6 text-sm font-medium">
+                <a href="#mrp-tool" class="hover:text-accent transition">Công cụ MRP</a>
+                <a href="#huong-dan" class="hover:text-accent transition">Hướng dẫn</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mx-auto px-4 py-8 max-w-7xl space-y-12">
+
+        <!-- SECTION: GIỚI THIỆU -->
+        <section class="text-center max-w-3xl mx-auto">
+            <h1 class="text-3xl font-bold mb-4 text-brand-navy">Công Cụ Lập Kế Hoạch Nguyên Vật Liệu (MRP)</h1>
+            <p class="text-gray-600">Chỉnh sửa trực tiếp vào bảng BOM bên dưới. Hệ thống sẽ tự động tính toán Nhu cầu (Gross Requirement) và Số lượng Cần Mua/Sản Xuất (Net Requirement) theo thời gian thực.</p>
+        </section>
+
+        <!-- SECTION: CÔNG CỤ MRP -->
+        <section id="mrp-tool" class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+            
+            <!-- Thanh Công Cụ (Input Target & Add Row) -->
+            <div class="bg-brand-blue text-white p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <label class="font-medium text-blue-100">Mục tiêu Sản xuất (Thành phẩm):</label>
+                    <div class="relative">
+                        <input type="number" id="targetQty" value="100" min="1" 
+                            class="w-32 bg-blue-800 text-white font-bold text-xl border border-blue-400 rounded-lg px-4 py-2 text-center focus:outline-none focus:ring-2 focus:ring-accent transition-colors">
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 font-bold">Cái</span>
+                    </div>
+                </div>
+                <button onclick="addNewRow()" class="bg-accent hover:bg-yellow-500 text-brand-navy font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2 shadow-md">
+                    <i class="fa-solid fa-plus"></i> Thêm Vật Tư Mới
+                </button>
+            </div>
+
+            <!-- Bảng Nhập Liệu BOM -->
+            <div class="overflow-x-auto table-scroll">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-200 text-sm text-gray-700">
+                            <th class="p-3 font-bold w-32">Mã VT</th>
+                            <th class="p-3 font-bold min-w-[200px]">Tên Vật Tư</th>
+                            <th class="p-3 font-bold w-24 text-center">Cấp</th>
+                            <th class="p-3 font-bold w-28 text-center">Định mức</th>
+                            <th class="p-3 font-bold w-32 text-center">Tồn kho</th>
+                            <th class="p-3 font-bold w-32 text-center bg-blue-50 text-blue-800">Nhu cầu (Gross)</th>
+                            <th class="p-3 font-bold w-32 text-center bg-green-50 text-green-800">Cần Mua (Net)</th>
+                            <th class="p-3 font-bold w-12 text-center">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bomTableBody" class="divide-y divide-gray-100 text-sm">
+                        <!-- Dữ liệu sẽ được JavaScript render tự động -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Chú thích -->
+            <div class="bg-gray-50 p-4 border-t border-gray-200 text-xs text-gray-500 flex gap-4 flex-wrap">
+                <div><i class="fa-solid fa-circle-info text-brand-blue mr-1"></i> <strong>Công thức:</strong> Nhu cầu Cấp 1 = Mục tiêu × Định mức.</div>
+                <div>Nhu cầu Cấp 2+ = Số lượng *Cần sản xuất* của vật tư cha × Định mức.</div>
+                <div>Số lượng Cần Mua = Nhu cầu - Tồn kho (Nếu âm sẽ tính là 0).</div>
+            </div>
+        </section>
+
+        <!-- SECTION: HƯỚNG DẪN -->
+        <section id="huong-dan" class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-lightbulb text-accent"></i> Cách hoạt động</h3>
+                <ul class="space-y-3 text-gray-600 text-sm">
+                    <li><strong>1. Chỉnh sửa trực tiếp:</strong> Bạn có thể click vào bất kỳ ô nào trong bảng để sửa Mã, Tên, Cấp, Định mức hoặc Tồn kho.</li>
+                    <li><strong>2. Tính toán tự động:</strong> Hệ thống sẽ tự động tính lại cột <span class="text-blue-600 font-bold">Nhu cầu</span> và <span class="text-green-600 font-bold">Cần Mua</span> ngay khi bạn gõ.</li>
+                    <li><strong>3. Cấu trúc phân cấp:</strong> Nếu bạn đặt Cấp = 2, hệ thống sẽ tự hiểu vật tư này là linh kiện cấu thành nên vật tư Cấp 1 phía trên nó. (Đảm bảo bạn nhập vật tư Cấp 1 trước, Cấp 2 sau).</li>
+                    <li><strong>4. Thêm/Xóa:</strong> Sử dụng nút "Thêm Vật Tư Mới" ở trên cùng hoặc nút thùng rác ở cuối mỗi dòng để thay đổi cấu trúc BOM.</li>
+                </ul>
+            </div>
+            
+            <div class="bg-blue-50 border border-blue-100 p-6 rounded-xl">
+                <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-brand-blue"><i class="fa-solid fa-diagram-project"></i> Ví dụ thực tế</h3>
+                <p class="text-sm text-gray-700 mb-4">Giả sử bạn sản xuất <strong>100 Xe Đạp</strong>. Bạn nhập:</p>
+                <ul class="text-sm space-y-2 font-mono bg-white p-4 rounded border border-blue-200">
+                    <li>- Cấp 1: Bộ Pin (Định mức: 1). Tồn kho: 5.<br> <span class="text-gray-400">👉 Nhu cầu = 100. Cần mua = 95.</span></li>
+                    <li class="mt-2">- Cấp 2: Tế bào pin (Định mức: 40). Tồn kho: 100.<br> <span class="text-gray-400">👉 Hệ thống không lấy 100 Xe × 40, mà lấy <strong>95 Bộ Pin</strong> × 40 = 3800. Cần mua = 3700.</span></li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Khởi tạo dữ liệu mẫu (Có thể sửa đổi tùy ý)
+        let bomData = [
+            { id: 'SP01', name: 'Xe Đạp Điện (Thành phẩm)', level: 0, qty: 1, inventory: 0 }, // Dòng ảo (Target)
+            
+            { id: 'VT01', name: 'Khung sườn xe', level: 1, qty: 1, inventory: 15 },
+            { id: 'VT02', name: 'Bánh xe', level: 1, qty: 2, inventory: 80 },
+            { id: 'VT03', name: 'Động cơ điện', level: 1, qty: 1, inventory: 10 },
+            { id: 'VT04', name: 'Bộ Pin', level: 1, qty: 1, inventory: 5 },
+            
+            { id: 'VT04-1', name: 'Tế bào pin (Cell)', level: 2, qty: 40, inventory: 200 },
+            { id: 'VT04-2', name: 'Mạch BMS', level: 2, qty: 1, inventory: 5 },
+            { id: 'VT04-3', name: 'Vỏ hộp Pin', level: 2, qty: 1, inventory: 12 }
+        ];
+
+        // Lưu trữ kết quả tính toán để render
+        let mrpResults = [];
+
+        // 2. Hàm Render Bảng Nhập Liệu
+        function renderTable() {
+            const tbody = document.getElementById('bomTableBody');
+            tbody.innerHTML = '';
+
+            bomData.forEach((item, index) => {
+                // Bỏ qua dòng ảo Cấp 0 (dùng làm target)
+                if (item.level === 0) return;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition group";
+                
+                // Xác định màu cho Net Req
+                const netReq = mrpResults[index] ? mrpResults[index].net : 0;
+                const netColor = netReq > 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold';
+                
+                // Hiệu ứng thụt lề cho cấp 2+
+                const indent = item.level > 1 ? `<i class="fa-solid fa-arrow-turn-up fa-rotate-90 text-gray-300 mr-2"></i>` : '';
+
+                tr.innerHTML = `
+                    <td class="p-2">
+                        <input type="text" class="editable-input font-mono text-gray-600 font-medium" value="${item.id}" onchange="updateData(${index}, 'id', this.value)">
+                    </td>
+                    <td class="p-2">
+                        <div class="flex items-center">
+                            ${indent}
+                            <input type="text" class="editable-input font-medium text-brand-navy" value="${item.name}" onchange="updateData(${index}, 'name', this.value)">
+                        </div>
+                    </td>
+                    <td class="p-2 text-center">
+                        <input type="number" class="editable-input text-center font-bold ${item.level === 1 ? 'text-blue-600' : 'text-gray-500'}" value="${item.level}" min="1" onchange="updateData(${index}, 'level', parseInt(this.value))">
+                    </td>
+                    <td class="p-2 text-center">
+                        <input type="number" class="editable-input text-center font-mono" value="${item.qty}" min="1" onchange="updateData(${index}, 'qty', parseFloat(this.value))">
+                    </td>
+                    <td class="p-2 text-center">
+                        <input type="number" class="editable-input text-center font-mono text-gray-500" value="${item.inventory}" min="0" onchange="updateData(${index}, 'inventory', parseFloat(this.value))">
+                    </td>
+                    <td class="p-3 text-center bg-blue-50/50">
+                        <span class="font-bold text-blue-700 text-base">${mrpResults[index] ? mrpResults[index].gross.toLocaleString('vi-VN') : 0}</span>
+                    </td>
+                    <td class="p-3 text-center bg-green-50/30">
+                        <span class="${netColor} text-base">${netReq.toLocaleString('vi-VN')}</span>
+                    </td>
+                    <td class="p-2 text-center">
+                        <button onclick="removeRow(${index})" class="text-gray-400 hover:text-red-500 transition p-2 rounded-full hover:bg-red-50" title="Xóa dòng">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 3. Hàm Cập nhật Dữ liệu khi gõ
+        function updateData(index, field, value) {
+            // Cập nhật mảng dữ liệu
+            bomData[index][field] = value;
+            
+            // Nếu đổi cấp bậc, cần sắp xếp lại mảng để đảm bảo Cấp 1 đứng trước Cấp 2
+            if (field === 'level') {
+                // Giữ nguyên dòng Cấp 0 (Target) ở đầu
+                const targetRow = bomData[0];
+                const rest = bomData.slice(1);
+                // Sắp xếp theo cấp độ tăng dần
+                rest.sort((a, b) => a.level - b.level);
+                bomData = [targetRow, ...rest];
+            }
+            
+            // Tính toán lại và render lại bảng
+            calculateMRP();
+            renderTable();
+        }
+
+        // 4. Thuật toán tính toán MRP
+        function calculateMRP() {
+            const targetQty = parseFloat(document.getElementById('targetQty').value) || 0;
+            mrpResults = [];
+            
+            // Lưu trữ số lượng "Cần sản xuất" (Net) của các cấp trước để làm cơ sở tính cấp sau
+            // Key: level, Value: Tổng Net của các item ở level đó (Giả định luồng sản xuất tuyến tính đơn giản)
+            let netProductionByLevel = { 0: targetQty };
+
+            // Duyệt qua từng dòng trong BOM (Đã được sắp xếp từ Cấp 1 -> Cấp N)
+            bomData.forEach((item, index) => {
+                if (item.level === 0) return; // Bỏ qua target ảo
+
+                let grossReq = 0;
+
+                // Xác định nhu cầu dựa trên cấp bậc
+                if (item.level === 1) {
+                    // Cấp 1: Nhu cầu = Target * Định mức
+                    grossReq = targetQty * item.qty;
+                } else {
+                    // Cấp 2+: Nhu cầu = (Tổng Net của Cấp trên gần nhất) * Định mức
+                    // Tìm cấp trên gần nhất có trong mảng
+                    const parentLevel = item.level - 1;
+                    const parentNet = netProductionByLevel[parentLevel] || 0;
+                    grossReq = parentNet * item.qty;
+                }
+
+                // Tính Net Requirement (Số lượng cần mua/sản xuất thêm)
+                const netReq = Math.max(0, grossReq - item.inventory);
+
+                // Lưu kết quả để render
+                mrpResults[index] = {
+                    gross: grossReq,
+                    net: netReq
+                };
+
+                // Cộng dồn số lượng Net của cấp này để làm nhu cầu cho cấp dưới (nếu có)
+                if (!netProductionByLevel[item.level]) {
+                    netProductionByLevel[item.level] = 0;
+                }
+                // Tùy thuộc vào cấu trúc BOM thực tế, nếu 1 cấp có nhiều sản phẩm mẹ khác nhau,
+                // việc cộng dồn này giúp tính tổng nhu cầu cho các linh kiện con.
+                netProductionByLevel[item.level] += netReq; 
+            });
+        }
+
+        // 5. Hàm Thêm Dòng Mới
+        function addNewRow() {
+            const newItem = {
+                id: 'NEW',
+                name: 'Vật tư mới',
+                level: 1,
+                qty: 1,
+                inventory: 0
+            };
+            
+            // Thêm vào cuối mảng
+            bomData.push(newItem);
+            
+            calculateMRP();
+            renderTable();
+            
+            // Tự động cuộn xuống dòng mới thêm
+            const tableBody = document.getElementById('bomTableBody');
+            tableBody.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 6. Hàm Xóa Dòng
+        function removeRow(index) {
+            if(confirm("Bạn có chắc chắn muốn xóa vật tư này khỏi BOM?")) {
+                bomData.splice(index, 1);
+                calculateMRP();
+                renderTable();
+            }
+        }
+
+        // 7. Lắng nghe sự kiện thay đổi số lượng mục tiêu
+        document.getElementById('targetQty').addEventListener('input', () => {
+            calculateMRP();
+            renderTable();
+        });
+
+        // Khởi chạy lần đầu
+        window.onload = () => {
+            calculateMRP();
+            renderTable();
+        };
+    </script>
+</body>
+</html>
