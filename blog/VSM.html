@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional VSM Editor - Tony Supply Chain</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* VSM Canvas & Styles */
+        .vsm-canvas {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+        }
+        
+        .vsm-box {
+            border: 2px solid #1e3a8a;
+            background-color: white;
+            width: 150px;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+        .vsm-box-header {
+            border-bottom: 2px solid #1e3a8a;
+            background-color: #eff6ff;
+            text-align: center;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px;
+            color: #1e3a8a;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .vsm-box-body {
+            display: grid;
+            grid-template-columns: 1fr;
+            font-size: 10px;
+        }
+        .vsm-box-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 4px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .vsm-box-row:last-child { border-bottom: none; }
+        
+        /* Inventory Triangle */
+        .inventory-triangle-container {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .inventory-triangle {
+            width: 0; height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 40px solid #fef08a;
+            position: relative; margin: 0 15px;
+            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));
+        }
+        .inventory-triangle::after {
+            content: 'I';
+            position: absolute;
+            top: 15px; left: -4px;
+            font-weight: bold; font-size: 16px; color: #854d0e;
+        }
+        .inventory-border {
+            position: absolute; top: 3px; left: -23px;
+            width: 0; height: 0;
+            border-left: 23px solid transparent;
+            border-right: 23px solid transparent;
+            border-bottom: 37px solid #ca8a04;
+            z-index: -1;
+        }
+
+        /* Push Arrow */
+        .push-arrow {
+            width: 40px; height: 14px;
+            background: repeating-linear-gradient(45deg, #475569, #475569 4px, #f8fafc 4px, #f8fafc 8px);
+            position: relative; border: 1px solid #475569; margin-top: 20px;
+            z-index: 10;
+        }
+        .push-arrow::after {
+            content: ''; position: absolute; right: -10px; top: -2px;
+            border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+            border-left: 12px solid #475569;
+        }
+
+        /* Timeline Staircase */
+        .timeline-va {
+            background-color: #3b82f6; color: white; font-size: 9px; font-weight: bold;
+            height: 30px; display: flex; align-items: center; justify-content: center;
+            border-top: 2px solid #1d4ed8; border-left: 1px solid #1d4ed8; border-right: 1px solid #1d4ed8;
+        }
+        .timeline-nva {
+            background-color: #ef4444; color: white; font-size: 9px; font-weight: bold;
+            height: 30px; display: flex; align-items: center; justify-content: center;
+            border-bottom: 2px solid #b91c1c; border-left: 1px solid #b91c1c; border-right: 1px solid #b91c1c;
+            margin-top: 30px;
+        }
+
+        /* SVG Connecting Lines */
+        #connectionLayer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+        .info-label {
+            background-color: white; padding: 2px 4px; font-size: 10px; color: #64748b; border-radius: 4px;
+        }
+        
+        /* Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen overflow-hidden flex flex-col">
+
+    <!-- Top Navigation -->
+    <header class="bg-slate-900 text-white shadow-md h-14 flex items-center px-4 justify-between shrink-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="bg-blue-600 p-1.5 rounded">
+                <i class="fa-solid fa-diagram-project text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-sm tracking-wide">VSM Editor Pro</h1>
+                <p class="text-[10px] text-slate-400">Tony Supply Chain</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 text-sm">
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                <span class="text-slate-400">Takt Time:</span>
+                <span id="headerTaktTime" class="font-bold text-yellow-400">0 min</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                <span class="text-slate-400">PCE:</span>
+                <span id="headerPce" class="font-bold text-emerald-400">0.00%</span>
+            </div>
+            <button onclick="exportData()" class="bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded text-xs font-semibold transition">
+                <i class="fa-solid fa-download mr-1"></i> Save
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- SIDEBAR: CONFIGURATION -->
+        <aside class="w-80 bg-white border-r border-slate-200 flex flex-col h-full z-40 shadow-xl">
+            <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Value Stream Config</h2>
+            </div>
+            
+            <div class="overflow-y-auto custom-scrollbar flex-1 p-4 space-y-4">
+                <!-- Global Settings -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-700 text-[11px] uppercase border-b pb-1">Takt Time Setup</h3>
+                    <div class="flex gap-2">
+                        <div class="flex-1">
+                            <label class="text-[10px] text-slate-500">Avail. Time (min/shift)</label>
+                            <input type="number" id="availTime" value="480" class="w-full text-xs border rounded px-2 py-1">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[10px] text-slate-500">Demand (units/shift)</label>
+                            <input type="number" id="demand" value="800" class="w-full text-xs border rounded px-2 py-1">
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-bold text-slate-700 text-[11px] uppercase border-b pb-1 mt-4">Information Flow</h3>
+                    <div>
+                        <label class="text-[10px] text-blue-600 block">Supplier to PC Text</label>
+                        <input type="text" id="infoSupTxt" value="Weekly Order" class="w-full text-xs border rounded px-2 py-1">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-green-600 block">Customer to PC Text</label>
+                        <input type="text" id="infoCusTxt" value="Daily Forecast" class="w-full text-xs border rounded px-2 py-1">
+                    </div>
+                </div>
+
+                <!-- Process Sequence -->
+                <div class="pt-2">
+                    <div class="flex justify-between items-center mb-2 border-b pb-1">
+                        <h3 class="font-bold text-slate-700 text-[11px] uppercase">Process Sequence</h3>
+                        <button onclick="addProcess()" class="text-blue-600 hover:text-blue-800 text-xs font-bold"><i class="fa-solid fa-plus"></i> Add Step</button>
+                    </div>
+                    <div id="sidebarProcessList" class="space-y-3">
+                        <!-- Dynamic forms -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CANVAS -->
+        <main class="flex-1 overflow-auto vsm-canvas relative custom-scrollbar flex flex-col" id="mainCanvasContainer">
+            
+            <!-- LỚP SVG ĐỂ VẼ ĐƯỜNG NỐI -->
+            <svg id="connectionLayer" class="absolute inset-0 w-full h-full pointer-events-none z-0">
+                <defs>
+                    <marker id="arrow-info" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+                    </marker>
+                    <marker id="arrow-mat" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#1e293b" />
+                    </marker>
+                </defs>
+            </svg>
+
+            <!-- Canvas Area -->
+            <div class="min-w-max p-8 flex-1 flex flex-col justify-center relative z-10" id="vsmCanvas">
+                
+                <!-- Info Flow Layer (Top) -->
+                <div class="flex justify-between items-start w-full px-12 mb-12 relative" id="infoFlowLayer">
+                    <!-- Supplier -->
+                    <div id="info-sup" class="flex flex-col items-center bg-white p-3 border-2 border-slate-800 rounded shadow-sm z-20 relative">
+                        <i class="fa-solid fa-industry text-2xl mb-1 text-slate-700"></i>
+                        <div class="font-bold text-xs uppercase text-center">Supplier</div>
+                    </div>
+
+                    <div class="flex-1"></div>
+
+                    <!-- Production Control -->
+                    <div id="info-pc" class="flex flex-col items-center bg-yellow-100 p-3 border-2 border-slate-800 rounded shadow-sm z-20 relative">
+                        <i class="fa-solid fa-clipboard-list text-2xl mb-1 text-slate-700"></i>
+                        <div class="font-bold text-xs uppercase text-center">Production<br>Control</div>
+                    </div>
+
+                    <div class="flex-1"></div>
+
+                    <!-- Customer -->
+                    <div id="info-cus" class="flex flex-col items-center bg-white p-3 border-2 border-slate-800 rounded shadow-sm z-20 relative">
+                        <i class="fa-solid fa-users text-2xl mb-1 text-slate-700"></i>
+                        <div class="font-bold text-xs uppercase text-center">Customer</div>
+                    </div>
+                </div>
+
+                <!-- Material Flow Layer (Middle) -->
+                <div class="flex items-end justify-start gap-2 relative z-10" id="materialFlowLayer">
+                    <!-- Process Boxes & Inventories injected by JS -->
+                </div>
+
+                <!-- Timeline Layer (Bottom) -->
+                <div class="mt-12 pt-4 relative z-10" id="timelineContainer">
+                    <div class="absolute top-0 left-0 text-xs font-bold text-slate-500 uppercase">Timeline</div>
+                    <div class="flex items-end h-24 mt-6" id="timelineLayer">
+                        <!-- Timeline injected by JS -->
+                    </div>
+                    
+                    <!-- Lead Time Arrow (Bottom) -->
+                    <div class="w-full flex items-center mt-2 relative">
+                        <div class="w-4 h-4 border-l-4 border-b-4 border-blue-600 transform -rotate-45 mb-1"></div>
+                        <div class="flex-1 h-1 bg-blue-600"></div>
+                        <div class="w-4 h-4 border-r-4 border-b-4 border-blue-600 transform rotate-45 mb-1"></div>
+                        <div class="absolute left-1/2 -top-4 transform -translate-x-1/2 bg-white px-2 text-xs font-bold text-blue-700">
+                            Total Lead Time: <span id="leadTimeArrowTxt">0 days</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Summary Panel (Floating) -->
+            <div class="fixed bottom-6 right-6 bg-slate-800 text-white p-4 rounded-xl shadow-2xl w-72 border border-slate-700 z-50">
+                <h3 class="text-xs font-bold text-slate-300 uppercase mb-3 border-b border-slate-600 pb-2">Key Metrics</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-slate-400">Lead Time (NVA):</span> <span class="font-bold text-red-400" id="sumLeadTime">0 days</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Process Time (VA):</span> <span class="font-bold text-emerald-400" id="sumProcessTime">0 mins</span></div>
+                    <div class="flex justify-between mt-2 pt-2 border-t border-slate-600"><span class="text-white font-bold">PCE:</span> <span class="font-bold text-yellow-400 text-lg" id="sumPce">0.00%</span></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. DATA MODEL
+        let state = {
+            availTime: 480, // Mins
+            demand: 800,
+            infoSupTxt: 'Weekly Order',
+            infoCusTxt: 'Daily Forecast',
+            processes: [
+                { id: 1, name: 'Tiếp nhận YC', ct: 20, co: 10, uptime: 95, fpy: 92, staff: 1.0, waitDays: 2, wip: 150, batch: 10, epe: 'High' },
+                { id: 2, name: 'Xử lý Bước 1', ct: 45, co: 20, uptime: 90, fpy: 93, staff: 2.0, waitDays: 1, wip: 80, batch: 20, epe: 'Medium' },
+                { id: 3, name: 'Xử lý Bước 2', ct: 60, co: 30, uptime: 90, fpy: 95, staff: 2.0, waitDays: 1.5, wip: 120, batch: 20, epe: 'Low' },
+                { id: 4, name: 'Kiểm tra CL', ct: 30, co: 15, uptime: 95, fpy: 90, staff: 1.5, waitDays: 0.5, wip: 40, batch: 10, epe: 'Critical' },
+                { id: 5, name: 'Giao hàng', ct: 25, co: 10, uptime: 95, fpy: 98, staff: 1.0, waitDays: 0, wip: 0, batch: 10, epe: '-' }
+            ],
+            nextId: 6
+        };
+
+        // 2. RENDER SIDEBAR
+        function renderSidebar() {
+            const list = document.getElementById('sidebarProcessList');
+            list.innerHTML = '';
+            
+            state.processes.forEach((p, idx) => {
+                const div = document.createElement('div');
+                div.className = "bg-white border border-slate-200 rounded-lg p-3 shadow-sm relative group";
+                div.innerHTML = `
+                    <button onclick="removeProcess(${p.id})" class="absolute top-2 right-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-slate-800 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">${idx + 1}</span>
+                        <input type="text" value="${p.name}" oninput="updateProcess(${p.id}, 'name', this.value)" class="font-bold text-xs text-slate-800 w-full border-b border-transparent focus:border-blue-500 focus:outline-none">
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-[10px] mb-2">
+                        <div><label class="text-slate-500 block">CT (min)</label><input type="number" value="${p.ct}" oninput="updateProcess(${p.id}, 'ct', this.value)" class="w-full border rounded px-1 text-center"></div>
+                        <div><label class="text-slate-500 block">C/O (min)</label><input type="number" value="${p.co}" oninput="updateProcess(${p.id}, 'co', this.value)" class="w-full border rounded px-1 text-center"></div>
+                        <div><label class="text-slate-500 block">Uptime (%)</label><input type="number" value="${p.uptime}" oninput="updateProcess(${p.id}, 'uptime', this.value)" class="w-full border rounded px-1 text-center"></div>
+                        <div><label class="text-slate-500 block">FPY (%)</label><input type="number" value="${p.fpy}" oninput="updateProcess(${p.id}, 'fpy', this.value)" class="w-full border rounded px-1 text-center"></div>
+                        <div><label class="text-slate-500 block">Staff</label><input type="number" value="${p.staff}" step="0.1" oninput="updateProcess(${p.id}, 'staff', this.value)" class="w-full border rounded px-1 text-center"></div>
+                        <div><label class="text-slate-500 block">Batch</label><input type="number" value="${p.batch}" oninput="updateProcess(${p.id}, 'batch', this.value)" class="w-full border rounded px-1 text-center"></div>
+                    </div>
+
+                    <div class="bg-red-50 p-2 rounded border border-red-100 flex gap-2 text-[10px] mb-2">
+                        <div class="flex-1"><label class="text-red-700 font-bold block">Wait (Days)</label><input type="number" value="${p.waitDays}" step="0.1" oninput="updateProcess(${p.id}, 'waitDays', this.value)" class="w-full border rounded px-1 text-center"></div>
+                        <div class="flex-1"><label class="text-red-700 font-bold block">WIP (Qty)</label><input type="number" value="${p.wip}" oninput="updateProcess(${p.id}, 'wip', this.value)" class="w-full border rounded px-1 text-center"></div>
+                    </div>
+                    <div class="text-[10px]">
+                         <label class="text-slate-500 block">EPE</label>
+                         <select onchange="updateProcess(${p.id}, 'epe', this.value)" class="w-full border rounded px-1 py-0.5">
+                            <option value="High" ${p.epe === 'High' ? 'selected' : ''}>High</option>
+                            <option value="Medium" ${p.epe === 'Medium' ? 'selected' : ''}>Medium</option>
+                            <option value="Low" ${p.epe === 'Low' ? 'selected' : ''}>Low</option>
+                            <option value="Critical" ${p.epe === 'Critical' ? 'selected' : ''}>Critical</option>
+                            <option value="-" ${p.epe === '-' ? 'selected' : ''}>N/A</option>
+                         </select>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // 3. RENDER CANVAS
+        function renderCanvas() {
+            const matLayer = document.getElementById('materialFlowLayer');
+            const timeLayer = document.getElementById('timelineLayer');
+            matLayer.innerHTML = '';
+            timeLayer.innerHTML = '';
+
+            let totalVA = 0;
+            let totalNVA = 0;
+
+            state.processes.forEach((p, index) => {
+                totalVA += p.ct;
+                totalNVA += p.waitDays;
+
+                // 1. Inventory Triangle
+                const invDiv = document.createElement('div');
+                invDiv.className = "inventory-triangle-container mx-2";
+                invDiv.id = `inv-${p.id}`;
+                invDiv.innerHTML = `
+                    <div class="mb-1 text-[10px] font-bold text-slate-700 bg-white px-1.5 py-0.5 rounded border border-slate-300 shadow-sm">${p.wip} pcs</div>
+                    <div class="inventory-triangle"><div class="inventory-border"></div></div>
+                    <div class="mt-1 text-[10px] font-bold text-red-600">${p.waitDays}d</div>
+                `;
+                matLayer.appendChild(invDiv);
+
+                // 2. Push Arrow
+                if (index > 0) {
+                    const arrowDiv = document.createElement('div');
+                    arrowDiv.className = "flex flex-col items-center justify-end pb-8";
+                    arrowDiv.innerHTML = `<div class="push-arrow"></div>`;
+                    matLayer.appendChild(arrowDiv);
+                }
+
+                // 3. Process Box
+                const boxDiv = document.createElement('div');
+                boxDiv.className = "vsm-box flex flex-col h-full";
+                boxDiv.id = `proc-${p.id}`;
+                boxDiv.innerHTML = `
+                    <div class="vsm-box-header" title="${p.name}">
+                        <i class="fa-solid fa-gear text-slate-400 mr-1"></i>${index + 1}. ${p.name}
+                    </div>
+                    <div class="vsm-box-body text-slate-700 flex-1">
+                        <div class="vsm-box-row"><span>CT:</span> <b>${p.ct} min</b></div>
+                        <div class="vsm-box-row"><span>C/O:</span> <b>${p.co} min</b></div>
+                        <div class="vsm-box-row"><span>Uptime:</span> <b>${p.uptime}%</b></div>
+                        <div class="vsm-box-row"><span>FPY:</span> <b>${p.fpy}%</b></div>
+                        <div class="vsm-box-row bg-blue-50"><span>Staff:</span> <b>${p.staff} FTE</b></div>
+                        <div class="vsm-box-row text-[9px] text-slate-500"><span>Batch:</span> <b>${p.batch}</b></div>
+                        <div class="vsm-box-row text-[9px] text-slate-500"><span>EPE:</span> <b>${p.epe}</b></div>
+                    </div>
+                `;
+                matLayer.appendChild(boxDiv);
+
+                // --- TIMELINE ---
+                const nvaStep = document.createElement('div');
+                nvaStep.className = "flex flex-col items-center flex-1";
+                nvaStep.innerHTML = `
+                    <div class="w-full timeline-nva">${p.waitDays > 0 ? p.waitDays + ' d' : ''}</div>
+                    <div class="w-full h-0.5 bg-slate-400"></div>
+                `;
+                timeLayer.appendChild(nvaStep);
+
+                const vaStep = document.createElement('div');
+                vaStep.className = "flex flex-col items-center flex-1";
+                vaStep.innerHTML = `
+                    <div class="w-full h-0.5 bg-slate-400"></div>
+                    <div class="w-full timeline-va">${p.ct} m</div>
+                `;
+                timeLayer.appendChild(vaStep);
+            });
+
+            const finalArrow = document.createElement('div');
+            finalArrow.className = "flex flex-col items-center justify-end pb-8 ml-2";
+            finalArrow.innerHTML = `<div class="push-arrow"></div>`;
+            matLayer.appendChild(finalArrow);
+
+            updateMetrics(totalVA, totalNVA);
+            setTimeout(drawConnections, 50); 
+        }
+
+        // 4. VẼ ĐƯỜNG NỐI (SVG)
+        function drawConnections() {
+            const svg = document.getElementById('connectionLayer');
+            const oldElements = svg.querySelectorAll('path:not(defs path), text:not(defs text)');
+            oldElements.forEach(el => el.remove());
+
+            const canvasRect = document.getElementById('vsmCanvas').getBoundingClientRect();
+            
+            const getPos = (id) => {
+                const el = document.getElementById(id);
+                if (!el) return null;
+                const rect = el.getBoundingClientRect();
+                return {
+                    left: rect.left - canvasRect.left,
+                    right: rect.right - canvasRect.left,
+                    top: rect.top - canvasRect.top,
+                    bottom: rect.bottom - canvasRect.top,
+                    centerX: rect.left - canvasRect.left + rect.width / 2,
+                    centerY: rect.top - canvasRect.top + rect.height / 2,
+                    width: rect.width,
+                    height: rect.height
+                };
+            };
+
+            const sup = getPos('info-sup');
+            const pc = getPos('info-pc');
+            const cus = getPos('info-cus');
+
+            // Hàm tạo chữ trên SVG
+            const createText = (x, y, text) => {
+                const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                t.setAttribute('x', x);
+                t.setAttribute('y', y);
+                t.setAttribute('text-anchor', 'middle');
+                t.setAttribute('class', 'text-[10px] fill-slate-500 font-medium bg-white');
+                t.textContent = text;
+                svg.appendChild(t);
+            };
+
+            // 1. INFORMATION FLOW
+            // Supplier -> PC
+            if (sup && pc) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const startX = sup.right, startY = sup.centerY;
+                const endX = pc.left, endY = pc.centerY;
+                const midX = startX + 30;
+                const d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+                path.setAttribute('d', d); path.setAttribute('stroke', '#64748b');
+                path.setAttribute('stroke-width', '1.5'); path.setAttribute('stroke-dasharray', '5,5');
+                path.setAttribute('fill', 'none'); path.setAttribute('marker-end', 'url(#arrow-info)');
+                svg.appendChild(path);
+                createText(midX, startY - 5, document.getElementById('infoSupTxt').value);
+            }
+
+            // Customer -> PC
+            if (cus && pc) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const startX = cus.left, startY = cus.centerY;
+                const endX = pc.right, endY = pc.centerY;
+                const midX = startX - 30;
+                const d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+                path.setAttribute('d', d); path.setAttribute('stroke', '#64748b');
+                path.setAttribute('stroke-width', '1.5'); path.setAttribute('stroke-dasharray', '5,5');
+                path.setAttribute('fill', 'none'); path.setAttribute('marker-end', 'url(#arrow-info)');
+                svg.appendChild(path);
+                createText(midX, startY - 5, document.getElementById('infoCusTxt').value);
+            }
+
+            // PC -> Process Boxes
+            state.processes.forEach(p => {
+                const proc = getPos(`proc-${p.id}`);
+                if (proc && pc) {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const startX = pc.centerX, startY = pc.bottom;
+                    const endX = proc.centerX, endY = proc.top;
+                    const midY = startY + (endY - startY) / 2;
+                    const d = `M ${startX} ${startY} L ${startX} ${midY} L ${endX} ${midY} L ${endX} ${endY}`;
+                    path.setAttribute('d', d); path.setAttribute('stroke', '#64748b');
+                    path.setAttribute('stroke-width', '1.5'); path.setAttribute('stroke-dasharray', '5,5');
+                    path.setAttribute('fill', 'none'); path.setAttribute('marker-end', 'url(#arrow-info)');
+                    svg.appendChild(path);
+                }
+            });
+
+            // 2. MATERIAL FLOW
+            if (sup) {
+                const firstInv = getPos(`inv-${state.processes[0].id}`);
+                if (firstInv) {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const startX = sup.centerX, startY = sup.bottom;
+                    const endX = firstInv.centerX, endY = firstInv.top;
+                    const midY = startY + 30;
+                    const d = `M ${startX} ${startY} L ${startX} ${midY} L ${endX} ${midY} L ${endX} ${endY}`;
+                    path.setAttribute('d', d); path.setAttribute('stroke', '#1e293b');
+                    path.setAttribute('stroke-width', '2'); path.setAttribute('fill', 'none');
+                    path.setAttribute('marker-end', 'url(#arrow-mat)');
+                    svg.appendChild(path);
+                }
+            }
+
+            state.processes.forEach((p, index) => {
+                if (index < state.processes.length - 1) {
+                    const currentProc = getPos(`proc-${p.id}`);
+                    const nextInv = getPos(`inv-${state.processes[index + 1].id}`);
+                    if (currentProc && nextInv) {
+                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        const d = `M ${currentProc.right} ${currentProc.centerY} L ${nextInv.left} ${nextInv.centerY}`;
+                        path.setAttribute('d', d); path.setAttribute('stroke', '#1e293b');
+                        path.setAttribute('stroke-width', '2'); path.setAttribute('fill', 'none');
+                        path.setAttribute('marker-end', 'url(#arrow-mat)');
+                        svg.appendChild(path);
+                    }
+                }
+            });
+
+            const lastProc = getPos(`proc-${state.processes[state.processes.length - 1].id}`);
+            if (lastProc && cus) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const startX = lastProc.right, startY = lastProc.centerY;
+                const endX = cus.centerX, endY = cus.top;
+                const d = `M ${startX} ${startY} L ${startX + 40} ${startY} L ${startX + 40} ${endY} L ${endX} ${endY}`;
+                path.setAttribute('d', d); path.setAttribute('stroke', '#1e293b');
+                path.setAttribute('stroke-width', '2'); path.setAttribute('fill', 'none');
+                path.setAttribute('marker-end', 'url(#arrow-mat)');
+                svg.appendChild(path);
+            }
+        }
+
+        // 5. UPDATE METRICS
+        function updateMetrics(vaMins, nvaDays) {
+            const nvaMins = nvaDays * 480;
+            const leadTimeMins = vaMins + nvaMins;
+            let pce = 0;
+            if (leadTimeMins > 0) pce = (vaMins / leadTimeMins) * 100;
+
+            document.getElementById('sumLeadTime').innerText = (leadTimeMins / 480).toFixed(1) + ' days';
+            document.getElementById('leadTimeArrowTxt').innerText = (leadTimeMins / 480).toFixed(1) + ' days';
+            document.getElementById('sumProcessTime').innerText = vaMins.toFixed(0) + ' mins';
+            
+            const pceStr = pce.toFixed(2) + '%';
+            document.getElementById('sumPce').innerText = pceStr;
+            document.getElementById('headerPce').innerText = pceStr;
+
+            // Takt Time Calculation
+            const availTime = parseFloat(document.getElementById('availTime').value) || 480;
+            const demand = parseFloat(document.getElementById('demand').value) || 1;
+            const taktTime = availTime / demand;
+            document.getElementById('headerTaktTime').innerText = taktTime.toFixed(2) + ' min';
+        }
+
+        // 6. EVENT HANDLERS
+        function updateProcess(id, field, value) {
+            const p = state.processes.find(item => item.id === id);
+            if (p) {
+                p[field] = (field === 'name' || field === 'epe') ? value : (parseFloat(value) || 0);
+                renderCanvas(); 
+            }
+        }
+
+        function addProcess() {
+            state.processes.push({ 
+                id: state.nextId++, name: 'Công đoạn mới', ct: 30, co: 0, uptime: 100, fpy: 100, staff: 1.0, waitDays: 1, wip: 100, batch: 10, epe: '-' 
+            });
+            renderSidebar();
+            renderCanvas();
+            const sidebar = document.querySelector('aside .overflow-y-auto');
+            sidebar.scrollTop = sidebar.scrollHeight;
+        }
+
+        function removeProcess(id) {
+            state.processes = state.processes.filter(p => p.id !== id);
+            renderSidebar();
+            renderCanvas();
+        }
+
+        // Lắng nghe sự kiện thay đổi thông tin chung
+        ['availTime', 'demand', 'infoSupTxt', 'infoCusTxt'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                if(id === 'availTime' || id === 'demand') {
+                    updateMetrics(
+                        state.processes.reduce((s, p) => s + p.ct, 0),
+                        state.processes.reduce((s, p) => s + p.waitDays, 0)
+                    );
+                } else {
+                    drawConnections();
+                }
+            });
+        });
+
+        window.addEventListener('resize', drawConnections);
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "vsm_data.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            renderCanvas();
+        });
+    </script>
+</body>
+</html>
