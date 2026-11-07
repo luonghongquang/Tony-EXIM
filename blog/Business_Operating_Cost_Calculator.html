@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Operating Cost Calculator</title>
+
+<!-- ===== CDN: Tailwind CSS ===== -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class' };
+</script>
+
+<!-- ===== CDN: Lucide Icons ===== -->
+<script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js"></script>
+
+<!-- ===== CDN: Chart.js ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<!-- ===== CDN: SheetJS (xuất Excel .xlsx) ===== -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+  /* ================= BIẾN MÀU & THEME ================= */
+  :root{
+    --bg:#f1f5f9; --card-bg:#ffffff; --card-bd:#e2e8f0;
+    --inp-bg:#ffffff; --inp-bd:#cbd5e1; --txt:#0f172a; --muted:#64748b;
+    --hover:#f8fafc;
+  }
+  html.dark{
+    --bg:#020617; --card-bg:#0f172a; --card-bd:#1e293b;
+    --inp-bg:#1e293b; --inp-bd:#334155; --txt:#e2e8f0; --muted:#94a3b8;
+    --hover:#16203a;
+  }
+  body{ background:var(--bg); color:var(--txt); font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; }
+  .card{ background:var(--card-bg); border:1px solid var(--card-bd); border-radius:.9rem; padding:1rem; }
+  .inp{
+    width:100%; background:var(--inp-bg); border:1px solid var(--inp-bd); color:var(--txt);
+    border-radius:.5rem; padding:.32rem .5rem; font-size:.8125rem; outline:none; transition:.15s;
+  }
+  .inp:focus{ border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.18); }
+  .btn{
+    display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .75rem; border-radius:.6rem;
+    font-size:.8125rem; font-weight:600; border:1px solid var(--card-bd); background:var(--card-bg);
+    color:var(--txt); cursor:pointer; transition:.15s; white-space:nowrap;
+  }
+  .btn:hover{ background:rgba(99,102,241,.1); border-color:#6366f1; color:#6366f1; }
+  .btn-primary{ background:#6366f1; border-color:#6366f1; color:#fff; }
+  .btn-primary:hover{ background:#4f46e5; border-color:#4f46e5; color:#fff; }
+  .btn-danger{ color:#ef4444; border-color:rgba(239,68,68,.4); }
+  .btn-danger:hover{ background:rgba(239,68,68,.12); border-color:#ef4444; color:#ef4444; }
+  .ibtn{ display:inline-grid; place-items:center; width:1.9rem; height:1.9rem; border-radius:.45rem; color:var(--muted); cursor:pointer; transition:.15s; }
+  .ibtn:hover{ background:rgba(99,102,241,.12); color:#6366f1; }
+  .ibtn-danger:hover{ background:rgba(239,68,68,.12); color:#ef4444; }
+  .navbtn{
+    display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .7rem; border-radius:.6rem;
+    font-size:.8rem; font-weight:500; color:var(--muted); white-space:nowrap; transition:.15s; cursor:pointer;
+  }
+  .navbtn:hover{ background:rgba(99,102,241,.1); color:#6366f1; }
+  .navbtn.active{ background:#6366f1; color:#fff; }
+  .dt{ width:100%; border-collapse:collapse; font-size:.8125rem; }
+  .dt th{
+    text-align:left; padding:.5rem .4rem; font-weight:700; color:var(--muted);
+    border-bottom:1px solid var(--card-bd); white-space:nowrap;
+    font-size:.68rem; text-transform:uppercase; letter-spacing:.03em;
+  }
+  .dt td{ padding:.3rem .4rem; border-bottom:1px solid var(--card-bd); vertical-align:middle; }
+  .dt tbody tr:hover{ background:var(--hover); }
+  .dt tfoot td{ font-weight:700; border-top:2px solid var(--card-bd); border-bottom:none; padding-top:.55rem; }
+  .kpi-label{ font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; }
+  ::-webkit-scrollbar{ height:8px; width:8px; }
+  ::-webkit-scrollbar-thumb{ background:rgba(100,116,139,.4); border-radius:8px; }
+  @media print{
+    .no-print{ display:none !important; }
+    .sec{ display:block !important; page-break-inside:avoid; }
+    body{ background:#fff; }
+    .card{ box-shadow:none; border:1px solid #ddd; }
+    header{ position:static !important; }
+  }
+</style>
+</head>
+
+<body class="min-h-screen">
+
+<!-- ==================== HEADER ==================== -->
+<header class="sticky top-0 z-30 no-print" style="background:var(--card-bg);border-bottom:1px solid var(--card-bd)">
+  <div class="max-w-[1700px] mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl grid place-items-center text-white shrink-0"
+           style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
+        <i data-lucide="wallet" class="w-5 h-5"></i>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-base sm:text-lg font-bold leading-tight">Business Operating Cost Calculator</h1>
+        <p class="text-[11px] sm:text-xs" style="color:var(--muted)">Tính toán &amp; phân tích chi phí vận hành doanh nghiệp</p>
+      </div>
+    </div>
+    <div class="ml-auto flex items-center gap-2">
+      <select id="periodSelect" class="inp" style="width:auto" onchange="setPeriod(this.value)"></select>
+      <button class="btn" onclick="toggleTheme()" title="Đổi chế độ sáng/tối">
+        <i data-lucide="moon" class="w-4 h-4" id="themeIcon"></i>
+      </button>
+    </div>
+  </div>
+  <nav class="max-w-[1700px] mx-auto px-2 pb-2 flex gap-1 overflow-x-auto" id="navBar"></nav>
+</header>
+
+<main class="max-w-[1700px] mx-auto px-3 sm:px-4 py-4 space-y-4">
+
+  <!-- ==================== 1. DASHBOARD ==================== -->
+  <section id="sec-dashboard" class="sec">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3" id="kpiGrid"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-3">
+      <div class="card">
+        <h3 class="font-bold text-sm mb-1">Cơ cấu định phí &amp; biến phí</h3>
+        <p class="text-[11px] mb-2" style="color:var(--muted)">Tỷ trọng theo tổng chi phí vận hành trong kỳ</p>
+        <div class="relative" style="height:270px"><canvas id="chartPie"></canvas></div>
+      </div>
+      <div class="card">
+        <h3 class="font-bold text-sm mb-1">Cơ cấu chi phí theo nhóm</h3>
+        <p class="text-[11px] mb-2" style="color:var(--muted)">So sánh định phí / biến phí của từng nhóm</p>
+        <div class="relative" style="height:270px"><canvas id="chartGroup"></canvas></div>
+      </div>
+      <div class="card lg:col-span-2">
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-1">
+          <div>
+            <h3 class="font-bold text-sm">Xu hướng chi phí 12 tháng (dự báo)</h3>
+            <p class="text-[11px]" style="color:var(--muted)">Định phí giữ nguyên, biến phí tăng theo tốc độ tăng trưởng cấu hình</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-xs" style="color:var(--muted)">Tăng trưởng biến phí / tháng (%)</label>
+            <input type="number" step="0.1" class="inp" style="width:90px" id="growthInput" onchange="setGrowth(this.value)">
+          </div>
+        </div>
+        <div class="relative" style="height:280px"><canvas id="chartTrend"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. ĐỊNH PHÍ ==================== -->
+  <section id="sec-fixed" class="sec hidden">
+    <div class="card">
+      <div class="flex items-center justify-between gap-2 flex-wrap mb-3">
+        <div>
+          <h2 class="text-base font-bold">Quản lý định phí (Fixed Costs)</h2>
+          <p class="text-xs" style="color:var(--muted)">Chi phí cố định trong phạm vi hoạt động — tự động quy đổi về tháng và năm.</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button class="btn" onclick="addGroup()"><i data-lucide="folder-plus" class="w-4 h-4"></i>Nhóm chi phí</button>
+          <button class="btn btn-primary" onclick="addFixed()"><i data-lucide="plus" class="w-4 h-4"></i>Thêm định phí</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="dt">
+          <thead>
+            <tr>
+              <th style="width:40px">STT</th>
+              <th>Khoản mục chi phí</th>
+              <th>Nhóm</th>
+              <th style="width:90px">Số lượng</th>
+              <th style="width:130px">Đơn giá</th>
+              <th style="width:95px">Đơn vị</th>
+              <th style="width:130px">Chu kỳ</th>
+              <th class="text-right">Tổng / chu kỳ</th>
+              <th class="text-right">Quy đổi / tháng</th>
+              <th class="text-right">Quy đổi / năm</th>
+              <th style="width:150px">Ghi chú</th>
+              <th style="width:80px" class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="fixedBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="text-right">TỔNG CỘNG</td>
+              <td class="text-right" id="fxSumCycle">—</td>
+              <td class="text-right" id="fxSumMonth">—</td>
+              <td class="text-right" id="fxSumYear">—</td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="text-[11px] mt-2" style="color:var(--muted)">
+        * Số ngày quy đổi mặc định: <b id="daysLabel">30</b> ngày/tháng (chỉnh trong Cài đặt).
+        Chu kỳ <b>Một lần</b> có thể ghi nhận toàn bộ trong kỳ hoặc phân bổ theo số tháng tùy chỉnh.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== 3. BIẾN PHÍ ==================== -->
+  <section id="sec-variable" class="sec hidden">
+    <div class="card">
+      <div class="flex items-center justify-between gap-2 flex-wrap mb-3">
+        <div>
+          <h2 class="text-base font-bold">Quản lý biến phí (Variable Costs)</h2>
+          <p class="text-xs" style="color:var(--muted)">Hỗ trợ 3 phương pháp: theo số lượng hoạt động, theo % doanh thu, theo sản lượng sản xuất.</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button class="btn" onclick="addGroup()"><i data-lucide="folder-plus" class="w-4 h-4"></i>Nhóm chi phí</button>
+          <button class="btn btn-primary" onclick="addVariable()"><i data-lucide="plus" class="w-4 h-4"></i>Thêm biến phí</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="dt">
+          <thead>
+            <tr>
+              <th style="width:40px">STT</th>
+              <th>Khoản mục</th>
+              <th>Nhóm</th>
+              <th style="width:150px">Phương pháp</th>
+              <th style="width:130px">SL / Doanh thu / Sản lượng</th>
+              <th style="width:130px">Đơn giá / Tỷ lệ / CF 1 SP</th>
+              <th style="width:80px">Đơn vị</th>
+              <th class="text-right">Tổng / tháng</th>
+              <th class="text-right">Tổng / kỳ</th>
+              <th style="width:140px">Ghi chú</th>
+              <th style="width:80px" class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="variableBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="text-right">TỔNG CỘNG</td>
+              <td class="text-right" id="vrSumMonth">—</td>
+              <td class="text-right" id="vrSumPeriod">—</td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. TỔNG HỢP CHI PHÍ ==================== -->
+  <section id="sec-summary" class="sec hidden">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3" id="summaryCards"></div>
+    <div class="card">
+      <h2 class="text-base font-bold mb-1">Báo cáo tổng hợp chi phí theo nhóm</h2>
+      <p class="text-xs mb-3" style="color:var(--muted)">Đơn vị: kỳ phân tích đang chọn</p>
+      <div class="overflow-x-auto">
+        <table class="dt">
+          <thead>
+            <tr>
+              <th>Nhóm chi phí</th>
+              <th class="text-right">Định phí</th>
+              <th class="text-right">Biến phí</th>
+              <th class="text-right">Tổng chi phí</th>
+              <th class="text-right">Tỷ trọng</th>
+              <th style="width:180px">Biểu đồ tỷ trọng</th>
+            </tr>
+          </thead>
+          <tbody id="summaryBody"></tbody>
+          <tfoot>
+            <tr>
+              <td>TỔNG CỘNG</td>
+              <td class="text-right" id="sumFootFixed">—</td>
+              <td class="text-right" id="sumFootVar">—</td>
+              <td class="text-right" id="sumFootTotal">—</td>
+              <td class="text-right">100%</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div id="summaryInsights" class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3"></div>
+    </div>
+  </section>
+
+  <!-- ==================== 5. CHI PHÍ THEO SẢN LƯỢNG ==================== -->
+  <section id="sec-volume" class="sec hidden">
+    <div class="card">
+      <h2 class="text-base font-bold mb-3">Tính chi phí theo sản lượng</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        <div>
+          <label class="kpi-label block mb-1">Sản lượng sản xuất (sản phẩm / tháng)</label>
+          <input type="number" min="0" class="inp" id="volInput" onchange="setVolume(this.value)">
+        </div>
+        <div>
+          <label class="kpi-label block mb-1">Biến phí trên 1 sản phẩm</label>
+          <div class="flex gap-1">
+            <input type="number" min="0" class="inp" id="varUnitInput" onchange="setVarUnit(this.value)">
+            <button class="btn" onclick="resetVarUnit()" title="Đồng bộ tự động từ dữ liệu biến phí">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="kpi-label block mb-1">Định phí hàng tháng</label>
+          <div class="inp" style="background:transparent;border-style:dashed" id="volFixedDisplay">—</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4" id="volumeKpis"></div>
+
+      <h3 class="font-bold text-sm mb-2">Bảng mô phỏng theo mức sản lượng</h3>
+      <div class="overflow-x-auto">
+        <table class="dt">
+          <thead>
+            <tr>
+              <th style="width:140px">Sản lượng</th>
+              <th class="text-right">Định phí</th>
+              <th class="text-right">Biến phí</th>
+              <th class="text-right">Tổng chi phí</th>
+              <th class="text-right">Chi phí / sản phẩm</th>
+            </tr>
+          </thead>
+          <tbody id="volumeBody"></tbody>
+        </table>
+      </div>
+      <p class="text-[11px] mt-2" style="color:var(--muted)">
+        * Các mức sản lượng có thể chỉnh sửa trực tiếp. Định phí tổng không thay đổi theo sản lượng trong phạm vi hoạt động bình thường.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== 6. MÔ PHỎNG CHI PHÍ ==================== -->
+  <section id="sec-simulate" class="sec hidden">
+    <div class="card mb-3">
+      <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+        <div>
+          <h2 class="text-base font-bold">Mô phỏng &amp; dự báo chi phí (What-if Analysis)</h2>
+          <p class="text-xs" style="color:var(--muted)">Thay đổi % từng khoản chi phí để xem tác động. Dữ liệu gốc không bị ghi đè.</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button class="btn" onclick="resetSim()"><i data-lucide="rotate-ccw" class="w-4 h-4"></i>Xóa điều chỉnh</button>
+          <button class="btn btn-primary" onclick="saveScenario()"><i data-lucide="save" class="w-4 h-4"></i>Lưu kịch bản</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+        <div>
+          <label class="kpi-label block mb-1">Thay đổi sản lượng (%)</label>
+          <input type="number" step="1" class="inp" id="simVolumePct" oninput="setSimVolume(this.value)">
+        </div>
+      </div>
+
+      <div class="overflow-x-auto" style="max-height:460px;overflow-y:auto">
+        <table class="dt">
+          <thead style="position:sticky;top:0;background:var(--card-bg);z-index:1">
+            <tr>
+              <th>Khoản mục</th>
+              <th style="width:100px">Loại</th>
+              <th class="text-right">Hiện tại</th>
+              <th style="width:110px">% thay đổi</th>
+              <th class="text-right">Sau thay đổi</th>
+              <th class="text-right">Chênh lệch</th>
+            </tr>
+          </thead>
+          <tbody id="simBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div class="card">
+        <h3 class="font-bold text-sm mb-2">Tổng hợp tác động</h3>
+        <div id="simTotals"></div>
+      </div>
+      <div class="card">
+        <h3 class="font-bold text-sm mb-2">So sánh kịch bản</h3>
+        <div class="relative" style="height:250px"><canvas id="chartScenario"></canvas></div>
+        <div id="scenarioList" class="mt-2 space-y-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 7. ĐIỂM HÒA VỐN ==================== -->
+  <section id="sec-breakeven" class="sec hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+      <div class="card lg:col-span-1">
+        <h2 class="text-base font-bold mb-3">Thông số đầu vào</h2>
+        <div class="space-y-3">
+          <div>
+            <label class="kpi-label block mb-1">Giá bán trung bình / sản phẩm</label>
+            <input type="number" min="0" class="inp" id="bePrice" onchange="setRevenue('price',this.value)">
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Sản lượng tiêu thụ (kỳ)</label>
+            <input type="number" min="0" class="inp" id="beVolume" onchange="setRevenue('volume',this.value)">
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Biến phí trên 1 sản phẩm</label>
+            <input type="number" min="0" class="inp" id="beVarUnit" onchange="setVarUnit(this.value)">
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Tổng định phí (kỳ)</label>
+            <div class="inp" style="background:transparent;border-style:dashed" id="beFixedDisplay">—</div>
+          </div>
+        </div>
+        <p class="text-[11px] mt-3" style="color:var(--muted)">
+          * Đây là khu vực phân tích bổ sung, không bắt buộc để tính chi phí vận hành.
+        </p>
+      </div>
+
+      <div class="card lg:col-span-2">
+        <h2 class="text-base font-bold mb-3">Kết quả phân tích hòa vốn</h2>
+        <div class="grid grid-cols-2 gap-3" id="beResults"></div>
+        <div id="beWarning" class="mt-3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 8. CÀI ĐẶT ==================== -->
+  <section id="sec-settings" class="sec hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+
+      <div class="card">
+        <h2 class="text-base font-bold mb-3">Cài đặt chung</h2>
+        <div class="space-y-3">
+          <div>
+            <label class="kpi-label block mb-1">Đơn vị tiền tệ</label>
+            <select class="inp" id="currencySelect" onchange="setCurrency(this.value)"></select>
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Số ngày quy đổi / tháng</label>
+            <input type="number" min="1" max="31" class="inp" id="daysInput" onchange="setDays(this.value)">
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Kỳ phân tích</label>
+            <select class="inp" id="periodSetting" onchange="setPeriod(this.value)"></select>
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Tốc độ tăng biến phí / tháng (dự báo %)</label>
+            <input type="number" step="0.1" class="inp" id="growthSetting" onchange="setGrowth(this.value)">
+          </div>
+          <div>
+            <label class="kpi-label block mb-1">Giao diện</label>
+            <button class="btn w-full justify-center" onclick="toggleTheme()">
+              <i data-lucide="sun-moon" class="w-4 h-4"></i> Chuyển chế độ sáng / tối
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold">Nhóm chi phí</h2>
+          <button class="btn btn-primary" onclick="addGroup()"><i data-lucide="plus" class="w-4 h-4"></i>Thêm nhóm</button>
+        </div>
+        <div id="groupList" class="space-y-2"></div>
+      </div>
+
+      <div class="card lg:col-span-2">
+        <h2 class="text-base font-bold mb-3">Dữ liệu &amp; báo cáo</h2>
+        <div class="flex flex-wrap gap-2">
+          <button class="btn" onclick="exportXLSX()"><i data-lucide="file-spreadsheet" class="w-4 h-4"></i>Xuất Excel (.xlsx)</button>
+          <button class="btn" onclick="exportCSV()"><i data-lucide="file-text" class="w-4 h-4"></i>Xuất CSV</button>
+          <button class="btn" onclick="window.print()"><i data-lucide="printer" class="w-4 h-4"></i>In báo cáo</button>
+          <button class="btn" onclick="backupJSON()"><i data-lucide="download" class="w-4 h-4"></i>Tải bản sao lưu JSON</button>
+          <button class="btn" onclick="document.getElementById('jsonFile').click()"><i data-lucide="upload" class="w-4 h-4"></i>Nhập dữ liệu JSON</button>
+          <input type="file" id="jsonFile" accept=".json" class="hidden" onchange="importJSON(this.files[0])">
+          <button class="btn" onclick="restoreSample()"><i data-lucide="rotate-ccw" class="w-4 h-4"></i>Khôi phục dữ liệu mẫu</button>
+          <button class="btn btn-danger" onclick="clearAll()"><i data-lucide="trash-2" class="w-4 h-4"></i>Xóa toàn bộ dữ liệu</button>
+        </div>
+        <p class="text-[11px] mt-3" style="color:var(--muted)">
+          Dữ liệu được lưu tự động vào <b>localStorage</b> của trình duyệt sau mỗi thay đổi.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ==================== SCRIPT ==================== -->
+<script>
+/* =====================================================================
+   BUSINESS OPERATING COST CALCULATOR
+   Toàn bộ logic tính toán, lưu trữ, biểu đồ và xuất dữ liệu
+   ===================================================================== */
+
+/* ---------------------- HẰNG SỐ ---------------------- */
+const LS_KEY = 'bocc_state_v1';
+
+const CURRENCIES = {
+  VND: { symbol: '₫',  label: 'VND - Việt Nam Đồng' },
+  USD: { symbol: '$',  label: 'USD - Đô la Mỹ' },
+  EUR: { symbol: '€',  label: 'EUR - Euro' },
+  JPY: { symbol: '¥',  label: 'JPY - Yên Nhật' },
+  GBP: { symbol: '£',  label: 'GBP - Bảng Anh' }
+};
+
+const PERIODS = {
+  month:   { label: 'Tháng', months: 1 },
+  quarter: { label: 'Quý',   months: 3 },
+  year:    { label: 'Năm',   months: 12 }
+};
+
+const CYCLES = {
+  day: 'Ngày', week: 'Tuần', month: 'Tháng',
+  quarter: 'Quý', halfyear: '6 tháng', year: 'Năm', once: 'Một lần'
+};
+
+const METHODS = {
+  qty:     'A. Theo số lượng hoạt động',
+  revenue: 'B. Theo % doanh thu',
+  output:  'C. Theo sản lượng sản xuất'
+};
+
+const NUM_FIELDS = new Set(['qty', 'price', 'rate', 'output', 'cpu']);
+
+const NAV = [
+  { id: 'dashboard', label: 'Dashboard',              icon: 'layout-dashboard' },
+  { id: 'fixed',     label: 'Định phí',               icon: 'building-2' },
+  { id: 'variable',  label: 'Biến phí',               icon: 'activity' },
+  { id: 'summary',   label: 'Tổng hợp chi phí',       icon: 'table-2' },
+  { id: 'volume',    label: 'Chi phí theo sản lượng', icon: 'boxes' },
+  { id: 'simulate',  label: 'Mô phỏng chi phí',       icon: 'flask-conical' },
+  { id: 'breakeven', label: 'Điểm hòa vốn',           icon: 'target' },
+  { id: 'settings',  label: 'Cài đặt',                icon: 'settings' }
+];
+
+/* ---------------------- TIỆN ÍCH ---------------------- */
+const uid = () => 'id' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-3);
+const n2 = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+
+function fmt(n, dec = 0) {
+  if (!isFinite(n)) n = 0;
+  return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: dec }).format(n);
+}
+function money(n, dec = 0) {
+  return fmt(n, dec) + ' ' + (CURRENCIES[state.settings.currency]?.symbol || '₫');
+}
+function pct(n, dec = 1) { return fmt(n, dec) + '%'; }
+function download(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function setCell(id, html) {
+  const el = document.querySelector(`[data-cell="${id}"]`);
+  if (el) el.innerHTML = html;
+}
+
+/* ---------------------- DỮ LIỆU MẶC ĐỊNH ---------------------- */
+function defaultState() {
+  const g = {
+    ns:  { id: 'g_ns',  name: 'Nhân sự' },
+    vp:  { id: 'g_vp',  name: 'Văn phòng' },
+    sx:  { id: 'g_sx',  name: 'Sản xuất' },
+    vc:  { id: 'g_vc',  name: 'Vận chuyển' },
+    nvl: { id: 'g_nvl', name: 'Nguyên vật liệu' },
+    mkt: { id: 'g_mkt', name: 'Marketing' },
+    kh:  { id: 'g_kh',  name: 'Khác' }
+  };
+
+  const fixed = [
+    { id: uid(), name: 'Tiền thuê văn phòng',  groupId: g.vp.id,  qty: 1,  price: 20000000, unit: 'VND',    cycle: 'month', onceMode: 'amortize', amortMonths: 12, note: '' },
+    { id: uid(), name: 'Lương nhân viên',       groupId: g.ns.id,  qty: 10, price: 12000000, unit: 'Người',  cycle: 'month', onceMode: 'amortize', amortMonths: 12, note: '' },
+    { id: uid(), name: 'Bảo hiểm',              groupId: g.ns.id,  qty: 10, price: 1500000,  unit: 'Người',  cycle: 'month', onceMode: 'amortize', amortMonths: 12, note: '' },
+    { id: uid(), name: 'Khấu hao máy móc',      groupId: g.sx.id,  qty: 1,  price: 15000000, unit: 'VND',    cycle: 'month', onceMode: 'amortize', amortMonths: 12, note: '' },
+    { id: uid(), name: 'Phần mềm quản lý',      groupId: g.vp.id,  qty: 1,  price: 2000000,  unit: 'VND',    cycle: 'month', onceMode: 'amortize', amortMonths: 12, note: '' },
+    { id: uid(), name: 'Chi phí Internet',      groupId: g.vp.id,  qty: 1,  price: 1000000,  unit: 'VND',    cycle: 'month', onceMode: 'amortize', amortMonths: 12, note: '' }
+  ];
+
+  const variable = [
+    { id: uid(), name: 'Điện sản xuất',        groupId: g.sx.id,  method: 'qty',     qty: 5000, price: 3000,   unit: 'kWh',    rate: 0, output: 0,    cpu: 0,     note: '' },
+    { id: uid(), name: 'Nước',                 groupId: g.sx.id,  method: 'qty',     qty: 500,  price: 15000,  unit: 'm³',     rate: 0, output: 0,    cpu: 0,     note: '' },
+    { id: uid(), name: 'Vận chuyển',           groupId: g.vc.id,  method: 'qty',     qty: 100,  price: 500000, unit: 'Chuyến', rate: 0, output: 0,    cpu: 0,     note: '' },
+    { id: uid(), name: 'Bao bì',               groupId: g.nvl.id, method: 'output',  qty: 0,    price: 0,      unit: 'Cái',    rate: 0, output: 1000, cpu: 10000, note: 'Chi phí / sản phẩm' },
+    { id: uid(), name: 'Nguyên vật liệu phụ',  groupId: g.nvl.id, method: 'qty',     qty: 1000, price: 25000,  unit: 'Bộ',     rate: 0, output: 0,    cpu: 0,     note: '' },
+    { id: uid(), name: 'Phí giao dịch',        groupId: g.kh.id,  method: 'qty',     qty: 1,    price: 5000000, unit: 'VND',   rate: 0, output: 0,    cpu: 0,     note: '' },
+    { id: uid(), name: 'Hoa hồng bán hàng',    groupId: g.mkt.id, method: 'revenue', qty: 0,    price: 0,      unit: '%',      rate: 3, output: 0,    cpu: 0,     note: '3% doanh thu' }
+  ];
+
+  return {
+    settings: { currency: 'VND', daysPerMonth: 30, period: 'month', theme: 'light', trendGrowth: 0 },
+    groups: Object.values(g),
+    fixed, variable,
+    volume: 1000,
+    varUnit: null,                 // null = tự động tính từ dữ liệu biến phí
+    levels: [500, 1000, 1500, 2000, 3000],
+    revenue: { price: 500000, volume: 1000 },
+    sim: { adjust: {}, volumePct: 0 },
+    scenarios: []
+  };
+}
+
+/* ---------------------- TẢI / LƯU ---------------------- */
+function loadState() {
+  const d = defaultState();
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return d;
+    const s = JSON.parse(raw);
+    return {
+      settings: Object.assign({}, d.settings, s.settings || {}),
+      groups: Array.isArray(s.groups) && s.groups.length ? s.groups : d.groups,
+      fixed: Array.isArray(s.fixed) ? s.fixed : d.fixed,
+      variable: Array.isArray(s.variable) ? s.variable : d.variable,
+      volume: typeof s.volume === 'number' ? s.volume : d.volume,
+      varUnit: (s.varUnit === null || s.varUnit === undefined) ? null : n2(s.varUnit),
+      levels: Array.isArray(s.levels) && s.levels.length ? s.levels : d.levels,
+      revenue: Object.assign({}, d.revenue, s.revenue || {}),
+      sim: { adjust: Object.assign({}, (s.sim || {}).adjust || {}), volumePct: n2((s.sim || {}).volumePct) },
+      scenarios: Array.isArray(s.scenarios) ? s.scenarios : []
+    };
+  } catch (e) {
+    console.warn('Không đọc được localStorage, dùng dữ liệu mặc định.', e);
+    return d;
+  }
+}
+function save() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  catch (e) { console.warn('Không lưu được dữ liệu', e); }
+}
+
+let state = loadState();
+let charts = {};
+let currentSection = 'dashboard';
+
+/* =====================================================================
+   TÍNH TOÁN
+   ===================================================================== */
+const pMonths = () => PERIODS[state.settings.period].months;
+const periodLabel = () => PERIODS[state.settings.period].label;
+const revMonthly = () => n2(state.revenue.price) * n2(state.revenue.volume);
+
+/** Chi phí 1 khoản định phí quy đổi về THÁNG */
+function fixedMonthly(c) {
+  const total = n2(c.qty) * n2(c.price);
+  const days = n2(state.settings.daysPerMonth) || 30;
+  switch (c.cycle) {
+    case 'day':      return total * days;
+    case 'week':     return total * 52 / 12;
+    case 'month':    return total;
+    case 'quarter':  return total / 3;
+    case 'halfyear': return total / 6;
+    case 'year':     return total / 12;
+    case 'once':     return c.onceMode === 'amortize' ? total / (n2(c.amortMonths) || 1) : 0;
+    default:         return total;
+  }
+}
+/** Khoản "một lần" ghi nhận toàn bộ trong kỳ (không phân bổ) */
+function fixedOnceFull(c) {
+  return (c.cycle === 'once' && c.onceMode === 'full') ? n2(c.qty) * n2(c.price) : 0;
+}
+/** Chi phí định phí trong KỲ phân tích */
+function fixedPeriod(c) { return fixedMonthly(c) * pMonths() + fixedOnceFull(c); }
+/** Chi phí định phí quy đổi năm */
+function fixedYearly(c) {
+  if (c.cycle === 'once' && c.onceMode === 'full') return n2(c.qty) * n2(c.price);
+  return fixedMonthly(c) * 12;
+}
+
+/** Chi phí biến phí trong THÁNG theo phương pháp đã chọn */
+function varMonthly(c) {
+  if (c.method === 'revenue') return revMonthly() * n2(c.rate) / 100;
+  if (c.method === 'output')  return n2(c.output) * n2(c.cpu);
+  return n2(c.qty) * n2(c.price);
+}
+function varPeriod(c) { return varMonthly(c) * pMonths(); }
+
+/** Tổng hợp toàn bộ chỉ số */
+function totals() {
+  const pf = pMonths();
+  const fixedM = state.fixed.reduce((s, c) => s + fixedMonthly(c), 0);
+  const onceF  = state.fixed.reduce((s, c) => s + fixedOnceFull(c), 0);
+  const varM   = state.variable.reduce((s, c) => s + varMonthly(c), 0);
+
+  const fixedP = fixedM * pf + onceF;
+  const varP   = varM * pf;
+  const totalP = fixedP + varP;
+
+  const volPeriod = n2(state.volume) * pf;
+  const unitCost  = volPeriod > 0 ? totalP / volPeriod : 0;
+
+  return {
+    fixedM, varM, onceF,
+    fixedP, varP, totalP, totalM: fixedM + varM,
+    unitCost, volPeriod,
+    pctFixed: totalP > 0 ? fixedP / totalP * 100 : 0,
+    pctVar:   totalP > 0 ? varP   / totalP * 100 : 0
+  };
+}
+
+/** Biến phí trên 1 sản phẩm đang sử dụng (auto hoặc người dùng nhập) */
+function varUnitUsed() {
+  if (state.varUnit !== null && state.varUnit !== '') return n2(state.varUnit);
+  const t = totals();
+  return n2(state.volume) > 0 ? t.varM / n2(state.volume) : 0;
+}
+
+/* =====================================================================
+   ĐIỀU HƯỚNG
+   ===================================================================== */
+function renderNav() {
+  document.getElementById('navBar').innerHTML = NAV.map(n => `
+    <button class="navbtn" data-nav="${n.id}" onclick="showSection('${n.id}')">
+      <i data-lucide="${n.icon}" class="w-4 h-4"></i><span>${n.label}</span>
+    </button>`).join('');
+  if (window.lucide) lucide.createIcons();
+  updateNavActive();
+}
+function updateNavActive() {
+  document.querySelectorAll('[data-nav]').forEach(b => {
+    b.classList.toggle('active', b.dataset.nav === currentSection);
+  });
+}
+function showSection(id) {
+  currentSection = id;
+  document.querySelectorAll('.sec').forEach(s => s.classList.toggle('hidden', s.id !== 'sec-' + id));
+  updateNavActive();
+  setTimeout(() => { Object.values(charts).forEach(c => c && c.resize()); }, 60);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =====================================================================
+   RENDER: ĐỊNH PHÍ
+   ===================================================================== */
+function groupSelect(kind, c) {
+  return `<select class="inp" onchange="upd('${kind}','${c.id}','groupId',this)">
+    ${state.groups.map(g => `<option value="${g.id}" ${g.id === c.groupId ? 'selected' : ''}>${esc(g.name)}</option>`).join('')}
+  </select>`;
+}
+function cycleOptions(selected) {
+  return Object.entries(CYCLES).map(([k, v]) =>
+    `<option value="${k}" ${selected === k ? 'selected' : ''}>${v}</option>`).join('');
+}
+function onceFields(c) {
+  return `<div class="mt-1 space-y-1">
+    <select class="inp" style="font-size:.7rem" onchange="setOnce('${c.id}','mode',this.value)">
+      <option value="amortize" ${c.onceMode === 'amortize' ? 'selected' : ''}>Phân bổ</option>
+      <option value="full" ${c.onceMode === 'full' ? 'selected' : ''}>Toàn bộ trong kỳ</option>
+    </select>
+    ${c.onceMode === 'amortize'
+      ? `<input type="number" min="1" class="inp" style="font-size:.7rem" value="${n2(c.amortMonths) || 12}"
+                oninput="setOnce('${c.id}','amortMonths',this.value)" title="Số tháng phân bổ">`
+      : ''}
+  </div>`;
+}
+
+function renderFixed() {
+  const body = document.getElementById('fixedBody');
+  if (!body) return;
+  body.innerHTML = state.fixed.map((c, i) => `
+    <tr>
+      <td class="text-center text-xs" style="color:var(--muted)">${i + 1}</td>
+      <td style="min-width:170px"><input class="inp" value="${esc(c.name)}" oninput="upd('fixed','${c.id}','name',this)"></td>
+      <td style="min-width:125px">${groupSelect('fixed', c)}</td>
+      <td><input type="number" min="0" class="inp" value="${c.qty}" oninput="upd('fixed','${c.id}','qty',this)"></td>
+      <td><input type="number" min="0" class="inp" value="${c.price}" oninput="upd('fixed','${c.id}','price',this)"></td>
+      <td><input class="inp" value="${esc(c.unit)}" oninput="upd('fixed','${c.id}','unit',this)"></td>
+      <td>
+        <select class="inp" onchange="setCycle('${c.id}',this.value)">${cycleOptions(c.cycle)}</select>
+        ${c.cycle === 'once' ? onceFields(c) : ''}
+      </td>
+      <td class="text-right whitespace-nowrap" data-cell="fx-total-${c.id}">${money(n2(c.qty) * n2(c.price))}</td>
+      <td class="text-right whitespace-nowrap" data-cell="fx-month-${c.id}">${money(fixedMonthly(c))}</td>
+      <td class="text-right whitespace-nowrap" data-cell="fx-year-${c.id}">${money(fixedYearly(c))}</td>
+      <td><input class="inp" value="${esc(c.note || '')}" placeholder="Ghi chú..." oninput="upd('fixed','${c.id}','note',this)"></td>
+      <td class="text-center whitespace-nowrap">
+        <button class="ibtn" onclick="duplicateItem('fixed','${c.id}')" title="Sao chép"><i data-lucide="copy" class="w-4 h-4"></i></button>
+        <button class="ibtn ibtn-danger" onclick="removeItem('fixed','${c.id}')" title="Xóa"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="12" class="text-center py-6" style="color:var(--muted)">Chưa có khoản định phí nào. Nhấn "Thêm định phí" để bắt đầu.</td></tr>`;
+  if (window.lucide) lucide.createIcons();
+}
+
+/* =====================================================================
+   RENDER: BIẾN PHÍ
+   ===================================================================== */
+function varFields(c) {
+  if (c.method === 'revenue') {
+    return `
+      <td>
+        <div class="inp" style="background:transparent;border-style:dashed" data-cell="vr-rev-${c.id}">${money(revMonthly())}</div>
+      </td>
+      <td><input type="number" min="0" step="0.1" class="inp" value="${c.rate}" oninput="upd('variable','${c.id}','rate',this)"></td>
+      <td><div class="inp" style="background:transparent;border-style:dashed">%</div></td>`;
+  }
+  if (c.method === 'output') {
+    return `
+      <td><input type="number" min="0" class="inp" value="${c.output}" oninput="upd('variable','${c.id}','output',this)"></td>
+      <td><input type="number" min="0" class="inp" value="${c.cpu}" oninput="upd('variable','${c.id}','cpu',this)"></td>
+      <td><input class="inp" value="${esc(c.unit)}" oninput="upd('variable','${c.id}','unit',this)"></td>`;
+  }
+  return `
+    <td><input type="number" min="0" class="inp" value="${c.qty}" oninput="upd('variable','${c.id}','qty',this)"></td>
+    <td><input type="number" min="0" class="inp" value="${c.price}" oninput="upd('variable','${c.id}','price',this)"></td>
+    <td><input class="inp" value="${esc(c.unit)}" oninput="upd('variable','${c.id}','unit',this)"></td>`;
+}
+
+function renderVariable() {
+  const body = document.getElementById('variableBody');
+  if (!body) return;
+  body.innerHTML = state.variable.map((c, i) => `
+    <tr>
+      <td class="text-center text-xs" style="color:var(--muted)">${i + 1}</td>
+      <td style="min-width:170px"><input class="inp" value="${esc(c.name)}" oninput="upd('variable','${c.id}','name',this)"></td>
+      <td style="min-width:125px">${groupSelect('variable', c)}</td>
+      <td style="min-width:150px">
+        <select class="inp" onchange="setMethod('${c.id}',this.value)">
+          ${Object.entries(METHODS).map(([k, v]) => `<option value="${k}" ${c.method === k ? 'selected' : ''}>${v}</option>`).join('')}
+        </select>
+      </td>
+      ${varFields(c)}
+      <td class="text-right whitespace-nowrap" data-cell="vr-total-${c.id}">${money(varMonthly(c))}</td>
+      <td class="text-right whitespace-nowrap" data-cell="vr-period-${c.id}">${money(varPeriod(c))}</td>
+      <td><input class="inp" value="${esc(c.note || '')}" placeholder="Ghi chú..." oninput="upd('variable','${c.id}','note',this)"></td>
+      <td class="text-center whitespace-nowrap">
+        <button class="ibtn" onclick="duplicateItem('variable','${c.id}')" title="Sao chép"><i data-lucide="copy" class="w-4 h-4"></i></button>
+        <button class="ibtn ibtn-danger" onclick="removeItem('variable','${c.id}')" title="Xóa"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </td>
+    </tr>`).join('') || `<tr><td colspan="11" class="text-center py-6" style="color:var(--muted)">Chưa có khoản biến phí nào. Nhấn "Thêm biến phí" để bắt đầu.</td></tr>`;
+  if (window.lucide) lucide.createIcons();
+}
+
+/* =====================================================================
+   CẬP NHẬT GIÁ TRỊ Ô TÍNH (không rebuild bảng -> giữ focus)
+   ===================================================================== */
+function updateFixedCells() {
+  state.fixed.forEach(c => {
+    setCell('fx-total-' + c.id, money(n2(c.qty) * n2(c.price)));
+    setCell('fx-month-' + c.id, money(fixedMonthly(c)));
+    setCell('fx-year-' + c.id,  money(fixedYearly(c)));
+  });
+  const sumCycle = state.fixed.reduce((s, c) => s + n2(c.qty) * n2(c.price), 0);
+  const sumMonth = state.fixed.reduce((s, c) => s + fixedMonthly(c), 0);
+  const sumYear  = state.fixed.reduce((s, c) => s + fixedYearly(c), 0);
+  const e1 = document.getElementById('fxSumCycle'); if (e1) e1.textContent = money(sumCycle);
+  const e2 = document.getElementById('fxSumMonth'); if (e2) e2.textContent = money(sumMonth);
+  const e3 = document.getElementById('fxSumYear');  if (e3) e3.textContent = money(sumYear);
+}
+
+function updateVarCells() {
+  const rev = revMonthly();
+  state.variable.forEach(c => {
+    setCell('vr-total-' + c.id,  money(varMonthly(c)));
+    setCell('vr-period-' + c.id, money(varPeriod(c)));
+    if (c.method === 'revenue') setCell('vr-rev-' + c.id, money(rev));
+  });
+  const sumMonth  = state.variable.reduce((s, c) => s + varMonthly(c), 0);
+  const sumPeriod = state.variable.reduce((s, c) => s + varPeriod(c), 0);
+  const e1 = document.getElementById('vrSumMonth');  if (e1) e1.textContent = money(sumMonth);
+  const e2 = document.getElementById('vrSumPeriod'); if (e2) e2.textContent = money(sumPeriod);
+}
+
+/* =====================================================================
+   RENDER: DASHBOARD
+   ===================================================================== */
+function kpiCard({ label, value, sub, icon, color }) {
+  const colorMap = {
+    indigo: 'background:rgba(99,102,241,.14);color:#6366f1',
+    amber:  'background:rgba(245,158,11,.14);color:#f59e0b',
+    emerald:'background:rgba(16,185,129,.14);color:#10b981',
+    sky:    'background:rgba(14,165,233,.14);color:#0ea5e9',
+    rose:   'background:rgba(244,63,94,.14);color:#f43f5e',
+    violet: 'background:rgba(139,92,246,.14);color:#8b5cf6'
+  };
+  return `<div class="card flex items-start gap-3">
+    <div class="w-10 h-10 rounded-lg grid place-items-center shrink-0" style="${colorMap[color] || colorMap.indigo}">
+      <i data-lucide="${icon}" class="w-5 h-5"></i>
+    </div>
+    <div class="min-w-0 flex-1">
+      <p class="kpi-label">${label}</p>
+      <p class="text-lg sm:text-xl font-bold truncate" title="${value}">${value}</p>
+      <p class="text-[11px]" style="color:var(--muted)">${sub}</p>
+    </div>
+  </div>`;
+}
+
+function renderDashboard() {
+  const t = totals();
+  const grid = document.getElementById('kpiGrid');
+  if (!grid) return;
+  grid.innerHTML = [
+    kpiCard({ label: 'Tổng định phí', value: money(t.fixedP), sub: `Kỳ ${periodLabel()} • ${pct(t.pctFixed)} tổng chi phí`, icon: 'building-2', color: 'indigo' }),
+    kpiCard({ label: 'Tổng biến phí', value: money(t.varP), sub: `Kỳ ${periodLabel()} • ${pct(t.pctVar)} tổng chi phí`, icon: 'activity', color: 'amber' }),
+    kpiCard({ label: 'Tổng chi phí vận hành', value: money(t.totalP), sub: `Định phí + Biến phí (${periodLabel()})`, icon: 'wallet', color: 'rose' }),
+    kpiCard({ label: 'Chi phí bình quân / sản phẩm', value: money(t.unitCost), sub: `Sản lượng ${fmt(n2(state.volume))} SP/tháng`, icon: 'package', color: 'emerald' }),
+    kpiCard({ label: 'Tỷ trọng định phí', value: pct(t.pctFixed), sub: money(t.fixedP) + ' / ' + money(t.totalP), icon: 'pie-chart', color: 'violet' }),
+    kpiCard({ label: 'Tỷ trọng biến phí', value: pct(t.pctVar), sub: money(t.varP) + ' / ' + money(t.totalP), icon: 'pie-chart', color: 'sky' })
+  ].join('');
+  if (window.lucide) lucide.createIcons();
+
+  const growth = document.getElementById('growthInput');
+  if (growth && document.activeElement !== growth) growth.value = state.settings.trendGrowth;
+}
+
+/* =====================================================================
+   RENDER: TỔNG HỢP CHI PHÍ
+   ===================================================================== */
+function renderSummary() {
+  const body = document.getElementById('summaryBody');
+  if (!body) return;
+
+  const rows = state.groups.map(g => {
+    const f = state.fixed.filter(c => c.groupId === g.id).reduce((s, c) => s + fixedPeriod(c), 0);
+    const v = state.variable.filter(c => c.groupId === g.id).reduce((s, c) => s + varPeriod(c), 0);
+    return { name: g.name, f, v, total: f + v };
+  });
+  const grand = rows.reduce((s, r) => s + r.total, 0);
+
+  body.innerHTML = rows.map(r => {
+    const share = grand > 0 ? r.total / grand * 100 : 0;
+    return `<tr>
+      <td class="font-medium">${esc(r.name)}</td>
+      <td class="text-right whitespace-nowrap">${money(r.f)}</td>
+      <td class="text-right whitespace-nowrap">${money(r.v)}</td>
+      <td class="text-right whitespace-nowrap font-semibold">${money(r.total)}</td>
+      <td class="text-right">${pct(share)}</td>
+      <td>
+        <div style="height:8px;border-radius:6px;background:var(--card-bd);overflow:hidden">
+          <div style="height:100%;width:${Math.min(100, share)}%;background:linear-gradient(90deg,#6366f1,#8b5cf6)"></div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="6" class="text-center py-6" style="color:var(--muted)">Chưa có dữ liệu</td></tr>`;
+
+  const ff = document.getElementById('sumFootFixed'); if (ff) ff.textContent = money(rows.reduce((s, r) => s + r.f, 0));
+  const fv = document.getElementById('sumFootVar');   if (fv) fv.textContent = money(rows.reduce((s, r) => s + r.v, 0));
+  const ft = document.getElementById('sumFootTotal'); if (ft) ft.textContent = money(grand);
+
+  /* Thẻ số liệu tổng hợp */
+  const t = totals();
+  const cards = document.getElementById('summaryCards');
+  if (cards) {
+    cards.innerHTML = [
+      kpiCard({ label: 'Tổng theo tháng', value: money(t.totalM), sub: 'Định phí + biến phí / tháng', icon: 'calendar', color: 'indigo' }),
+      kpiCard({ label: 'Tổng theo quý', value: money(t.totalM * 3 + t.onceF), sub: 'Quy đổi 3 tháng', icon: 'calendar-days', color: 'sky' }),
+      kpiCard({ label: 'Tổng theo năm', value: money(t.fixedM * 12 + t.varM * 12 + t.onceF), sub: 'Quy đổi 12 tháng', icon: 'calendar-range', color: 'emerald' }),
+      kpiCard({ label: 'Chi phí bình quân / SP', value: money(t.unitCost), sub: `Sản lượng ${fmt(n2(state.volume))} SP/tháng`, icon: 'package', color: 'rose' })
+    ].join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  /* Insight: khoản chi phí lớn nhất & nhóm chiếm tỷ trọng cao nhất */
+  const allItems = [
+    ...state.fixed.map(c => ({ name: c.name, val: fixedPeriod(c), kind: 'Định phí' })),
+    ...state.variable.map(c => ({ name: c.name, val: varPeriod(c), kind: 'Biến phí' }))
+  ].sort((a, b) => b.val - a.val);
+  const topItem  = allItems[0];
+  const topGroup = rows.slice().sort((a, b) => b.total - a.total)[0];
+
+  const insights = document.getElementById('summaryInsights');
+  if (insights) {
+    insights.innerHTML = `
+      <div class="card" style="background:var(--hover)">
+        <p class="kpi-label">Khoản chi phí lớn nhất</p>
+        <p class="font-bold truncate" title="${esc(topItem ? topItem.name : '—')}">${esc(topItem ? topItem.name : '—')}</p>
+        <p class="text-sm">${topItem ? money(topItem.val) : '—'} <span class="text-[11px]" style="color:var(--muted)">(${topItem ? topItem.kind : ''})</span></p>
+      </div>
+      <div class="card" style="background:var(--hover)">
+        <p class="kpi-label">Nhóm chiếm tỷ trọng cao nhất</p>
+        <p class="font-bold truncate">${esc(topGroup ? topGroup.name : '—')}</p>
+        <p class="text-sm">${topGroup ? money(topGroup.total) : '—'}
+          <span class="text-[11px]" style="color:var(--muted)">(${grand > 0 && topGroup ? pct(topGroup.total / grand * 100) : '0%'})</span></p>
+      </div>
+      <div class="card" style="background:var(--hover)">
+        <p class="kpi-label">So sánh định phí / biến phí</p>
+        <p class="font-bold">${pct(t.pctFixed)} / ${pct(t.pctVar)}</p>
+        <p class="text-sm">${money(t.fixedP)} <span style="color:var(--muted)">vs</span> ${money(t.varP)}</p>
+      </div>`;
+  }
+}
+
+/* =====================================================================
+   RENDER: CHI PHÍ THEO SẢN LƯỢNG
+   ===================================================================== */
+function renderVolume() {
+  const t = totals();
+  const F = t.fixedM;
+  const autoVU = n2(state.volume) > 0 ? t.varM / n2(state.volume) : 0;
+  const vu = varUnitUsed();
+
+  const volEl = document.getElementById('volInput');
+  if (volEl && document.activeElement !== volEl) volEl.value = state.volume;
+
+  const vuEl = document.getElementById('varUnitInput');
+  if (vuEl && document.activeElement !== vuEl) vuEl.value = Math.round(vu);
+
+  const fxEl = document.getElementById('volFixedDisplay');
+  if (fxEl) fxEl.textContent = money(F) + ' / tháng';
+
+  /* KPI nhanh */
+  const kpis = document.getElementById('volumeKpis');
+  if (kpis) {
+    const vol = n2(state.volume);
+    const varTotal = vu * vol;
+    const total = F + varTotal;
+    kpis.innerHTML = [
+      kpiCard({ label: 'Sản lượng', value: fmt(vol) + ' SP', sub: 'mỗi tháng', icon: 'boxes', color: 'indigo' }),
+      kpiCard({ label: 'Tổng biến phí', value: money(varTotal), sub: `${money(vu)} / SP`, icon: 'activity', color: 'amber' }),
+      kpiCard({ label: 'Tổng chi phí', value: money(total), sub: 'Định phí + biến phí', icon: 'wallet', color: 'rose' }),
+      kpiCard({ label: 'Chi phí / sản phẩm', value: money(vol > 0 ? total / vol : 0), sub: 'Bình quân', icon: 'package', color: 'emerald' })
+    ].join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  /* Bảng mô phỏng */
+  const body = document.getElementById('volumeBody');
+  if (!body) return;
+  body.innerHTML = state.levels.map((L, i) => {
+    const lv = n2(L);
+    const v = vu * lv;
+    const tot = F + v;
+    return `<tr>
+      <td><input type="number" min="0" class="inp" value="${lv}" onchange="setLevel(${i},this.value)"></td>
+      <td class="text-right whitespace-nowrap">${money(F)}</td>
+      <td class="text-right whitespace-nowrap">${money(v)}</td>
+      <td class="text-right whitespace-nowrap font-semibold">${money(tot)}</td>
+      <td class="text-right whitespace-nowrap">${money(lv > 0 ? tot / lv : 0)}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="5" class="text-center py-6" style="color:var(--muted)">Chưa có mức sản lượng</td></tr>`;
+}
+
+/* =====================================================================
+   RENDER: MÔ PHỎNG (WHAT-IF)
+   ===================================================================== */
+function simItems() {
+  return [
+    ...state.fixed.map(c => ({ id: c.id, name: c.name, kind: 'Định phí', base: fixedPeriod(c) })),
+    ...state.variable.map(c => ({ id: c.id, name: c.name, kind: 'Biến phí', base: varPeriod(c) }))
+  ];
+}
+
+function renderSimulation() {
+  const body = document.getElementById('simBody');
+  if (!body) return;
+
+  body.innerHTML = simItems().map(it => {
+    const p = n2(state.sim.adjust[it.id] || 0);
+    const after = it.base * (1 + p / 100);
+    const diff = after - it.base;
+    return `<tr>
+      <td class="min-w-[180px]">${esc(it.name)}</td>
+      <td><span class="text-[11px] px-2 py-0.5 rounded-full"
+            style="background:${it.kind === 'Định phí' ? 'rgba(99,102,241,.14);color:#6366f1' : 'rgba(245,158,11,.14);color:#b45309'}">${it.kind}</span></td>
+      <td class="text-right whitespace-nowrap">${money(it.base)}</td>
+      <td><input type="number" step="1" class="inp" value="${p}" oninput="setSimAdjust('${it.id}',this)"></td>
+      <td class="text-right whitespace-nowrap" data-cell="sim-after-${it.id}">${money(after)}</td>
+      <td class="text-right whitespace-nowrap" data-cell="sim-diff-${it.id}"
+          style="color:${diff > 0 ? '#ef4444' : diff < 0 ? '#10b981' : 'var(--muted)'}">
+        ${diff >= 0 ? '+' : ''}${money(diff)}
+      </td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="6" class="text-center py-6" style="color:var(--muted)">Chưa có khoản chi phí nào</td></tr>`;
+
+  const simVolEl = document.getElementById('simVolumePct');
+  if (simVolEl && document.activeElement !== simVolEl) simVolEl.value = state.sim.volumePct || 0;
+
+  updateSimNumbers();
+  renderScenarios();
+}
+
+function updateSimNumbers() {
+  const items = simItems();
+  let baseTotal = 0, simTotal = 0;
+
+  items.forEach(it => {
+    const p = n2(state.sim.adjust[it.id] || 0);
+    const after = it.base * (1 + p / 100);
+    baseTotal += it.base;
+    simTotal += after;
+    setCell('sim-after-' + it.id, money(after));
+    const diff = after - it.base;
+    const el = document.querySelector(`[data-cell="sim-diff-${it.id}"]`);
+    if (el) {
+      el.textContent = (diff >= 0 ? '+' : '') + money(diff);
+      el.style.color = diff > 0 ? '#ef4444' : diff < 0 ? '#10b981' : 'var(--muted)';
+    }
+  });
+
+  const diffTotal = simTotal - baseTotal;
+  const pctChange = baseTotal > 0 ? diffTotal / baseTotal * 100 : 0;
+
+  const pf = pMonths();
+  const volBase = n2(state.volume) * pf;
+  const volSim  = volBase * (1 + n2(state.sim.volumePct) / 100);
+  const unitBase = volBase > 0 ? baseTotal / volBase : 0;
+  const unitSim  = volSim  > 0 ? simTotal / volSim  : 0;
+
+  const box = document.getElementById('simTotals');
+  if (box) {
+    box.innerHTML = `
+      <table class="dt">
+        <tbody>
+          <tr><td>Chi phí hiện tại</td><td class="text-right font-semibold">${money(baseTotal)}</td></tr>
+          <tr><td>Chi phí sau thay đổi</td><td class="text-right font-semibold" style="color:#6366f1">${money(simTotal)}</td></tr>
+          <tr><td>Chênh lệch tuyệt đối</td>
+              <td class="text-right font-semibold" style="color:${diffTotal > 0 ? '#ef4444' : diffTotal < 0 ? '#10b981' : 'var(--muted)'}">
+                ${diffTotal >= 0 ? '+' : ''}${money(diffTotal)}</td></tr>
+          <tr><td>Tỷ lệ tăng / giảm</td>
+              <td class="text-right font-semibold" style="color:${pctChange > 0 ? '#ef4444' : pctChange < 0 ? '#10b981' : 'var(--muted)'}">
+                ${pctChange >= 0 ? '+' : ''}${pct(pctChange)}</td></tr>
+          <tr><td>Chi phí bình quân hiện tại</td><td class="text-right">${money(unitBase)} / SP</td></tr>
+          <tr><td>Chi phí bình quân sau thay đổi</td><td class="text-right">${money(unitSim)} / SP</td></tr>
+        </tbody>
+      </table>
+      <p class="text-[11px] mt-2" style="color:var(--muted)">* Kết quả mô phỏng không ghi đè dữ liệu gốc.</p>`;
+  }
+
+  /* Cập nhật biểu đồ kịch bản */
+  updateScenarioChart(baseTotal);
+}
+
+function renderScenarios() {
+  const list = document.getElementById('scenarioList');
+  if (!list) return;
+  if (!state.scenarios.length) {
+    list.innerHTML = `<p class="text-[11px]" style="color:var(--muted)">Chưa có kịch bản nào được lưu.</p>`;
+    return;
+  }
+  list.innerHTML = state.scenarios.map(s => `
+    <div class="flex items-center gap-2 text-xs px-2 py-1 rounded-lg" style="background:var(--hover)">
+      <span class="font-semibold flex-1 truncate">${esc(s.name)}</span>
+      <span style="color:var(--muted)">Sản lượng ${s.volumePct >= 0 ? '+' : ''}${fmt(n2(s.volumePct))}%</span>
+      <button class="ibtn" onclick="loadScenario('${s.id}')" title="Áp dụng"><i data-lucide="upload" class="w-3.5 h-3.5"></i></button>
+      <button class="ibtn ibtn-danger" onclick="deleteScenario('${s.id}')" title="Xóa"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+    </div>`).join('');
+  if (window.lucide) lucide.createIcons();
+}
+
+function scenarioTotal(s) {
+  return simItems().reduce((sum, it) => sum + it.base * (1 + n2((s.adjust || {})[it.id] || 0) / 100), 0);
+}
+
+/* =====================================================================
+   RENDER: ĐIỂM HÒA VỐN
+   ===================================================================== */
+function renderBreakeven() {
+  const t = totals();
+  const price = n2(state.revenue.price);
+  const vol   = n2(state.revenue.volume);
+  const vu    = varUnitUsed();
+  const F     = t.fixedP;
+
+  const bePrice = document.getElementById('bePrice');
+  if (bePrice && document.activeElement !== bePrice) bePrice.value = price;
+
+  const beVol = document.getElementById('beVolume');
+  if (beVol && document.activeElement !== beVol) beVol.value = vol;
+
+  const beVu = document.getElementById('beVarUnit');
+  if (beVu && document.activeElement !== beVu) beVu.value = Math.round(vu);
+
+  const beFx = document.getElementById('beFixedDisplay');
+  if (beFx) beFx.textContent = money(F) + ' / kỳ ' + periodLabel();
+
+  const revenue = price * vol;
+  const cm = price - vu;                    // Lãi góp đơn vị
+  const cmRatio = price > 0 ? cm / price * 100 : 0;
+  const varTotal = vu * vol;
+  const profit = revenue - F - varTotal;
+
+  const bepQty = cm > 0 ? F / cm : Infinity;
+  const bepRevenue = cm > 0 ? bepQty * price : Infinity;
+
+  const box = document.getElementById('beResults');
+  if (box) {
+    box.innerHTML = [
+      kpiCard({ label: 'Doanh thu', value: money(revenue), sub: `${fmt(price)} × ${fmt(vol)} SP`, icon: 'trending-up', color: 'emerald' }),
+      kpiCard({ label: 'Lãi góp đơn vị', value: money(cm), sub: `Tỷ lệ ${pct(cmRatio)}`, icon: 'percent', color: 'indigo' }),
+      kpiCard({ label: 'Sản lượng hòa vốn', value: cm > 0 ? fmt(Math.ceil(bepQty)) + ' SP' : 'Không xác định', sub: 'Định phí / lãi góp đơn vị', icon: 'target', color: 'amber' }),
+      kpiCard({ label: 'Doanh thu hòa vốn', value: cm > 0 ? money(bepRevenue) : 'Không xác định', sub: 'Sản lượng hòa vốn × giá bán', icon: 'badge-dollar-sign', color: 'sky' }),
+      kpiCard({ label: 'Tổng biến phí', value: money(varTotal), sub: `${money(vu)} × ${fmt(vol)} SP`, icon: 'activity', color: 'violet' }),
+      kpiCard({ label: 'Lợi nhuận hoạt động', value: money(profit), sub: 'Doanh thu − định phí − biến phí', icon: 'piggy-bank', color: profit >= 0 ? 'emerald' : 'rose' })
+    ].join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  const warn = document.getElementById('beWarning');
+  if (warn) {
+    if (cm <= 0) {
+      warn.innerHTML = `<div class="card" style="border-color:#ef4444;background:rgba(239,68,68,.08)">
+        <p class="text-sm font-semibold" style="color:#ef4444">
+          <i data-lucide="alert-triangle" class="w-4 h-4 inline"></i>
+          Lãi góp đơn vị ≤ 0 — Không tồn tại điểm hòa vốn hữu hạn theo mô hình hiện tại.
+        </p>
+        <p class="text-xs mt-1" style="color:var(--muted)">Giá bán phải lớn hơn biến phí trên một sản phẩm để doanh nghiệp có thể hòa vốn.</p>
+      </div>`;
+    } else if (profit < 0) {
+      warn.innerHTML = `<div class="card" style="border-color:#f59e0b;background:rgba(245,158,11,.08)">
+        <p class="text-sm font-semibold" style="color:#b45309">
+          <i data-lucide="info" class="w-4 h-4 inline"></i>
+          Doanh nghiệp đang lỗ ${money(Math.abs(profit))} trong kỳ. Cần đạt ${fmt(Math.ceil(bepQty))} SP để hòa vốn.
+        </p>
+      </div>`;
+    } else {
+      warn.innerHTML = `<div class="card" style="border-color:#10b981;background:rgba(16,185,129,.08)">
+        <p class="text-sm font-semibold" style="color:#059669">
+          <i data-lucide="check-circle-2" class="w-4 h-4 inline"></i>
+          Doanh nghiệp có lãi ${money(profit)} trong kỳ. Vượt điểm hòa vốn ${fmt(Math.max(0, vol - Math.ceil(bepQty)))} SP.
+        </p>
+      </div>`;
+    }
+    if (window.lucide) lucide.createIcons();
+  }
+}
+
+/* =====================================================================
+   RENDER: CÀI ĐẶT
+   ===================================================================== */
+function renderSettings() {
+  const cur = document.getElementById('currencySelect');
+  if (cur) cur.innerHTML = Object.entries(CURRENCIES).map(([k, v]) =>
+    `<option value="${k}" ${state.settings.currency === k ? 'selected' : ''}>${v.label}</option>`).join('');
+
+  const per = document.getElementById('periodSetting');
+  if (per) per.innerHTML = Object.entries(PERIODS).map(([k, v]) =>
+    `<option value="${k}" ${state.settings.period === k ? 'selected' : ''}>${v.label}</option>`).join('');
+
+  const days = document.getElementById('daysInput');
+  if (days && document.activeElement !== days) days.value = state.settings.daysPerMonth;
+
+  const gr = document.getElementById('growthSetting');
+  if (gr && document.activeElement !== gr) gr.value = state.settings.trendGrowth;
+
+  const gList = document.getElementById('groupList');
+  if (gList) {
+    gList.innerHTML = state.groups.map(g => {
+      const count = state.fixed.filter(c => c.groupId === g.id).length + state.variable.filter(c => c.groupId === g.id).length;
+      return `<div class="flex items-center gap-2">
+        <input class="inp" value="${esc(g.name)}" onchange="renameGroup('${g.id}',this.value)">
+        <span class="text-[11px] whitespace-nowrap" style="color:var(--muted)">${count} khoản</span>
+        <button class="ibtn ibtn-danger" onclick="deleteGroup('${g.id}')" title="Xóa nhóm"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div>`;
+    }).join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  const headSel = document.getElementById('periodSelect');
+  if (headSel) headSel.innerHTML = Object.entries(PERIODS).map(([k, v]) =>
+    `<option value="${k}" ${state.settings.period === k ? 'selected' : ''}>Kỳ: ${v.label}</option>`).join('');
+
+  const dl = document.getElementById('daysLabel');
+  if (dl) dl.textContent = state.settings.daysPerMonth;
+}
+
+/* =====================================================================
+   BIỂU ĐỒ
+   ===================================================================== */
+function chartTheme() {
+  const dark = state.settings.theme === 'dark';
+  if (window.Chart) {
+    Chart.defaults.color = dark ? '#cbd5e1' : '#475569';
+    Chart.defaults.borderColor = dark ? 'rgba(148,163,184,.15)' : 'rgba(100,116,139,.15)';
+    Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+  }
+}
+
+function initCharts() {
+  if (typeof Chart === 'undefined') return;
+  chartTheme();
+  const t = totals();
+
+  /* 1. Pie: cơ cấu định phí / biến phí */
+  const pieEl = document.getElementById('chartPie');
+  if (pieEl && !charts.pie) {
+    charts.pie = new Chart(pieEl, {
+      type: 'doughnut',
+      data: {
+        labels: ['Định phí', 'Biến phí'],
+        datasets: [{ data: [t.fixedP, t.varP], backgroundColor: ['#6366f1', '#f59e0b'], borderWidth: 0, hoverOffset: 6 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, cutout: '62%',
+        plugins: {
+          legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 16 } },
+          tooltip: { callbacks: { label: c => ` ${c.label}: ${money(c.parsed)}` } }
+        }
+      }
+    });
+  }
+
+  /* 2. Bar: chi phí theo nhóm */
+  const grpEl = document.getElementById('chartGroup');
+  if (grpEl && !charts.group) {
+    charts.group = new Chart(grpEl, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Định phí', data: [], backgroundColor: '#6366f1', borderRadius: 4, stack: 's' },
+          { label: 'Biến phí', data: [], backgroundColor: '#f59e0b', borderRadius: 4, stack: 's' }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: {
+          x: { stacked: true, grid: { display: false }, ticks: { autoSkip: false, maxRotation: 45, minRotation: 0 } },
+          y: { stacked: true, beginAtZero: true, ticks: { callback: v => fmt(v) } }
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
+          tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${money(c.parsed.y)}` } }
+        }
+      }
+    });
+  }
+
+  /* 3. Line: xu hướng 12 tháng */
+  const trEl = document.getElementById('chartTrend');
+  if (trEl && !charts.trend) {
+    charts.trend = new Chart(trEl, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Định phí', data: [], borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.12)', fill: true, tension: .35, pointRadius: 3 },
+          { label: 'Biến phí', data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.12)', fill: true, tension: .35, pointRadius: 3 },
+          { label: 'Tổng chi phí', data: [], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.08)', fill: false, tension: .35, pointRadius: 3, borderWidth: 2.5 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+        scales: { y: { beginAtZero: true, ticks: { callback: v => fmt(v) } }, x: { grid: { display: false } } },
+        plugins: {
+          legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } },
+          tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${money(c.parsed.y)}` } }
+        }
+      }
+    });
+  }
+
+  /* 4. Bar: so sánh kịch bản */
+  const scEl = document.getElementById('chartScenario');
+  if (scEl && !charts.scenario) {
+    charts.scenario = new Chart(scEl, {
+      type: 'bar',
+      data: {
+        labels: ['Hiện tại'],
+        datasets: [{ label: 'Tổng chi phí', data: [t.totalP], backgroundColor: ['#6366f1'], borderRadius: 6 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, ticks: { callback: v => fmt(v) } }, x: { grid: { display: false } } },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: c => ` ${money(c.parsed.y)}` } }
+        }
+      }
+    });
+  }
+}
+
+function updateCharts() {
+  if (typeof Chart === 'undefined') return;
+  const t = totals();
+
+  /* Pie */
+  if (charts.pie) {
+    charts.pie.data.datasets[0].data = [t.fixedP, t.varP];
+    charts.pie.update();
+  }
+
+  /* Group bar */
+  if (charts.group) {
+    charts.group.data.labels = state.groups.map(g => g.name);
+    charts.group.data.datasets[0].data = state.groups.map(g =>
+      state.fixed.filter(c => c.groupId === g.id).reduce((s, c) => s + fixedPeriod(c), 0));
+    charts.group.data.datasets[1].data = state.groups.map(g =>
+      state.variable.filter(c => c.groupId === g.id).reduce((s, c) => s + varPeriod(c), 0));
+    charts.group.update();
+  }
+
+  /* Trend line */
+  if (charts.trend) {
+    const g = n2(state.settings.trendGrowth) / 100;
+    const labels = [], dFixed = [], dVar = [], dTotal = [];
+    const now = new Date();
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      labels.push('T' + (d.getMonth() + 1) + '/' + String(d.getFullYear()).slice(2));
+      const f = t.fixedM;
+      const v = t.varM * Math.pow(1 + g, i);
+      dFixed.push(f); dVar.push(v); dTotal.push(f + v);
+    }
+    charts.trend.data.labels = labels;
+    charts.trend.data.datasets[0].data = dFixed;
+    charts.trend.data.datasets[1].data = dVar;
+    charts.trend.data.datasets[2].data = dTotal;
+    charts.trend.update();
+  }
+
+  /* Scenario chart */
+  updateScenarioChart(t.totalP);
+}
+
+function updateScenarioChart(baseTotal) {
+  if (!charts.scenario) return;
+  const labels = ['Hiện tại', ...state.scenarios.map(s => s.name)];
+  const data = [baseTotal, ...state.scenarios.map(s => scenarioTotal(s))];
+  const colors = ['#6366f1', ...state.scenarios.map((_, i) =>
+    ['#f59e0b', '#10b981', '#ef4444', '#0ea5e9', '#8b5cf6'][i % 5])];
+  charts.scenario.data.labels = labels;
+  charts.scenario.data.datasets[0].data = data;
+  charts.scenario.data.datasets[0].backgroundColor = colors;
+  charts.scenario.update();
+}
+
+/* =====================================================================
+   HÀNH ĐỘNG: CẬP NHẬT DỮ LIỆU
+   ===================================================================== */
+function upd(kind, id, field, el) {
+  const arr = kind === 'fixed' ? state.fixed : state.variable;
+  const c = arr.find(x => x.id === id);
+  if (!c) return;
+
+  if (NUM_FIELDS.has(field)) {
+    if (el.value === '') { c[field] = 0; }
+    else {
+      let v = n2(el.value);
+      if (v < 0) { v = 0; el.value = 0; }   // chặn giá trị âm
+      c[field] = v;
+    }
+  } else {
+    c[field] = el.value;
+  }
+  save();
+  recalcLive();
+}
+
+function setCycle(id, val) {
+  const c = state.fixed.find(x => x.id === id);
+  if (!c) return;
+  c.cycle = val;
+  save();
+  renderFixed();
+  recalcLive();
+}
+
+function setOnce(id, field, value) {
+  const c = state.fixed.find(x => x.id === id);
+  if (!c) return;
+  if (field === 'amortMonths') {
+    c.amortMonths = Math.max(1, n2(value) || 1);
+  } else {
+    c.onceMode = value;
+    renderFixed();
+  }
+  save();
+  recalcLive();
+}
+
+function setMethod(id, val) {
+  const c = state.variable.find(x => x.id === id);
+  if (!c) return;
+  c.method = val;
+  if (val === 'revenue' && !n2(c.rate)) c.rate = 3;
+  if (val === 'output' && !n2(c.cpu)) c.cpu = 0;
+  save();
+  renderVariable();
+  recalcLive();
+}
+
+function addFixed() {
+  state.fixed.push({
+    id: uid(), name: 'Khoản định phí mới', groupId: state.groups[0]?.id || 'g_kh',
+    qty: 1, price: 0, unit: 'VND', cycle: 'month',
+    onceMode: 'amortize', amortMonths: 12, note: ''
+  });
+  save(); renderFixed(); recalcLive();
+}
+
+function addVariable() {
+  state.variable.push({
+    id: uid(), name: 'Khoản biến phí mới', groupId: state.groups[0]?.id || 'g_kh',
+    method: 'qty', qty: 0, price: 0, unit: 'Đơn vị',
+    rate: 0, output: 0, cpu: 0, note: ''
+  });
+  save(); renderVariable(); recalcLive();
+}
+
+function removeItem(kind, id) {
+  const arr = kind === 'fixed' ? state.fixed : state.variable;
+  const c = arr.find(x => x.id === id);
+  if (!c) return;
+  if (!confirm(`Xóa khoản "${c.name}"? Hành động này không thể hoàn tác.`)) return;
+  const idx = arr.findIndex(x => x.id === id);
+  arr.splice(idx, 1);
+  delete state.sim.adjust[id];
+  save();
+  if (kind === 'fixed') renderFixed(); else renderVariable();
+  recalcLive();
+}
+
+function duplicateItem(kind, id) {
+  const arr = kind === 'fixed' ? state.fixed : state.variable;
+  const c = arr.find(x => x.id === id);
+  if (!c) return;
+  const copy = JSON.parse(JSON.stringify(c));
+  copy.id = uid();
+  copy.name = c.name + ' (bản sao)';
+  arr.splice(arr.findIndex(x => x.id === id) + 1, 0, copy);
+  save();
+  if (kind === 'fixed') renderFixed(); else renderVariable();
+  recalcLive();
+}
+
+/* ---------- Nhóm chi phí ---------- */
+function addGroup() {
+  const name = prompt('Tên nhóm chi phí mới:', 'Nhóm chi phí mới');
+  if (!name || !name.trim()) return;
+  state.groups.push({ id: uid(), name: name.trim() });
+  save(); renderAll();
+}
+
+function renameGroup(id, name) {
+  const g = state.groups.find(x => x.id === id);
+  if (!g) return;
+  if (!name.trim()) { alert('Tên nhóm không được để trống.'); renderSettings(); return; }
+  g.name = name.trim();
+  save(); recalcLive(); renderSettings();
+}
+
+function deleteGroup(id) {
+  const g = state.groups.find(x => x.id === id);
+  if (!g) return;
+  if (state.groups.length <= 1) { alert('Phải còn ít nhất một nhóm chi phí.'); return; }
+  const used = state.fixed.filter(c => c.groupId === id).length + state.variable.filter(c => c.groupId === id).length;
+  const msg = used > 0
+    ? `Nhóm "${g.name}" đang chứa ${used} khoản chi phí. Các khoản này sẽ được chuyển sang nhóm khác. Tiếp tục?`
+    : `Xóa nhóm "${g.name}"?`;
+  if (!confirm(msg)) return;
+
+  state.groups = state.groups.filter(x => x.id !== id);
+  const fallback = state.groups[0].id;
+  state.fixed.forEach(c => { if (c.groupId === id) c.groupId = fallback; });
+  state.variable.forEach(c => { if (c.groupId === id) c.groupId = fallback; });
+  save(); renderAll();
+}
+
+/* ---------- Cài đặt ---------- */
+function setCurrency(v) { state.settings.currency = v; save(); renderAll(); }
+function setPeriod(v)   { state.settings.period = v; save(); renderAll(); }
+function setDays(v) {
+  const d = Math.min(31, Math.max(1, n2(v) || 30));
+  state.settings.daysPerMonth = d; save(); renderAll();
+}
+function setGrowth(v) { state.settings.trendGrowth = n2(v); save(); updateCharts(); renderDashboard(); }
+
+function toggleTheme() {
+  state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+  save(); applyTheme(); renderAll();
+}
+function applyTheme() {
+  const dark = state.settings.theme === 'dark';
+  document.documentElement.classList.toggle('dark', dark);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.setAttribute('data-lucide', dark ? 'sun' : 'moon');
+  chartTheme();
+  if (window.lucide) lucide.createIcons();
+  Object.values(charts).forEach(c => c && c.update());
+}
+
+/* ---------- Sản lượng & biến phí đơn vị ---------- */
+function setVolume(v) {
+  state.volume = Math.max(0, n2(v));
+  save(); recalcLive();
+}
+function setVarUnit(v) {
+  state.varUnit = Math.max(0, n2(v));
+  save(); recalcLive();
+}
+function resetVarUnit() {
+  state.varUnit = null;
+  save(); recalcLive();
+}
+function setLevel(i, v) {
+  state.levels[i] = Math.max(0, n2(v));
+  save(); renderVolume(); updateCharts();
+}
+function setRevenue(field, v) {
+  state.revenue[field] = Math.max(0, n2(v));
+  save(); recalcLive();
+}
+
+/* ---------- Mô phỏng ---------- */
+function setSimAdjust(id, el) {
+  state.sim.adjust[id] = n2(el.value);
+  save();
+  updateSimNumbers();
+}
+function setSimVolume(v) {
+  state.sim.volumePct = n2(v);
+  save();
+  updateSimNumbers();
+}
+function resetSim() {
+  state.sim = { adjust: {}, volumePct: 0 };
+  save(); renderSimulation(); updateCharts();
+}
+function saveScenario() {
+  const name = prompt('Tên kịch bản:', 'Kịch bản ' + (state.scenarios.length + 1));
+  if (!name || !name.trim()) return;
+  state.scenarios.push({
+    id: uid(),
+    name: name.trim(),
+    adjust: JSON.parse(JSON.stringify(state.sim.adjust)),
+    volumePct: n2(state.sim.volumePct)
+  });
+  save(); renderScenarios(); updateCharts();
+}
+function loadScenario(id) {
+  const s = state.scenarios.find(x => x.id === id);
+  if (!s) return;
+  state.sim.adjust = JSON.parse(JSON.stringify(s.adjust || {}));
+  state.sim.volumePct = n2(s.volumePct);
+  save(); renderSimulation(); updateCharts();
+}
+function deleteScenario(id) {
+  if (!confirm('Xóa kịch bản này?')) return;
+  state.scenarios = state.scenarios.filter(x => x.id !== id);
+  save(); renderScenarios(); updateCharts();
+}
+
+/* =====================================================================
+   XUẤT / NHẬP DỮ LIỆU
+   ===================================================================== */
+function reportAOA() {
+  const t = totals();
+  const rows = [];
+
+  rows.push(['BÁO CÁO CHI PHÍ VẬN HÀNH DOANH NGHIỆP']);
+  rows.push(['Ngày xuất:', new Date().toLocaleString('vi-VN')]);
+  rows.push(['Kỳ phân tích:', periodLabel()]);
+  rows.push(['Đơn vị tiền tệ:', state.settings.currency]);
+  rows.push([]);
+
+  rows.push(['TỔNG QUAN']);
+  rows.push(['Chỉ tiêu', 'Giá trị']);
+  rows.push(['Tổng định phí (kỳ)', t.fixedP]);
+  rows.push(['Tổng biến phí (kỳ)', t.varP]);
+  rows.push(['Tổng chi phí vận hành (kỳ)', t.totalP]);
+  rows.push(['Chi phí bình quân / sản phẩm', t.unitCost]);
+  rows.push(['Tỷ trọng định phí (%)', t.pctFixed]);
+  rows.push(['Tỷ trọng biến phí (%)', t.pctVar]);
+  rows.push([]);
+
+  rows.push(['ĐỊNH PHÍ']);
+  rows.push(['STT', 'Khoản mục', 'Nhóm', 'Số lượng', 'Đơn giá', 'Đơn vị', 'Chu kỳ', 'Tổng/chu kỳ', 'Quy đổi/tháng', 'Quy đổi/năm', 'Ghi chú']);
+  state.fixed.forEach((c, i) => {
+    const g = state.groups.find(x => x.id === c.groupId);
+    rows.push([i + 1, c.name, g ? g.name : '', n2(c.qty), n2(c.price), c.unit,
+      CYCLES[c.cycle] || c.cycle, n2(c.qty) * n2(c.price), fixedMonthly(c), fixedYearly(c), c.note || '']);
+  });
+  rows.push([]);
+
+  rows.push(['BIẾN PHÍ']);
+  rows.push(['STT', 'Khoản mục', 'Nhóm', 'Phương pháp', 'Số lượng', 'Đơn giá/Tỷ lệ', 'Đơn vị', 'Tổng/tháng', 'Tổng/kỳ', 'Ghi chú']);
+  state.variable.forEach((c, i) => {
+    const g = state.groups.find(x => x.id === c.groupId);
+    let qty, price;
+    if (c.method === 'revenue') { qty = revMonthly(); price = n2(c.rate) + '%'; }
+    else if (c.method === 'output') { qty = n2(c.output); price = n2(c.cpu); }
+    else { qty = n2(c.qty); price = n2(c.price); }
+    rows.push([i + 1, c.name, g ? g.name : '', METHODS[c.method] || c.method,
+      qty, price, c.unit, varMonthly(c), varPeriod(c), c.note || '']);
+  });
+  rows.push([]);
+
+  rows.push(['TỔNG HỢP THEO NHÓM']);
+  rows.push(['Nhóm chi phí', 'Định phí', 'Biến phí', 'Tổng chi phí', 'Tỷ trọng (%)']);
+  const grand = state.groups.reduce((s, g) => s +
+    state.fixed.filter(c => c.groupId === g.id).reduce((a, c) => a + fixedPeriod(c), 0) +
+    state.variable.filter(c => c.groupId === g.id).reduce((a, c) => a + varPeriod(c), 0), 0);
+  state.groups.forEach(g => {
+    const f = state.fixed.filter(c => c.groupId === g.id).reduce((s, c) => s + fixedPeriod(c), 0);
+    const v = state.variable.filter(c => c.groupId === g.id).reduce((s, c) => s + varPeriod(c), 0);
+    rows.push([g.name, f, v, f + v, grand > 0 ? (f + v) / grand * 100 : 0]);
+  });
+  rows.push(['TỔNG CỘNG', t.fixedP, t.varP, t.totalP, 100]);
+
+  return rows;
+}
+
+function exportCSV() {
+  const aoa = reportAOA();
+  const csv = aoa.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  download('bao-cao-chi-phi-van-hanh.csv', '\uFEFF' + csv, 'text/csv;charset=utf-8;');
+}
+
+function exportXLSX() {
+  if (typeof XLSX === 'undefined') {
+    alert('Thư viện Excel chưa tải được. Hệ thống sẽ xuất file CSV thay thế.');
+    exportCSV(); return;
+  }
+  const wb = XLSX.utils.book_new();
+
+  const wsSummary = XLSX.utils.aoa_to_sheet(reportAOA());
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'Tong hop');
+
+  const wsFixed = XLSX.utils.aoa_to_sheet([
+    ['STT', 'Khoản mục', 'Nhóm', 'Số lượng', 'Đơn giá', 'Đơn vị', 'Chu kỳ', 'Tổng/chu kỳ', 'Quy đổi/tháng', 'Quy đổi/năm', 'Ghi chú'],
+    ...state.fixed.map((c, i) => {
+      const g = state.groups.find(x => x.id === c.groupId);
+      return [i + 1, c.name, g ? g.name : '', n2(c.qty), n2(c.price), c.unit,
+        CYCLES[c.cycle] || c.cycle, n2(c.qty) * n2(c.price), fixedMonthly(c), fixedYearly(c), c.note || ''];
+    })
+  ]);
+  XLSX.utils.book_append_sheet(wb, wsFixed, 'Dinh phi');
+
+  const wsVar = XLSX.utils.aoa_to_sheet([
+    ['STT', 'Khoản mục', 'Nhóm', 'Phương pháp', 'Số lượng', 'Đơn giá/Tỷ lệ', 'Đơn vị', 'Tổng/tháng', 'Tổng/kỳ', 'Ghi chú'],
+    ...state.variable.map((c, i) => {
+      const g = state.groups.find(x => x.id === c.groupId);
+      let qty, price;
+      if (c.method === 'revenue') { qty = revMonthly(); price = n2(c.rate) + '%'; }
+      else if (c.method === 'output') { qty = n2(c.output); price = n2(c.cpu); }
+      else { qty = n2(c.qty); price = n2(c.price); }
+      return [i + 1, c.name, g ? g.name : '', METHODS[c.method] || c.method, qty, price, c.unit,
+        varMonthly(c), varPeriod(c), c.note || ''];
+    })
+  ]);
+  XLSX.utils.book_append_sheet(wb, wsVar, 'Bien phi');
+
+  XLSX.writeFile(wb, 'bao-cao-chi-phi-van-hanh.xlsx');
+}
+
+function backupJSON() {
+  download('bocc-backup-' + new Date().toISOString().slice(0, 10) + '.json',
+    JSON.stringify(state, null, 2), 'application/json');
+}
+
+function importJSON(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || !Array.isArray(data.fixed) || !Array.isArray(data.variable)) {
+        throw new Error('Cấu trúc dữ liệu không hợp lệ');
+      }
+      if (!confirm('Nhập dữ liệu sẽ thay thế toàn bộ dữ liệu hiện tại. Tiếp tục?')) return;
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
+      state = loadState();
+      applyTheme();
+      renderAll();
+      alert('Nhập dữ liệu thành công!');
+    } catch (err) {
+      alert('Lỗi khi nhập dữ liệu: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  document.getElementById('jsonFile').value = '';
+}
+
+function restoreSample() {
+  if (!confirm('Khôi phục dữ liệu mẫu? Toàn bộ dữ liệu hiện tại sẽ bị thay thế.')) return;
+  state = defaultState();
+  save(); applyTheme(); renderAll();
+}
+
+function clearAll() {
+  if (!confirm('XÓA TOÀN BỘ dữ liệu? Hành động này không thể hoàn tác.')) return;
+  if (!confirm('Xác nhận lần cuối: tất cả định phí, biến phí, nhóm và kịch bản sẽ bị xóa.')) return;
+  localStorage.removeItem(LS_KEY);
+  state = {
+    settings: { currency: 'VND', daysPerMonth: 30, period: 'month', theme: 'light', trendGrowth: 0 },
+    groups: [{ id: 'g_kh', name: 'Khác' }],
+    fixed: [], variable: [],
+    volume: 0, varUnit: null, levels: [500, 1000, 1500, 2000, 3000],
+    revenue: { price: 0, volume: 0 },
+    sim: { adjust: {}, volumePct: 0 }, scenarios: []
+  };
+  save(); renderAll();
+}
+
+/* =====================================================================
+   RENDER TỔNG
+   ===================================================================== */
+function renderAll() {
+  renderNav();
+  renderFixed();
+  renderVariable();
+  renderDashboard();
+  renderSummary();
+  renderVolume();
+  renderSimulation();
+  renderBreakeven();
+  renderSettings();
+  initCharts();
+  updateCharts();
+  if (window.lucide) lucide.createIcons();
+}
+
+/** Cập nhật nhẹ: không rebuild bảng đang nhập liệu */
+function recalcLive() {
+  updateFixedCells();
+  updateVarCells();
+  renderDashboard();
+  renderSummary();
+  renderVolume();
+  renderSimulation();
+  renderBreakeven();
+  updateCharts();
+}
+
+/* =====================================================================
+   KHỞI TẠO
+   ===================================================================== */
+(function init() {
+  applyTheme();
+  renderAll();
+  showSection('dashboard');
+
+  // Lắng nghe phím tắt: Ctrl/Cmd + P in báo cáo đã được xử lý mặc định
+  window.addEventListener('resize', () => {
+    Object.values(charts).forEach(c => c && c.resize());
+  });
+})();
+</script>
+</body>
+</html>
