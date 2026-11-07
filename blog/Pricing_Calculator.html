@@ -1,755 +1,338 @@
 <!DOCTYPE html>
-<html lang="vi" class="light">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Trade Costing - Pricing Calculator</title>
-    <!-- Tailwind CSS -->
+    <title>International Pricing Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
-                        dark: { bg: '#0f172a', card: '#1e293b', border: '#334155' }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Chart.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Custom styles for print and scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
-        
-        @media print {
-            body { background: white; color: black; }
-            #sidebar, #header-actions, .no-print, button { display: none !important; }
-            main { margin: 0; padding: 0; overflow: visible; }
-            .card { box-shadow: none; border: 1px solid #ccc; margin-bottom: 20px; page-break-inside: avoid; }
-            .dark-card { background: white !important; color: black !important; border-color: #ccc !important;}
-        }
-        
-        .card { @apply bg-white dark:bg-dark-card rounded-xl shadow-sm border border-gray-100 dark:border-dark-border p-5; }
-        .input-field { @apply w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none text-sm; }
-        .label { @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1; }
-        .th-cell { @apply px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b dark:border-dark-border; }
-        .td-cell { @apply px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200 border-b dark:border-dark-border; }
-    </style>
 </head>
-<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 h-screen flex overflow-hidden font-sans transition-colors duration-200">
-
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-white dark:bg-dark-card border-r border-gray-200 dark:border-dark-border flex flex-col hidden md:flex z-20">
-        <div class="p-5 border-b border-gray-200 dark:border-dark-border flex items-center gap-3">
-            <div class="bg-primary-600 text-white p-2 rounded-lg"><i data-lucide="globe"></i></div>
-            <h1 class="font-bold text-lg leading-tight">INCOTERMS<br><span class="text-primary-600 dark:text-primary-400 text-sm">CALCULATOR</span></h1>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <a href="#mod-shipment" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-50 dark:bg-gray-800 text-primary-700 dark:text-primary-400 font-medium"><i data-lucide="package" class="w-5 h-5"></i> Shipment Info</a>
-            <a href="#mod-costs" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="calculator" class="w-5 h-5"></i> Cost Management</a>
-            <a href="#mod-incoterms" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="bar-chart-2" class="w-5 h-5"></i> Price Comparison</a>
-            <a href="#mod-margin" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="trending-up" class="w-5 h-5"></i> Profit & Margin</a>
-            <a href="#mod-landed" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="download" class="w-5 h-5"></i> Buyer Landed Cost</a>
-        </nav>
-        <div class="p-4 border-t border-gray-200 dark:border-dark-border">
-            <button onclick="app.loadTestCase()" class="w-full mb-3 flex items-center justify-center gap-2 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 px-4 py-2 rounded-lg hover:bg-emerald-200 transition-colors text-sm font-medium">
-                <i data-lucide="flask-conical" class="w-4 h-4"></i> Tải Test Case (Gạo)
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Navbar -->
+    <nav class="bg-blue-900 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold"><i class="fas fa-ship mr-2"></i>GLOBAL TRADE PRICING</h1>
+            <button onclick="loadTestCase()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-sm font-semibold transition">
+                <i class="fas fa-file-import mr-1"></i> Tải bài toán mẫu (HongKong Rice)
             </button>
         </div>
-    </aside>
+    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
-        <!-- Header -->
-        <header class="h-16 bg-white dark:bg-dark-card border-b border-gray-200 dark:border-dark-border flex items-center justify-between px-4 lg:px-8 z-10 shrink-0">
-            <div class="flex items-center gap-3">
-                <button class="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg"><i data-lucide="menu"></i></button>
-                <h2 class="font-semibold text-lg">Global Trade Costing</h2>
-            </div>
-            <div id="header-actions" class="flex items-center gap-3">
-                <div class="flex items-center gap-2 mr-4 text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <span class="text-gray-500">Tỷ giá:</span>
-                    <span class="font-semibold text-primary-600">1 USD = <input type="number" id="global-rate" class="bg-transparent w-20 outline-none font-bold text-right" onchange="app.updateRate(this.value)"> VND</span>
-                </div>
-                <button onclick="app.toggleTheme()" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="moon" id="theme-icon"></i></button>
-                <button onclick="window.print()" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"><i data-lucide="printer"></i></button>
-            </div>
-        </header>
-
-        <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto p-4 lg:p-8 pb-24">
+    <div class="container mx-auto p-4 flex flex-col lg:flex-row gap-6 mt-4">
+        <!-- Cột trái: Nhập liệu -->
+        <div class="lg:w-2/3 space-y-6">
             
-            <!-- Mod 1: Shipment Info -->
-            <section id="mod-shipment" class="card mb-6">
-                <div class="flex items-center gap-2 mb-4 border-b dark:border-dark-border pb-3">
-                    <i data-lucide="package" class="text-primary-500"></i>
-                    <h3 class="font-semibold text-lg">Module 1: Thông tin lô hàng</h3>
+            <!-- Module 1: Thông tin Lô hàng & Tỷ giá -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-lg font-bold border-b pb-2 mb-4 text-blue-800"><i class="fas fa-info-circle mr-2"></i>1. Thông tin Lô hàng & Tỷ giá</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600">Sản lượng (Tấn)</label>
+                        <input type="number" id="totalQty" value="100" class="w-full border p-2 rounded mt-1 outline-blue-500" onchange="calculateAll()">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600">Số lượng Container</label>
+                        <input type="number" id="totalConts" value="4" class="w-full border p-2 rounded mt-1 outline-blue-500" onchange="calculateAll()">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600">Tỷ giá (VND/USD)</label>
+                        <input type="number" id="exchangeRate" value="25000" class="w-full border p-2 rounded mt-1 outline-blue-500 bg-yellow-50" onchange="calculateAll()">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600">Giá xuất xưởng (USD/Tấn)</label>
+                        <input type="number" id="exwPrice" value="500" class="w-full border p-2 rounded mt-1 outline-blue-500 bg-green-50" onchange="calculateAll()">
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <div><label class="label">Tên hàng hóa</label><input type="text" id="info-name" class="input-field" placeholder="VD: Gạo Jasmine"></div>
-                    <div><label class="label">HS Code</label><input type="text" id="info-hs" class="input-field" placeholder="1006.30"></div>
-                    <div><label class="label">Phương thức vận tải</label>
-                        <select id="info-mode" class="input-field" onchange="app.render()">
-                            <option value="sea">Sea Freight (Đường biển)</option>
-                            <option value="air">Air Freight (Đường hàng không)</option>
-                            <option value="multimodal">Đa phương thức / Khác</option>
-                        </select>
-                    </div>
-                    <div><label class="label">Tổng số lượng</label>
-                        <div class="flex gap-2">
-                            <input type="number" id="info-qty" class="input-field w-2/3" placeholder="100">
-                            <select id="info-unit" class="input-field w-1/3 p-1"><option>Tấn</option><option>Kg</option><option>PCS</option></select>
-                        </div>
-                    </div>
-                    <div><label class="label">Số Container/Kiện</label>
-                        <div class="flex gap-2">
-                            <input type="number" id="info-contQty" class="input-field w-1/2" placeholder="4">
-                            <select id="info-contType" class="input-field w-1/2 p-1"><option>20GP</option><option>40HC</option><option>LCL/Pallet</option></select>
-                        </div>
-                    </div>
-                    <div><label class="label">Cảng XNK (Pol - Pod)</label><input type="text" id="info-ports" class="input-field" placeholder="Cat Lai - Hong Kong"></div>
-                    <div><label class="label">Đồng tiền báo giá gốc</label>
-                        <select id="info-baseCurr" class="input-field bg-gray-50 font-bold" disabled>
-                            <option value="USD">USD (Mặc định tính toán)</option>
-                        </select>
-                    </div>
-                    <div><label class="label">Trọng lượng Gross (KGS)</label><input type="number" class="input-field" placeholder="102000"></div>
-                </div>
-            </section>
+            </div>
 
-            <!-- Mod 2: Cost Management -->
-            <section id="mod-costs" class="card mb-6 overflow-hidden">
-                <div class="flex items-center justify-between mb-4 border-b dark:border-dark-border pb-3">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="calculator" class="text-primary-500"></i>
-                        <h3 class="font-semibold text-lg">Module 2 & 7: Quản lý chi phí & Đa tiền tệ</h3>
-                    </div>
-                    <button onclick="app.addCostRow()" class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 transition-colors">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Thêm chi phí
-                    </button>
+            <!-- Module 2: Quản lý Chi phí -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                    <h2 class="text-lg font-bold text-blue-800"><i class="fas fa-money-bill-wave mr-2"></i>2. Bảng kê Chi phí (Cost Sheet)</h2>
+                    <button onclick="addCostRow()" class="text-blue-600 hover:text-blue-800 text-sm font-semibold"><i class="fas fa-plus mr-1"></i> Thêm chi phí</button>
                 </div>
                 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead class="bg-gray-50 dark:bg-gray-800/50">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-100 text-gray-700">
                             <tr>
-                                <th class="th-cell w-8">#</th>
-                                <th class="th-cell min-w-[200px]">Khoản chi phí</th>
-                                <th class="th-cell">Phân bổ Incoterms<br><span class="text-[10px] text-gray-400 normal-case">(Chi phí cộng vào từ bước nào)</span></th>
-                                <th class="th-cell w-20">SL</th>
-                                <th class="th-cell min-w-[120px]">Đơn giá</th>
-                                <th class="th-cell w-20">Tiền tệ</th>
-                                <th class="th-cell text-right">Thành tiền (Quy USD)</th>
-                                <th class="th-cell w-10"></th>
+                                <th class="p-2">Tên chi phí</th>
+                                <th class="p-2">Phân loại (Incoterms Matrix)</th>
+                                <th class="p-2">Đơn giá</th>
+                                <th class="p-2">Tiền tệ</th>
+                                <th class="p-2">Tính theo</th>
+                                <th class="p-2 text-right">Tổng (USD)</th>
+                                <th class="p-2 text-center">Xóa</th>
                             </tr>
                         </thead>
-                        <tbody id="cost-table-body">
-                            <!-- Rows generated by JS -->
+                        <tbody id="costTableBody">
+                            <!-- Các dòng chi phí sẽ được JS render ở đây -->
                         </tbody>
-                        <tfoot class="bg-gray-50 dark:bg-gray-800/50 font-semibold">
-                            <tr>
-                                <td colspan="6" class="td-cell text-right">TỔNG CHI PHÍ DỰ KIẾN:</td>
-                                <td class="td-cell text-right text-lg text-primary-600 dark:text-primary-400" id="total-cost-usd">$0.00</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
-                <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 italic">
-                    * Logic Incoterms: Hệ thống xây dựng giá theo nguyên tắc cộng dồn (Build-up). Ví dụ: Chọn "FOB" nghĩa là khoản phí này thuộc trách nhiệm người bán bắt đầu từ điều kiện FOB trở đi.
-                </div>
-            </section>
-
-            <!-- Mod 3 & 4: Incoterms Calculator & Comparison -->
-            <section id="mod-incoterms" class="mb-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <!-- Data Table -->
-                <div class="card flex flex-col">
-                    <div class="flex items-center justify-between mb-4 border-b dark:border-dark-border pb-3">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="bar-chart-2" class="text-primary-500"></i>
-                            <h3 class="font-semibold text-lg">Module 3 & 4: Giá Seller chào (Incoterms 2020)</h3>
-                        </div>
-                    </div>
-                    <div class="flex-1 overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-800/50">
-                                <tr>
-                                    <th class="th-cell">Incoterm</th>
-                                    <th class="th-cell text-right">Tổng lô hàng (USD)</th>
-                                    <th class="th-cell text-right">Đơn giá (USD/ĐV)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="incoterm-results-body">
-                                <!-- Generated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-xs text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 flex gap-2">
-                        <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-                        <span>Lưu ý: Nếu Phương thức VT là "Air", các điều kiện FAS, FOB, CFR, CIF sẽ bị làm mờ vì theo ICC không áp dụng cho đường hàng không.</span>
-                    </div>
-                </div>
-
-                <!-- Chart -->
-                <div class="card flex flex-col">
-                    <div class="flex items-center gap-2 mb-4 border-b dark:border-dark-border pb-3">
-                        <i data-lucide="pie-chart" class="text-primary-500"></i>
-                        <h3 class="font-semibold text-lg">Biểu đồ so sánh giá trị</h3>
-                    </div>
-                    <div class="flex-1 relative min-h-[300px] w-full flex items-center justify-center">
-                        <canvas id="priceChart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Mod 5: Profit Margin & Mod 6: Buyer Landed Cost (Side by side) -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                
-                <!-- Mod 5: Profit Margin -->
-                <section id="mod-margin" class="card">
-                    <div class="flex items-center gap-2 mb-4 border-b dark:border-dark-border pb-3">
-                        <i data-lucide="trending-up" class="text-primary-500"></i>
-                        <h3 class="font-semibold text-lg">Module 5: Xác định giá bán (Profit Margin)</h3>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="label">Incoterm báo giá</label>
-                            <select id="margin-incoterm" class="input-field bg-primary-50 dark:bg-primary-900/20" onchange="app.renderMargin()">
-                                <!-- Options filled by JS -->
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label">Phương pháp tính</label>
-                            <select id="margin-type" class="input-field" onchange="app.renderMargin()">
-                                <option value="markup">Markup on Cost</option>
-                                <option value="gross">Gross Margin (Tỷ suất LN Gộp)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="label">Tỷ lệ (%)</label>
-                            <input type="number" id="margin-rate" class="input-field" value="10" oninput="app.renderMargin()">
-                        </div>
-                        <div class="flex flex-col justify-end">
-                            <div class="text-xs text-gray-500 mb-1">Công thức:</div>
-                            <div id="margin-formula" class="text-xs font-mono bg-gray-100 dark:bg-gray-800 p-2 rounded">Price = Cost * (1 + 10%)</div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-dark-border">
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-500">Tổng chi phí (Cost):</span>
-                            <span id="margin-cost-val" class="font-semibold">$0.00</span>
-                        </div>
-                        <div class="flex justify-between mb-2 text-emerald-600 dark:text-emerald-400">
-                            <span>Lợi nhuận dự kiến:</span>
-                            <span id="margin-profit-val" class="font-semibold">+$0.00</span>
-                        </div>
-                        <div class="border-t dark:border-gray-700 my-2 pt-2 flex justify-between items-end">
-                            <span class="font-bold text-gray-700 dark:text-gray-200">TỔNG GIÁ CHÀO BÁN:</span>
-                            <div class="text-right">
-                                <div id="margin-sell-total" class="text-xl font-bold text-primary-600 dark:text-primary-400">$0.00</div>
-                                <div id="margin-sell-unit" class="text-sm text-gray-500">~ $0.00 / ĐV</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Mod 6: Buyer Landed Cost -->
-                <section id="mod-landed" class="card relative">
-                    <div class="flex items-center justify-between mb-4 border-b dark:border-dark-border pb-3">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="download" class="text-indigo-500"></i>
-                            <h3 class="font-semibold text-lg">Module 6: Buyer Landed Cost</h3>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mb-4">Mô phỏng tổng chi phí người mua phải bỏ ra để đưa hàng về kho (dựa trên giá chốt ở Module 5).</p>
-                    
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center text-sm">
-                            <span>Giá mua lô hàng (Invoice Value):</span>
-                            <span id="landed-invoice" class="font-semibold">$0.00</span>
-                        </div>
-                        <div class="flex justify-between items-center gap-4 text-sm">
-                            <span class="shrink-0">Cước vận tải/Bảo hiểm (Nếu mua FOB/EXW):</span>
-                            <input type="number" id="landed-freight" class="input-field py-1 text-right w-32" value="0" oninput="app.calcLandedCost()">
-                        </div>
-                        <div class="flex justify-between items-center gap-4 text-sm">
-                            <span class="shrink-0">Thuế Nhập Khẩu (Import Duty):</span>
-                            <input type="number" id="landed-duty" class="input-field py-1 text-right w-32" value="0" oninput="app.calcLandedCost()">
-                        </div>
-                        <div class="flex justify-between items-center gap-4 text-sm">
-                            <span class="shrink-0">Chi phí thông quan & Nội địa đầu nhập:</span>
-                            <input type="number" id="landed-local" class="input-field py-1 text-right w-32" value="0" oninput="app.calcLandedCost()">
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-4 border-t dark:border-dark-border flex justify-between items-end">
-                        <span class="font-bold text-gray-700 dark:text-gray-200">TỔNG CHI PHÍ NHẬP (Landed Cost):</span>
-                        <div class="text-right">
-                            <div id="landed-total" class="text-xl font-bold text-indigo-600 dark:text-indigo-400">$0.00</div>
-                            <div id="landed-unit" class="text-sm text-gray-500">Giá vốn tham khảo: $0.00 / ĐV</div>
-                        </div>
-                    </div>
-                </section>
-
             </div>
+        </div>
+
+        <!-- Cột phải: Bảng Điều khiển Giá -->
+        <div class="lg:w-1/3 space-y-6">
             
-            <!-- Module 10: What-if / Footer Note -->
-            <div class="text-center text-sm text-gray-400 mb-8 mt-10">
-                <p>Engine tính toán dựa trên quy tắc phân bổ rủi ro và chi phí của <strong>ICC Incoterms® 2020</strong>.</p>
-                <p>Để thực hiện What-If Analysis, vui lòng thay đổi trực tiếp Tỷ giá trên thanh công cụ hoặc Đơn giá trong Bảng chi phí, hệ thống sẽ render lại toàn bộ báo cáo tức thì (Reactive UI).</p>
+            <!-- Module 3: Incoterms Quotation -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-lg font-bold border-b pb-2 mb-4 text-blue-800"><i class="fas fa-globe mr-2"></i>3. Chào giá Incoterms 2020</h2>
+                
+                <div class="space-y-3" id="incotermsResults">
+                    <!-- JS Render kết quả EXW, FOB, CFR, CIF, DAP, DDP -->
+                </div>
+
+                <div id="ddpWarning" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> <strong>Lưu ý DDP:</strong> Giá đã bao gồm Thuế nhập khẩu. Người bán phải có tư cách pháp nhân hoặc đại lý để làm thủ tục nộp thuế tại nước nhập khẩu.
+                </div>
+            </div>
+
+            <!-- Module 4: Lợi nhuận & Landed Cost -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h2 class="text-lg font-bold border-b pb-2 mb-4 text-green-700"><i class="fas fa-chart-line mr-2"></i>4. Markup Lợi nhuận</h2>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-600">Lợi nhuận mong muốn (%)</label>
+                    <input type="number" id="markupPercent" value="15" class="w-full border p-2 rounded mt-1" onchange="calculateAll()">
+                </div>
+                <div class="p-3 bg-green-50 rounded border border-green-200">
+                    <p class="text-sm text-gray-600">Tổng lợi nhuận kỳ vọng:</p>
+                    <p class="text-xl font-bold text-green-700" id="expectedProfit">$0.00</p>
+                </div>
             </div>
 
         </div>
-    </main>
+    </div>
 
+    <!-- Script xử lý Logic -->
     <script>
-        /**
-         * GLOBAL TRADE COSTING CORE ENGINE
-         * Vanilla JS Implementation
-         */
-        
-        // --- 1. STATE MANAGEMENT ---
-        const INCOTERM_LEVELS = {
-            'EXW': 1, // Ex Works
-            'FCA': 2, // + Origin Inland & Customs
-            'FAS': 3, // + Alongside ship (Sea only)
-            'FOB': 4, // + Loading/THC Origin (Sea only)
-            'CFR': 5, // + Main Freight (Sea only) -> Equivalent to CPT level
-            'CPT': 5, // + Main Freight (Any)
-            'CIF': 6, // + Insurance (Sea only) -> Equivalent to CIP level
-            'CIP': 6, // + Insurance (Any)
-            'DAP': 7, // + Dest Inland (No unloading)
-            'DPU': 8, // + Unloading at dest
-            'DDP': 9  // + Import Clearance & Duties
+        // Các danh mục chi phí theo Ma trận phân bổ
+        const categoryOptions = {
+            'origin_inland': 'Vận tải xuất khẩu (C1)',
+            'origin_customs': 'HQ xuất khẩu (C2)',
+            'origin_thc': 'THC cảng đi (C3.2)',
+            'freight': 'Cước quốc tế (C3.1)',
+            'insurance': 'Bảo hiểm (C6)',
+            'dest_thc': 'THC cảng đích (C3.3)',
+            'dest_customs': 'Thuế/Phí NK (C4)',
+            'dest_inland': 'Vận tải nhập khẩu (C5)',
+            'other': 'Khác'
         };
 
-        const INCOTERM_LIST = ['EXW', 'FCA', 'FAS', 'FOB', 'CFR', 'CIF', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP'];
-
-        const DEFAULT_STATE = {
-            exchangeRateVND: 25000,
-            shipment: { mode: 'sea', qty: 100 },
-            costs: [
-                { id: Date.now(), name: 'Giá xuất xưởng (Goods/EXW)', incotermStage: 'EXW', qty: 100, price: 500, currency: 'USD' }
-            ],
-            calculatedIncoterms: {},
-            chartInstance: null
+        const unitOptions = {
+            'cont': 'Mỗi Container',
+            'ton': 'Mỗi Tấn',
+            'lot': 'Theo Lô (Toàn bộ)'
         };
 
-        const app = {
-            state: JSON.parse(JSON.stringify(DEFAULT_STATE)), // Deep copy
+        // State quản lý chi phí
+        let costs = [];
 
-            // --- 2. INITIALIZATION ---
-            init() {
-                // Check theme
-                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
+        // Khởi tạo 1 dòng trống
+        function addCostRow(data = null) {
+            const newId = Date.now() + Math.floor(Math.random() * 1000);
+            const cost = data || { id: newId, name: '', cat: 'origin_inland', price: 0, curr: 'VND', unit: 'cont' };
+            costs.push(cost);
+            renderTable();
+        }
+
+        function removeCostRow(id) {
+            costs = costs.filter(c => c.id !== id);
+            renderTable();
+            calculateAll();
+        }
+
+        // Tải dữ kiện Case Study (Gạo Jasmine HongKong)
+        function loadTestCase() {
+            document.getElementById('totalQty').value = 100;
+            document.getElementById('totalConts').value = 4;
+            document.getElementById('exchangeRate').value = 25000;
+            document.getElementById('exwPrice').value = 500;
+            
+            costs = [
+                { id: 1, name: 'Vận chuyển Cần Thơ - HCMC', cat: 'origin_inland', price: 3000000, curr: 'VND', unit: 'cont' },
+                { id: 2, name: 'Khai hải quan xuất khẩu', cat: 'origin_customs', price: 500000, curr: 'VND', unit: 'lot' },
+                { id: 3, name: 'Ocean Freight (HCMC-HK)', cat: 'freight', price: 200, curr: 'USD', unit: 'cont' },
+                { id: 4, name: 'THC đầu bốc', cat: 'origin_thc', price: 50, curr: 'USD', unit: 'cont' },
+                { id: 5, name: 'THC đầu dỡ', cat: 'dest_thc', price: 50, curr: 'USD', unit: 'cont' },
+                { id: 6, name: 'Thuế & Lệ phí nhập khẩu', cat: 'dest_customs', price: 10, curr: 'USD', unit: 'ton' },
+                { id: 7, name: 'Vận chuyển HK Port - Kho Buyer', cat: 'dest_inland', price: 100, curr: 'USD', unit: 'cont' },
+                { id: 8, name: 'Bảo hiểm hàng hóa (I)', cat: 'insurance', price: 70, curr: 'USD', unit: 'lot' }
+            ];
+            
+            renderTable();
+            calculateAll();
+        }
+
+        // Render HTML bảng chi phí
+        function renderTable() {
+            const tbody = document.getElementById('costTableBody');
+            tbody.innerHTML = '';
+
+            costs.forEach((cost, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b hover:bg-gray-50";
+
+                // Generate Dropdowns
+                let catSelect = `<select onchange="updateCost(${cost.id}, 'cat', this.value)" class="border p-1 w-full rounded text-xs outline-blue-500">`;
+                for (let key in categoryOptions) {
+                    catSelect += `<option value="${key}" ${cost.cat === key ? 'selected' : ''}>${categoryOptions[key]}</option>`;
                 }
-                this.updateThemeIcon();
+                catSelect += `</select>`;
 
-                // Load from storage if exists (skipped for simplicity in this demo, relying on default/test case)
-                document.getElementById('global-rate').value = this.state.exchangeRateVND;
-                
-                // Set inputs
-                document.getElementById('info-qty').value = this.state.shipment.qty;
-                document.getElementById('info-mode').value = this.state.shipment.mode;
-
-                lucide.createIcons();
-                this.render();
-            },
-
-            // --- 3. ACTIONS & MUTATIONS ---
-            toggleTheme() {
-                document.documentElement.classList.toggle('dark');
-                localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-                this.updateThemeIcon();
-                if(this.state.chartInstance) this.renderChart(); // Redraw chart for colors
-            },
-
-            updateThemeIcon() {
-                const isDark = document.documentElement.classList.contains('dark');
-                const iconStr = isDark ? 'sun' : 'moon';
-                const el = document.getElementById('theme-icon');
-                if (el) { el.setAttribute('data-lucide', iconStr); lucide.createIcons({attrs: {class: "w-5 h-5"}}); }
-            },
-
-            updateRate(val) {
-                this.state.exchangeRateVND = parseFloat(val) || 25000;
-                this.render(); // Trigger full reactivity
-            },
-
-            addCostRow() {
-                this.state.costs.push({
-                    id: Date.now(),
-                    name: 'Khoản chi phí mới',
-                    incotermStage: 'FCA', // default to next logical step
-                    qty: 1,
-                    price: 0,
-                    currency: 'USD'
-                });
-                this.render();
-            },
-
-            removeCost(id) {
-                this.state.costs = this.state.costs.filter(c => c.id !== id);
-                this.render();
-            },
-
-            updateCost(id, field, value) {
-                const cost = this.state.costs.find(c => c.id === id);
-                if (cost) {
-                    if (field === 'qty' || field === 'price') value = parseFloat(value) || 0;
-                    cost[field] = value;
-                    this.render(); // Note: in a real big app, debounce this. Here it's fast enough.
+                let unitSelect = `<select onchange="updateCost(${cost.id}, 'unit', this.value)" class="border p-1 w-full rounded text-xs outline-blue-500">`;
+                for (let key in unitOptions) {
+                    unitSelect += `<option value="${key}" ${cost.unit === key ? 'selected' : ''}>${unitOptions[key]}</option>`;
                 }
-            },
+                unitSelect += `</select>`;
 
-            loadTestCase() {
-                this.state.exchangeRateVND = 22900;
-                document.getElementById('global-rate').value = 22900;
+                tr.innerHTML = `
+                    <td class="p-2"><input type="text" value="${cost.name}" onchange="updateCost(${cost.id}, 'name', this.value)" class="border p-1 w-full rounded text-xs outline-blue-500"></td>
+                    <td class="p-2">${catSelect}</td>
+                    <td class="p-2"><input type="number" value="${cost.price}" onchange="updateCost(${cost.id}, 'price', this.value)" class="border p-1 w-full rounded text-xs outline-blue-500"></td>
+                    <td class="p-2">
+                        <select onchange="updateCost(${cost.id}, 'curr', this.value)" class="border p-1 rounded text-xs outline-blue-500">
+                            <option value="VND" ${cost.curr === 'VND' ? 'selected' : ''}>VND</option>
+                            <option value="USD" ${cost.curr === 'USD' ? 'selected' : ''}>USD</option>
+                        </select>
+                    </td>
+                    <td class="p-2">${unitSelect}</td>
+                    <td class="p-2 text-right font-semibold text-blue-700 id="total-${cost.id}">$0.00</td>
+                    <td class="p-2 text-center"><button onclick="removeCostRow(${cost.id})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calculateAll(); // Update totals whenever rendered
+        }
+
+        // Cập nhật state khi người dùng gõ
+        function updateCost(id, field, value) {
+            const cost = costs.find(c => c.id === id);
+            if(field === 'price') value = parseFloat(value) || 0;
+            cost[field] = value;
+            calculateAll();
+        }
+
+        // --- CORE LOGIC: COST ALLOCATION ENGINE ---
+        function calculateAll() {
+            const totalQty = parseFloat(document.getElementById('totalQty').value) || 0;
+            const totalConts = parseFloat(document.getElementById('totalConts').value) || 0;
+            const exRate = parseFloat(document.getElementById('exchangeRate').value) || 1;
+            const exwBasePrice = parseFloat(document.getElementById('exwPrice').value) || 0;
+            const markup = parseFloat(document.getElementById('markupPercent').value) || 0;
+
+            // 1. Tính tổng giá trị hàng cơ bản (EXW Base)
+            let totalExwValue = exwBasePrice * totalQty;
+
+            // Bộ lưu trữ tổng chi phí theo phân loại
+            let sumCategories = {
+                origin_inland: 0, origin_customs: 0, origin_thc: 0,
+                freight: 0, insurance: 0,
+                dest_thc: 0, dest_customs: 0, dest_inland: 0, other: 0
+            };
+
+            // 2. Tính toán từng dòng chi phí quy về USD
+            costs.forEach(cost => {
+                // Áp dụng Multiplier dựa trên đơn vị
+                let multiplier = 1;
+                if(cost.unit === 'cont') multiplier = totalConts;
+                if(cost.unit === 'ton') multiplier = totalQty;
+                if(cost.unit === 'lot') multiplier = 1;
+
+                // Tính Amount quy đổi ra USD
+                let amountUSD = cost.price * multiplier;
+                if(cost.curr === 'VND') amountUSD = amountUSD / exRate;
                 
-                document.getElementById('info-name').value = 'Gạo thơm Jasmine';
-                document.getElementById('info-hs').value = '1006.30';
-                document.getElementById('info-qty').value = 100;
-                document.getElementById('info-unit').value = 'Tấn';
-                document.getElementById('info-mode').value = 'sea';
-                document.getElementById('info-contQty').value = 4;
-                document.getElementById('info-contType').value = '20GP';
+                // Hiển thị ra UI cột Tổng của từng dòng
+                const rowTotalElement = document.querySelector(`td[id="total-${cost.id}"]`);
+                if(rowTotalElement) rowTotalElement.innerText = '$' + amountUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-                this.state.costs = [
-                    { id: 1, name: 'Giá xuất xưởng gạo (EXW)', incotermStage: 'EXW', qty: 100, price: 500, currency: 'USD' },
-                    { id: 2, name: 'Giám định chất lượng', incotermStage: 'FCA', qty: 1, price: 5000000, currency: 'VND' },
-                    { id: 3, name: 'Kiểm dịch', incotermStage: 'FCA', qty: 1, price: 500000, currency: 'VND' },
-                    { id: 4, name: 'Hun trùng', incotermStage: 'FCA', qty: 1, price: 1000000, currency: 'VND' },
-                    { id: 5, name: 'Giấy phép XK', incotermStage: 'FCA', qty: 1, price: 500000, currency: 'VND' },
-                    { id: 6, name: 'Bank Charge', incotermStage: 'FCA', qty: 1, price: 100, currency: 'USD' },
-                    { id: 7, name: 'Vận chuyển Cần Thơ - HCMC', incotermStage: 'FCA', qty: 4, price: 3000000, currency: 'VND' },
-                    { id: 8, name: 'Khai hải quan XK', incotermStage: 'FCA', qty: 1, price: 500000, currency: 'VND' },
-                    { id: 9, name: 'THC đầu xuất (Xếp hàng)', incotermStage: 'FOB', qty: 4, price: 50, currency: 'USD' },
-                    { id: 10, name: 'Ocean Freight (Cước biển)', incotermStage: 'CFR', qty: 4, price: 200, currency: 'USD' },
-                    { id: 11, name: 'Bảo hiểm hàng hải', incotermStage: 'CIF', qty: 1, price: 70, currency: 'USD' },
-                    { id: 12, name: 'THC đầu nhập & Dỡ hàng', incotermStage: 'DPU', qty: 4, price: 50, currency: 'USD' }, // DAP excludes unloading, DPU includes
-                    { id: 13, name: 'Vận chuyển HK Port - Kho Mua', incotermStage: 'DAP', qty: 4, price: 100, currency: 'USD' }, // Happens after CPT/CFR, before clearance
-                    { id: 14, name: 'Thuế nhập khẩu & Phí', incotermStage: 'DDP', qty: 100, price: 10, currency: 'USD' }
-                ];
-                this.render();
-            },
-
-            // --- 4. CORE CALCULATION ENGINE ---
-            formatUSD(val) {
-                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
-            },
-
-            calculateIncoterms() {
-                const mode = document.getElementById('info-mode').value;
-                this.state.shipment.mode = mode;
-                const qty = parseFloat(document.getElementById('info-qty').value) || 1;
-
-                // 1. Calculate USD total for each cost item
-                let totalUSD = 0;
-                const costItems = this.state.costs.map(c => {
-                    const rowTotal = c.qty * c.price;
-                    const rowTotalUSD = c.currency === 'VND' ? rowTotal / this.state.exchangeRateVND : rowTotal;
-                    totalUSD += rowTotalUSD;
-                    return { ...c, totalUSD: rowTotalUSD };
-                });
-
-                // Update Total UI
-                document.getElementById('total-cost-usd').innerText = this.formatUSD(totalUSD);
-
-                // 2. Build cumulative logic based on levels
-                let results = {};
-                INCOTERM_LIST.forEach(term => {
-                    let termCost = 0;
-                    const termLevel = INCOTERM_LEVELS[term];
-                    
-                    costItems.forEach(item => {
-                        const itemLevel = INCOTERM_LEVELS[item.incotermStage];
-                        // Special rules mapping
-                        let include = false;
-
-                        // Base logic: If cost's assigned stage level <= current checking term level, include it.
-                        if (itemLevel <= termLevel) {
-                            include = true;
-                        }
-
-                        // EXCEPTIONS & PARALLEL BRANCHES:
-                        // CPT/CIP branch vs CFR/CIF branch
-                        if (term === 'CPT' || term === 'CIP' || term === 'DAP' || term === 'DPU' || term === 'DDP') {
-                            // These terms encompass all lower levels, including FCA, but they logically replace CFR/CIF path for Air/Multimodal.
-                            // However, in our system, user assigns a cost to "CFR". If they calculate "CPT", should CFR costs be included?
-                            // Yes, CFR and CPT are both level 5.
-                            if(item.incotermStage === 'CFR' && (term === 'CPT' || term === 'CIP')) include = true;
-                            if(item.incotermStage === 'CIF' && term === 'CIP') include = true;
-                        }
-                        
-                        // Strict ICC Rule: FAS, FOB, CFR, CIF are SEA/INLAND WATERWAY ONLY.
-                        if (mode !== 'sea' && ['FAS', 'FOB', 'CFR', 'CIF'].includes(term)) {
-                            results[term] = null; // Mark as invalid for this mode
-                            return; // skip further processing for this term
-                        }
-
-                        if (include) {
-                            termCost += item.totalUSD;
-                        }
-                    });
-
-                    if (results[term] !== null) {
-                        results[term] = {
-                            total: termCost,
-                            unit: termCost / qty
-                        };
-                    }
-                });
-
-                this.state.calculatedIncoterms = results;
-                this.renderIncotermTable();
-                this.renderChart();
-                this.populateMarginDropdown();
-            },
-
-            // --- 5. RENDER FUNCTIONS ---
-            render() {
-                this.renderCostTable();
-                this.calculateIncoterms(); // Triggers subsequent renders
-                this.renderMargin();
-                this.calcLandedCost();
-            },
-
-            renderCostTable() {
-                const tbody = document.getElementById('cost-table-body');
-                tbody.innerHTML = '';
-                
-                this.state.costs.forEach((cost, index) => {
-                    const rowTotal = cost.qty * cost.price;
-                    const rowTotalUSD = cost.currency === 'VND' ? rowTotal / this.state.exchangeRateVND : rowTotal;
-                    
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group';
-                    
-                    // Generate Incoterm Stage Options dynamically based on hierarchy
-                    const stageOptions = Object.keys(INCOTERM_LEVELS).map(term => {
-                        return `<option value="${term}" ${cost.incotermStage === term ? 'selected' : ''}>Cộng từ mức: ${term}</option>`;
-                    }).join('');
-
-                    tr.innerHTML = `
-                        <td class="td-cell text-gray-500">${index + 1}</td>
-                        <td class="td-cell"><input type="text" class="input-field py-1 text-sm border-transparent group-hover:border-gray-300 w-full" value="${cost.name}" onchange="app.updateCost(${cost.id}, 'name', this.value)"></td>
-                        <td class="td-cell">
-                            <select class="input-field py-1 text-sm border-transparent group-hover:border-gray-300 w-full" onchange="app.updateCost(${cost.id}, 'incotermStage', this.value)">
-                                ${stageOptions}
-                            </select>
-                        </td>
-                        <td class="td-cell"><input type="number" class="input-field py-1 text-sm border-transparent group-hover:border-gray-300 w-full text-right" value="${cost.qty}" oninput="app.updateCost(${cost.id}, 'qty', this.value)"></td>
-                        <td class="td-cell"><input type="number" class="input-field py-1 text-sm border-transparent group-hover:border-gray-300 w-full text-right" value="${cost.price}" oninput="app.updateCost(${cost.id}, 'price', this.value)"></td>
-                        <td class="td-cell">
-                            <select class="input-field py-1 text-sm border-transparent group-hover:border-gray-300 w-full" onchange="app.updateCost(${cost.id}, 'currency', this.value)">
-                                <option value="USD" ${cost.currency==='USD'?'selected':''}>USD</option>
-                                <option value="VND" ${cost.currency==='VND'?'selected':''}>VND</option>
-                            </select>
-                        </td>
-                        <td class="td-cell text-right font-mono text-gray-700 dark:text-gray-300">${this.formatUSD(rowTotalUSD)}</td>
-                        <td class="td-cell text-right">
-                            <button onclick="app.removeCost(${cost.id})" class="text-red-400 hover:text-red-600 p-1 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-                lucide.createIcons();
-            },
-
-            renderIncotermTable() {
-                const tbody = document.getElementById('incoterm-results-body');
-                tbody.innerHTML = '';
-                const mode = document.getElementById('info-mode').value;
-
-                INCOTERM_LIST.forEach(term => {
-                    const data = this.state.calculatedIncoterms[term];
-                    const tr = document.createElement('tr');
-                    
-                    if (data === null) {
-                        // Invalid for mode
-                        tr.className = 'opacity-40 bg-gray-50 dark:bg-gray-800/20 line-through';
-                        tr.innerHTML = `
-                            <td class="td-cell font-bold text-gray-400">${term}</td>
-                            <td class="td-cell text-right text-gray-400">N/A (Sea only)</td>
-                            <td class="td-cell text-right text-gray-400">N/A</td>
-                        `;
-                    } else {
-                        // Valid
-                        const isMain = ['EXW', 'FOB', 'CIF', 'DAP', 'DDP'].includes(term);
-                        tr.className = isMain ? 'bg-primary-50/50 dark:bg-primary-900/10' : '';
-                        tr.innerHTML = `
-                            <td class="td-cell font-bold ${isMain ? 'text-primary-700 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'}">${term}</td>
-                            <td class="td-cell text-right font-mono font-medium">${this.formatUSD(data.total)}</td>
-                            <td class="td-cell text-right font-mono text-gray-500">${this.formatUSD(data.unit)}</td>
-                        `;
-                    }
-                    tbody.appendChild(tr);
-                });
-            },
-
-            renderChart() {
-                const ctx = document.getElementById('priceChart').getContext('2d');
-                if (this.state.chartInstance) {
-                    this.state.chartInstance.destroy();
+                // Cộng dồn vào danh mục
+                if(sumCategories[cost.cat] !== undefined) {
+                    sumCategories[cost.cat] += amountUSD;
                 }
+            });
 
-                // Select key terms to display
-                const mode = this.state.shipment.mode;
-                let displayTerms = mode === 'sea' 
-                    ? ['EXW', 'FOB', 'CIF', 'DAP', 'DDP']
-                    : ['EXW', 'FCA', 'CIP', 'DAP', 'DDP'];
+            // 3. MA TRẬN INCOTERMS 2020 (Tính giá FOB, CIF...)
+            let incotermsPrices = {};
+            
+            incotermsPrices['EXW'] = totalExwValue;
+            
+            incotermsPrices['FOB'] = incotermsPrices['EXW'] 
+                                   + sumCategories.origin_inland 
+                                   + sumCategories.origin_customs 
+                                   + sumCategories.origin_thc;
+                                   
+            incotermsPrices['CFR'] = incotermsPrices['FOB'] 
+                                   + sumCategories.freight;
+                                   
+            incotermsPrices['CIF'] = incotermsPrices['CFR'] 
+                                   + sumCategories.insurance;
+                                   
+            // DAP bao gồm CFR + THC đích + Vận tải đích (Seller trả để đưa đến tận kho)
+            incotermsPrices['DAP'] = incotermsPrices['CFR'] 
+                                   + sumCategories.dest_thc 
+                                   + sumCategories.dest_inland
+                                   + sumCategories.insurance; // Thường tự nguyện cộng vào để bảo vệ Seller
+                                   
+            // DDP = DAP + Thuế NK
+            incotermsPrices['DDP'] = incotermsPrices['DAP'] 
+                                   + sumCategories.dest_customs;
+
+            // 4. Cập nhật UI Báo giá Incoterms
+            const resultsDiv = document.getElementById('incotermsResults');
+            resultsDiv.innerHTML = '';
+            
+            // Hàm helper sinh UI
+            const renderPriceBox = (term, title, amount, highlight = false) => {
+                const markupAmount = amount * (1 + markup/100);
+                const color = highlight ? 'bg-blue-600 text-white' : 'bg-gray-50 border border-gray-200 text-gray-800 hover:border-blue-400';
+                const textCol = highlight ? 'text-blue-100' : 'text-gray-500';
                 
-                const labels = [];
-                const dataPoints = [];
+                return `
+                <div class="p-3 rounded-lg flex justify-between items-center cursor-pointer transition ${color}" onmouseenter="showWarning('${term}')" onmouseleave="hideWarning()">
+                    <div>
+                        <h3 class="font-bold text-lg">${term} <span class="text-xs font-normal ${textCol}">(${title})</span></h3>
+                        <p class="text-xs mt-1 ${textCol}">Cost: $${amount.toLocaleString('en-US', {maximumFractionDigits: 2})}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-xl">$${markupAmount.toLocaleString('en-US', {maximumFractionDigits: 2})}</p>
+                        <p class="text-xs ${textCol}">Quote Price</p>
+                    </div>
+                </div>`;
+            };
 
-                displayTerms.forEach(term => {
-                    if (this.state.calculatedIncoterms[term]) {
-                        labels.push(term);
-                        dataPoints.push(this.state.calculatedIncoterms[term].total);
-                    }
-                });
+            resultsDiv.innerHTML += renderPriceBox('EXW', 'Giao tại xưởng', incotermsPrices['EXW']);
+            resultsDiv.innerHTML += renderPriceBox('FOB', 'Giao lên tàu', incotermsPrices['FOB'], true); // Highlight FOB vì phổ biến nhất
+            resultsDiv.innerHTML += renderPriceBox('CFR', 'Tiền hàng & Cước', incotermsPrices['CFR']);
+            resultsDiv.innerHTML += renderPriceBox('CIF', 'Tiền hàng, Bảo hiểm, Cước', incotermsPrices['CIF'], true);
+            resultsDiv.innerHTML += renderPriceBox('DAP', 'Giao tại nơi đến', incotermsPrices['DAP']);
+            resultsDiv.innerHTML += renderPriceBox('DDP', 'Giao đã nộp thuế', incotermsPrices['DDP']);
 
-                const isDark = document.documentElement.classList.contains('dark');
-                const textColor = isDark ? '#cbd5e1' : '#475569';
-                const gridColor = isDark ? '#334155' : '#e2e8f0';
+            // 5. Cập nhật Lợi nhuận hiển thị (Dựa trên FOB làm chuẩn tham khảo)
+            const profitValue = incotermsPrices['FOB'] * (markup / 100);
+            document.getElementById('expectedProfit').innerText = '$' + profitValue.toLocaleString('en-US', {maximumFractionDigits: 2});
+        }
 
-                this.state.chartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Total Shipment Value (USD)',
-                            data: dataPoints,
-                            backgroundColor: 'rgba(59, 130, 246, 0.5)', // primary-500 with opacity
-                            borderColor: 'rgba(59, 130, 246, 1)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) { label += ': '; }
-                                        if (context.parsed.y !== null) {
-                                            label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: { color: gridColor },
-                                ticks: { color: textColor }
-                            },
-                            x: {
-                                grid: { display: false },
-                                ticks: { color: textColor, font: { weight: 'bold' } }
-                            }
-                        }
-                    }
-                });
-            },
-
-            populateMarginDropdown() {
-                const select = document.getElementById('margin-incoterm');
-                const currentVal = select.value;
-                select.innerHTML = '';
-                
-                INCOTERM_LIST.forEach(term => {
-                    if (this.state.calculatedIncoterms[term] !== null) {
-                        const opt = document.createElement('option');
-                        opt.value = term;
-                        opt.textContent = `${term} (${this.formatUSD(this.state.calculatedIncoterms[term].total)})`;
-                        select.appendChild(opt);
-                    }
-                });
-                
-                if(currentVal && this.state.calculatedIncoterms[currentVal]) {
-                    select.value = currentVal;
-                }
-            },
-
-            renderMargin() {
-                const term = document.getElementById('margin-incoterm').value;
-                if(!term || !this.state.calculatedIncoterms[term]) return;
-
-                const cost = this.state.calculatedIncoterms[term].total;
-                const type = document.getElementById('margin-type').value;
-                const rate = parseFloat(document.getElementById('margin-rate').value) || 0;
-                
-                let sellPrice = 0;
-                let formulaStr = '';
-
-                if (type === 'markup') {
-                    // Markup on Cost: Price = Cost * (1 + rate)
-                    sellPrice = cost * (1 + (rate / 100));
-                    formulaStr = `Price = ${this.formatUSD(cost)} × (1 + ${rate}%)`;
-                } else {
-                    // Gross Margin: Price = Cost / (1 - rate)
-                    // Prevent divide by zero or negative price if margin >= 100%
-                    if (rate >= 100) { sellPrice = 0; formulaStr = "Error: Margin >= 100%"; }
-                    else {
-                        sellPrice = cost / (1 - (rate / 100));
-                        formulaStr = `Price = ${this.formatUSD(cost)} ÷ (1 - ${rate}%)`;
-                    }
-                }
-
-                const profit = sellPrice - cost;
-                const qty = parseFloat(document.getElementById('info-qty').value) || 1;
-
-                document.getElementById('margin-formula').innerText = formulaStr;
-                document.getElementById('margin-cost-val').innerText = this.formatUSD(cost);
-                document.getElementById('margin-profit-val').innerText = '+' + this.formatUSD(profit);
-                document.getElementById('margin-sell-total').innerText = this.formatUSD(sellPrice);
-                document.getElementById('margin-sell-unit').innerText = `~ ${this.formatUSD(sellPrice/qty)} / ĐV`;
-
-                // Update Landed Cost base value
-                document.getElementById('landed-invoice').innerText = this.formatUSD(sellPrice);
-                // Store base sell price for Landed Cost calculation
-                this.state.currentSellPrice = sellPrice;
-                this.calcLandedCost();
-            },
-
-            calcLandedCost() {
-                const invoice = this.state.currentSellPrice || 0;
-                const freight = parseFloat(document.getElementById('landed-freight').value) || 0;
-                const duty = parseFloat(document.getElementById('landed-duty').value) || 0;
-                const local = parseFloat(document.getElementById('landed-local').value) || 0;
-
-                const totalLanded = invoice + freight + duty + local;
-                const qty = parseFloat(document.getElementById('info-qty').value) || 1;
-
-                document.getElementById('landed-total').innerText = this.formatUSD(totalLanded);
-                document.getElementById('landed-unit').innerText = `Giá vốn tham khảo: ${this.formatUSD(totalLanded/qty)} / ĐV`;
+        // Show/Hide Cảnh báo DDP
+        function showWarning(term) {
+            const warnBox = document.getElementById('ddpWarning');
+            if (term === 'DDP') {
+                warnBox.classList.remove('hidden');
+            } else {
+                warnBox.classList.add('hidden');
             }
+        }
+        function hideWarning() {
+            document.getElementById('ddpWarning').classList.add('hidden');
+        }
+
+        // Khởi chạy khi load trang
+        window.onload = () => {
+            loadTestCase();
         };
-
-        // Init App on Load
-        window.addEventListener('DOMContentLoaded', () => {
-            app.init();
-        });
-
     </script>
 </body>
 </html>
