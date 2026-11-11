@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Pricing Calculator — Global Trade Costing</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { darkMode: 'class' };</script>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<!-- SheetJS (Excel export) -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+:root{
+  --bg:#f1f5f9; --card:#ffffff; --bd:#e2e8f0; --inp:#ffffff; --inp-bd:#cbd5e1;
+  --txt:#0f172a; --muted:#64748b; --hover:#f8fafc; --accent:#059669; --accent-2:#0891b2;
+  --warn:#f59e0b; --danger:#ef4444; --ok:#10b981;
+}
+html.dark{
+  --bg:#020617; --card:#0f172a; --bd:#1e293b; --inp:#1e293b; --inp-bd:#334155;
+  --txt:#e2e8f0; --muted:#94a3b8; --hover:#152036; --accent:#10b981; --accent-2:#06b6d4;
+}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:.85rem;padding:1rem}
+.inp{width:100%;background:var(--inp);border:1px solid var(--inp-bd);color:var(--txt);
+     border-radius:.45rem;padding:.32rem .5rem;font-size:.8rem;outline:none;transition:.15s}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,185,129,.15)}
+select.inp{cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.42rem .72rem;border-radius:.55rem;
+     font-size:.8rem;font-weight:600;border:1px solid var(--bd);background:var(--card);color:var(--txt);
+     cursor:pointer;transition:.15s;white-space:nowrap}
+.btn:hover{background:rgba(16,185,129,.1);border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:#059669;border-color:#059669;color:#fff}
+.btn-primary:hover{background:#047857;border-color:#047857;color:#fff}
+.btn-cyan{background:#0891b2;border-color:#0891b2;color:#fff}
+.btn-cyan:hover{background:#0e7490;border-color:#0e7490;color:#fff}
+.btn-danger{color:#ef4444;border-color:rgba(239,68,68,.4)}
+.btn-danger:hover{background:rgba(239,68,68,.12);border-color:#ef4444;color:#ef4444}
+.btn-sm{padding:.22rem .5rem;font-size:.7rem}
+.ibtn{display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:.45rem;
+      color:var(--muted);cursor:pointer;transition:.15s}
+.ibtn:hover{background:rgba(16,185,129,.12);color:var(--accent)}
+.ibtn-danger:hover{background:rgba(239,68,68,.12);color:#ef4444}
+.navbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .7rem;border-radius:.55rem;
+        font-size:.78rem;font-weight:500;color:var(--muted);white-space:nowrap;cursor:pointer;transition:.15s}
+.navbtn:hover{background:rgba(16,185,129,.1);color:var(--accent)}
+.navbtn.active{background:#059669;color:#fff}
+.dt{width:100%;border-collapse:collapse;font-size:.78rem}
+.dt th{text-align:left;padding:.45rem .4rem;font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;
+       font-weight:700;color:var(--muted);border-bottom:1px solid var(--bd);white-space:nowrap}
+.dt td{padding:.28rem .35rem;border-bottom:1px solid var(--bd);vertical-align:middle}
+.dt tbody tr:hover{background:var(--hover)}
+.dt tfoot td{font-weight:700;border-top:2px solid var(--bd);border-bottom:none;padding-top:.55rem}
+.kpi-label{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+.badge{display:inline-block;padding:.13rem .48rem;border-radius:999px;font-size:.66rem;font-weight:700;white-space:nowrap}
+.subtab{padding:.38rem .78rem;border-radius:.45rem;font-size:.76rem;font-weight:600;cursor:pointer;
+        color:var(--muted);transition:.15s}
+.subtab:hover{background:rgba(16,185,129,.1);color:var(--accent)}
+.subtab.active{background:var(--accent);color:#fff}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] .chev{transform:rotate(90deg)}
+.chev{transition:.2s;display:inline-block}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:8px}
+.money-cell{font-variant-numeric:tabular-nums}
+.warn-box{background:rgba(245,158,11,.1);border:1px solid #f59e0b;border-radius:.5rem;padding:.6rem .8rem;font-size:.8rem}
+.danger-box{background:rgba(239,68,68,.1);border:1px solid #ef4444;border-radius:.5rem;padding:.6rem .8rem;font-size:.8rem}
+.ok-box{background:rgba(16,185,129,.1);border:1px solid #10b981;border-radius:.5rem;padding:.6rem .8rem;font-size:.8rem}
+.info-box{background:rgba(8,145,178,.1);border:1px solid #0891b2;border-radius:.5rem;padding:.6rem .8rem;font-size:.8rem}
+@media print{
+  .no-print{display:none!important}
+  .sec{display:block!important;page-break-inside:avoid}
+  body{background:#fff}
+  .card{box-shadow:none;border:1px solid #ddd}
+  header{position:static!important}
+}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ================= HEADER ================= -->
+<header class="sticky top-0 z-30 no-print" style="background:var(--card);border-bottom:1px solid var(--bd)">
+  <div class="max-w-[1800px] mx-auto px-4 py-2.5 flex items-center gap-3 flex-wrap">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-xl grid place-items-center text-white shrink-0"
+           style="background:linear-gradient(135deg,#059669,#0891b2)">
+        <i data-lucide="globe-2" class="w-5 h-5"></i>
+      </div>
+      <div class="min-w-0">
+        <h1 class="text-sm sm:text-base font-bold leading-tight">International Pricing Calculator</h1>
+        <p class="text-[10px] sm:text-[11px]" style="color:var(--muted)">Global Trade Costing · Incoterms 2020</p>
+      </div>
+    </div>
+    <div class="ml-auto flex items-center gap-2">
+      <select id="reportCurrencySel" class="inp" style="width:auto" onchange="setReportCurrency(this.value)" title="Đồng tiền báo cáo"></select>
+      <button class="btn" onclick="toggleTheme()" title="Sáng/Tối">
+        <i data-lucide="moon" class="w-4 h-4" id="themeIcon"></i>
+      </button>
+    </div>
+  </div>
+  <nav class="max-w-[1800px] mx-auto px-2 pb-2 flex gap-1 overflow-x-auto" id="navBar"></nav>
+</header>
+
+<main class="max-w-[1800px] mx-auto px-3 sm:px-4 py-4 space-y-4">
+
+<!-- ================= DASHBOARD ================= -->
+<section id="sec-dashboard" class="sec">
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-3" id="kpiGrid"></div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+    <div class="card lg:col-span-2">
+      <h3 class="font-bold text-sm mb-1">So sánh giá theo 11 điều kiện Incoterms 2020</h3>
+      <p class="text-[11px] mb-2" style="color:var(--muted)">Đơn vị: đồng tiền báo cáo</p>
+      <div class="relative" style="height:320px"><canvas id="chartMain"></canvas></div>
+    </div>
+    <div class="card">
+      <h3 class="font-bold text-sm mb-2">Cơ cấu chi phí theo danh mục</h3>
+      <div class="relative" style="height:280px"><canvas id="chartPie"></canvas></div>
+      <div class="mt-2 text-[11px]" style="color:var(--muted)" id="pieNote"></div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+    <div class="card">
+      <h3 class="font-bold text-sm mb-2">Cảnh báo & lưu ý</h3>
+      <div id="dashboardWarnings"></div>
+    </div>
+    <div class="card">
+      <h3 class="font-bold text-sm mb-2">Tóm tắt lô hàng</h3>
+      <div id="dashboardShipment" class="text-[12px] space-y-1"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SHIPMENT ================= -->
+<section id="sec-shipment" class="sec hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+    <div class="card">
+      <h3 class="font-bold text-sm mb-3"><i data-lucide="package" class="w-4 h-4 inline"></i> A. Thông tin hàng hóa</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-2"><label class="kpi-label block mb-1">Tên hàng hóa</label><input class="inp" id="sh_productName" onchange="updSh('productName',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Mã sản phẩm (SKU)</label><input class="inp" id="sh_sku" onchange="updSh('sku',this.value)"></div>
+        <div><label class="kpi-label block mb-1">HS Code</label><input class="inp" id="sh_hsCode" onchange="updSh('hsCode',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Số lượng</label><input type="number" min="0" class="inp" id="sh_quantity" onchange="updSh('quantity',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Đơn vị tính</label><input class="inp" id="sh_unit" onchange="updSh('unit',this.value)" placeholder="tấn, kg, cái..."></div>
+        <div><label class="kpi-label block mb-1">Trọng lượng Net (kg)</label><input type="number" min="0" class="inp" id="sh_netWeight" onchange="updSh('netWeight',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Trọng lượng Gross (kg)</label><input type="number" min="0" class="inp" id="sh_grossWeight" onchange="updSh('grossWeight',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Số kiện</label><input type="number" min="0" class="inp" id="sh_packages" onchange="updSh('packages',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Số container</label><input type="number" min="0" class="inp" id="sh_containers" onchange="updSh('containers',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Loại container</label>
+          <select class="inp" id="sh_containerType" onchange="updSh('containerType',this.value)">
+            <option>20GP</option><option>40GP</option><option>40HC</option><option>45HC</option><option>Khác</option>
+          </select>
+        </div>
+        <div><label class="kpi-label block mb-1">CBM (m³)</label><input type="number" min="0" step="0.001" class="inp" id="sh_cbm" onchange="updSh('cbm',+this.value)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="font-bold text-sm mb-3"><i data-lucide="users" class="w-4 h-4 inline"></i> B. Thông tin giao dịch</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="kpi-label block mb-1">Người bán (Seller)</label><input class="inp" id="sh_seller" onchange="updSh('seller',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Người mua (Buyer)</label><input class="inp" id="sh_buyer" onchange="updSh('buyer',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Quốc gia xuất khẩu</label><input class="inp" id="sh_exportCountry" onchange="updSh('exportCountry',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Quốc gia nhập khẩu</label><input class="inp" id="sh_importCountry" onchange="updSh('importCountry',this.value)"></div>
+        <div class="col-span-2"><label class="kpi-label block mb-1">Địa điểm kho người bán</label><input class="inp" id="sh_sellerWarehouse" onchange="updSh('sellerWarehouse',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Cảng xuất khẩu</label><input class="inp" id="sh_exportPort" onchange="updSh('exportPort',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Cảng nhập khẩu</label><input class="inp" id="sh_importPort" onchange="updSh('importPort',this.value)"></div>
+        <div class="col-span-2"><label class="kpi-label block mb-1">Địa điểm giao hàng cuối cùng</label><input class="inp" id="sh_finalDestination" onchange="updSh('finalDestination',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Ngày dự kiến giao hàng</label><input type="date" class="inp" id="sh_expectedDate" onchange="updSh('expectedDate',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Phương thức vận tải</label>
+          <select class="inp" id="sh_transportMode" onchange="updSh('transportMode',this.value)">
+            <option value="sea">Sea Freight</option>
+            <option value="air">Air Freight</option>
+            <option value="road">Road Freight</option>
+            <option value="rail">Rail Freight</option>
+            <option value="multimodal">Multimodal</option>
+          </select>
+        </div>
+        <div class="col-span-2"><label class="kpi-label block mb-1">Named Place (địa điểm giao theo Incoterms)</label><input class="inp" id="sh_namedPlace" onchange="updSh('namedPlace',this.value)" placeholder="VD: FOB Ho Chi Minh City"></div>
+      </div>
+    </div>
+
+    <div class="card lg:col-span-2">
+      <h3 class="font-bold text-sm mb-3"><i data-lucide="dollar-sign" class="w-4 h-4 inline"></i> C. Thông tin thương mại</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <div><label class="kpi-label block mb-1">Đồng tiền giao dịch</label>
+          <select class="inp" id="sh_currency" onchange="updSh('currency',this.value)">
+            <option>USD</option><option>VND</option><option>EUR</option><option>CNY</option>
+            <option>JPY</option><option>KRW</option>
+          </select>
+        </div>
+        <div><label class="kpi-label block mb-1">Tỷ giá (→ VND)</label><input type="number" min="0" class="inp" id="sh_exchangeRate" onchange="updSh('exchangeRate',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Giá xuất xưởng</label><input type="number" min="0" class="inp" id="sh_exwPrice" onchange="updSh('exwPrice',+this.value)"></div>
+        <div><label class="kpi-label block mb-1">Điều kiện thanh toán</label><input class="inp" id="sh_paymentTerms" onchange="updSh('paymentTerms',this.value)"></div>
+      </div>
+      <p class="text-[11px] mt-2" style="color:var(--muted)">
+        <i data-lucide="info" class="w-3 h-3 inline"></i>
+        Giá xuất xưởng nên khớp với khoản chi phí "Giá xuất xưởng" trong Module 2 để tránh sai lệch.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COSTS ================= -->
+<section id="sec-costs" class="sec hidden">
+  <div class="card mb-3">
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+      <div>
+        <h2 class="text-base font-bold">Module 2 — Quản lý chi phí (Cost Management)</h2>
+        <p class="text-xs" style="color:var(--muted)">Thành tiền = Số lượng × Đơn giá. Đánh dấu "Đã gộp" để loại trừ khoản đã bao gồm trong khoản khác.</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-cyan" onclick="restoreTestCosts()"><i data-lucide="refresh-cw" class="w-4 h-4"></i>Nạp dữ liệu mẫu</button>
+        <button class="btn btn-primary" onclick="addCost()"><i data-lucide="plus" class="w-4 h-4"></i>Thêm chi phí</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="dt">
+        <thead>
+          <tr>
+            <th style="width:36px">STT</th>
+            <th style="min-width:180px">Khoản chi phí</th>
+            <th style="width:170px">Danh mục</th>
+            <th style="width:90px">SL</th>
+            <th style="width:110px">Đơn vị</th>
+            <th style="width:110px">Đơn giá</th>
+            <th style="width:75px">Tiền tệ</th>
+            <th class="text-right" style="width:130px">Thành tiền (nguyên tệ)</th>
+            <th class="text-right" style="width:130px">Quy đổi</th>
+            <th style="width:60px" class="text-center" title="Đánh dấu nếu khoản này đã bao gồm trong khoản khác">Đã gộp</th>
+            <th style="width:140px">Ghi chú</th>
+            <th style="width:50px"></th>
+          </tr>
+        </thead>
+        <tbody id="costBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8" class="text-right">TỔNG CHI PHÍ (không tính khoản đã gộp)</td>
+            <td class="text-right" id="costTotal">—</td>
+            <td colspan="3"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="mt-2 text-[11px]" style="color:var(--muted)" id="costSummaryLine"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div class="card">
+      <p class="kpi-label">Tổng giá trị hàng hóa (Goods Value)</p>
+      <p class="text-2xl font-bold mt-1" id="goodsValue">—</p>
+      <p class="text-[11px] mt-1" style="color:var(--muted)">Cơ sở tính cho chi phí %</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Tổng chi phí quy đổi</p>
+      <p class="text-2xl font-bold mt-1" id="totalCostConv">—</p>
+      <p class="text-[11px] mt-1" style="color:var(--muted)">Không gồm khoản đã gộp</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Số khoản chi phí</p>
+      <p class="text-2xl font-bold mt-1" id="costCount">—</p>
+      <p class="text-[11px] mt-1" style="color:var(--muted)" id="includedCount"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INCOTERMS DETAIL ================= -->
+<section id="sec-incoterms" class="sec hidden">
+  <div class="card mb-3">
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <div>
+        <h2 class="text-base font-bold">Module 3 — Incoterms 2020 Calculator</h2>
+        <p class="text-xs" style="color:var(--muted)">Nhấn vào từng điều kiện để xem chi tiết phân bổ chi phí, rủi ro và trách nhiệm</p>
+      </div>
+      <div class="text-sm">
+        <span style="color:var(--muted)">Phương thức vận tải:</span>
+        <b id="transportModeLabel">Sea Freight</b>
+      </div>
+    </div>
+  </div>
+  <div id="incotermsList" class="grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
+</section>
+
+<!-- ================= COMPARISON ================= -->
+<section id="sec-comparison" class="sec hidden">
+  <div class="card mb-3">
+    <h2 class="text-base font-bold mb-1">Module 4 — So sánh giá 11 điều kiện Incoterms</h2>
+    <p class="text-xs mb-3" style="color:var(--muted)">Bảng tổng hợp + biểu đồ + phân tích min/max</p>
+
+    <div class="overflow-x-auto mb-3">
+      <table class="dt">
+        <thead>
+          <tr>
+            <th style="width:80px">Incoterms</th>
+            <th style="min-width:130px">Tên đầy đủ</th>
+            <th class="text-right">Tổng giá lô</th>
+            <th class="text-right">Đơn giá / SP</th>
+            <th class="text-right">Chi phí Seller chịu</th>
+            <th class="text-right">Chi phí Buyer chịu</th>
+            <th style="width:80px" class="text-center">Chi tiết</th>
+          </tr>
+        </thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+
+    <div class="relative" style="height:340px"><canvas id="chartComparison"></canvas></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div class="card">
+      <p class="kpi-label">Điều kiện có giá thấp nhất</p>
+      <p class="text-xl font-bold mt-1" id="minIncoterm">—</p>
+      <p class="text-sm mt-1" style="color:var(--accent)" id="minPrice">—</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Điều kiện có giá cao nhất</p>
+      <p class="text-xl font-bold mt-1" id="maxIncoterm">—</p>
+      <p class="text-sm mt-1" style="color:var(--danger)" id="maxPrice">—</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Chênh lệch</p>
+      <p class="text-xl font-bold mt-1" id="diffPrice">—</p>
+      <p class="text-sm mt-1" style="color:var(--muted)" id="diffPct">—</p>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <h3 class="font-bold text-sm mb-2">Chi phí tăng thêm khi chuyển điều kiện</h3>
+    <div class="overflow-x-auto">
+      <table class="dt">
+        <thead><tr><th>Từ → Đến</th><th class="text-right">Chênh lệch tuyệt đối</th><th class="text-right">Tỷ lệ tăng</th></tr></thead>
+        <tbody id="transitionBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROFIT ================= -->
+<section id="sec-profit" class="sec hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+    <div class="card lg:col-span-1">
+      <h3 class="font-bold text-sm mb-3">Module 5 — Profit Margin & Selling Price</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="kpi-label block mb-1">Phương pháp tính</label>
+          <select class="inp" id="profit_method" onchange="updProfit('method',this.value)">
+            <option value="markup">Markup on Cost (%)</option>
+            <option value="margin">Gross Profit Margin (%)</option>
+          </select>
+        </div>
+        <div>
+          <label class="kpi-label block mb-1">Tỷ lệ lợi nhuận (%)</label>
+          <input type="number" min="0" step="0.1" class="inp" id="profit_rate" onchange="updProfit('rate',+this.value)">
+        </div>
+        <div class="border-t pt-3" style="border-color:var(--bd)">
+          <p class="kpi-label mb-2">Chi phí bổ sung (đồng tiền báo cáo)</p>
+          <div class="space-y-2">
+            <div><label class="text-xs block mb-1">Quản lý phân bổ</label><input type="number" min="0" class="inp" id="profit_mgmt" onchange="updProfitExtra('management',+this.value)"></div>
+            <div><label class="text-xs block mb-1">Tài chính</label><input type="number" min="0" class="inp" id="profit_fin" onchange="updProfitExtra('finance',+this.value)"></div>
+            <div><label class="text-xs block mb-1">Ngân hàng</label><input type="number" min="0" class="inp" id="profit_bank" onchange="updProfitExtra('bank',+this.value)"></div>
+            <div><label class="text-xs block mb-1">Bán hàng</label><input type="number" min="0" class="inp" id="profit_sell" onchange="updProfitExtra('selling',+this.value)"></div>
+            <div><label class="text-xs block mb-1">Marketing</label><input type="number" min="0" class="inp" id="profit_mkt" onchange="updProfitExtra('marketing',+this.value)"></div>
+            <div><label class="text-xs block mb-1">Dự phòng</label><input type="number" min="0" class="inp" id="profit_cont" onchange="updProfitExtra('contingency',+this.value)"></div>
+          </div>
+        </div>
+        <div>
+          <label class="kpi-label block mb-1">Incoterms cơ sở</label>
+          <select class="inp" id="profit_baseInc" onchange="updProfit('baseIncoterm',this.value)" id="profit_baseIncSel"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card lg:col-span-2">
+      <h3 class="font-bold text-sm mb-3">Kết quả</h3>
+      <div class="grid grid-cols-2 gap-3 mb-3" id="profitKpis"></div>
+      <table class="dt">
+        <tbody id="profitTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LANDED COST ================= -->
+<section id="sec-landed" class="sec hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+    <div class="card">
+      <h3 class="font-bold text-sm mb-3">Module 6 — Buyer Landed Cost</h3>
+      <div class="space-y-2">
+        <div>
+          <label class="kpi-label block mb-1">Incoterms mua hàng</label>
+          <select class="inp" id="lc_incoterm" onchange="updLc('incoterm',this.value)"></select>
+        </div>
+        <div>
+          <label class="kpi-label block mb-1">Giá mua (đồng tiền báo cáo)</label>
+          <input type="number" min="0" class="inp" id="lc_purchasePrice" onchange="updLc('purchasePrice',+this.value)">
+        </div>
+        <div><label class="text-xs block mb-1">Vận tải đầu nhập</label><input type="number" min="0" class="inp" id="lc_importFreight" onchange="updLc('importFreight',+this.value)"></div>
+        <div><label class="text-xs block mb-1">Phí cảng / THC nhập</label><input type="number" min="0" class="inp" id="lc_portFees" onchange="updLc('portFees',+this.value)"></div>
+        <div><label class="text-xs block mb-1">Thông quan nhập khẩu</label><input type="number" min="0" class="inp" id="lc_customs" onchange="updLc('customsClearance',+this.value)"></div>
+        <div><label class="text-xs block mb-1">Thuế nhập khẩu</label><input type="number" min="0" class="inp" id="lc_importDuty" onchange="updLc('importDuty',+this.value)"></div>
+        <div><label class="text-xs block mb-1">VAT nhập khẩu</label><input type="number" min="0" class="inp" id="lc_importVat" onchange="updLc('importVat',+this.value)"></div>
+        <div><label class="text-xs block mb-1">Kiểm tra chuyên ngành</label><input type="number" min="0" class="inp" id="lc_special" onchange="updLc('specialInspection',+this.value)"></div>
+        <div><label class="text-xs block mb-1">Giao hàng nội địa</label><input type="number" min="0" class="inp" id="lc_delivery" onchange="updLc('domesticDelivery',+this.value)"></div>
+        <div><label class="text-xs block mb-1">Chi phí khác</label><input type="number" min="0" class="inp" id="lc_other" onchange="updLc('other',+this.value)"></div>
+        <div>
+          <label class="kpi-label block mb-1">Chế độ VAT</label>
+          <select class="inp" id="lc_vatMode" onchange="updLc('vatMode',this.value)">
+            <option value="with">Tổng dòng tiền chi ra (bao gồm VAT)</option>
+            <option value="without">Chi phí thực tế (loại VAT khấu trừ)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card lg:col-span-2">
+      <h3 class="font-bold text-sm mb-3">Kết quả Landed Cost</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3" id="lcKpis"></div>
+      <div id="lcWarning" class="mb-3"></div>
+      <table class="dt">
+        <tbody id="lcTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUOTATION ================= -->
+<section id="sec-quotation" class="sec hidden">
+  <div class="card mb-3">
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <h2 class="text-base font-bold">Module 9 — Cost Sheet & Quotation Report</h2>
+      <div class="flex gap-1">
+        <button class="subtab active" id="qTabInternal" onclick="setQuoteTab('internal')">Internal Cost Sheet</button>
+        <button class="subtab" id="qTabCustomer" onclick="setQuoteTab('customer')">Customer Quotation</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <h3 class="font-bold text-sm mb-2">Thông tin báo giá</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div><label class="kpi-label block mb-1">Company Name</label><input class="inp" id="q_company" onchange="updQuote('company',this.value)"></div>
+      <div><label class="kpi-label block mb-1">Buyer</label><input class="inp" id="q_buyer" onchange="updQuote('buyer',this.value)"></div>
+      <div><label class="kpi-label block mb-1">Incoterms</label>
+        <select class="inp" id="q_incoterm" onchange="updQuote('incoterm',this.value)"></select>
+      </div>
+      <div><label class="kpi-label block mb-1">Named Place</label><input class="inp" id="q_namedPlace" onchange="updQuote('namedPlace',this.value)"></div>
+      <div><label class="kpi-label block mb-1">Validity</label><input class="inp" id="q_validity" onchange="updQuote('validity',this.value)" placeholder="30 days"></div>
+      <div><label class="kpi-label block mb-1">Delivery Time</label><input class="inp" id="q_deliveryTime" onchange="updQuote('deliveryTime',this.value)" placeholder="30-45 days"></div>
+      <div><label class="kpi-label block mb-1">Payment Terms</label><input class="inp" id="q_paymentTerms" onchange="updQuote('paymentTerms',this.value)" placeholder="L/C at sight"></div>
+      <div><label class="kpi-label block mb-1">Exclusions</label><input class="inp" id="q_exclusions" onchange="updQuote('exclusions',this.value)"></div>
+      <div class="col-span-2 md:col-span-4"><label class="kpi-label block mb-1">Remarks</label><input class="inp" id="q_remarks" onchange="updQuote('remarks',this.value)"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="font-bold text-sm" id="quoteTitle">Xem trước</h3>
+      <div class="flex gap-2 flex-wrap no-print">
+        <button class="btn" onclick="exportQuoteCSV()"><i data-lucide="file-text" class="w-4 h-4"></i>CSV</button>
+        <button class="btn" onclick="exportQuoteXLSX()"><i data-lucide="file-spreadsheet" class="w-4 h-4"></i>Excel</button>
+        <button class="btn" onclick="window.print()"><i data-lucide="printer" class="w-4 h-4"></i>In / PDF</button>
+        <button class="btn" onclick="copyQuote()"><i data-lucide="copy" class="w-4 h-4"></i>Copy</button>
+      </div>
+    </div>
+    <div id="quotePreview"></div>
+  </div>
+</section>
+
+<!-- ================= WHAT-IF ================= -->
+<section id="sec-whatif" class="sec hidden">
+  <div class="card mb-3">
+    <h2 class="text-base font-bold mb-1">Module 10 — What-if Analysis</h2>
+    <p class="text-xs mb-3" style="color:var(--muted)">Mô phỏng thay đổi giả định — không ghi đè dữ liệu gốc</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div><label class="kpi-label block mb-1">Ocean Freight thay đổi (%)</label><input type="number" step="1" class="inp" id="wi_freight" onchange="updWi('freightChange',+this.value)"></div>
+      <div><label class="kpi-label block mb-1">THC thay đổi (%)</label><input type="number" step="1" class="inp" id="wi_thc" onchange="updWi('thcChange',+this.value)"></div>
+      <div><label class="kpi-label block mb-1">Tỷ giá thay đổi (%)</label><input type="number" step="0.1" class="inp" id="wi_exchange" onchange="updWi('exchangeChange',+this.value)"></div>
+      <div><label class="kpi-label block mb-1">Bảo hiểm thay đổi (%)</label><input type="number" step="1" class="inp" id="wi_insurance" onchange="updWi('insuranceChange',+this.value)"></div>
+      <div><label class="kpi-label block mb-1">Sản lượng thay đổi (%)</label><input type="number" step="1" class="inp" id="wi_volume" onchange="updWi('volumeChange',+this.value)"></div>
+      <div><label class="kpi-label block mb-1">Lợi nhuận mục tiêu mới (%)</label><input type="number" step="0.1" class="inp" id="wi_profit" onchange="updWi('targetProfitChange',+this.value)"></div>
+    </div>
+    <div class="mt-3">
+      <label class="kpi-label block mb-1">Incoterms tham chiếu</label>
+      <select class="inp" id="wi_incoterm" onchange="updWi('incoterm','' + this.value)" style="max-width:200px"></select>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3" id="wiKpis"></div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+    <div class="card">
+      <h3 class="font-bold text-sm mb-2">Chi tiết thay đổi</h3>
+      <div class="overflow-x-auto">
+        <table class="dt">
+          <thead><tr><th>Hạng mục</th><th class="text-right">Hiện tại</th><th class="text-right">Sau mô phỏng</th><th class="text-right">Chênh lệch</th></tr></thead>
+          <tbody id="wiTable"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="font-bold text-sm mb-2">So sánh trực quan</h3>
+      <div class="relative" style="height:300px"><canvas id="chartWhatIf"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section id="sec-settings" class="sec hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+    <div class="card">
+      <h2 class="text-base font-bold mb-3">Cài đặt chung</h2>
+      <div class="space-y-3">
+        <div><label class="kpi-label block mb-1">Tên doanh nghiệp</label><input class="inp" id="set_company" onchange="setSetting('companyName',this.value)"></div>
+        <div><label class="kpi-label block mb-1">Đồng tiền báo cáo</label>
+          <select class="inp" id="set_currency" onchange="setReportCurrency(this.value)"></select>
+        </div>
+        <div>
+          <label class="kpi-label block mb-1">Bao gồm VAT nhập khẩu trong DDP</label>
+          <select class="inp" id="set_includeVat" onchange="setSetting('includeVatInDdp',this.value==='true')">
+            <option value="false">Không (Buyer tự chịu VAT)</option>
+            <option value="true">Có (Seller chịu VAT trong DDP)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="text-base font-bold mb-3">Tỷ giá tham chiếu</h2>
+      <p class="text-xs mb-2" style="color:var(--muted)">Tỷ giá được lưu lại theo từng thời điểm. Bạn có thể nhập thủ công.</p>
+      <div id="exchangeList" class="space-y-2"></div>
+      <p class="text-[11px] mt-2" style="color:var(--muted)"><i data-lucide="info" class="w-3 h-3 inline"></i> Hệ thống không tự động cập nhật tỷ giá từ internet.</p>
+    </div>
+
+    <div class="card lg:col-span-2">
+      <h2 class="text-base font-bold mb-3">Dữ liệu</h2>
+      <div class="flex flex-wrap gap-2">
+        <button class="btn" onclick="exportBackup()"><i data-lucide="download" class="w-4 h-4"></i>Tải JSON backup</button>
+        <button class="btn" onclick="document.getElementById('importFile').click()"><i data-lucide="upload" class="w-4 h-4"></i>Nhập JSON</button>
+        <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
+        <button class="btn btn-cyan" onclick="restoreTestData()"><i data-lucide="refresh-cw" class="w-4 h-4"></i>Khôi phục dữ liệu mẫu</button>
+        <button class="btn btn-danger" onclick="clearAll()"><i data-lucide="trash-2" class="w-4 h-4"></i>Xóa toàn bộ</button>
+      </div>
+      <p class="text-[11px] mt-2" style="color:var(--muted)">Dữ liệu lưu tự động vào localStorage sau mỗi thay đổi.</p>
+    </div>
+
+    <div class="card lg:col-span-2">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-base font-bold">Bộ test kiểm tra công thức</h2>
+        <button class="btn" onclick="runTests()"><i data-lucide="play" class="w-4 h-4"></i>Chạy test</button>
+      </div>
+      <div id="testResults" class="text-[12px] space-y-1"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* ============================================================================
+   INTERNATIONAL PRICING CALCULATOR — GLOBAL TRADE COSTING
+   Toàn bộ logic tính toán Incoterms 2020, đa tiền tệ, lợi nhuận, landed cost
+   ========================================================================== */
+
+const LS_KEY = 'ipc_global_trade_v1';
+
+/* ------------------------------ HẰNG SỐ ------------------------------ */
+const CURRENCIES = {
+  USD: { symbol: '$', label: 'USD — US Dollar' },
+  VND: { symbol: '₫', label: 'VND — Việt Nam Đồng' },
+  EUR: { symbol: '€', label: 'EUR — Euro' },
+  CNY: { symbol: '¥', label: 'CNY — Chinese Yuan' },
+  JPY: { symbol: '¥', label: 'JPY — Japanese Yen' },
+  KRW: { symbol: '₩', label: 'KRW — Korean Won' }
+};
+
+const COST_CATEGORIES = {
+  goods:          'Giá xuất xưởng (Goods Value)',
+  packaging:      'Bao bì (Packaging)',
+  pre_export:     'Chi phí trước XK (Pre-export)',
+  inland_export:  'Vận chuyển nội địa XK',
+  export_customs: 'Thông quan xuất khẩu',
+  documents:      'Phí chứng từ / ngân hàng',
+  port_export:    'Phí cảng xuất / THC',
+  loading:        'Xếp hàng lên tàu',
+  intl_freight:   'Cước quốc tế (Intl Freight)',
+  insurance:      'Bảo hiểm (Insurance)',
+  port_import:    'THC nhập / Phí cảng nhập',
+  unloading:      'Dỡ hàng (Unloading)',
+  import_customs: 'Thông quan nhập khẩu',
+  import_duty:    'Thuế nhập khẩu (Import Duty)',
+  import_vat:     'VAT nhập khẩu (Import VAT)',
+  local_import:   'Local charges nhập',
+  inland_import:  'Vận chuyển nội địa nhập',
+  storage:        'Phí lưu kho (Storage)',
+  other:          'Khác (Other)'
+};
+
+const UNITS = {
+  lot: 'Lô (Lot)',
+  container: 'Container',
+  product: 'Sản phẩm',
+  ton: 'Tấn',
+  kg: 'Kg',
+  cbm: 'CBM',
+  trip: 'Chuyến',
+  day: 'Ngày',
+  percent: '% Giá trị'
+};
+
+const TRANSPORT_MODES = {
+  sea: 'Sea Freight',
+  air: 'Air Freight',
+  road: 'Road Freight',
+  rail: 'Rail Freight',
+  multimodal: 'Multimodal'
+};
+
+/* Định nghĩa 11 điều kiện Incoterms 2020 */
+const INCOTERMS = {
+  EXW: {
+    name: 'EXW', fullName: 'Ex Works',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging'],
+    riskTransfer: 'Tại cơ sở người bán khi hàng được đặt dưới quyền định đoạt của người mua',
+    deliveryPoint: 'Cơ sở người bán',
+    buyerResp: 'Toàn bộ chi phí từ khi nhận hàng: bốc hàng, vận chuyển, thông quan xuất & nhập, thuế, giao đến kho.'
+  },
+  FCA: {
+    name: 'FCA', fullName: 'Free Carrier',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents'],
+    riskTransfer: 'Khi hàng được giao cho người chuyên chở do người mua chỉ định',
+    deliveryPoint: 'Địa điểm giao cho carrier',
+    buyerResp: 'Cước chính, bảo hiểm, thông quan nhập, thuế, giao đến kho.'
+  },
+  FAS: {
+    name: 'FAS', fullName: 'Free Alongside Ship',
+    category: 'B', modes: ['sea'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','port_export'],
+    riskTransfer: 'Khi hàng được đặt dọc mạn tàu tại cảng xếp',
+    deliveryPoint: 'Dọc mạn tàu tại cảng xếp',
+    buyerResp: 'Phí xếp hàng lên tàu, cước chính, bảo hiểm, nhập khẩu, giao đến kho.'
+  },
+  FOB: {
+    name: 'FOB', fullName: 'Free On Board',
+    category: 'B', modes: ['sea'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','port_export','loading'],
+    riskTransfer: 'Khi hàng được xếp lên tàu tại cảng xếp',
+    deliveryPoint: 'Trên tàu tại cảng xếp',
+    buyerResp: 'Cước chính, bảo hiểm, nhập khẩu, giao đến kho.'
+  },
+  CPT: {
+    name: 'CPT', fullName: 'Carriage Paid To',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','intl_freight'],
+    riskTransfer: 'Khi hàng được giao cho carrier đầu tiên (KHÔNG phải tại đích)',
+    deliveryPoint: 'Giao cho carrier đầu tiên',
+    buyerResp: 'Bảo hiểm (nếu muốn), nhập khẩu, thuế, giao đến kho. Rủi ro đã chuyển tại điểm giao carrier.'
+  },
+  CIP: {
+    name: 'CIP', fullName: 'Carriage and Insurance Paid To',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','intl_freight','insurance'],
+    riskTransfer: 'Khi hàng được giao cho carrier đầu tiên (KHÔNG phải tại đích)',
+    deliveryPoint: 'Giao cho carrier đầu tiên',
+    buyerResp: 'Nhập khẩu, thuế, giao đến kho.',
+    insuranceLevel: 'Institute Cargo Clauses (A) — All Risks'
+  },
+  CFR: {
+    name: 'CFR', fullName: 'Cost and Freight',
+    category: 'B', modes: ['sea'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','port_export','loading','intl_freight'],
+    riskTransfer: 'Khi hàng được xếp lên tàu tại cảng xếp',
+    deliveryPoint: 'Trên tàu tại cảng xếp',
+    buyerResp: 'Bảo hiểm (nếu muốn), nhập khẩu, thuế, giao đến kho.'
+  },
+  CIF: {
+    name: 'CIF', fullName: 'Cost, Insurance and Freight',
+    category: 'B', modes: ['sea'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','port_export','loading','intl_freight','insurance'],
+    riskTransfer: 'Khi hàng được xếp lên tàu tại cảng xếp',
+    deliveryPoint: 'Trên tàu tại cảng xếp',
+    buyerResp: 'Nhập khẩu, thuế, giao đến kho.',
+    insuranceLevel: 'Institute Cargo Clauses (C) — Minimum'
+  },
+  DAP: {
+    name: 'DAP', fullName: 'Delivered at Place',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','intl_freight','inland_import'],
+    riskTransfer: 'Tại địa điểm giao hàng đích, hàng sẵn sàng để dỡ (CHƯA dỡ)',
+    deliveryPoint: 'Địa điểm đích — chưa dỡ',
+    buyerResp: 'Chi phí dỡ hàng, thông quan nhập, thuế, VAT, giao vào kho.'
+  },
+  DPU: {
+    name: 'DPU', fullName: 'Delivered at Place Unloaded',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','intl_freight','inland_import','unloading'],
+    riskTransfer: 'Tại địa điểm đích sau khi hàng đã được dỡ xuống',
+    deliveryPoint: 'Địa điểm đích — đã dỡ',
+    buyerResp: 'Thông quan nhập, thuế, VAT.'
+  },
+  DDP: {
+    name: 'DDP', fullName: 'Delivered Duty Paid',
+    category: 'A', modes: ['sea','air','road','rail','multimodal'],
+    includes: ['goods','packaging','pre_export','inland_export','export_customs','documents','intl_freight','port_import','import_customs','import_duty','local_import','inland_import'],
+    riskTransfer: 'Tại địa điểm đích sau khi đã thông quan nhập',
+    deliveryPoint: 'Địa điểm đích — đã thông quan',
+    buyerResp: 'Chỉ còn VAT (thường được khấu trừ nếu có đăng ký VAT).',
+    includesVat: false
+  }
+};
+
+const INCOTERM_ORDER = ['EXW','FCA','FAS','FOB','CPT','CIP','CFR','CIF','DAP','DPU','DDP'];
+
+const NAV = [
+  { id:'dashboard',  label:'Dashboard',    icon:'layout-dashboard' },
+  { id:'shipment',   label:'Lô hàng',      icon:'package' },
+  { id:'costs',      label:'Chi phí',      icon:'receipt' },
+  { id:'incoterms',  label:'Incoterms',    icon:'globe-2' },
+  { id:'comparison', label:'So sánh giá',  icon:'bar-chart-3' },
+  { id:'profit',     label:'Lợi nhuận',    icon:'trending-up' },
+  { id:'landed',     label:'Landed Cost',  icon:'truck' },
+  { id:'quotation',  label:'Báo giá',      icon:'file-text' },
+  { id:'whatif',     label:'What-if',      icon:'flask-conical' },
+  { id:'settings',   label:'Cài đặt',      icon:'settings' }
+];
+
+/* ------------------------------ HELPERS ------------------------------ */
+const uid = () => 'id' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+const n2 = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmt = (n, d = 2) => {
+  if (!isFinite(n)) return '—';
+  const abs = Math.abs(n);
+  const digits = abs >= 1000000 ? 0 : abs >= 1000 ? 2 : d;
+  return new Intl.NumberFormat('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(n);
+};
+function fmtMoney(n, currency) {
+  const c = currency || state.settings.reportCurrency;
+  const sym = CURRENCIES[c]?.symbol || '';
+  return fmt(n, 2) + ' ' + sym;
+}
+function todayISO() { return new Date().toISOString().slice(0, 10); }
+function pct(n, d = 2) { return (isFinite(n) ? fmt(n, d) : '—') + '%'; }
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  const bg = { error:'#ef4444', success:'#10b981', warn:'#f59e0b' }[type] || '#0891b2';
+  el.textContent = msg;
+  el.style.cssText = `position:fixed;bottom:20px;right:20px;z-index:9999;padding:.6rem 1rem;border-radius:.6rem;color:#fff;font-size:.8rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);background:${bg};max-width:380px`;
+  document.body.appendChild(el);
+  setTimeout(() => el.style.opacity = '0', 2300);
+  setTimeout(() => el.remove(), 2700);
+}
+function setCell(key, html) { const el = document.querySelector(`[data-cell="${key}"]`); if (el) el.innerHTML = html; }
+
+/* ============================================================================
+   DỮ LIỆU MẶC ĐỊNH — TEST CASE TỪ BÀI VIẾT THAM KHẢO
+   ========================================================================== */
+function defaultState() {
+  return {
+    settings: {
+      companyName: 'Công ty A Việt Nam',
+      reportCurrency: 'USD',
+      exchangeRates: {
+        USD: 1,
+        VND: 1/22900,
+        EUR: 1.08,
+        CNY: 0.14,
+        JPY: 0.0067,
+        KRW: 0.00074
+      },
+      rateUpdatedAt: todayISO(),
+      includeVatInDdp: false,
+      theme: 'light'
+    },
+    shipment: {
+      productName: 'Gạo Jasmine',
+      sku: 'RICE-JAS-25',
+      hsCode: '1006.30',
+      quantity: 100,
+      unit: 'tấn',
+      netWeight: 100000,
+      grossWeight: 100500,
+      packages: 4000,
+      containers: 4,
+      containerType: '20GP',
+      cbm: 0,
+      seller: 'Công ty A Việt Nam',
+      buyer: 'Công ty B Hong Kong',
+      exportCountry: 'Việt Nam',
+      importCountry: 'Hồng Kông',
+      sellerWarehouse: 'Cần Thơ',
+      exportPort: 'Cát Lái (HCM)',
+      importPort: 'Hong Kong',
+      finalDestination: 'Kho B, Hong Kong',
+      expectedDate: '2025-12-31',
+      transportMode: 'sea',
+      namedPlace: 'FOB Ho Chi Minh City',
+      currency: 'USD',
+      exchangeRate: 22900,
+      exwPrice: 500,
+      paymentTerms: 'L/C at sight'
+    },
+    costs: buildTestCosts(),
+    profit: {
+      method: 'markup',
+      rate: 15,
+      baseIncoterm: 'CIF',
+      extraCosts: {
+        management: 0,
+        finance: 0,
+        bank: 0,
+        selling: 0,
+        marketing: 0,
+        contingency: 0
+      }
+    },
+    landedCost: {
+      incoterm: 'CIF',
+      purchasePrice: 0,
+      importFreight: 0,
+      portFees: 0,
+      customsClearance: 0,
+      importDuty: 0,
+      importVat: 0,
+      specialInspection: 0,
+      domesticDelivery: 0,
+      other: 0,
+      vatMode: 'with'
+    },
+    quotation: {
+      company: 'Công ty A Việt Nam',
+      buyer: 'Công ty B Hong Kong',
+      incoterm: 'CIF',
+      namedPlace: 'CIF Hong Kong',
+      validity: '30 days',
+      deliveryTime: '30-45 days',
+      paymentTerms: 'L/C at sight',
+      exclusions: 'Import duty & VAT at destination not included',
+      remarks: 'Price subject to change without prior notice'
+    },
+    whatIf: {
+      freightChange: 0,
+      thcChange: 0,
+      exchangeChange: 0,
+      insuranceChange: 0,
+      volumeChange: 0,
+      targetProfitChange: null,
+      incoterm: 'CIF'
+    }
+  };
+}
+
+function buildTestCosts() {
+  return [
+    { id: uid(), name: 'Giá xuất xưởng', category: 'goods', qty: 100, unitPrice: 500, currency: 'USD', unit: 'ton', isIncluded: false, note: '500 USD/tấn × 100 tấn' },
+    { id: uid(), name: 'Giám định chất lượng', category: 'pre_export', qty: 1, unitPrice: 5000000, currency: 'VND', unit: 'lot', isIncluded: false, note: '' },
+    { id: uid(), name: 'Kiểm dịch', category: 'pre_export', qty: 1, unitPrice: 500000, currency: 'VND', unit: 'lot', isIncluded: false, note: '' },
+    { id: uid(), name: 'Hun trùng', category: 'pre_export', qty: 1, unitPrice: 1000000, currency: 'VND', unit: 'lot', isIncluded: false, note: '' },
+    { id: uid(), name: 'Giấy phép xuất khẩu', category: 'pre_export', qty: 1, unitPrice: 500000, currency: 'VND', unit: 'lot', isIncluded: false, note: '' },
+    { id: uid(), name: 'Bank Charge', category: 'documents', qty: 1, unitPrice: 100, currency: 'USD', unit: 'lot', isIncluded: false, note: '' },
+    { id: uid(), name: 'Vận chuyển Cần Thơ → HCMC', category: 'inland_export', qty: 4, unitPrice: 3000000, currency: 'VND', unit: 'container', isIncluded: false, note: '' },
+    { id: uid(), name: 'Khai hải quan xuất khẩu', category: 'export_customs', qty: 1, unitPrice: 500000, currency: 'VND', unit: 'lot', isIncluded: false, note: '' },
+    { id: uid(), name: 'Ocean Freight', category: 'intl_freight', qty: 4, unitPrice: 200, currency: 'USD', unit: 'container', isIncluded: false, note: '200 USD/container × 4' },
+    { id: uid(), name: 'THC đầu xuất', category: 'port_export', qty: 4, unitPrice: 50, currency: 'USD', unit: 'container', isIncluded: false, note: '' },
+    { id: uid(), name: 'THC đầu nhập', category: 'port_import', qty: 4, unitPrice: 50, currency: 'USD', unit: 'container', isIncluded: false, note: '' },
+    { id: uid(), name: 'Import duty & phí NK (giả định)', category: 'import_duty', qty: 100, unitPrice: 10, currency: 'USD', unit: 'ton', isIncluded: false, note: 'Giả định bài tập, không phải thuế suất HK thực tế' },
+    { id: uid(), name: 'Vận chuyển HK → kho người mua', category: 'inland_import', qty: 4, unitPrice: 100, currency: 'USD', unit: 'container', isIncluded: false, note: '' },
+    { id: uid(), name: 'Bảo hiểm (USD)', category: 'insurance', qty: 1, unitPrice: 70, currency: 'USD', unit: 'lot', isIncluded: false, note: 'Bảo hiểm theo dữ liệu bổ sung' },
+    { id: uid(), name: 'Bảo hiểm (VND) — ĐÃ GỘP', category: 'insurance', qty: 1, unitPrice: 1000000, currency: 'VND', unit: 'lot', isIncluded: true, note: 'Đã gộp trong dòng bảo hiểm USD — tránh cộng trùng' }
+  ];
+}
+
+/* ------------------------------ STATE ------------------------------ */
+function loadState() {
+  const d = defaultState();
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return d;
+    const s = JSON.parse(raw);
+    const merged = {};
+    Object.keys(d).forEach(k => merged[k] = (s[k] !== undefined) ? s[k] : d[k]);
+    merged.settings = Object.assign({}, d.settings, s.settings || {});
+    merged.shipment = Object.assign({}, d.shipment, s.shipment || {});
+    merged.profit = Object.assign({}, d.profit, s.profit || {});
+    merged.profit.extraCosts = Object.assign({}, d.profit.extraCosts, (s.profit || {}).extraCosts || {});
+    merged.landedCost = Object.assign({}, d.landedCost, s.landedCost || {});
+    merged.quotation = Object.assign({}, d.quotation, s.quotation || {});
+    merged.whatIf = Object.assign({}, d.whatIf, s.whatIf || {});
+    if (!Array.isArray(merged.costs)) merged.costs = d.costs;
+    return merged;
+  } catch (e) {
+    console.warn('Load state failed:', e);
+    return d;
+  }
+}
+let state = loadState();
+function save() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  catch (e) { console.warn('Save state failed:', e); }
+}
+
+let currentSection = 'dashboard';
+let ui = {
+  quoteTab: 'internal',
+  charts: {}
+};
+
+/* ============================================================================
+   CURRENCY & CONVERSION
+   ========================================================================== */
+function getRate(currency) {
+  return n2(state.settings.exchangeRates[currency]) || 1;
+}
+function convertToReport(amount, currency) {
+  if (currency === state.settings.reportCurrency) return amount;
+  const rateToVND = getRate(currency);
+  const reportRateToVND = getRate(state.settings.reportCurrency);
+  return (amount * rateToVND) / reportRateToVND;
+}
+
+/* ============================================================================
+   COST CALCULATION
+   ========================================================================== */
+function goodsValueReport() {
+  return state.costs
+    .filter(c => c.category === 'goods' && !c.isIncluded)
+    .reduce((s, c) => s + convertToReport(n2(c.qty) * n2(c.unitPrice), c.currency), 0);
+}
+
+function calcCostAmount(cost) {
+  // Trả về giá trị quy đổi sang đồng tiền báo cáo
+  if (cost.isIncluded) return 0;
+  let baseAmount;
+  if (cost.unit === 'percent') {
+    const base = goodsValueReport();
+    baseAmount = (n2(cost.qty) / 100) * base;
+  } else {
+    baseAmount = n2(cost.qty) * n2(cost.unitPrice);
+  }
+  return convertToReport(baseAmount, cost.currency);
+}
+
+function calcCostNativeAmount(cost) {
+  if (cost.unit === 'percent') {
+    const base = goodsValueReport();
+    // percentage applies to goods value in report currency, then convert back to native
+    const reportAmt = (n2(cost.qty) / 100) * base;
+    const rate = getRate(cost.currency) / getRate(state.settings.reportCurrency);
+    return reportAmt / rate;
+  }
+  return n2(cost.qty) * n2(cost.unitPrice);
+}
+
+/* ============================================================================
+   INCOTERMS CALCULATION ENGINE
+   ========================================================================== */
+function incotermsIncludes(incName) {
+  const inc = INCOTERMS[incName];
+  if (!inc) return [];
+  let list = [...inc.includes];
+  // DDP VAT toggle
+  if (incName === 'DDP' && state.settings.includeVatInDdp) {
+    list.push('import_vat');
+  }
+  return list;
+}
+
+function calcIncoterms(incName) {
+  const inc = INCOTERMS[incName];
+  if (!inc) return null;
+
+  const allowedCats = incotermsIncludes(incName);
+  const breakdown = [];  // { category, name, amount }
+  let total = 0;
+  let sellerCost = 0;    // Chi phí Seller chịu (đã bao gồm trong giá chào)
+  let buyerCost = 0;     // Chi phí Buyer sẽ phải chịu sau điểm giao
+
+  state.costs.forEach(c => {
+    if (c.isIncluded) return; // Skip included
+    const amt = calcCostAmount(c);
+    const inScope = allowedCats.includes(c.category);
+    if (inScope) {
+      breakdown.push({
+        category: c.category,
+        name: c.name,
+        amount: amt,
+        nativeAmount: calcCostNativeAmount(c),
+        currency: c.currency
+      });
+      total += amt;
+      sellerCost += amt;
+    } else {
+      buyerCost += amt;
+    }
+  });
+
+  return {
+    name: incName,
+    fullName: inc.fullName,
+    total,
+    sellerCost,
+    buyerCost,
+    breakdown,
+    riskTransfer: inc.riskTransfer,
+    deliveryPoint: inc.deliveryPoint,
+    buyerResp: inc.buyerResp,
+    insuranceLevel: inc.insuranceLevel,
+    allowedCats
+  };
+}
+
+function calcAllIncoterms() {
+  const result = {};
+  INCOTERM_ORDER.forEach(k => result[k] = calcIncoterms(k));
+  return result;
+}
+
+function isIncotermsAvailable(incName) {
+  const inc = INCOTERMS[incName];
+  if (!inc) return false;
+  return inc.modes.includes(state.shipment.transportMode || 'sea');
+}
+
+/* ============================================================================
+   PROFIT CALCULATION
+   ========================================================================== */
+function calcProfit() {
+  const inc = state.profit.baseIncoterm || 'CIF';
+  const incResult = calcIncoterms(inc);
+  if (!incResult) return null;
+
+  const extra = state.profit.extraCosts || {};
+  const extraTotal = Object.values(extra).reduce((s, v) => s + n2(v), 0);
+  const totalCost = incResult.total + extraTotal;
+  const rate = n2(state.profit.rate);
+
+  let sellingPrice = totalCost;
+  let profitAmount = 0;
+
+  if (state.profit.method === 'markup') {
+    sellingPrice = totalCost * (1 + rate / 100);
+    profitAmount = sellingPrice - totalCost;
+  } else {
+    // margin
+    const margin = Math.min(rate, 99.99) / 100;
+    sellingPrice = margin < 1 ? totalCost / (1 - margin) : totalCost;
+    profitAmount = sellingPrice - totalCost;
+  }
+
+  const qty = n2(state.shipment.quantity) || 1;
+  return {
+    incoterm: inc,
+    basePrice: incResult.total,
+    extraCost: extraTotal,
+    totalCost,
+    sellingPrice,
+    profitAmount,
+    profitPct: totalCost > 0 ? (profitAmount / totalCost * 100) : 0,
+    marginPct: sellingPrice > 0 ? (profitAmount / sellingPrice * 100) : 0,
+    unitPrice: sellingPrice / qty,
+    qty
+  };
+}
+
+/* ============================================================================
+   LANDED COST CALCULATION
+   ========================================================================== */
+function calcLandedCost() {
+  const lc = state.landedCost;
+  const purchase = n2(lc.purchasePrice);
+  const imports = ['importFreight','portFees','customsClearance','importDuty','specialInspection','domesticDelivery','other']
+    .reduce((s, k) => s + n2(lc[k]), 0);
+  const vat = n2(lc.importVat);
+
+  const totalWithVat = purchase + imports + vat;
+  const totalWithoutVat = purchase + imports;  // VAT khấu trừ → không phải chi phí
+  const effectiveTotal = lc.vatMode === 'without' ? totalWithoutVat : totalWithVat;
+
+  const qty = n2(state.shipment.quantity) || 1;
+  const containers = n2(state.shipment.containers) || 1;
+
+  return {
+    purchase,
+    importCost: imports + (lc.vatMode === 'with' ? vat : 0),
+    importCostNoVat: imports,
+    vat,
+    total: effectiveTotal,
+    totalWithVat,
+    totalNoVat: totalWithoutVat,
+    perUnit: effectiveTotal / qty,
+    perContainer: effectiveTotal / containers,
+    vatMode: lc.vatMode,
+    incoterm: lc.incoterm
+  };
+}
+
+/* ============================================================================
+   WHAT-IF CALCULATION
+   ========================================================================== */
+function calcWhatIf() {
+  const wi = state.whatIf;
+  const incName = wi.incoterm || 'CIF';
+
+  // Current state
+  const current = calcIncoterms(incName);
+  if (!current) return null;
+
+  // Simulate: apply changes to specific categories
+  const changes = {
+    freightChange: n2(wi.freightChange),
+    thcChange: n2(wi.thcChange),
+    exchangeChange: n2(wi.exchangeChange),
+    insuranceChange: n2(wi.insuranceChange),
+    volumeChange: n2(wi.volumeChange)
+  };
+
+  const allowedCats = incotermsIncludes(incName);
+  let simulatedTotal = 0;
+  const details = [];
+
+  state.costs.forEach(c => {
+    if (c.isIncluded) return;
+    let amt = calcCostAmount(c);
+    const original = amt;
+
+    if (c.category === 'intl_freight') amt *= (1 + changes.freightChange / 100);
+    if (c.category === 'port_export' || c.category === 'port_import') amt *= (1 + changes.thcChange / 100);
+    if (c.category === 'insurance') amt *= (1 + changes.insuranceChange / 100);
+    // exchange rate applies to costs in non-report currency
+    if (c.currency !== state.settings.reportCurrency) amt *= (1 + changes.exchangeChange / 100);
+    // volume applies to variable costs (freight, per-unit costs)
+    if (['intl_freight','port_export','port_import','inland_export','inland_import'].includes(c.category)) {
+      amt *= (1 + changes.volumeChange / 100);
+    }
+
+    if (allowedCats.includes(c.category)) {
+      simulatedTotal += amt;
+      if (Math.abs(amt - original) > 0.01) {
+        details.push({ name: c.name, category: c.category, original, simulated: amt });
+      }
+    }
+  });
+
+  const diff = simulatedTotal - current.total;
+  const diffPct = current.total > 0 ? (diff / current.total * 100) : 0;
+
+  // Find biggest contributor
+  let biggest = null;
+  details.forEach(d => {
+    const delta = Math.abs(d.simulated - d.original);
+    if (!biggest || delta > biggest.delta) biggest = { ...d, delta };
+  });
+
+  return {
+    incoterm: incName,
+    currentTotal: current.total,
+    simulatedTotal,
+    diff,
+    diffPct,
+    details,
+    biggest
+  };
+}
+
+/* ============================================================================
+   NAVIGATION
+   ========================================================================== */
+function renderNav() {
+  const nav = document.getElementById('navBar');
+  if (!nav) return;
+  nav.innerHTML = NAV.map(n => `
+    <button class="navbtn" data-nav="${n.id}" onclick="showSection('${n.id}')">
+      <i data-lucide="${n.icon}" class="w-4 h-4"></i><span>${n.label}</span>
+    </button>`).join('');
+  updateNavActive();
+  if (window.lucide) lucide.createIcons();
+}
+function updateNavActive() {
+  document.querySelectorAll('[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === currentSection));
+}
+function showSection(id) {
+  currentSection = id;
+  document.querySelectorAll('.sec').forEach(s => s.classList.toggle('hidden', s.id !== 'sec-' + id));
+  updateNavActive();
+  if (id === 'dashboard') initCharts();
+  setTimeout(() => Object.values(ui.charts).forEach(c => c && c.resize()), 60);
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ============================================================================
+   RENDER: DASHBOARD
+   ========================================================================== */
+function renderDashboard() {
+  const all = calcAllIncoterms();
+  const goodsVal = goodsValueReport();
+  const totalCostAll = state.costs.reduce((s, c) => s + calcCostAmount(c), 0);
+
+  const grid = document.getElementById('kpiGrid');
+  if (grid) {
+    grid.innerHTML = [
+      kpiCard('Giá trị hàng hóa', fmtMoney(goodsVal), `${n2(state.shipment.quantity)} ${state.shipment.unit}`, 'package', 'emerald'),
+      kpiCard('Tổng chi phí (không gộp)', fmtMoney(totalCostAll), `${state.costs.filter(c => !c.isIncluded).length} khoản`, 'receipt', 'cyan'),
+      kpiCard('Giá CIF', fmtMoney(all.CIF?.total || 0), 'Cost, Insurance & Freight', 'ship', 'amber'),
+      kpiCard('Giá DDP', fmtMoney(all.DDP?.total || 0), 'Delivered Duty Paid', 'home', 'violet')
+    ].join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  // Shipment summary
+  const s = state.shipment;
+  const shEl = document.getElementById('dashboardShipment');
+  if (shEl) {
+    shEl.innerHTML = `
+      <div class="flex justify-between"><span style="color:var(--muted)">Sản phẩm</span><b>${esc(s.productName || '—')}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Số lượng</span><b>${fmt(n2(s.quantity))} ${esc(s.unit || '')}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Container</span><b>${fmt(n2(s.containers))} × ${esc(s.containerType)}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Seller</span><b>${esc(s.seller || '—')}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Buyer</span><b>${esc(s.buyer || '—')}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Route</span><b>${esc(s.exportPort || '—')} → ${esc(s.importPort || '—')}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Transport</span><b>${TRANSPORT_MODES[s.transportMode] || '—'}</b></div>
+      <div class="flex justify-between"><span style="color:var(--muted)">Tỷ giá</span><b>1 USD = ${fmt(n2(s.exchangeRate))} VND</b></div>
+    `;
+  }
+
+  // Warnings
+  const warnEl = document.getElementById('dashboardWarnings');
+  if (warnEl) {
+    const warnings = [];
+    const insuranceCount = state.costs.filter(c => c.category === 'insurance' && !c.isIncluded).length;
+    if (insuranceCount > 1) {
+      warnings.push({ type: 'warn', msg: `Có ${insuranceCount} khoản bảo hiểm đang hoạt động — kiểm tra trùng lặp.` });
+    }
+    if (state.costs.some(c => c.isIncluded)) {
+      warnings.push({ type: 'info', msg: `${state.costs.filter(c => c.isIncluded).length} khoản được đánh dấu "Đã gộp" — không tính vào tổng.` });
+    }
+    if (!isIncotermsAvailable('FOB') && s.transportMode !== 'sea') {
+      warnings.push({ type: 'info', msg: `Phương thức ${TRANSPORT_MODES[s.transportMode]} không áp dụng được FAS/FOB/CFR/CIF.` });
+    }
+    if (state.settings.includeVatInDdp) {
+      warnings.push({ type: 'info', msg: 'DDP đang bao gồm VAT nhập khẩu (Seller chịu VAT).' });
+    }
+    warnEl.innerHTML = warnings.length
+      ? warnings.map(w => `<div class="${w.type === 'warn' ? 'warn-box' : 'info-box'} mb-2">${esc(w.msg)}</div>`).join('')
+      : `<div class="ok-box">Không có cảnh báo đặc biệt.</div>`;
+  }
+
+  updateCharts();
+}
+
+function kpiCard(label, value, sub, icon, color) {
+  const colors = {
+    emerald: '#10b981', cyan: '#0891b2', amber: '#f59e0b', violet: '#7c3aed',
+    blue: '#2563eb', red: '#ef4444', slate: '#64748b'
+  };
+  const c = colors[color] || colors.emerald;
+  return `<div class="card flex items-start gap-3">
+    <div class="w-10 h-10 rounded-lg grid place-items-center shrink-0" style="background:${c}22;color:${c}">
+      <i data-lucide="${icon}" class="w-5 h-5"></i>
+    </div>
+    <div class="min-w-0 flex-1">
+      <p class="kpi-label">${label}</p>
+      <p class="text-lg font-bold truncate" title="${value}">${value}</p>
+      <p class="text-[11px]" style="color:var(--muted)">${sub}</p>
+    </div>
+  </div>`;
+}
+
+/* ============================================================================
+   CHARTS
+   ========================================================================== */
+function chartTheme() {
+  if (!window.Chart) return;
+  const dark = state.settings.theme === 'dark';
+  Chart.defaults.color = dark ? '#cbd5e1' : '#475569';
+  Chart.defaults.borderColor = dark ? 'rgba(148,163,184,.15)' : 'rgba(100,116,139,.15)';
+  Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+}
+
+function initCharts() {
+  if (typeof Chart === 'undefined') return;
+  chartTheme();
+  const C = ui.charts;
+
+  if (!C.main) {
+    const el = document.getElementById('chartMain');
+    if (el) C.main = new Chart(el, {
+      type: 'bar',
+      data: { labels: [], datasets: [{ label: 'Giá lô hàng', data: [], backgroundColor: '#10b981', borderRadius: 4 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true }, x: { grid: { display: false } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+  if (!C.pie) {
+    const el = document.getElementById('chartPie');
+    if (el) C.pie = new Chart(el, {
+      type: 'doughnut',
+      data: { labels: [], datasets: [{ data: [], backgroundColor: ['#10b981','#0891b2','#f59e0b','#7c3aed','#ef4444','#2563eb','#64748b','#a855f7','#14b8a6','#f43f5e'], borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { display: false } } }
+    });
+  }
+  if (!C.comparison) {
+    const el = document.getElementById('chartComparison');
+    if (el) C.comparison = new Chart(el, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Tổng giá (Seller)', data: [], backgroundColor: '#10b981', borderRadius: 4, stack: 's' },
+          { label: 'Chi phí Buyer chịu', data: [], backgroundColor: '#f59e0b', borderRadius: 4, stack: 's' }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true } },
+        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } }
+      }
+    });
+  }
+  if (!C.whatIf) {
+    const el = document.getElementById('chartWhatIf');
+    if (el) C.whatIf = new Chart(el, {
+      type: 'bar',
+      data: {
+        labels: ['Hiện tại', 'Sau mô phỏng'],
+        datasets: [{ label: 'Tổng giá', data: [], backgroundColor: ['#10b981','#f59e0b'], borderRadius: 6 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true }, x: { grid: { display: false } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+  updateCharts();
+}
+
+function updateCharts() {
+  if (typeof Chart === 'undefined') return;
+  const C = ui.charts;
+  const all = calcAllIncoterms();
+
+  if (C.main) {
+    const incs = INCOTERM_ORDER.filter(k => isIncotermsAvailable(k));
+    C.main.data.labels = incs;
+    C.main.data.datasets[0].data = incs.map(k => all[k]?.total || 0);
+    C.main.data.datasets[0].backgroundColor = incs.map(k => k === 'CIF' ? '#0891b2' : '#10b981');
+    C.main.update();
+  }
+
+  if (C.pie) {
+    const byCat = {};
+    state.costs.forEach(c => {
+      if (c.isIncluded) return;
+      if (!byCat[c.category]) byCat[c.category] = 0;
+      byCat[c.category] += calcCostAmount(c);
+    });
+    const entries = Object.entries(byCat).sort((a,b) => b[1] - a[1]).slice(0, 8);
+    C.pie.data.labels = entries.map(e => COST_CATEGORIES[e[0]]?.split(' ')[0] || e[0]);
+    C.pie.data.datasets[0].data = entries.map(e => e[1]);
+    C.pie.update();
+
+    const note = document.getElementById('pieNote');
+    if (note) {
+      note.innerHTML = entries.slice(0, 3).map(e => `• ${COST_CATEGORIES[e[0]]}: ${fmtMoney(e[1])}`).join('<br>');
+    }
+  }
+
+  if (C.comparison) {
+    const incs = INCOTERM_ORDER.filter(k => isIncotermsAvailable(k));
+    C.comparison.data.labels = incs;
+    C.comparison.data.datasets[0].data = incs.map(k => all[k]?.sellerCost || 0);
+    C.comparison.data.datasets[1].data = incs.map(k => all[k]?.buyerCost || 0);
+    C.comparison.update();
+  }
+}
+
+/* ============================================================================
+   RENDER: SHIPMENT
+   ========================================================================== */
+function renderShipment() {
+  const s = state.shipment;
+  const fields = ['productName','sku','hsCode','quantity','unit','netWeight','grossWeight','packages',
+    'containers','containerType','cbm','seller','buyer','exportCountry','importCountry',
+    'sellerWarehouse','exportPort','importPort','finalDestination','expectedDate','transportMode',
+    'namedPlace','currency','exchangeRate','exwPrice','paymentTerms'];
+  fields.forEach(f => {
+    const el = document.getElementById('sh_' + f);
+    if (el && document.activeElement !== el) {
+      if (el.type === 'checkbox') el.checked = !!s[f];
+      else el.value = s[f] ?? '';
+    }
+  });
+}
+
+/* ============================================================================
+   RENDER: COSTS
+   ========================================================================== */
+function renderCosts() {
+  const body = document.getElementById('costBody');
+  if (!body) return;
+
+  body.innerHTML = state.costs.map((c, i) => {
+    const nativeAmt = calcCostNativeAmount(c);
+    const reportAmt = calcCostAmount(c);
+    return `<tr style="${c.isIncluded ? 'opacity:.5' : ''}">
+      <td class="text-center text-xs" style="color:var(--muted)">${i + 1}</td>
+      <td><input class="inp" value="${esc(c.name)}" onchange="updCost('${c.id}','name',this.value)"></td>
+      <td>
+        <select class="inp" onchange="updCost('${c.id}','category',this.value)">
+          ${Object.entries(COST_CATEGORIES).map(([k,v]) =>
+            `<option value="${k}" ${k === c.category ? 'selected' : ''}>${v}</option>`).join('')}
+        </select>
+      </td>
+      <td><input type="number" min="0" step="0.01" class="inp" value="${c.qty}" onchange="updCost('${c.id}','qty',+this.value)"></td>
+      <td>
+        <select class="inp" onchange="updCost('${c.id}','unit',this.value)">
+          ${Object.entries(UNITS).map(([k,v]) =>
+            `<option value="${k}" ${k === c.unit ? 'selected' : ''}>${v}</option>`).join('')}
+        </select>
+      </td>
+      <td><input type="number" min="0" step="0.01" class="inp" value="${c.unitPrice}" onchange="updCost('${c.id}','unitPrice',+this.value)" ${c.unit === 'percent' ? 'placeholder="VD: 0.5 = 0.5%"' : ''}></td>
+      <td>
+        <select class="inp" onchange="updCost('${c.id}','currency',this.value)">
+          ${Object.keys(CURRENCIES).map(k =>
+            `<option value="${k}" ${k === c.currency ? 'selected' : ''}>${k}</option>`).join('')}
+        </select>
+      </td>
+      <td class="text-right money-cell">${fmt(nativeAmt, 2)} ${esc(c.currency)}</td>
+      <td class="text-right money-cell font-semibold" data-cell="cost-amt-${c.id}">${fmtMoney(reportAmt)}</td>
+      <td class="text-center"><input type="checkbox" ${c.isIncluded ? 'checked' : ''} onchange="updCost('${c.id}','isIncluded',this.checked)"></td>
+      <td><input class="inp" value="${esc(c.note || '')}" onchange="updCost('${c.id}','note',this.value)" placeholder="..."></td>
+      <td class="text-center"><button class="ibtn ibtn-danger" onclick="delCost('${c.id}')" title="Xóa"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="12" class="text-center py-6" style="color:var(--muted)">Chưa có khoản chi phí</td></tr>`;
+
+  // Totals
+  const total = state.costs.reduce((s, c) => s + calcCostAmount(c), 0);
+  const totalEl = document.getElementById('costTotal');
+  if (totalEl) totalEl.textContent = fmtMoney(total);
+
+  const goodsVal = goodsValueReport();
+  const goodsEl = document.getElementById('goodsValue');
+  if (goodsEl) goodsEl.textContent = fmtMoney(goodsVal);
+
+  const totalConvEl = document.getElementById('totalCostConv');
+  if (totalConvEl) totalConvEl.textContent = fmtMoney(total);
+
+  const countEl = document.getElementById('costCount');
+  if (countEl) countEl.textContent = state.costs.length;
+
+  const includedEl = document.getElementById('includedCount');
+  if (includedEl) includedEl.textContent = `${state.costs.filter(c => c.isIncluded).length} khoản đã gộp`;
+
+  const sumEl = document.getElementById('costSummaryLine');
+  if (sumEl) {
+    const currency = state.settings.reportCurrency;
+    sumEl.innerHTML = `Tổng chi phí quy đổi: <b>${fmtMoney(total)}</b> · Giá trị hàng hóa: <b>${fmtMoney(goodsVal)}</b> · Đồng tiền báo cáo: <b>${currency}</b>`;
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   RENDER: INCOTERMS DETAIL
+   ========================================================================== */
+function renderIncoterms() {
+  const mode = TRANSPORT_MODES[state.shipment.transportMode] || 'Sea Freight';
+  const lbl = document.getElementById('transportModeLabel');
+  if (lbl) lbl.textContent = mode;
+
+  const list = document.getElementById('incotermsList');
+  if (!list) return;
+
+  const all = calcAllIncoterms();
+
+  list.innerHTML = INCOTERM_ORDER.map(k => {
+    const inc = INCOTERMS[k];
+    const res = all[k];
+    const available = isIncotermsAvailable(k);
+    return `<details class="card" style="${!available ? 'opacity:.5' : ''}">
+      <summary class="flex items-center justify-between gap-2 cursor-pointer">
+        <div class="flex items-center gap-2">
+          <span class="chev">▶</span>
+          <span class="badge" style="background:${inc.category === 'A' ? '#10b98122' : '#0891b222'};color:${inc.category === 'A' ? '#10b981' : '#0891b2'}">${inc.category === 'A' ? 'Mọi PT' : 'Sea only'}</span>
+          <b>${k}</b>
+          <span class="text-xs" style="color:var(--muted)">${inc.fullName}</span>
+        </div>
+        <div class="text-right">
+          <div class="font-bold" style="color:var(--accent)">${fmtMoney(res?.total || 0)}</div>
+          ${!available ? `<span class="text-[10px]" style="color:var(--danger)">Không áp dụng cho ${mode}</span>` : ''}
+        </div>
+      </summary>
+      ${available ? `
+      <div class="mt-3 pt-3 border-t" style="border-color:var(--bd)">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3 text-[12px]">
+          <div class="p-2 rounded-lg" style="background:var(--hover)">
+            <p class="kpi-label">Địa điểm giao hàng</p>
+            <p class="font-semibold mt-1">${esc(inc.deliveryPoint)}</p>
+          </div>
+          <div class="p-2 rounded-lg" style="background:var(--hover)">
+            <p class="kpi-label">Chuyển giao rủi ro</p>
+            <p class="font-semibold mt-1">${esc(inc.riskTransfer)}</p>
+          </div>
+          <div class="p-2 rounded-lg" style="background:var(--hover)">
+            <p class="kpi-label">Trách nhiệm Buyer</p>
+            <p class="mt-1">${esc(inc.buyerResp)}</p>
+          </div>
+        </div>
+        ${inc.insuranceLevel ? `<div class="info-box mb-3"><b>Mức bảo hiểm:</b> ${esc(inc.insuranceLevel)}</div>` : ''}
+        <table class="dt">
+          <thead><tr><th>Khoản chi phí được cộng</th><th class="text-right">Số tiền</th></tr></thead>
+          <tbody>
+            ${res.breakdown.map(b => `<tr>
+              <td>${esc(b.name)} <span class="text-xs" style="color:var(--muted)">[${esc(COST_CATEGORIES[b.category] || b.category)}]</span></td>
+              <td class="text-right money-cell">${fmtMoney(b.amount)}</td>
+            </tr>`).join('') || `<tr><td colspan="2" class="text-center py-3" style="color:var(--muted)">Không có chi phí</td></tr>`}
+          </tbody>
+          <tfoot>
+            <tr><td>TỔNG GIÁ ${k}</td><td class="text-right" style="color:var(--accent)">${fmtMoney(res.total)}</td></tr>
+            <tr><td style="color:var(--muted)">Chi phí Buyer tiếp tục chịu</td><td class="text-right" style="color:var(--warn)">${fmtMoney(res.buyerCost)}</td></tr>
+          </tfoot>
+        </table>
+      </div>
+      ` : ''}
+    </details>`;
+  }).join('');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   RENDER: COMPARISON
+   ========================================================================== */
+function renderComparison() {
+  const all = calcAllIncoterms();
+  const qty = n2(state.shipment.quantity) || 1;
+  const body = document.getElementById('comparisonBody');
+  if (!body) return;
+
+  body.innerHTML = INCOTERM_ORDER.map(k => {
+    const inc = INCOTERMS[k];
+    const res = all[k];
+    const available = isIncotermsAvailable(k);
+    if (!available) {
+      return `<tr style="opacity:.4">
+        <td><b>${k}</b></td><td>${inc.fullName}</td>
+        <td colspan="5" class="text-center text-xs" style="color:var(--muted)">Không áp dụng cho phương thức vận tải hiện tại</td>
+      </tr>`;
+    }
+    return `<tr>
+      <td><b>${k}</b></td>
+      <td class="text-xs" style="color:var(--muted)">${inc.fullName}</td>
+      <td class="text-right money-cell font-semibold">${fmtMoney(res.total)}</td>
+      <td class="text-right money-cell">${fmtMoney(res.total / qty)}</td>
+      <td class="text-right money-cell" style="color:var(--accent)">${fmtMoney(res.sellerCost)}</td>
+      <td class="text-right money-cell" style="color:var(--warn)">${fmtMoney(res.buyerCost)}</td>
+      <td class="text-center"><button class="ibtn" onclick="showIncotermsDetail('${k}')" title="Chi tiết"><i data-lucide="eye" class="w-4 h-4"></i></button></td>
+    </tr>`;
+  }).join('');
+
+  // Min/max analysis
+  const available = INCOTERM_ORDER.filter(k => isIncotermsAvailable(k));
+  const sorted = available.slice().sort((a, b) => (all[a]?.total || 0) - (all[b]?.total || 0));
+  const min = sorted[0], max = sorted[sorted.length - 1];
+
+  setCell('minIncoterm', min || '—');
+  setCell('minPrice', min ? fmtMoney(all[min]?.total || 0) : '—');
+  setCell('maxIncoterm', max || '—');
+  setCell('maxPrice', max ? fmtMoney(all[max]?.total || 0) : '—');
+  if (min && max) {
+    const diff = (all[max].total || 0) - (all[min].total || 0);
+    const diffPct = all[min].total > 0 ? (diff / all[min].total * 100) : 0;
+    setCell('diffPrice', fmtMoney(diff));
+    setCell('diffPct', `+${pct(diffPct)} so với ${min}`);
+  }
+
+  // Transition table — consecutive pairs
+  const transBody = document.getElementById('transitionBody');
+  if (transBody) {
+    transBody.innerHTML = available.slice(1).map((k, i) => {
+      const prev = available[i];
+      const diff = (all[k].total || 0) - (all[prev].total || 0);
+      const pctv = all[prev].total > 0 ? (diff / all[prev].total * 100) : 0;
+      return `<tr>
+        <td>${prev} → ${k}</td>
+        <td class="text-right money-cell" style="color:${diff >= 0 ? 'var(--danger)' : 'var(--ok)'}">${diff >= 0 ? '+' : ''}${fmtMoney(diff)}</td>
+        <td class="text-right">${diff >= 0 ? '+' : ''}${pct(pctv)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  updateCharts();
+  if (window.lucide) lucide.createIcons();
+}
+
+function showIncotermsDetail(name) {
+  showSection('incoterms');
+  setTimeout(() => {
+    const all = document.querySelectorAll('#incotermsList details');
+    const idx = INCOTERM_ORDER.indexOf(name);
+    if (all[idx]) all[idx].open = true;
+  }, 100);
+}
+
+/* ============================================================================
+   RENDER: PROFIT
+   ========================================================================== */
+function renderProfit() {
+  const p = state.profit;
+  const methodEl = document.getElementById('profit_method');
+  if (methodEl) methodEl.value = p.method;
+  const rateEl = document.getElementById('profit_rate');
+  if (rateEl && document.activeElement !== rateEl) rateEl.value = p.rate;
+
+  const extras = ['management','finance','bank','selling','marketing','contingency'];
+  const extraMap = { management:'mgmt', finance:'fin', bank:'bank', selling:'sell', marketing:'mkt', contingency:'cont' };
+  extras.forEach(k => {
+    const el = document.getElementById('profit_' + extraMap[k]);
+    if (el && document.activeElement !== el) el.value = p.extraCosts[k] || 0;
+  });
+
+  const incSel = document.getElementById('profit_baseInc');
+  if (incSel) {
+    incSel.innerHTML = INCOTERM_ORDER.map(k =>
+      `<option value="${k}" ${p.baseIncoterm === k ? 'selected' : ''}>${k} — ${INCOTERMS[k].fullName}</option>`).join('');
+  }
+
+  const result = calcProfit();
+  if (!result) return;
+
+  const kpis = document.getElementById('profitKpis');
+  if (kpis) {
+    kpis.innerHTML = [
+      kpiCard('Tổng chi phí', fmtMoney(result.totalCost), `${result.incoterm} + extras`, 'receipt', 'cyan'),
+      kpiCard('Giá bán', fmtMoney(result.sellingPrice), `Phương pháp: ${p.method === 'markup' ? 'Markup' : 'Margin'}`, 'tag', 'emerald'),
+      kpiCard('Lợi nhuận', fmtMoney(result.profitAmount), `Tỷ lệ: ${pct(result.profitPct)}`, 'trending-up', 'amber'),
+      kpiCard('Lợi nhuận / SP', fmtMoney(result.profitAmount / result.qty), `${fmt(result.qty)} SP`, 'package', 'violet')
+    ].join('');
+  }
+
+  const table = document.getElementById('profitTable');
+  if (table) {
+    table.innerHTML = `
+      <tr><td>Giá theo ${result.incoterm}</td><td class="text-right">${fmtMoney(result.basePrice)}</td></tr>
+      <tr><td>Chi phí bổ sung</td><td class="text-right">${fmtMoney(result.extraCost)}</td></tr>
+      <tr><td class="font-bold">Tổng chi phí đầy đủ</td><td class="text-right font-bold">${fmtMoney(result.totalCost)}</td></tr>
+      <tr><td>Lợi nhuận mục tiêu (${pct(state.profit.rate)})</td><td class="text-right">${fmtMoney(result.profitAmount)}</td></tr>
+      <tr style="background:var(--hover)"><td class="font-bold">GIÁ BÁN CUỐI CÙNG</td><td class="text-right font-bold" style="color:var(--accent)">${fmtMoney(result.sellingPrice)}</td></tr>
+      <tr><td>Giá bán 1 sản phẩm</td><td class="text-right">${fmtMoney(result.unitPrice)}</td></tr>
+      <tr><td>Số lượng</td><td class="text-right">${fmt(result.qty)} ${esc(state.shipment.unit)}</td></tr>
+      <tr><td>Lợi nhuận / SP</td><td class="text-right">${fmtMoney(result.profitAmount / result.qty)}</td></tr>
+      <tr><td>Gross Margin thực tế</td><td class="text-right">${pct(result.marginPct)}</td></tr>
+    `;
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   RENDER: LANDED COST
+   ========================================================================== */
+function renderLandedCost() {
+  const lc = state.landedCost;
+  const incSel = document.getElementById('lc_incoterm');
+  if (incSel) {
+    incSel.innerHTML = INCOTERM_ORDER.map(k =>
+      `<option value="${k}" ${lc.incoterm === k ? 'selected' : ''}>${k}</option>`).join('');
+  }
+
+  const fields = ['purchasePrice','importFreight','portFees','customsClearance','importDuty','importVat','specialInspection','domesticDelivery','other'];
+  fields.forEach(f => {
+    const el = document.getElementById('lc_' + f);
+    if (el && document.activeElement !== el) el.value = lc[f] || 0;
+  });
+  const vatEl = document.getElementById('lc_vatMode');
+  if (vatEl) vatEl.value = lc.vatMode;
+
+  const result = calcLandedCost();
+
+  const kpis = document.getElementById('lcKpis');
+  if (kpis) {
+    kpis.innerHTML = [
+      kpiCard('Giá mua', fmtMoney(result.purchase), `${lc.incoterm}`, 'tag', 'blue'),
+      kpiCard('Chi phí nhập khẩu', fmtMoney(result.importCost), lc.vatMode === 'without' ? '(không VAT)' : '(gồm VAT)', 'truck', 'cyan'),
+      kpiCard('Total Landed Cost', fmtMoney(result.total), lc.vatMode === 'without' ? 'Loại VAT khấu trừ' : 'Gồm VAT', 'home', 'emerald'),
+      kpiCard('Giá vốn / SP', fmtMoney(result.perUnit), `${fmt(state.shipment.quantity)} ${state.shipment.unit}`, 'package', 'amber')
+    ].join('');
+  }
+
+  const warn = document.getElementById('lcWarning');
+  if (warn) {
+    if (lc.incoterm === 'DDP') {
+      warn.innerHTML = `<div class="warn-box"><b>⚠️ Cảnh báo DDP:</b> Các khoản thuế nhập khẩu & thông quan đã có thể nằm trong giá mua DDP. Không cộng lại lần hai.</div>`;
+    } else if (lc.vatMode === 'without') {
+      warn.innerHTML = `<div class="info-box"><b>ℹ️ Chế độ VAT khấu trừ:</b> VAT ${fmtMoney(result.vat)} không được tính vào chi phí thực tế.</div>`;
+    } else {
+      warn.innerHTML = '';
+    }
+  }
+
+  const table = document.getElementById('lcTable');
+  if (table) {
+    table.innerHTML = `
+      <tr><td>Giá mua (${lc.incoterm})</td><td class="text-right">${fmtMoney(result.purchase)}</td></tr>
+      <tr><td>Vận tải đầu nhập</td><td class="text-right">${fmtMoney(lc.importFreight)}</td></tr>
+      <tr><td>Phí cảng / THC</td><td class="text-right">${fmtMoney(lc.portFees)}</td></tr>
+      <tr><td>Thông quan nhập khẩu</td><td class="text-right">${fmtMoney(lc.customsClearance)}</td></tr>
+      <tr><td>Thuế nhập khẩu</td><td class="text-right">${fmtMoney(lc.importDuty)}</td></tr>
+      <tr><td>VAT nhập khẩu ${lc.vatMode === 'without' ? '(không tính — khấu trừ)' : ''}</td><td class="text-right ${lc.vatMode === 'without' ? 'line-through' : ''}">${fmtMoney(result.vat)}</td></tr>
+      <tr><td>Kiểm tra chuyên ngành</td><td class="text-right">${fmtMoney(lc.specialInspection)}</td></tr>
+      <tr><td>Giao hàng nội địa</td><td class="text-right">${fmtMoney(lc.domesticDelivery)}</td></tr>
+      <tr><td>Chi phí khác</td><td class="text-right">${fmtMoney(lc.other)}</td></tr>
+      <tr style="background:var(--hover)"><td class="font-bold">TOTAL LANDED COST</td><td class="text-right font-bold" style="color:var(--accent)">${fmtMoney(result.total)}</td></tr>
+      <tr><td>Chi phí / container</td><td class="text-right">${fmtMoney(result.perContainer)}</td></tr>
+      <tr><td>Chi phí / sản phẩm</td><td class="text-right">${fmtMoney(result.perUnit)}</td></tr>
+    `;
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   RENDER: QUOTATION
+   ========================================================================== */
+function setQuoteTab(tab) {
+  ui.quoteTab = tab;
+  document.getElementById('qTabInternal').classList.toggle('active', tab === 'internal');
+  document.getElementById('qTabCustomer').classList.toggle('active', tab === 'customer');
+  renderQuotation();
+}
+
+function renderQuotation() {
+  const q = state.quotation;
+  ['company','buyer','namedPlace','validity','deliveryTime','paymentTerms','exclusions','remarks'].forEach(f => {
+    const el = document.getElementById('q_' + f);
+    if (el && document.activeElement !== el) el.value = q[f] || '';
+  });
+
+  const incSel = document.getElementById('q_incoterm');
+  if (incSel) {
+    incSel.innerHTML = INCOTERM_ORDER.map(k =>
+      `<option value="${k}" ${q.incoterm === k ? 'selected' : ''}>${k}</option>`).join('');
+  }
+
+  const title = document.getElementById('quoteTitle');
+  const preview = document.getElementById('quotePreview');
+  if (!preview) return;
+
+  const inc = q.incoterm || 'CIF';
+  const incResult = calcIncoterms(inc);
+  const profit = calcProfit();
+  const qty = n2(state.shipment.quantity) || 1;
+
+  if (ui.quoteTab === 'internal') {
+    if (title) title.textContent = 'Internal Cost Sheet — Chi tiết nội bộ';
+    preview.innerHTML = `
+      <div class="p-4 rounded-lg" style="background:var(--hover)">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="text-lg font-bold">INTERNAL COST SHEET</div>
+            <div class="text-xs" style="color:var(--muted)">${esc(q.company)} → ${esc(q.buyer)}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs" style="color:var(--muted)">Ngày: ${todayISO()}</div>
+            <div class="text-xs" style="color:var(--muted)">Điều kiện: <b>${inc}</b></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3 text-sm">
+          <div><span style="color:var(--muted)">Sản phẩm:</span> <b>${esc(state.shipment.productName)}</b></div>
+          <div><span style="color:var(--muted)">Số lượng:</span> <b>${fmt(qty)} ${esc(state.shipment.unit)}</b></div>
+          <div><span style="color:var(--muted)">Named Place:</span> <b>${esc(q.namedPlace)}</b></div>
+          <div><span style="color:var(--muted)">Hiệu lực:</span> <b>${esc(q.validity)}</b></div>
+        </div>
+
+        <table class="dt mb-3">
+          <thead><tr><th>Chi phí nội bộ</th><th class="text-right">Số tiền</th></tr></thead>
+          <tbody>
+            ${incResult.breakdown.map(b => `<tr>
+              <td>${esc(b.name)}</td>
+              <td class="text-right">${fmtMoney(b.amount)}</td>
+            </tr>`).join('')}
+          </tbody>
+          <tfoot>
+            <tr><td>Tổng chi phí ${inc}</td><td class="text-right">${fmtMoney(incResult.total)}</td></tr>
+            <tr><td>Chi phí bổ sung</td><td class="text-right">${fmtMoney(profit.extraCost)}</td></tr>
+            <tr><td class="font-bold">Tổng chi phí đầy đủ</td><td class="text-right font-bold">${fmtMoney(profit.totalCost)}</td></tr>
+            <tr><td>Lợi nhuận (${pct(state.profit.rate)})</td><td class="text-right">${fmtMoney(profit.profitAmount)}</td></tr>
+            <tr style="background:var(--card)"><td class="font-bold">GIÁ BÁN ĐỀ XUẤT</td><td class="text-right font-bold" style="color:var(--accent)">${fmtMoney(profit.sellingPrice)}</td></tr>
+            <tr><td>Đơn giá / SP</td><td class="text-right">${fmtMoney(profit.unitPrice)}</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
+  } else {
+    if (title) title.textContent = 'Customer Quotation — Bản gửi khách';
+    preview.innerHTML = `
+      <div class="p-6 rounded-lg" style="background:var(--hover)">
+        <div class="text-center mb-4 pb-4" style="border-bottom:1px solid var(--bd)">
+          <div class="text-xl font-bold">${esc(q.company || state.settings.companyName)}</div>
+          <div class="text-sm" style="color:var(--muted)">COMMERCIAL QUOTATION</div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+          <div><span style="color:var(--muted)">To:</span> <b>${esc(q.buyer)}</b></div>
+          <div class="text-right"><span style="color:var(--muted)">Date:</span> ${todayISO()}</div>
+          <div><span style="color:var(--muted)">Product:</span> ${esc(state.shipment.productName)}</div>
+          <div class="text-right"><span style="color:var(--muted)">Quantity:</span> ${fmt(qty)} ${esc(state.shipment.unit)}</div>
+        </div>
+
+        <table class="dt mb-4">
+          <thead>
+            <tr><th>Điều kiện</th><th>Named Place</th><th class="text-right">Đơn giá</th><th class="text-right">Tổng giá</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>${inc}</b></td>
+              <td>${esc(q.namedPlace)}</td>
+              <td class="text-right font-semibold">${fmtMoney(profit.unitPrice)}</td>
+              <td class="text-right font-bold" style="color:var(--accent)">${fmtMoney(profit.sellingPrice)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="grid grid-cols-2 gap-3 text-xs mb-4">
+          <div><span style="color:var(--muted)">Validity:</span> ${esc(q.validity)}</div>
+          <div><span style="color:var(--muted)">Delivery:</span> ${esc(q.deliveryTime)}</div>
+          <div><span style="color:var(--muted)">Payment:</span> ${esc(q.paymentTerms)}</div>
+          <div><span style="color:var(--muted)">Currency:</span> ${state.settings.reportCurrency}</div>
+        </div>
+
+        <div class="text-xs mb-2"><b>Exclusions:</b> ${esc(q.exclusions)}</div>
+        <div class="text-xs"><b>Remarks:</b> ${esc(q.remarks)}</div>
+      </div>
+    `;
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   RENDER: WHAT-IF
+   ========================================================================== */
+function renderWhatIf() {
+  const wi = state.whatIf;
+  ['freightChange','thcChange','exchangeChange','insuranceChange','volumeChange'].forEach(f => {
+    const el = document.getElementById('wi_' + f.replace('Change','').toLowerCase().replace('exchange','exchange'));
+    if (el && document.activeElement !== el) el.value = wi[f] || 0;
+  });
+  const fEl = document.getElementById('wi_freight');
+  if (fEl && document.activeElement !== fEl) fEl.value = wi.freightChange || 0;
+  const tEl = document.getElementById('wi_thc');
+  if (tEl && document.activeElement !== tEl) tEl.value = wi.thcChange || 0;
+  const eEl = document.getElementById('wi_exchange');
+  if (eEl && document.activeElement !== eEl) eEl.value = wi.exchangeChange || 0;
+  const iEl = document.getElementById('wi_insurance');
+  if (iEl && document.activeElement !== iEl) iEl.value = wi.insuranceChange || 0;
+  const vEl = document.getElementById('wi_volume');
+  if (vEl && document.activeElement !== vEl) vEl.value = wi.volumeChange || 0;
+  const pEl = document.getElementById('wi_profit');
+  if (pEl && document.activeElement !== pEl) pEl.value = wi.targetProfitChange ?? '';
+
+  const incSel = document.getElementById('wi_incoterm');
+  if (incSel) {
+    incSel.innerHTML = INCOTERM_ORDER.map(k =>
+      `<option value="${k}" ${wi.incoterm === k ? 'selected' : ''}>${k}</option>`).join('');
+  }
+
+  const result = calcWhatIf();
+  if (!result) return;
+
+  const kpis = document.getElementById('wiKpis');
+  if (kpis) {
+    kpis.innerHTML = [
+      kpiCard('Giá hiện tại', fmtMoney(result.currentTotal), `Điều kiện ${result.incoterm}`, 'tag', 'cyan'),
+      kpiCard('Giá sau mô phỏng', fmtMoney(result.simulatedTotal), `Điều kiện ${result.incoterm}`, 'flask-conical', 'amber'),
+      kpiCard('Chênh lệch', (result.diff >= 0 ? '+' : '') + fmtMoney(result.diff), (result.diff >= 0 ? '+' : '') + pct(result.diffPct), result.diff >= 0 ? 'trending-up' : 'trending-down', result.diff >= 0 ? 'red' : 'emerald')
+    ].join('');
+  }
+
+  const table = document.getElementById('wiTable');
+  if (table) {
+    if (result.details.length === 0) {
+      table.innerHTML = `<tr><td colspan="4" class="text-center py-3" style="color:var(--muted)">Chưa có thay đổi</td></tr>`;
+    } else {
+      table.innerHTML = result.details.map(d => `
+        <tr>
+          <td>${esc(d.name)}</td>
+          <td class="text-right">${fmtMoney(d.original)}</td>
+          <td class="text-right">${fmtMoney(d.simulated)}</td>
+          <td class="text-right" style="color:${d.simulated >= d.original ? 'var(--danger)' : 'var(--ok)'}">
+            ${d.simulated >= d.original ? '+' : ''}${fmtMoney(d.simulated - d.original)}
+          </td>
+        </tr>
+      `).join('') + (result.biggest ? `<tr style="background:var(--hover)">
+        <td colspan="3" class="font-bold">Ảnh hưởng lớn nhất: ${esc(result.biggest.name)}</td>
+        <td class="text-right font-bold" style="color:var(--danger)">${fmtMoney(result.biggest.delta)}</td>
+      </tr>` : '');
+    }
+  }
+
+  // Chart
+  const C = ui.charts;
+  if (C.whatIf) {
+    C.whatIf.data.datasets[0].data = [result.currentTotal, result.simulatedTotal];
+    C.whatIf.update();
+  }
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   RENDER: SETTINGS
+   ========================================================================== */
+function renderSettings() {
+  const c = document.getElementById('set_company');
+  if (c && document.activeElement !== c) c.value = state.settings.companyName;
+
+  const curSel = document.getElementById('set_currency');
+  if (curSel) {
+    curSel.innerHTML = Object.entries(CURRENCIES).map(([k,v]) =>
+      `<option value="${k}" ${state.settings.reportCurrency === k ? 'selected' : ''}>${v.label}</option>`).join('');
+  }
+
+  const vatEl = document.getElementById('set_includeVat');
+  if (vatEl) vatEl.value = state.settings.includeVatInDdp ? 'true' : 'false';
+
+  // Exchange rates
+  const exList = document.getElementById('exchangeList');
+  if (exList) {
+    exList.innerHTML = Object.keys(CURRENCIES).map(k => {
+      const rate = state.settings.exchangeRates[k] || 0;
+      // Show as "1 [currency] = X VND" for clarity
+      const rateVND = k === 'VND' ? 1 : (rate > 0 ? (1 / rate) : 0);
+      return `<div class="flex items-center gap-2">
+        <span class="text-xs font-semibold" style="min-width:50px">${k}</span>
+        <input type="number" step="0.00001" class="inp" value="${k === 'VND' ? rate : (rate > 0 ? (1/rate) : 0)}"
+          onchange="setExchangeRate('${k}', +this.value)" ${k === state.settings.reportCurrency ? 'disabled title="Đồng tiền báo cáo"' : ''}>
+        <span class="text-xs" style="color:var(--muted);min-width:80px">1 ${k} = ? VND</span>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('reportCurrencySel').value = state.settings.reportCurrency;
+}
+
+function setExchangeRate(currency, rateVND) {
+  // User inputs "1 [currency] = X VND". Store as "X VND per 1 currency" → reverse to "1 X = rate VND"
+  if (currency === 'VND') return;
+  if (rateVND <= 0) { toast('Tỷ giá phải > 0', 'error'); return; }
+  state.settings.exchangeRates[currency] = 1 / rateVND;
+  state.settings.rateUpdatedAt = todayISO();
+  save();
+  renderAll();
+  toast('Đã cập nhật tỷ giá ' + currency, 'success');
+}
+
+/* ============================================================================
+   RENDER ALL
+   ========================================================================== */
+function renderAll() {
+  renderNav();
+  renderShipment();
+  renderCosts();
+  renderIncoterms();
+  renderComparison();
+  renderProfit();
+  renderLandedCost();
+  renderQuotation();
+  renderWhatIf();
+  renderSettings();
+  renderDashboard();
+  initCharts();
+  updateCharts();
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   ACTIONS: SHIPMENT
+   ========================================================================== */
+function updSh(field, value) {
+  state.shipment[field] = value;
+  save();
+  renderAll();
+}
+
+function setReportCurrency(cur) {
+  state.settings.reportCurrency = cur;
+  save();
+  renderAll();
+}
+
+/* ============================================================================
+   ACTIONS: COSTS
+   ========================================================================== */
+function updCost(id, field, value) {
+  const c = state.costs.find(x => x.id === id);
+  if (!c) return;
+  c[field] = value;
+  if (['qty','unitPrice'].includes(field)) c[field] = Math.max(0, n2(value));
+  save();
+  renderAll();
+}
+
+function addCost() {
+  state.costs.push({
+    id: uid(),
+    name: 'Chi phí mới',
+    category: 'other',
+    qty: 1,
+    unitPrice: 0,
+    currency: state.settings.reportCurrency,
+    unit: 'lot',
+    isIncluded: false,
+    note: ''
+  });
+  save();
+  renderAll();
+  toast('Đã thêm khoản chi phí', 'success');
+}
+
+function delCost(id) {
+  if (!confirm('Xóa khoản chi phí này?')) return;
+  state.costs = state.costs.filter(c => c.id !== id);
+  save();
+  renderAll();
+}
+
+function restoreTestCosts() {
+  if (!confirm('Nạp lại bộ chi phí mẫu? Các khoản hiện tại sẽ bị thay thế.')) return;
+  state.costs = buildTestCosts();
+  save();
+  renderAll();
+  toast('Đã nạp lại chi phí mẫu', 'success');
+}
+
+/* ============================================================================
+   ACTIONS: PROFIT
+   ========================================================================== */
+function updProfit(field, value) {
+  if (field === 'rate') value = Math.max(0, n2(value));
+  state.profit[field] = value;
+  save();
+  renderProfit();
+  renderQuotation();
+}
+function updProfitExtra(field, value) {
+  state.profit.extraCosts[field] = Math.max(0, n2(value));
+  save();
+  renderProfit();
+  renderQuotation();
+}
+
+/* ============================================================================
+   ACTIONS: LANDED COST
+   ========================================================================== */
+function updLc(field, value) {
+  if (typeof value === 'number') value = Math.max(0, value);
+  state.landedCost[field] = value;
+  save();
+  renderLandedCost();
+}
+
+/* ============================================================================
+   ACTIONS: QUOTATION
+   ========================================================================== */
+function updQuote(field, value) {
+  state.quotation[field] = value;
+  save();
+  renderQuotation();
+}
+
+/* ============================================================================
+   ACTIONS: WHAT-IF
+   ========================================================================== */
+function updWi(field, value) {
+  state.whatIf[field] = value;
+  save();
+  renderWhatIf();
+}
+
+/* ============================================================================
+   ACTIONS: SETTINGS
+   ========================================================================== */
+function setSetting(field, value) {
+  state.settings[field] = value;
+  save();
+  renderAll();
+}
+
+/* ============================================================================
+   THEME
+   ========================================================================== */
+function toggleTheme() {
+  state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+  save();
+  applyTheme();
+  Object.values(ui.charts).forEach(c => c && c.update());
+}
+function applyTheme() {
+  const dark = state.settings.theme === 'dark';
+  document.documentElement.classList.toggle('dark', dark);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.setAttribute('data-lucide', dark ? 'sun' : 'moon');
+  chartTheme();
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ============================================================================
+   EXPORT / IMPORT
+   ========================================================================== */
+function download(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function exportBackup() {
+  download('ipc-backup-' + todayISO() + '.json', JSON.stringify(state, null, 2), 'application/json');
+  toast('Đã tải backup', 'success');
+}
+
+function importBackup(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || !data.settings || !Array.isArray(data.costs)) throw new Error('Cấu trúc không hợp lệ');
+      if (!confirm('Nhập dữ liệu sẽ thay thế toàn bộ dữ liệu hiện tại. Tiếp tục?')) return;
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
+      state = loadState();
+      applyTheme();
+      renderAll();
+      toast('Đã nhập dữ liệu', 'success');
+    } catch (err) {
+      toast('Lỗi: ' + err.message, 'error');
+    }
+  };
+  reader.readAsText(file);
+  document.getElementById('importFile').value = '';
+}
+
+function restoreTestData() {
+  if (!confirm('Khôi phục toàn bộ dữ liệu mẫu? Dữ liệu hiện tại sẽ bị thay thế.')) return;
+  state = defaultState();
+  save();
+  applyTheme();
+  renderAll();
+  toast('Đã khôi phục dữ liệu mẫu', 'success');
+}
+
+function clearAll() {
+  if (!confirm('XÓA TOÀN BỘ dữ liệu?')) return;
+  if (!confirm('Xác nhận lần cuối?')) return;
+  localStorage.removeItem(LS_KEY);
+  state = defaultState();
+  state.costs = [];
+  state.shipment = {};
+  save();
+  applyTheme();
+  renderAll();
+  toast('Đã xóa toàn bộ dữ liệu', 'success');
+}
+
+/* ---------- Quote export ---------- */
+function exportQuoteCSV() {
+  const inc = state.quotation.incoterm || 'CIF';
+  const incResult = calcIncoterms(inc);
+  const profit = calcProfit();
+  const qty = n2(state.shipment.quantity) || 1;
+
+  const rows = [];
+  rows.push(['INTERNATIONAL QUOTATION']);
+  rows.push(['Company', state.quotation.company]);
+  rows.push(['Buyer', state.quotation.buyer]);
+  rows.push(['Date', todayISO()]);
+  rows.push(['Product', state.shipment.productName]);
+  rows.push(['Quantity', qty + ' ' + state.shipment.unit]);
+  rows.push(['Incoterms', inc]);
+  rows.push(['Named Place', state.quotation.namedPlace]);
+  rows.push([]);
+
+  if (ui.quoteTab === 'internal') {
+    rows.push(['CHI TIẾT CHI PHÍ NỘI BỘ']);
+    rows.push(['Khoản chi phí', 'Số tiền']);
+    incResult.breakdown.forEach(b => rows.push([b.name, b.amount]));
+    rows.push(['Tổng chi phí ' + inc, incResult.total]);
+    rows.push(['Chi phí bổ sung', profit.extraCost]);
+    rows.push(['Tổng chi phí đầy đủ', profit.totalCost]);
+    rows.push(['Lợi nhuận', profit.profitAmount]);
+    rows.push(['Giá bán', profit.sellingPrice]);
+    rows.push(['Đơn giá / SP', profit.unitPrice]);
+  } else {
+    rows.push(['BÁO GIÁ']);
+    rows.push(['Điều kiện', 'Named Place', 'Đơn giá', 'Tổng giá']);
+    rows.push([inc, state.quotation.namedPlace, profit.unitPrice, profit.sellingPrice]);
+    rows.push([]);
+    rows.push(['Validity', state.quotation.validity]);
+    rows.push(['Delivery', state.quotation.deliveryTime]);
+    rows.push(['Payment Terms', state.quotation.paymentTerms]);
+    rows.push(['Exclusions', state.quotation.exclusions]);
+    rows.push(['Remarks', state.quotation.remarks]);
+  }
+
+  const csv = rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  download('quotation-' + inc + '-' + todayISO() + '.csv', '\uFEFF' + csv, 'text/csv;charset=utf-8;');
+}
+
+function exportQuoteXLSX() {
+  if (typeof XLSX === 'undefined') {
+    toast('SheetJS chưa tải. Xuất CSV thay thế.', 'warn');
+    exportQuoteCSV();
+    return;
+  }
+  const inc = state.quotation.incoterm || 'CIF';
+  const incResult = calcIncoterms(inc);
+  const profit = calcProfit();
+  const qty = n2(state.shipment.quantity) || 1;
+
+  const wb = XLSX.utils.book_new();
+
+  const header = [
+    ['INTERNATIONAL QUOTATION'],
+    ['Company', state.quotation.company],
+    ['Buyer', state.quotation.buyer],
+    ['Date', todayISO()],
+    ['Product', state.shipment.productName],
+    ['Quantity', qty + ' ' + state.shipment.unit],
+    ['Incoterms', inc],
+    ['Named Place', state.quotation.namedPlace],
+    []
+  ];
+
+  if (ui.quoteTab === 'internal') {
+    const rows = header.concat([
+      ['CHI TIẾT CHI PHÍ NỘI BỘ'],
+      ['Khoản chi phí', 'Số tiền'],
+      ...incResult.breakdown.map(b => [b.name, b.amount]),
+      ['Tổng chi phí ' + inc, incResult.total],
+      ['Chi phí bổ sung', profit.extraCost],
+      ['Tổng chi phí đầy đủ', profit.totalCost],
+      ['Lợi nhuận', profit.profitAmount],
+      ['Giá bán', profit.sellingPrice],
+      ['Đơn giá / SP', profit.unitPrice]
+    ]);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Internal');
+  } else {
+    const rows = header.concat([
+      ['BÁO GIÁ'],
+      ['Điều kiện', 'Named Place', 'Đơn giá', 'Tổng giá'],
+      [inc, state.quotation.namedPlace, profit.unitPrice, profit.sellingPrice],
+      [],
+      ['Validity', state.quotation.validity],
+      ['Delivery', state.quotation.deliveryTime],
+      ['Payment Terms', state.quotation.paymentTerms],
+      ['Exclusions', state.quotation.exclusions],
+      ['Remarks', state.quotation.remarks]
+    ]);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Quotation');
+  }
+
+  XLSX.writeFile(wb, 'quotation-' + inc + '-' + todayISO() + '.xlsx');
+}
+
+function copyQuote() {
+  const preview = document.getElementById('quotePreview');
+  if (!preview) return;
+  const text = preview.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    toast('Đã copy báo giá vào clipboard', 'success');
+  }).catch(err => {
+    toast('Không copy được: ' + err.message, 'error');
+  });
+}
+
+/* ============================================================================
+   TEST SUITE
+   ========================================================================== */
+function runTests() {
+  const results = [];
+  function assert(name, actual, expected, tolerance = 0.01) {
+    const pass = Math.abs(actual - expected) <= tolerance;
+    results.push({ name, actual, expected, pass });
+  }
+
+  // Test 1: Goods value
+  const goodsVal = goodsValueReport();
+  const expectedGoods = 100 * 500; // 100 tons × 500 USD/t = 50000 USD
+  assert('Test 1: Goods value = 100 × 500 = 50,000 USD', goodsVal, expectedGoods, 1);
+
+  // Test 2: EXW total should include goods + packaging (no packaging in test, so just goods)
+  const exw = calcIncoterms('EXW');
+  assert('Test 2: EXW = Goods value = 50,000 USD', exw.total, expectedGoods, 1);
+
+  // Test 3: FOB > EXW (includes pre_export, customs, inland, port, loading)
+  const fob = calcIncoterms('FOB');
+  const testFobExpected =
+    50000 + // goods
+    (5000000 + 500000 + 1000000 + 500000) / 22900 + // pre_export in VND → USD
+    100 + // bank
+    (4 * 3000000) / 22900 + // inland export
+    500000 / 22900 + // customs
+    (4 * 50) // THC export
+    ;
+  assert('Test 3: FOB > EXW', fob.total > exw.total ? 1 : 0, 1);
+  assert('Test 3b: FOB ≈ ' + fmt(testFobExpected, 2), fob.total, testFobExpected, 5);
+
+  // Test 4: CIF > FOB (includes freight + insurance)
+  const cif = calcIncoterms('CIF');
+  assert('Test 4: CIF > FOB', cif.total > fob.total ? 1 : 0, 1);
+
+  // Test 5: DDP > CIF (includes import duty + port import + inland import)
+  const ddp = calcIncoterms('DDP');
+  assert('Test 5: DDP > CIF', ddp.total > cif.total ? 1 : 0, 1);
+
+  // Test 6: FAS < FOB (FAS excludes loading)
+  const fas = calcIncoterms('FAS');
+  assert('Test 6: FAS < FOB', fas.total < fob.total ? 1 : 0, 1);
+
+  // Test 7: CFR < CIF (CIF adds insurance)
+  const cfr = calcIncoterms('CFR');
+  assert('Test 7: CFR < CIF', cfr.total < cif.total ? 1 : 0, 1);
+
+  // Test 8: DAP < DPU (DPU adds unloading)
+  const dap = calcIncoterms('DAP');
+  const dpu = calcIncoterms('DPU');
+  assert('Test 8: DAP < DPU', dap.total < dpu.total ? 1 : 0, 1);
+
+  // Test 9: Include flag prevents double counting
+  const includedCosts = state.costs.filter(c => c.isIncluded);
+  const activeInsuranceCount = state.costs.filter(c => c.category === 'insurance' && !c.isIncluded).length;
+  assert('Test 9: Chỉ có 1 insurance active (không tính trùng)', activeInsuranceCount, 1, 0);
+
+  // Test 10: Profit — Markup vs Margin
+  const tempProfit = JSON.parse(JSON.stringify(state.profit));
+  state.profit.method = 'markup';
+  state.profit.rate = 20;
+  const pMarkup = calcProfit();
+  state.profit.method = 'margin';
+  const pMargin = calcProfit();
+  // With markup 20%, margin should be 16.67%
+  const expectedMargin = 20 / 1.2;
+  assert('Test 10: Markup 20% ≈ Margin 16.67%', pMargin.marginPct, expectedMargin, 0.5);
+
+  // Restore
+  state.profit = tempProfit;
+
+  // Test 11: Landed cost
+  state.landedCost.purchasePrice = 10000;
+  state.landedCost.importFreight = 1000;
+  state.landedCost.importDuty = 500;
+  state.landedCost.importVat = 200;
+  state.landedCost.vatMode = 'with';
+  const lc1 = calcLandedCost();
+  assert('Test 11a: Landed Cost (with VAT) = 11,700', lc1.total, 11700, 1);
+  state.landedCost.vatMode = 'without';
+  const lc2 = calcLandedCost();
+  assert('Test 11b: Landed Cost (without VAT) = 11,500', lc2.total, 11500, 1);
+
+  // Test 12: Currency conversion
+  const usdToVnd = getRate('VND'); // should be 1/22900
+  const vndAmount = 2290000; // 2,290,000 VND
+  const usdConv = convertToReport(vndAmount, 'VND'); // should be 100 USD
+  assert('Test 12: 2,290,000 VND = 100 USD', usdConv, 100, 0.01);
+
+  // Render
+  const box = document.getElementById('testResults');
+  if (box) {
+    const passCount = results.filter(r => r.pass).length;
+    box.innerHTML = `
+      <div class="mb-2 font-semibold ${passCount === results.length ? 'text-green-500' : 'text-red-500'}">
+        ${passCount}/${results.length} tests passed
+      </div>
+      ${results.map(r => `
+        <div class="flex items-center gap-2 py-1 px-2 rounded" style="background:${r.pass ? 'rgba(16,185,129,.08)' : 'rgba(239,68,68,.08)'}">
+          <span style="color:${r.pass ? '#10b981' : '#ef4444'}">${r.pass ? '✓' : '✗'}</span>
+          <span class="flex-1">${esc(r.name)}</span>
+          ${!r.pass ? `<span class="text-xs" style="color:var(--muted)">got: ${fmt(r.actual, 2)}, expected: ${fmt(r.expected, 2)}</span>` : ''}
+        </div>
+      `).join('')}
+    `;
+  }
+
+  toast(`Test suite: ${passCount}/${results.length} passed`, passCount === results.length ? 'success' : 'warn');
+  return results;
+}
+
+/* ============================================================================
+   INIT
+   ========================================================================== */
+(function init() {
+  console.log('🚀 International Pricing Calculator initializing...');
+
+  // Populate report currency selector
+  const curSel = document.getElementById('reportCurrencySel');
+  if (curSel) {
+    curSel.innerHTML = Object.keys(CURRENCIES).map(k =>
+      `<option value="${k}" ${state.settings.reportCurrency === k ? 'selected' : ''}>${k}</option>`).join('');
+  }
+
+  applyTheme();
+  renderAll();
+  showSection('dashboard');
+
+  window.addEventListener('resize', () => {
+    Object.values(ui.charts).forEach(c => c && c.resize());
+  });
+
+  console.log('✅ Initialized. State:', {
+    costsCount: state.costs.length,
+    reportCurrency: state.settings.reportCurrency,
+    transportMode: state.shipment.transportMode
+  });
+})();
+</script>
+</body>
+</html>
